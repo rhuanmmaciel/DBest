@@ -36,7 +36,7 @@ public class ResultFrame extends JFrame {
 		
 		List<String> columnsName = new ArrayList<>();
 		
-		if(!data.isEmpty()) {
+		if(data != null && !data.isEmpty()) {
 			
 			columnsName = data.get(0);
 			List<String> firstLine = new ArrayList<>(data.remove(0));

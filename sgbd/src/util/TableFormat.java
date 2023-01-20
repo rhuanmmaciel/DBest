@@ -28,7 +28,7 @@ public class TableFormat {
 	    	rows.add(columnsName);
 		}
 		
-		System.out.println(columnsName);
+		//System.out.println(columnsName);
 		
 	    while(aux.hasNext()){
 	    	
@@ -64,7 +64,7 @@ public class TableFormat {
 	    
 	    aux.close();
 	    
-	    System.out.println("Table Format= " + rows);
+	    //System.out.println("Table Format= " + rows);
 	    
 	    return rows;
 		

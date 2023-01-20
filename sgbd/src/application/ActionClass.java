@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ import sgbd.table.Table;
 import util.ImportCSVFile;
 
 @SuppressWarnings("serial")
-public class ActionClass extends JFrame implements ActionListener {
+public class ActionClass extends JFrame implements ActionListener{
 	
 	private mxGraph graph;
 	private mxGraphComponent graphComponent;
@@ -204,14 +206,28 @@ public class ActionClass extends JFrame implements ActionListener {
 					
 					graph.getModel().remove(jCell);	
 
-				}else if(e.getButton() == MouseEvent.BUTTON2 && jCell != null) {
-					
-					new ResultFrame(cell.getContent());
-					
 				}
 				
 			}
 			
+		});
+		
+		graphComponent.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+				Cell cell = jCell != null ? cells.stream().filter(x -> x.getCell().equals((mxCell)jCell)).findFirst().orElse(null) : null;
+				
+				if (e.getKeyCode() == KeyEvent.VK_S && jCell != null) {
+					new ResultFrame(cell.getContent());
+				
+				}else if(e.getKeyCode() == KeyEvent.VK_DELETE && jCell != null) {
+					
+					graph.getModel().remove(jCell);	
+				
+				}
+				
+			}
 		});
 		
 		graph.getModel().endUpdate();
@@ -229,8 +245,6 @@ public class ActionClass extends JFrame implements ActionListener {
 		this.currentType = currentType;
 		
 	}
-	
-	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
