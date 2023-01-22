@@ -36,7 +36,7 @@ public class OperatorCell extends Cell{
 	
 	}
 	
-	public List<String> getColumns(){
+	public List<String> getColumnsName(){
 		
 		Operator aux = operator;
 		aux.open();

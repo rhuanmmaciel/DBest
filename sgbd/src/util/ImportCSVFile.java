@@ -52,11 +52,9 @@ public class ImportCSVFile {
 					for(String i : columns) {
 						
 						if(FindType.isInt(i)) {
-							if(columnsName[j].contains("Id")) {
-								data.setInt(columnsName[j], Integer.parseInt(i));
-							}else {
-								data.setInt(columnsName[j]+"."+currentFileName, Integer.parseInt(i));
-							}
+							
+							data.setInt(columnsName[j]+"."+currentFileName, Integer.parseInt(i));
+					
 						}else if(FindType.isFloat(i)) {
 							
 							data.setFloat(columnsName[j]+"."+currentFileName, Float.parseFloat(i));
@@ -78,7 +76,7 @@ public class ImportCSVFile {
 				
 				List<String> columnsNameList = new ArrayList<>(Arrays.asList(columnsName));
 				
-				for(int i = 1; i < columnsNameList.size(); i++) {
+				for(int i = 0; i < columnsNameList.size(); i++) {
 				
 					String test = columnsNameList.get(i);
 					columnsNameList.remove(i);

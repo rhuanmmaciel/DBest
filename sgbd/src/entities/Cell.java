@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sgbd.query.Operator;
+import util.FindRoots;
 
 public abstract class Cell {
 	
 	private String style;
 	private String name;
 	private Object cell;
-	private List<Cell> parents;
+	protected List<Cell> parents;
 	private Cell child;
 	
 	public Cell(String name, String style, Object cell) {
@@ -50,9 +51,22 @@ public abstract class Cell {
 	public void addParent(Cell parent) {
 		parents.add(parent);
 	}
+	
+	public String getSourceTableName(String columnName) {
+		
+		for(Cell cell : FindRoots.getRoots(this)) {
+			
+			if(cell.getColumnsName().contains(columnName)) 
+				return cell.getName();
+		
+		}
+		
+		return null;
+		
+	}
 
 	public abstract Operator getData();
-	public abstract List<String> getColumns();
+	public abstract List<String> getColumnsName();
 	public abstract List<List<String>> getContent();
 	
 }

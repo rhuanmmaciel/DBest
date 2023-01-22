@@ -80,7 +80,7 @@ public class FormFrameProjecao extends JFrame implements ActionListener {
 		
 		columnsList = new ArrayList<String>();
 		
-		columnsList = parentCell.getColumns();
+		columnsList = parentCell.getColumnsName();
 		
 		columnsComboBox = new JComboBox(columnsList.toArray(new String[0]));
 		
@@ -167,7 +167,7 @@ public class FormFrameProjecao extends JFrame implements ActionListener {
 	
 	public void executeOperation(List<String> columnsResult) {
 		
-		List<String> aux = parentCell.getColumns();
+		List<String> aux = parentCell.getColumnsName();
 		aux.removeAll(columnsResult);
 		
 		Operator operator = parentCell.getData();

@@ -73,12 +73,12 @@ public class FormFrameJuncao extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		
 		columnsList_1 = new ArrayList<String>();
-		columnsList_1 = parentCell1.getColumns();
+		columnsList_1 = parentCell1.getColumnsName();
 		
 		colunasComboBox = new JComboBox(columnsList_1.toArray(new String[0]));
 		
 		columnsList_2 = new ArrayList<String>();
-		columnsList_2 = parentCell2.getColumns();
+		columnsList_2 = parentCell2.getColumnsName();
 		
 		colunasComboBox_1 = new JComboBox(columnsList_2.toArray(new String[0]));
 		
@@ -143,7 +143,7 @@ public class FormFrameJuncao extends JFrame implements ActionListener {
 		Operator table_2 = parentCell2.getData();
 		
 		Operator operator = new BlockNestedLoopJoin(table_1,table_2,(t1, t2) -> {
-            return t1.getContent(parentCell1.getName()).getInt(item1) == t2.getContent(parentCell2.getName()).getInt(item2);
+			return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
         });
 		
 		operator.open();

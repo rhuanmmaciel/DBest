@@ -207,6 +207,11 @@ public class ActionClass extends JFrame implements ActionListener{
 					graph.getModel().remove(jCell);	
 
 				}
+				if(e.getButton() == MouseEvent.BUTTON2 && jCell != null) {
+					
+					cell.getSourceTableName(name);
+					
+				}
 				
 			}
 			

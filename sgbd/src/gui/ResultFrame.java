@@ -55,7 +55,7 @@ public class ResultFrame extends JFrame {
 		
 		}
 		
-		setBounds(100, 100, 1400, 385);
+		setBounds(100, 100, 1400, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -79,7 +79,7 @@ public class ResultFrame extends JFrame {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addComponent(lblNewLabel)
 					.addGap(19)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 283, GroupLayout.PREFERRED_SIZE)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(20, Short.MAX_VALUE))
 		);
 		

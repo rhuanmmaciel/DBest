@@ -76,7 +76,7 @@ public class FormFrameSelecao extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		
 		columnsList = new ArrayList<String>();
-		columnsList = parentCell.getColumns();
+		columnsList = parentCell.getColumnsName();
 		
 		comboBoxColunas = new JComboBox(columnsList.toArray(new String[0]));
 		
@@ -152,12 +152,12 @@ public class FormFrameSelecao extends JFrame implements ActionListener {
 		
 		Operator operator = new FilterOperator(parentCell.getData(),(Tuple t)->{
 
-			if(op.equals(">")) return t.getContent(parentCell.getData().getSources().get(0).getTableName()).getInt(columnName) > Integer.parseInt(value);
-			if(op.equals(">=")) return t.getContent(parentCell.getData().getSources().get(0).getTableName()).getInt(columnName) >= Integer.parseInt(value);
-			if(op.equals("<")) return t.getContent(parentCell.getData().getSources().get(0).getTableName()).getInt(columnName) < Integer.parseInt(value);
-			if(op.equals("<=")) return t.getContent(parentCell.getData().getSources().get(0).getTableName()).getInt(columnName) <= Integer.parseInt(value);
-			if(op.equals("=")) return t.getContent(parentCell.getData().getSources().get(0).getTableName()).getInt(columnName) == Integer.parseInt(value);
-			return t.getContent(parentCell.getData().getSources().get(0).getTableName()).getInt(columnName) != Integer.parseInt(value);
+			if(op.equals(">")) return t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName) > Integer.parseInt(value);
+			if(op.equals(">=")) return t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName) >= Integer.parseInt(value);
+			if(op.equals("<")) return t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName) < Integer.parseInt(value);
+			if(op.equals("<=")) return t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName) <= Integer.parseInt(value);
+			if(op.equals("=")) return t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName) == Integer.parseInt(value);
+			return t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName) != Integer.parseInt(value);
 			
 		});
 

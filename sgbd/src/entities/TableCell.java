@@ -30,7 +30,7 @@ public class TableCell extends Cell{
 		return prototype;
 	}
 	
-	public List<String> getColumns(){
+	public List<String> getColumnsName(){
 		
 		return Columns.getColumns(prototype.getColumns());
 		
@@ -38,13 +38,13 @@ public class TableCell extends Cell{
 	
 	public List<List<String>> getContent(){
 		
-		return TableFormat.getRows(new TableScan(table, getColumns()));
+		return TableFormat.getRows(new TableScan(table, getColumnsName()));
 		
 	}
 	
 	public Operator getData() {
 		
-		return new TableScan(table, getColumns());
+		return new TableScan(table);
 	
 	}
 	
