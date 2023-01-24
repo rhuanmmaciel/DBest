@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import gui.forms.FormFramePrimaryKey;
 import sgbd.prototype.Column;
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
@@ -21,8 +22,12 @@ public class ImportCSVFile {
 	private static Prototype currentPrototype;
 	private static Table currentTable;
 	private static String currentFileName;
+	private static List<String> columnsNameList = new ArrayList<>();
+	private static List<RowData> rows = new ArrayList<>();
+	private static List<List<String>> allData = new ArrayList<>();
+	private static String primaryKeyName;
 	
-	public static void importCSVFile() {
+	public static void importCSVFile(){
 		
 		JFileChooser fileUpload = new JFileChooser();
 		//fileUpload.showOpenDialog(null);
@@ -33,83 +38,128 @@ public class ImportCSVFile {
 		
 		if(res == JFileChooser.APPROVE_OPTION) {
 			
-			try(BufferedReader br = new BufferedReader(new FileReader(fileUpload.getSelectedFile().getAbsolutePath()))){
-				
-				String columnsName[] = br.readLine().replace("\"", "").replace(" ", "").split(",");
-				currentFileName = fileUpload.getSelectedFile().getName().toUpperCase().substring(0, fileUpload.getSelectedFile().getName().indexOf("."));
-				
-				List<RowData> rows = new ArrayList<>();
-				
-				String line = br.readLine();
-				while(line != null) {
-					
-					String columns[] = line.split(",");
-					
-					RowData data = new RowData();
-					
-					int j = 0;
-					
-					for(String i : columns) {
-						
-						if(FindType.isInt(i)) {
-							
-							data.setInt(columnsName[j]+"."+currentFileName, Integer.parseInt(i));
-					
-						}else if(FindType.isFloat(i)) {
-							
-							data.setFloat(columnsName[j]+"."+currentFileName, Float.parseFloat(i));
-							
-						}else {
-							
-							data.setString(columnsName[j]+"."+currentFileName, i);
-							
-						}
-						
-						j++;
-						
-					}
-					
-					rows.add(data);
-					
-					line = br.readLine();
-				}
-				
-				List<String> columnsNameList = new ArrayList<>(Arrays.asList(columnsName));
-				
-				for(int i = 0; i < columnsNameList.size(); i++) {
-				
-					String test = columnsNameList.get(i);
-					columnsNameList.remove(i);
-					columnsNameList.add(i, test.concat("."+currentFileName));
-					
-				}
-				
-				createTable(currentFileName, columnsNameList, rows);
-				
-			}catch(IOException e) {
-				
-				e.printStackTrace();
-			
-			}
+			createData(fileUpload);
+			createTable(currentFileName, columnsNameList, rows);
 			
 		}
 		
+	}
+	
+	private static void getData(JFileChooser fileUpload) {
+		
+		try(BufferedReader br = new BufferedReader(new FileReader(fileUpload.getSelectedFile().getAbsolutePath()))){
+			
+			String columnsName[] = br.readLine().replace("\"", "").replace(" ", "").split(",");
+			currentFileName = fileUpload.getSelectedFile().getName().toUpperCase().substring(0, fileUpload.getSelectedFile().getName().indexOf("."));		
+			
+			allData.add(Arrays.asList(columnsName));
+			
+			String line = br.readLine();
+			while(line != null) {
+				
+				String columns[] = line.split(",");
+				
+				allData.add(Arrays.asList(columns));
+				
+				line = br.readLine();
+			}
+			
+		}catch(IOException e){
+			
+			e.printStackTrace();
+		
+		}
+		
+	}
+	
+	private static List<RowData> createData(JFileChooser fileUpload){
+		
+		columnsNameList.clear();
+		rows.clear();
+		allData.clear();
+		
+		try(BufferedReader br = new BufferedReader(new FileReader(fileUpload.getSelectedFile().getAbsolutePath()))){
+			
+			getData(fileUpload);
+			new FormFramePrimaryKey(allData);
+			
+			String columnsName[] = br.readLine().replace("\"", "").replace(" ", "").split(",");
+			currentFileName = fileUpload.getSelectedFile().getName().toUpperCase().substring(0, fileUpload.getSelectedFile().getName().indexOf("."));
+			
+			int k = 0;
+			String line = br.readLine();
+			while(line != null) {
+				
+				String columns[] = line.split(",");
+				
+				RowData data = new RowData();
+				
+				int j = 0;
+				
+				for(String i : columns) {
+					
+					if(FindType.isInt(i)) {
+						
+						data.setInt(columnsName[j]+"."+currentFileName, Integer.parseInt(i));
+				
+					}else if(FindType.isFloat(i)) {
+						
+						data.setFloat(columnsName[j]+"."+currentFileName, Float.parseFloat(i));
+						
+					}else {
+						
+						data.setString(columnsName[j]+"."+currentFileName, i);
+						
+					}
+					
+					j++;
+					
+				}
+				
+				if(FormFramePrimaryKey.getValues()[0] != null)
+					data.setInt(FormFramePrimaryKey.getColumnName()+"."+currentFileName, FormFramePrimaryKey.getValues()[k++]);
+				
+				rows.add(data);
+				
+				line = br.readLine();
+			}
+			
+			columnsNameList.addAll(Arrays.asList(columnsName));
+			if(FormFramePrimaryKey.getValues()[0] != null)			
+				columnsNameList.add(FormFramePrimaryKey.getColumnName());
+			
+			for(int i = 0; i < columnsNameList.size(); i++) {
+			
+				String test = columnsNameList.get(i);
+				columnsNameList.remove(i);
+				columnsNameList.add(i, test.concat("."+currentFileName));
+				
+			}
+						
+		}catch(IOException e) {
+			
+			e.printStackTrace();
+		
+		}
+		
+		return rows;
 	}
 
 	public static void createTable(String name, List<String> columnsName, List<RowData> rows) {
 		
 		currentPrototype = new Prototype();
+		 
+		primaryKeyName = FormFramePrimaryKey.getColumnName();
 		
 		int index = -1;
 		for(int i = 0; i < columnsName.size(); i++) {
 			
-			if(columnsName.get(i).contains("Id") && index < 0) index = i;
+			if(columnsName.get(i).contains(primaryKeyName) && index < 0) index = i;
 			
 		}
 		
-		currentPrototype.addColumn(columnsName.get(index), 4, Column.PRIMARY_KEY);
+		currentPrototype.addColumn(columnsName.get(index), 15, Column.PRIMARY_KEY);
 		columnsName.remove(index);
-		while(columnsName.contains("Id")) columnsName.remove(columnsName.indexOf("Id"));
 		
 		columnsName.forEach(x -> {currentPrototype.addColumn(x, 100, Column.NONE);});
 		

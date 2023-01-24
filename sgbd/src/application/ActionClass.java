@@ -233,6 +233,7 @@ public class ActionClass extends JFrame implements ActionListener{
 				}
 				
 			}
+			
 		});
 		
 		graph.getModel().endUpdate();
