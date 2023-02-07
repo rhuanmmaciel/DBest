@@ -1,4 +1,4 @@
-package gui.forms;
+package gui.forms.operations;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;

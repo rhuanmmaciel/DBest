@@ -36,9 +36,10 @@ import gui.buttons.Projecao;
 import gui.buttons.Renomeacao;
 import gui.buttons.Selecao;
 import gui.buttons.Uniao;
-import gui.forms.FormFrameJuncao;
-import gui.forms.FormFrameProjecao;
-import gui.forms.FormFrameSelecao;
+import gui.forms.FormFrameCreateTable;
+import gui.forms.operations.FormFrameJuncao;
+import gui.forms.operations.FormFrameProjecao;
+import gui.forms.operations.FormFrameSelecao;
 import sgbd.prototype.Prototype;
 import sgbd.table.Table;
 import util.ImportCSVFile;
@@ -69,13 +70,14 @@ public class ActionClass extends JFrame implements ActionListener{
 	private Object newParent;
 	private JPanel edgePanel;
 	
-	private JButton importButton;
+	private JButton btnImportCSV;
 	private JToolBar toolBar;
 	
 	private List<Cell> cells;
 	
 	private Prototype currentPrototype = null;
 	private Table currentTable = null;
+	private JButton btnCreateTable;
 	
 	public ActionClass() {
 		super("Jgraph teste");
@@ -132,13 +134,18 @@ public class ActionClass extends JFrame implements ActionListener{
 	    
 		toolBar = new JToolBar();
 		getContentPane().add(toolBar, BorderLayout.SOUTH);
+		
+		btnCreateTable = new JButton("Criar tabela");
+		toolBar.add(btnCreateTable);
+		btnCreateTable.setHorizontalAlignment(SwingConstants.LEFT);
+		btnCreateTable.addActionListener(this);
 	    
-		importButton = new JButton("Importar tabela");
-		toolBar.add(importButton);
-		importButton.setHorizontalAlignment(SwingConstants.LEFT);
-		importButton.addActionListener(this);
+		btnImportCSV = new JButton("Importar .csv");
+		toolBar.add(btnImportCSV);
+		btnImportCSV.setHorizontalAlignment(SwingConstants.LEFT);
+		btnImportCSV.addActionListener(this);
 	    
-		this.add(containerPanel,BorderLayout.EAST);
+		getContentPane().add(containerPanel,BorderLayout.EAST);
 
 		setVisible(true);
 		
@@ -256,27 +263,35 @@ public class ActionClass extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		
 		if(e.getSource() == tipoProjecao.getButton()) {
+			
 			assignVariables("projecao","π  projecao", true, OperationEnums.PROJECAO);
 			
 		}else if(e.getSource() == tipoSelecao.getButton() ) {
+			
 			assignVariables("selecao","σ  selecao", true, OperationEnums.SELECAO);
 			
 		}else if(e.getSource() == tipoProdutoCartesiano.getButton()) {
+			
 			assignVariables("produtoCartesiano","✕  produto cartesiano", true, OperationEnums.PRODUTO_CARTESIANO);
 			
 		}else if(e.getSource() == tipoUniao.getButton()) {
+			
 			assignVariables("uniao","∪  uniao", true, OperationEnums.UNIAO);
 			
 		}else if(e.getSource() == tipoDiferenca.getButton()) {
+			
 			assignVariables("diferenca","-  diferenca", true, OperationEnums.DIFERENCA);
 			
 		}else if(e.getSource() == tipoRenomeacao.getButton()) {
+			
 			assignVariables("renomeacao","ρ  renomeacao", true, OperationEnums.RENOMEACAO);
 			
 		}else if(e.getSource() == edgeButton) {
+			
 			createEdge = true;
 			
-		}else if(e.getSource() == importButton) {
+		}else if(e.getSource() == btnImportCSV) {
+			
 			ImportCSVFile.importCSVFile();
 			String name = ImportCSVFile.getFileName();
 			currentTable = ImportCSVFile.getTable();
@@ -284,8 +299,16 @@ public class ActionClass extends JFrame implements ActionListener{
 			assignVariables("tabela", name, false, null);
 			
 		}else if(e.getSource() == tipoJuncao.getButton()) {
+			
 			assignVariables("juncao","|X| juncao", true, OperationEnums.JUNCAO);
 
+		}else if(e.getSource() == btnCreateTable) {
+			
+			new FormFrameCreateTable();
+			currentTable = ImportCSVFile.getTable();
+			currentPrototype = ImportCSVFile.getPrototype();
+			assignVariables("tabela", ImportCSVFile.getTableName(), false, null);
+			
 		}
 			
 	}

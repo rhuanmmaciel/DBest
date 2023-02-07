@@ -83,7 +83,6 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 	    table.setGridColor(Color.blue);
 	    table.setColumnSelectionAllowed(true);
 	    table.setRowSelectionAllowed(false);
-	    table.setColumnSelectionInterval(2,2);
 	    
 		JScrollPane scrollPane = new JScrollPane(table);
 		

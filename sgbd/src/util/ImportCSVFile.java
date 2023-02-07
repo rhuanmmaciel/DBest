@@ -26,6 +26,7 @@ public class ImportCSVFile {
 	private static List<RowData> rows = new ArrayList<>();
 	private static List<List<String>> allData = new ArrayList<>();
 	private static String primaryKeyName;
+	private static String tableName;
 	
 	public static void importCSVFile(){
 		
@@ -70,6 +71,12 @@ public class ImportCSVFile {
 		
 		}
 		
+	}
+	
+	public static void reset() {
+		columnsNameList.clear();
+		rows.clear();
+		allData.clear();
 	}
 	
 	private static List<RowData> createData(JFileChooser fileUpload){
@@ -145,8 +152,9 @@ public class ImportCSVFile {
 		return rows;
 	}
 
-	public static void createTable(String name, List<String> columnsName, List<RowData> rows) {
+	public static void createTable(String tableName, List<String> columnsName, List<RowData> rows) {
 		
+		ImportCSVFile.tableName = tableName;
 		currentPrototype = new Prototype();
 		 
 		primaryKeyName = FormFramePrimaryKey.getColumnName();
@@ -157,13 +165,13 @@ public class ImportCSVFile {
 			if(columnsName.get(i).contains(primaryKeyName) && index < 0) index = i;
 			
 		}
-		
+				
 		currentPrototype.addColumn(columnsName.get(index), 15, Column.PRIMARY_KEY);
 		columnsName.remove(index);
 		
 		columnsName.forEach(x -> {currentPrototype.addColumn(x, 100, Column.NONE);});
 		
-	    currentTable = SimpleTable.openTable(name, currentPrototype);
+	    currentTable = SimpleTable.openTable(tableName, currentPrototype);
 	    currentTable.open();
 	    rows.stream().forEach(x -> {currentTable.insert(x);});
 	    
@@ -172,6 +180,12 @@ public class ImportCSVFile {
 	public static Table getTable() {
 		
 		return currentTable;
+		
+	}
+	
+	public static String getTableName() {
+		
+		return tableName;
 		
 	}
 	

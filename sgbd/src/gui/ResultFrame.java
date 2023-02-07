@@ -52,6 +52,7 @@ public class ResultFrame extends JFrame {
 			
 			
 			table = new JTable(dataArray, columnsNameArray);
+			table.setEnabled(false);
 		
 		}
 		

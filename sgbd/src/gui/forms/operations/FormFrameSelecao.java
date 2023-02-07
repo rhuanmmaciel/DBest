@@ -1,4 +1,4 @@
-package gui.forms;
+package gui.forms.operations;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -32,12 +32,12 @@ public class FormFrameSelecao extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTextField textField;
-	private JComboBox<List<String>> comboBoxColunas;
+	private JComboBox<List<String>> comboBoxColumns;
 	private JComboBox<List<String>> comboBoxOp;
 	
 	private List<String> columnsList;
 	
-	private JButton btnPronto;
+	private JButton btnReady;
 	private Cell cell;
 	private Cell parentCell;
 	
@@ -78,7 +78,7 @@ public class FormFrameSelecao extends JFrame implements ActionListener {
 		columnsList = new ArrayList<String>();
 		columnsList = parentCell.getColumnsName();
 		
-		comboBoxColunas = new JComboBox(columnsList.toArray(new String[0]));
+		comboBoxColumns = new JComboBox(columnsList.toArray(new String[0]));
 		
 		String operacoes[] = {">","<","=","!=",">=", "<="};
 		
@@ -93,8 +93,8 @@ public class FormFrameSelecao extends JFrame implements ActionListener {
 		
 		JLabel lblNewLabel_2 = new JLabel("Valor");
 		
-		btnPronto = new JButton("Pronto");
-		btnPronto.addActionListener(this);
+		btnReady = new JButton("Pronto");
+		btnReady.addActionListener(this);
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -102,7 +102,7 @@ public class FormFrameSelecao extends JFrame implements ActionListener {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(19)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(comboBoxColunas, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
+						.addComponent(comboBoxColumns, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblNewLabel))
 					.addGap(26)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -113,7 +113,7 @@ public class FormFrameSelecao extends JFrame implements ActionListener {
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(18)
-							.addComponent(btnPronto))
+							.addComponent(btnReady))
 						.addComponent(lblNewLabel_2))
 					.addContainerGap(51, Short.MAX_VALUE))
 		);
@@ -127,10 +127,10 @@ public class FormFrameSelecao extends JFrame implements ActionListener {
 						.addComponent(lblNewLabel_2))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(comboBoxColunas, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+						.addComponent(comboBoxColumns, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
 						.addComponent(comboBoxOp, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
 						.addComponent(textField, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-						.addComponent(btnPronto))
+						.addComponent(btnReady))
 					.addGap(261))
 		);
 		contentPane.setLayout(gl_contentPane);
@@ -140,9 +140,9 @@ public class FormFrameSelecao extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		if(e.getSource() == btnPronto) {
+		if(e.getSource() == btnReady) {
 			
-	        executeOperation(comboBoxColunas.getSelectedItem().toString(), comboBoxOp.getSelectedItem().toString(), textField.getText());
+	        executeOperation(comboBoxColumns.getSelectedItem().toString(), comboBoxOp.getSelectedItem().toString(), textField.getText());
 			
 		}
 		

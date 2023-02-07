@@ -28,8 +28,6 @@ public class TableFormat {
 	    	rows.add(columnsName);
 		}
 		
-		//System.out.println(columnsName);
-		
 	    while(aux.hasNext()){
 	    	
 	        Tuple t = tuple == null ? aux.next() : tuple;
@@ -40,9 +38,10 @@ public class TableFormat {
 	    		
 	            for(Map.Entry<String,byte[]> data:line.getValue()) {
 	            	
-	            	if(data.getKey().contains("Name") || data.getKey().contains("Sex") || data.getKey().contains("Team") ||
-	            			data.getKey().contains("Position") || data.getKey().contains("JobTitle") || data.getKey().contains("Dateofbirth") ||
-	            			data.getKey().contains("Phone")){
+	            	String columnName = data.getKey().toLowerCase();
+	            	if(columnName.contains("name") || columnName.contains("sex") || columnName.contains("team") ||
+	            			columnName.contains("position") || columnName.contains("jobtitle") || columnName.contains("dateofbirth") ||
+	            			columnName.contains("phone") || columnName.contains("nome")){
 	            		
 			         
 	            		row.add(line.getValue().getString(data.getKey()));
@@ -63,8 +62,6 @@ public class TableFormat {
 	    }
 	    
 	    aux.close();
-	    
-	    //System.out.println("Table Format= " + rows);
 	    
 	    return rows;
 		

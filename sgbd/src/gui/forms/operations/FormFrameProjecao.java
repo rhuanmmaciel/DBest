@@ -1,4 +1,4 @@
-package gui.forms;
+package gui.forms.operations;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -36,8 +36,8 @@ public class FormFrameProjecao extends JFrame implements ActionListener {
 	
 	private JButton btnAdd;
 	private JButton btnRemove;
-	private JButton btnPronto;
-	private String textTermos;
+	private JButton btnReady;
+	private String textColumnsPicked;
 	private JTextArea textArea;
 	
 	private List<String> columnsResult;
@@ -100,8 +100,8 @@ public class FormFrameProjecao extends JFrame implements ActionListener {
 		btnRemove.addActionListener(this);
 
 		
-		btnPronto = new JButton("Pronto");
-		btnPronto.addActionListener(this);
+		btnReady = new JButton("Pronto");
+		btnReady.addActionListener(this);
 
 		GroupLayout groupLayout = new GroupLayout(contentPane);
 		groupLayout.setHorizontalGroup(
@@ -112,7 +112,7 @@ public class FormFrameProjecao extends JFrame implements ActionListener {
 						.addComponent(columnsComboBox, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblColumns, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnPronto)
+						.addComponent(btnReady)
 						.addComponent(btnRemove))
 					.addPreferredGap(ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
@@ -136,7 +136,7 @@ public class FormFrameProjecao extends JFrame implements ActionListener {
 							.addGap(17)
 							.addComponent(btnRemove)
 							.addGap(17)
-							.addComponent(btnPronto))
+							.addComponent(btnReady))
 						.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(532, Short.MAX_VALUE))
 		);
@@ -149,15 +149,15 @@ public class FormFrameProjecao extends JFrame implements ActionListener {
 		if(e.getSource() == btnAdd){
 
 			if(columnsComboBox.getItemCount() > 0) {
-				textTermos = textArea.getText() + "\n" +columnsComboBox.getSelectedItem().toString() ;
+				textColumnsPicked = textArea.getText() + "\n" +columnsComboBox.getSelectedItem().toString() ;
 				columnsComboBox.removeItemAt(columnsComboBox.getSelectedIndex());
-				textArea.setText(textTermos);
+				textArea.setText(textColumnsPicked);
 			}
 
 		}else if(e.getSource() == btnRemove) {
 			System.out.println("botao remove");
 			
-		}else if(e.getSource() == btnPronto) {
+		}else if(e.getSource() == btnReady) {
 	        
 	        columnsResult = Arrays.asList(textArea.getText().split("\n"));
 	        executeOperation(columnsResult);		
