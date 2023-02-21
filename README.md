@@ -6,3 +6,6 @@ TO DO:
 - criar alguma estrutura que armazene o tipo de dado da coluna
 - refatorar o código para aproveitar a importação de csv + criação de tabela
 - mudar a forma de interação na aplicação das operações 
+- importar .dat
+- importar outros tipos de tabela
+- salvar a árvore
