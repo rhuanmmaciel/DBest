@@ -24,6 +24,10 @@ public abstract class Cell {
 		
 	}
 	
+	public void setJGraphCell(Object cell) {
+		this.cell = cell;
+	}
+	
 	public Cell getChild() {
 		return child;
 	}
@@ -35,11 +39,19 @@ public abstract class Cell {
 	public List<Cell> getParents() {
 		return parents;
 	}
-
+	
+	public void setStyle(String style) {
+		this.style = style;
+	}
+	
 	public String getStyle() {
 		return style;
 	}
-
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public String getName() {
 		return name;
 	}

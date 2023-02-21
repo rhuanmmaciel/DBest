@@ -14,6 +14,10 @@ public class TableCell extends Cell{
 	private Table table;
 	private Prototype prototype;
 	
+	public TableCell() {
+		super(null, null, null);
+	}
+	
 	public TableCell(String name, String style, Object cell, Table table, Prototype prototype){
 		
 		super(name, style, cell);
@@ -21,11 +25,27 @@ public class TableCell extends Cell{
 		this.prototype = prototype;
 		
 	}
-
+	
+	public TableCell(String name, String style, Table table, Prototype prototype){
+		
+		super(name, style, null);
+		this.table = table;
+		this.prototype = prototype;
+		
+	}
+	
+	public void setTable(Table table) {
+		this.table = table;
+	}
+	
 	public Table getTable() {
 		return table;
 	}
-
+	
+	public void setPrototype(Prototype prototype) {
+		this.prototype = prototype;
+	}
+	
 	public Prototype getPrototype() {
 		return prototype;
 	}

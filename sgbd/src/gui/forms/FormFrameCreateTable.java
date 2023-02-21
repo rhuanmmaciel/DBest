@@ -21,9 +21,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import sgbd.prototype.RowData;
-import util.DataToRowData;
-import util.ImportCSVFile;
+import entities.TableCell;
+import util.TableCreator;
 
 @SuppressWarnings("serial")
 public class FormFrameCreateTable extends JDialog implements ActionListener{
@@ -36,12 +35,13 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 	private JButton btnAddRow;
 	private JButton btnAddColumn;
 	private JTextField textFieldTableName;
+	private TableCell tableCell;
 	
-	public static void main() {
+	public static void main(TableCell tableCell) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormFrameCreateTable frame = new FormFrameCreateTable();
+					FormFrameCreateTable frame = new FormFrameCreateTable(tableCell);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,11 +50,12 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 		});
 	}
 
-	public FormFrameCreateTable() {
+	public FormFrameCreateTable(TableCell tableCell) {
 		
 		super((Window)null);
 		setModal(true);
 		
+		this.tableCell = tableCell;
 		model = new DefaultTableModel(); 
 		table = new JTable(model);
 		
@@ -227,9 +228,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 		
 		new FormFramePrimaryKey(lines);
 		lines.remove(0);
-		ImportCSVFile.reset();
-		List<RowData> rows = DataToRowData.getRowData(textFieldTableName.getText(), columnsName, lines);
-		ImportCSVFile.createTable(textFieldTableName.getText(), columnsName, rows);
+		TableCreator.createTable(tableCell, textFieldTableName.getText(), columnsName, lines);
 		dispose();
 		
 	}

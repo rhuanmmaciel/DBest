@@ -40,9 +40,7 @@ import gui.forms.FormFrameCreateTable;
 import gui.forms.operations.FormFrameJuncao;
 import gui.forms.operations.FormFrameProjecao;
 import gui.forms.operations.FormFrameSelecao;
-import sgbd.prototype.Prototype;
-import sgbd.table.Table;
-import util.ImportCSVFile;
+import util.ImportFile;
 
 @SuppressWarnings("serial")
 public class ActionClass extends JFrame implements ActionListener{
@@ -75,8 +73,7 @@ public class ActionClass extends JFrame implements ActionListener{
 	
 	private List<Cell> cells;
 	
-	private Prototype currentPrototype = null;
-	private Table currentTable = null;
+	private TableCell currentTableCell = null;
 	private JButton btnCreateTable;
 	
 	public ActionClass() {
@@ -169,8 +166,10 @@ public class ActionClass extends JFrame implements ActionListener{
 
 					newCell = graph.insertVertex(parent,null, name, e.getX(), e.getY(), 80, 30,style);
 					
+					if(!isOperation) currentTableCell.setJGraphCell(newCell);
+					
 					cells.add(isOperation ? new OperatorCell(name, style, newCell, currentType) :
-												new TableCell(name, style, newCell, currentTable, currentPrototype));
+												currentTableCell);
 					
 					createCell = false;
 					
@@ -292,11 +291,10 @@ public class ActionClass extends JFrame implements ActionListener{
 			
 		}else if(e.getSource() == btnImportCSV) {
 			
-			ImportCSVFile.importCSVFile();
-			String name = ImportCSVFile.getFileName();
-			currentTable = ImportCSVFile.getTable();
-			currentPrototype = ImportCSVFile.getPrototype();
-			assignVariables("tabela", name, false, null);
+			TableCell tableCell = new TableCell();
+			ImportFile.importCSVFile(tableCell);
+			assignVariables(tableCell.getStyle(), tableCell.getName(), false, null);
+			currentTableCell = tableCell;
 			
 		}else if(e.getSource() == tipoJuncao.getButton()) {
 			
@@ -304,10 +302,11 @@ public class ActionClass extends JFrame implements ActionListener{
 
 		}else if(e.getSource() == btnCreateTable) {
 			
-			new FormFrameCreateTable();
-			currentTable = ImportCSVFile.getTable();
-			currentPrototype = ImportCSVFile.getPrototype();
-			assignVariables("tabela", ImportCSVFile.getTableName(), false, null);
+			TableCell tableCell = new TableCell();
+			new FormFrameCreateTable(tableCell);
+			
+			assignVariables(tableCell.getStyle(), tableCell.getName(), false, null);
+			currentTableCell = tableCell;
 			
 		}
 			
