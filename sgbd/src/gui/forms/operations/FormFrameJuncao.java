@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 import com.mxgraph.model.mxCell;
 
 import entities.Cell;
+import entities.Column;
 import entities.OperatorCell;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.BlockNestedLoopJoin;
@@ -148,7 +149,11 @@ public class FormFrameJuncao extends JFrame implements ActionListener {
 		
 		operator.open();
 		    
-	    ((OperatorCell) cell).setOperator(operator, TableFormat.getRows(operator));
+		List<Column> columns = new ArrayList<>(parentCell1.getColumns());
+		columns.addAll(parentCell2.getColumns());
+		
+		cell.setColumns(columns);
+	    ((OperatorCell) cell).setOperator(operator, TableFormat.getRows(operator, cell.getColumns()));
 		    
 	    operator.close();
 			

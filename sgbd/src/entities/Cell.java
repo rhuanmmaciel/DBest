@@ -8,6 +8,7 @@ import util.FindRoots;
 
 public abstract class Cell {
 	
+	protected List<Column> columns;
 	private String style;
 	private String name;
 	private Object cell;
@@ -16,6 +17,7 @@ public abstract class Cell {
 	
 	public Cell(String name, String style, Object cell) {
 		
+		this.columns = new ArrayList<>();
 		this.parents = new ArrayList<>();
 		this.style = style;
 		this.name = name;
@@ -55,7 +57,11 @@ public abstract class Cell {
 	public String getName() {
 		return name;
 	}
-
+	
+	public List<Column> getColumns(){
+		return columns;
+	}
+	
 	public Object getCell() {
 		return cell;
 	}
@@ -80,5 +86,6 @@ public abstract class Cell {
 	public abstract Operator getData();
 	public abstract List<String> getColumnsName();
 	public abstract List<List<String>> getContent();
+	public abstract void setColumns(List<Column> columns);
 	
 }

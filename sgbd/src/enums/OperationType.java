@@ -1,6 +1,6 @@
 package enums;
 
-public enum OperationEnums {
+public enum OperationType {
 
 	SELECAO,
 	PROJECAO,

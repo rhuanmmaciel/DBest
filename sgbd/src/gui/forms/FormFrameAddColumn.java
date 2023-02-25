@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -18,6 +19,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import entities.Column;
+import enums.ColumnDataType;
+
 @SuppressWarnings("serial")
 public class FormFrameAddColumn extends JDialog implements ActionListener{
 
@@ -28,12 +32,13 @@ public class FormFrameAddColumn extends JDialog implements ActionListener{
 	private JButton btnReady;
 	private JButton btnCancel;
 	private JLabel lblColumnName;
+	private List<Column> columns;
 	
-	public static void main(DefaultTableModel table) {
+	public static void main(DefaultTableModel table, List<Column> columns) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormFrameAddColumn frame = new FormFrameAddColumn(table);
+					FormFrameAddColumn frame = new FormFrameAddColumn(table, columns);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,11 +47,12 @@ public class FormFrameAddColumn extends JDialog implements ActionListener{
 		});
 	}
 
-	public FormFrameAddColumn(DefaultTableModel table) {
+	public FormFrameAddColumn(DefaultTableModel table, List<Column> columns) {
 		
 		super((Window)null);
 		setModal(true);
 		
+		this.columns = columns;
 		this.table = table;
 		
 		setBounds(100, 100, 312, 263);
@@ -68,7 +74,7 @@ public class FormFrameAddColumn extends JDialog implements ActionListener{
 		
 		JLabel lblTypeq = new JLabel("Tipo de dado");
 		
-		String[] options = {"Inteiro", "Ponto flutuante", "Caracter", "String", "Valor booleano"};
+		String[] options = {"Integer", "Float", "Character", "String", "Boolean"};
 		comboBox = new JComboBox<Object>(options);
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -134,8 +140,39 @@ public class FormFrameAddColumn extends JDialog implements ActionListener{
 			}
 			
 			if(isAllRight) {
-
+				
+				ColumnDataType type;
+				
+				String itemSelected = comboBox.getSelectedItem().toString();
+				
+				if(itemSelected == "Integer") {
+					
+					type = ColumnDataType.INTEGER;
+					
+				}else if(itemSelected == "Float") {
+					
+					type = ColumnDataType.FLOAT;
+					
+				}else if(itemSelected == "String") {
+					
+					type = ColumnDataType.STRING;
+					
+				}else if(itemSelected == "Character") {
+					
+					type = ColumnDataType.CHARACTER;
+					
+				}else if(itemSelected == "Boolean") {
+					
+					type = ColumnDataType.BOOLEAN;
+					
+				}else {
+					
+					type = ColumnDataType.NONE;
+					
+				}
+				
 				table.addColumn(txtColumnName.getText().toUpperCase());
+				columns.add(new Column(txtColumnName.getText(), type));
 				dispose();
 			
 			}

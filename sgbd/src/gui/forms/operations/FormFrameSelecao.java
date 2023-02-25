@@ -163,7 +163,8 @@ public class FormFrameSelecao extends JFrame implements ActionListener {
 
 	    operator.open();
 	    
-	    ((OperatorCell) cell).setOperator(operator, TableFormat.getRows(operator));
+	    cell.setColumns(parentCell.getColumns());
+	    ((OperatorCell) cell).setOperator(operator, TableFormat.getRows(operator, cell.getColumns()));
 	    
         operator.close();
 		

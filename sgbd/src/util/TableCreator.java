@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entities.TableCell;
+import enums.ColumnDataType;
 import gui.forms.FormFramePrimaryKey;
 import sgbd.prototype.Column;
 import sgbd.prototype.Prototype;
@@ -13,16 +14,17 @@ import sgbd.table.Table;
 
 public class TableCreator {
 	
-	private static List<RowData> getRowData(String tableName, List<String> columnsName, List<List<String>> lines){
+	private static List<RowData> getRowData(String tableName, List<entities.Column> columns, List<List<String>> lines){
 		
 		List<RowData> rows = new ArrayList<>();
 		
-		for(int i = 0; i < columnsName.size(); i++) {
+		for(int i = 0; i < columns.size(); i++) {
 			
-			String name = columnsName.get(i);
+			String name = columns.get(i).getName();
 			name += "."+tableName;
-			columnsName.remove(i);
-			columnsName.add(i, name);
+			ColumnDataType type = columns.get(i).getType();
+			columns.remove(i);
+			columns.add(i, new entities.Column(name, type));
 			
 		}
 		
@@ -31,19 +33,20 @@ public class TableCreator {
 
 			RowData rowData = new RowData();
 			int i = 0;
+			
 			for(String data : line) {
 				
-				if(FindType.isInt(data)) {
+				if(columns.get(i).getType() == ColumnDataType.INTEGER) {
 					
-					rowData.setInt(columnsName.get(i), Integer.parseInt(data));
+					rowData.setInt(columns.get(i).getName(), Integer.parseInt(data));
 			
-				}else if(FindType.isFloat(data)) {
+				}else if(columns.get(i).getType() == ColumnDataType.FLOAT) {
 					
-					rowData.setFloat(columnsName.get(i), Float.parseFloat(data));
+					rowData.setFloat(columns.get(i).getName(), Float.parseFloat(data));
 					
 				}else {
 					
-					rowData.setString(columnsName.get(i), data);
+					rowData.setString(columns.get(i).getName(), data);
 					
 				}
 				i++;
@@ -57,31 +60,52 @@ public class TableCreator {
 		}
 		
 		if(FormFramePrimaryKey.getValues()[0] != null)			
-			columnsName.add(FormFramePrimaryKey.getColumnName()+"."+tableName);
+			columns.add(new entities.Column(FormFramePrimaryKey.getColumnName()+"."+tableName, ColumnDataType.INTEGER));
 		
 		return rows;
 		
 	}
 	
-	public static void createTable(TableCell tableCell, String tableName, List<String> columnsName, List<List<String>> lines) {
+	public static void createTable(TableCell tableCell, String tableName, List<entities.Column> columns, List<List<String>> lines) {
 		
-		List<RowData> rows = new ArrayList<>(getRowData(tableName, columnsName, lines));
+		List<RowData> rows = new ArrayList<>(getRowData(tableName, columns, lines));
 		
 		Prototype prototype = new Prototype();
 		 
 		String primaryKeyName = FormFramePrimaryKey.getColumnName();
 		
 		int index = -1;
-		for(int i = 0; i < columnsName.size(); i++) {
+		for(int i = 0; i < columns.size(); i++) {
 			
-			if(columnsName.get(i).contains(primaryKeyName) && index < 0) index = i;
+			if(columns.get(i).getName().toLowerCase().contains(primaryKeyName.toLowerCase()) && index < 0) index = i;
 			
 		}
 				
-		prototype.addColumn(columnsName.get(index), 15, Column.PRIMARY_KEY);
-		columnsName.remove(index);
+		prototype.addColumn(columns.get(index).getName(), 15, Column.PRIMARY_KEY);
+		entities.Column primaryKeyColumn = columns.get(index);
+		columns.remove(index);
 		
-		columnsName.forEach(x -> {prototype.addColumn(x, 100, Column.NONE);});
+		for(entities.Column column: columns) {
+			
+			if(column.getType() == ColumnDataType.INTEGER) {
+				
+				prototype.addColumn(column.getName(), 100, Column.SIGNED_INTEGER_COLUMN);		
+			
+			}else if(column.getType() == ColumnDataType.FLOAT) {
+				
+				prototype.addColumn(column.getName(), 100, Column.FLOATING_POINT);	
+				
+			}else if(column.getType() == ColumnDataType.STRING) {
+				
+				prototype.addColumn(column.getName(), 100, Column.STRING);	
+				
+			}else {
+				
+				prototype.addColumn(column.getName(), 100, Column.NONE);	
+				
+			}
+			
+		}
 		
 	    Table table = SimpleTable.openTable(tableName, prototype);
 	    table.open();
@@ -91,6 +115,8 @@ public class TableCreator {
 	    tableCell.setStyle("tabela");
 	    tableCell.setTable(table);
 	    tableCell.setPrototype(prototype);
+	    columns.add(primaryKeyColumn);
+	    tableCell.setColumns(columns);
 	    
 	}
 	

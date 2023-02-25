@@ -10,12 +10,14 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import entities.Column;
 import entities.TableCell;
+import gui.forms.FormFrameColumnType;
 import gui.forms.FormFramePrimaryKey;
 
 public class ImportFile {
 	
-	public static void importCSVFile(TableCell tableCell){
+	public static void csv(TableCell tableCell){
 		
 		JFileChooser fileUpload = new JFileChooser();
 		//fileUpload.showOpenDialog(null);
@@ -29,15 +31,16 @@ public class ImportFile {
 			StringBuilder fileName = new StringBuilder();
 			List<String> columnsName = new ArrayList<>();
 			List<List<String>> lines = new ArrayList<>();
+			List<Column> columns = new ArrayList<>();
 			
-			readFile(fileUpload, fileName, columnsName, lines);
-			TableCreator.createTable(tableCell, fileName.toString(), columnsName, lines);
+			readFile(fileUpload, fileName, columnsName, lines, columns);
+			TableCreator.createTable(tableCell, fileName.toString(), columns, lines);
 			
 		}
 		
 	}
 	
-	private static void readFile(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines){
+	private static void readFile(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns){
 		
 		try(BufferedReader br = new BufferedReader(new FileReader(fileUpload.getSelectedFile().getAbsolutePath()))){
 			
@@ -56,6 +59,7 @@ public class ImportFile {
 			aux.add(columnsName);
 			aux.addAll(lines);
 			new FormFramePrimaryKey(aux);
+			new FormFrameColumnType(columns, columnsName);
 			
 		}catch(IOException e) {
 			

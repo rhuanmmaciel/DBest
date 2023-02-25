@@ -27,7 +27,7 @@ import com.mxgraph.view.mxStylesheet;
 import entities.Cell;
 import entities.OperatorCell;
 import entities.TableCell;
-import enums.OperationEnums;
+import enums.OperationType;
 import gui.ResultFrame;
 import gui.buttons.Diferenca;
 import gui.buttons.Juncao;
@@ -53,7 +53,7 @@ public class ActionClass extends JFrame implements ActionListener{
 	private String name;
 	private Object jCell;
 	private Boolean isOperation;
-	private OperationEnums currentType;
+	private OperationType currentType;
 	
 	private Projecao tipoProjecao;
 	private Selecao tipoSelecao;
@@ -166,7 +166,11 @@ public class ActionClass extends JFrame implements ActionListener{
 
 					newCell = graph.insertVertex(parent,null, name, e.getX(), e.getY(), 80, 30,style);
 					
-					if(!isOperation) currentTableCell.setJGraphCell(newCell);
+					if(!isOperation) {
+						
+						currentTableCell.setJGraphCell(newCell);
+					
+					}
 					
 					cells.add(isOperation ? new OperatorCell(name, style, newCell, currentType) :
 												currentTableCell);
@@ -194,11 +198,11 @@ public class ActionClass extends JFrame implements ActionListener{
 						
 						if(cell instanceof OperatorCell) {
 							
-							if(((OperatorCell)cell).getType() == OperationEnums.PROJECAO) new FormFrameProjecao(jCell, cells);
+							if(((OperatorCell)cell).getType() == OperationType.PROJECAO) new FormFrameProjecao(jCell, cells);
 								
-							else if(((OperatorCell)cell).getType() == OperationEnums.SELECAO) new FormFrameSelecao(jCell, cells);
+							else if(((OperatorCell)cell).getType() == OperationType.SELECAO) new FormFrameSelecao(jCell, cells);
 								
-							else if(((OperatorCell)cell).getType() == OperationEnums.JUNCAO && cell.getParents().size() == 2) new FormFrameJuncao(jCell, cells);
+							else if(((OperatorCell)cell).getType() == OperationType.JUNCAO && cell.getParents().size() == 2) new FormFrameJuncao(jCell, cells);
 							
 						}
 						
@@ -230,6 +234,7 @@ public class ActionClass extends JFrame implements ActionListener{
 				Cell cell = jCell != null ? cells.stream().filter(x -> x.getCell().equals((mxCell)jCell)).findFirst().orElse(null) : null;
 				
 				if (e.getKeyCode() == KeyEvent.VK_S && jCell != null) {
+
 					new ResultFrame(cell.getContent());
 				
 				}else if(e.getKeyCode() == KeyEvent.VK_DELETE && jCell != null) {
@@ -246,7 +251,7 @@ public class ActionClass extends JFrame implements ActionListener{
 			
 	}
 
-	private void assignVariables(String styleVar, String nameVar, boolean isOperation, OperationEnums currentType) {
+	private void assignVariables(String styleVar, String nameVar, boolean isOperation, OperationType currentType) {
 		
 		createCell = true;
 		newCell = null;
@@ -263,27 +268,27 @@ public class ActionClass extends JFrame implements ActionListener{
 		
 		if(e.getSource() == tipoProjecao.getButton()) {
 			
-			assignVariables("projecao","π  projecao", true, OperationEnums.PROJECAO);
+			assignVariables("projecao","π  projecao", true, OperationType.PROJECAO);
 			
 		}else if(e.getSource() == tipoSelecao.getButton() ) {
 			
-			assignVariables("selecao","σ  selecao", true, OperationEnums.SELECAO);
+			assignVariables("selecao","σ  selecao", true, OperationType.SELECAO);
 			
 		}else if(e.getSource() == tipoProdutoCartesiano.getButton()) {
 			
-			assignVariables("produtoCartesiano","✕  produto cartesiano", true, OperationEnums.PRODUTO_CARTESIANO);
+			assignVariables("produtoCartesiano","✕  produto cartesiano", true, OperationType.PRODUTO_CARTESIANO);
 			
 		}else if(e.getSource() == tipoUniao.getButton()) {
 			
-			assignVariables("uniao","∪  uniao", true, OperationEnums.UNIAO);
+			assignVariables("uniao","∪  uniao", true, OperationType.UNIAO);
 			
 		}else if(e.getSource() == tipoDiferenca.getButton()) {
 			
-			assignVariables("diferenca","-  diferenca", true, OperationEnums.DIFERENCA);
+			assignVariables("diferenca","-  diferenca", true, OperationType.DIFERENCA);
 			
 		}else if(e.getSource() == tipoRenomeacao.getButton()) {
 			
-			assignVariables("renomeacao","ρ  renomeacao", true, OperationEnums.RENOMEACAO);
+			assignVariables("renomeacao","ρ  renomeacao", true, OperationType.RENOMEACAO);
 			
 		}else if(e.getSource() == edgeButton) {
 			
@@ -292,13 +297,13 @@ public class ActionClass extends JFrame implements ActionListener{
 		}else if(e.getSource() == btnImportCSV) {
 			
 			TableCell tableCell = new TableCell();
-			ImportFile.importCSVFile(tableCell);
+			ImportFile.csv(tableCell);
 			assignVariables(tableCell.getStyle(), tableCell.getName(), false, null);
 			currentTableCell = tableCell;
 			
 		}else if(e.getSource() == tipoJuncao.getButton()) {
 			
-			assignVariables("juncao","|X| juncao", true, OperationEnums.JUNCAO);
+			assignVariables("juncao","|X| juncao", true, OperationType.JUNCAO);
 
 		}else if(e.getSource() == btnCreateTable) {
 			

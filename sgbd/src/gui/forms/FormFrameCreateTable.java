@@ -21,6 +21,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import entities.Column;
 import entities.TableCell;
 import util.TableCreator;
 
@@ -36,6 +37,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 	private JButton btnAddColumn;
 	private JTextField textFieldTableName;
 	private TableCell tableCell;
+	private List<Column> columns;
 	
 	public static void main(TableCell tableCell) {
 		EventQueue.invokeLater(new Runnable() {
@@ -55,6 +57,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 		super((Window)null);
 		setModal(true);
 		
+		columns = new ArrayList<>();
 		this.tableCell = tableCell;
 		model = new DefaultTableModel(); 
 		table = new JTable(model);
@@ -157,7 +160,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 		}
 		if(e.getSource() == btnAddColumn) {
 			
-			new FormFrameAddColumn(this.model);
+			new FormFrameAddColumn(this.model, columns);
 			
 		}
 		if(e.getSource() == btnAddRow) {
@@ -228,7 +231,8 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 		
 		new FormFramePrimaryKey(lines);
 		lines.remove(0);
-		TableCreator.createTable(tableCell, textFieldTableName.getText(), columnsName, lines);
+		
+		TableCreator.createTable(tableCell, textFieldTableName.getText(), columns, lines);
 		dispose();
 		
 	}

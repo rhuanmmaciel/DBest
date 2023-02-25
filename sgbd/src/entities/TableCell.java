@@ -18,22 +18,6 @@ public class TableCell extends Cell{
 		super(null, null, null);
 	}
 	
-	public TableCell(String name, String style, Object cell, Table table, Prototype prototype){
-		
-		super(name, style, cell);
-		this.table = table;
-		this.prototype = prototype;
-		
-	}
-	
-	public TableCell(String name, String style, Table table, Prototype prototype){
-		
-		super(name, style, null);
-		this.table = table;
-		this.prototype = prototype;
-		
-	}
-	
 	public void setTable(Table table) {
 		this.table = table;
 	}
@@ -58,7 +42,7 @@ public class TableCell extends Cell{
 	
 	public List<List<String>> getContent(){
 		
-		return TableFormat.getRows(new TableScan(table, getColumnsName()));
+		return TableFormat.getRows(new TableScan(table, getColumnsName()), getColumns());
 		
 	}
 	
@@ -66,6 +50,13 @@ public class TableCell extends Cell{
 		
 		return new TableScan(table);
 	
+	}
+
+	@Override
+	public void setColumns(List<Column> columns) {
+		
+		this.columns = columns;
+		
 	}
 	
 }
