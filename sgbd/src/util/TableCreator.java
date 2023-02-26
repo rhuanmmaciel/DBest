@@ -5,7 +5,7 @@ import java.util.List;
 
 import entities.TableCell;
 import enums.ColumnDataType;
-import gui.forms.FormFramePrimaryKey;
+import gui.frames.forms.FormFramePrimaryKey;
 import sgbd.prototype.Column;
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;

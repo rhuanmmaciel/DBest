@@ -2,12 +2,12 @@ package entities;
 
 import java.util.List;
 
+import entities.util.Columns;
+import entities.util.TableFormat;
 import sgbd.prototype.Prototype;
 import sgbd.query.Operator;
 import sgbd.query.sourceop.TableScan;
 import sgbd.table.Table;
-import util.Columns;
-import util.TableFormat;
 
 public class TableCell extends Cell{
 
@@ -52,7 +52,6 @@ public class TableCell extends Cell{
 	
 	}
 
-	@Override
 	public void setColumns(List<Column> columns) {
 		
 		this.columns = columns;

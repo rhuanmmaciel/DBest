@@ -28,7 +28,6 @@ import entities.Cell;
 import entities.OperatorCell;
 import entities.TableCell;
 import enums.OperationType;
-import gui.ResultFrame;
 import gui.buttons.Diferenca;
 import gui.buttons.Juncao;
 import gui.buttons.ProdutoCartesiano;
@@ -36,11 +35,12 @@ import gui.buttons.Projecao;
 import gui.buttons.Renomeacao;
 import gui.buttons.Selecao;
 import gui.buttons.Uniao;
-import gui.forms.FormFrameCreateTable;
-import gui.forms.operations.FormFrameJuncao;
-import gui.forms.operations.FormFrameProjecao;
-import gui.forms.operations.FormFrameSelecao;
-import util.ImportFile;
+import gui.frames.ResultFrame;
+import gui.frames.forms.FormFrameCreateTable;
+import gui.frames.forms.FormFrameImportFile;
+import gui.frames.forms.operations.FormFrameJuncao;
+import gui.frames.forms.operations.FormFrameProjecao;
+import gui.frames.forms.operations.FormFrameSelecao;
 
 @SuppressWarnings("serial")
 public class ActionClass extends JFrame implements ActionListener{
@@ -68,7 +68,7 @@ public class ActionClass extends JFrame implements ActionListener{
 	private Object newParent;
 	private JPanel edgePanel;
 	
-	private JButton btnImportCSV;
+	private JButton btnImport;
 	private JToolBar toolBar;
 	
 	private List<Cell> cells;
@@ -137,10 +137,10 @@ public class ActionClass extends JFrame implements ActionListener{
 		btnCreateTable.setHorizontalAlignment(SwingConstants.LEFT);
 		btnCreateTable.addActionListener(this);
 	    
-		btnImportCSV = new JButton("Importar .csv");
-		toolBar.add(btnImportCSV);
-		btnImportCSV.setHorizontalAlignment(SwingConstants.LEFT);
-		btnImportCSV.addActionListener(this);
+		btnImport = new JButton("Importar arquivo");
+		toolBar.add(btnImport);
+		btnImport.setHorizontalAlignment(SwingConstants.LEFT);
+		btnImport.addActionListener(this);
 	    
 		getContentPane().add(containerPanel,BorderLayout.EAST);
 
@@ -294,10 +294,10 @@ public class ActionClass extends JFrame implements ActionListener{
 			
 			createEdge = true;
 			
-		}else if(e.getSource() == btnImportCSV) {
+		}else if(e.getSource() == btnImport) {
 			
 			TableCell tableCell = new TableCell();
-			ImportFile.csv(tableCell);
+			new FormFrameImportFile(tableCell);
 			assignVariables(tableCell.getStyle(), tableCell.getName(), false, null);
 			currentTableCell = tableCell;
 			

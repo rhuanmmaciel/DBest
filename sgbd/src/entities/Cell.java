@@ -3,8 +3,8 @@ package entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import entities.util.FindRoots;
 import sgbd.query.Operator;
-import util.FindRoots;
 
 public abstract class Cell {
 	
@@ -86,6 +86,5 @@ public abstract class Cell {
 	public abstract Operator getData();
 	public abstract List<String> getColumnsName();
 	public abstract List<List<String>> getContent();
-	public abstract void setColumns(List<Column> columns);
 	
 }

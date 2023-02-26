@@ -12,16 +12,28 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entities.Column;
 import entities.TableCell;
-import gui.forms.FormFrameColumnType;
-import gui.forms.FormFramePrimaryKey;
+import enums.FileType;
+import gui.frames.forms.FormFrameColumnType;
+import gui.frames.forms.FormFramePrimaryKey;
 
 public class ImportFile {
 	
-	public static void csv(TableCell tableCell){
+	public ImportFile(TableCell tableCell, FileType fileType){
 		
 		JFileChooser fileUpload = new JFileChooser();
-		//fileUpload.showOpenDialog(null);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV files", "csv");
+		
+		FileNameExtensionFilter filter = null; 
+		
+		if(fileType == FileType.CSV) {
+			
+			filter = new FileNameExtensionFilter("CSV files", "csv");
+			
+		}else if(fileType == FileType.EXCEL) {
+			
+			filter = new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
+			
+		}
+		
 		fileUpload.setFileFilter(filter);
 		
 		int res = fileUpload.showOpenDialog(null);
@@ -33,14 +45,32 @@ public class ImportFile {
 			List<List<String>> lines = new ArrayList<>();
 			List<Column> columns = new ArrayList<>();
 			
-			readFile(fileUpload, fileName, columnsName, lines, columns);
+			if(fileType == FileType.CSV) {
+			
+				csv(fileUpload, fileName, columnsName, lines, columns);
+			
+			}else if(fileType == FileType.EXCEL) {
+				
+				excel(fileUpload, fileName, columnsName, lines, columns);
+				
+			}
+			
 			TableCreator.createTable(tableCell, fileName.toString(), columns, lines);
+			
+		}else {
+			
+			tableCell = null;
 			
 		}
 		
 	}
 	
-	private static void readFile(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns){
+	private static void excel(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns) {
+		
+		
+	}
+	
+	private static void csv(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns){
 		
 		try(BufferedReader br = new BufferedReader(new FileReader(fileUpload.getSelectedFile().getAbsolutePath()))){
 			
