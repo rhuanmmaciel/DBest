@@ -66,7 +66,7 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 		btnCancel = new JButton("Cancelar");
 		btnCancel.addActionListener(this);
 		
-		btnXlsXlsxOdt = new JButton(".xls  .xlsx  .odt");
+		btnXlsXlsxOdt = new JButton(".xls  .xlsx");
 		btnXlsXlsxOdt.addActionListener(this);
 		
 		btnSql= new JButton(".sql");
@@ -87,30 +87,30 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(34)
 					.addComponent(lblPickFileExtension)
-					.addContainerGap(47, Short.MAX_VALUE))
+					.addContainerGap(0, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(116)
-					.addComponent(btnSql, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(116, Short.MAX_VALUE))
+					.addGap(contentPane.getWidth()/2 + 100)
+					.addComponent(btnSql, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(0, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(69)
-					.addComponent(btnXlsXlsxOdt)
-					.addContainerGap(99, Short.MAX_VALUE))
+					.addGap(contentPane.getWidth()/2 + 100)
+					.addComponent(btnCsv, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(0, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(110)
-					.addComponent(btnCsv, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(121, Short.MAX_VALUE))
+					.addGap(contentPane.getWidth()/2 + 100)
+					.addComponent(btnXlsXlsxOdt, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(0, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(lblPickFileExtension)
-					.addGap(23)
+					.addGap(20)
 					.addComponent(btnCsv)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnXlsXlsxOdt)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnSql)
 					.addPreferredGap(ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
 					.addComponent(btnCancel))

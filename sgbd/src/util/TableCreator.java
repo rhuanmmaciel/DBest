@@ -38,7 +38,7 @@ public class TableCreator {
 				
 				if(columns.get(i).getType() == ColumnDataType.INTEGER) {
 					
-					rowData.setInt(columns.get(i).getName(), Integer.parseInt(data));
+					rowData.setInt(columns.get(i).getName(), (int)(Double.parseDouble(data)));
 			
 				}else if(columns.get(i).getType() == ColumnDataType.FLOAT) {
 					

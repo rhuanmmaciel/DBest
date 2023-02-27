@@ -1,14 +1,21 @@
 package util;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import entities.Column;
 import entities.TableCell;
@@ -65,12 +72,89 @@ public class ImportFile {
 		
 	}
 	
-	private static void excel(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns) {
+	private void excel(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns) {
 		
+		try {
+		
+			FileInputStream file = new FileInputStream(fileUpload.getSelectedFile().getAbsolutePath());
+			
+			fileName.append(fileUpload.getSelectedFile().getName().toUpperCase().substring(0, fileUpload.getSelectedFile().getName().indexOf(".")));
+			
+			XSSFWorkbook workbook = new XSSFWorkbook(file);
+			XSSFSheet sheet = workbook.getSheetAt(0);
+			
+			Iterator<Row> rowIterator = sheet.iterator();
+			
+			Row firstRow = rowIterator.next();
+			Iterator<Cell> firstRowCellIterator = firstRow.cellIterator();
+			
+			while(firstRowCellIterator.hasNext()) {
+				
+				Cell cell = firstRowCellIterator.next();
+				columnsName.add(cell.getStringCellValue().replace("\"", "").replace(" ", ""));
+				
+			}
+			
+			while (rowIterator.hasNext()) {
+				
+				Row row = rowIterator.next();
+				Iterator<Cell> cellIterator = row.cellIterator();
+			    
+				List<String> line = new ArrayList<>();
+				
+			    while (cellIterator.hasNext()) {
+			    	
+			    	Cell cell = cellIterator.next();
+			    	switch (cell.getCellTypeEnum()) {
+			        	
+				    	case NUMERIC:
+				        	
+				        	line.add(String.valueOf(cell.getNumericCellValue()));
+				        	break;
+				        	
+				        case STRING:
+				        		
+				        	line.add(cell.getStringCellValue());
+				        	break;
+				        	
+						case BLANK:
+						case BOOLEAN:
+						case ERROR:
+						case FORMULA:
+						case _NONE:
+				        	
+				        default:
+							
+				        	System.out.println("Null");
+				        	break;
+			    	
+			    	}
+			    }
+			    
+			    lines.add(line);
+			    
+			    System.out.println("");
+			
+			}
+			    
+            file.close();
+            workbook.close();
+            
+			List<List<String>> aux = new ArrayList<>();
+			aux.add(columnsName);
+			aux.addAll(lines);
+			new FormFramePrimaryKey(aux);
+			new FormFrameColumnType(columns, columnsName);
+			
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		
+		}
 		
 	}
 	
-	private static void csv(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns){
+	private void csv(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns){
 		
 		try(BufferedReader br = new BufferedReader(new FileReader(fileUpload.getSelectedFile().getAbsolutePath()))){
 			

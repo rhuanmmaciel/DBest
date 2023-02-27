@@ -32,13 +32,13 @@ public class FormFrameColumnType extends JDialog implements ActionListener {
 	private List<Column> columns;
 	private List<JLabel> labels;
 	private List<JComboBox<String>> comboBoxes;
-	private List<String> data;	
+	private List<String> columnsName;	
 	
-	public static void main(List<Column> columns, List<String> data) {
+	public static void main(List<Column> columns, List<String> columnsName) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormFrameColumnType frame = new FormFrameColumnType(columns, data);
+					FormFrameColumnType frame = new FormFrameColumnType(columns, columnsName);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,13 +47,13 @@ public class FormFrameColumnType extends JDialog implements ActionListener {
 		});
 	}
 	
-	public FormFrameColumnType(List<Column> columns, List<String> data) {
+	public FormFrameColumnType(List<Column> columns, List<String> columnsName) {
 		
 		super((Window)null);
 		setModal(true);
 		
 		this.columns = columns; 
-		this.data = data;
+		this.columnsName = columnsName;
 			
 		initializeGUI();
 		
@@ -70,7 +70,7 @@ public class FormFrameColumnType extends JDialog implements ActionListener {
 		Dimension dim = new Dimension(100, 10);
 
 		JPanel panel = new JPanel(new GridLayout(0, 2));
-		for (String elemento : data) {
+		for (String elemento : columnsName) {
 		    
 			JLabel label = new JLabel(elemento);
 		    JComboBox<String> comboBox = new JComboBox<>(new String[]{"Integer", "Float", "Character", "String", "Boolean"});
