@@ -14,8 +14,8 @@ public class TableCell extends Cell{
 	private Table table;
 	private Prototype prototype;
 	
-	public TableCell() {
-		super(null, null, null);
+	public TableCell(int length, int width) {
+		super(null, null, null, 0, 0, length, width);
 	}
 	
 	public void setTable(Table table) {

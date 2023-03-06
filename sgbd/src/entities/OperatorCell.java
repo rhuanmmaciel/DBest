@@ -15,9 +15,9 @@ public class OperatorCell extends Cell{
 	private List<List<String>> content;
 	private OperationType type;
 	
-	public OperatorCell(String name, String style, Object cell, OperationType type) {
+	public OperatorCell(String name, String style, Object cell, OperationType type, int x,int y,int length,int width) {
 	
-		super(name, style, cell);
+		super(name, style, cell, x, y, length, width);
 		this.operator = null;
 		this.type = type;
 		
