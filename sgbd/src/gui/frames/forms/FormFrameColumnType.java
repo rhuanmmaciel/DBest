@@ -73,7 +73,7 @@ public class FormFrameColumnType extends JDialog implements ActionListener {
 		for (String elemento : columnsName) {
 		    
 			JLabel label = new JLabel(elemento);
-		    JComboBox<String> comboBox = new JComboBox<>(new String[]{"Integer", "Float", "Character", "String", "Boolean"});
+		    JComboBox<String> comboBox = new JComboBox<>(new String[]{"None", "Integer", "Float", "Character", "String", "Boolean"});
 		    labels.add(label);
 		    comboBoxes.add(comboBox);
 		    
@@ -142,7 +142,11 @@ public class FormFrameColumnType extends JDialog implements ActionListener {
 			int i = 0;
 			for(JLabel column : labels) {
 				
-				if(comboBoxes.get(i).getSelectedItem().toString() == "Integer") {
+				if(comboBoxes.get(i).getSelectedItem().toString() == "None") {
+					
+					columns.add(new Column(column.getText(), ColumnDataType.NONE));
+					
+				}else if(comboBoxes.get(i).getSelectedItem().toString() == "Integer") {
 				
 					columns.add(new Column(column.getText(), ColumnDataType.INTEGER));
 				

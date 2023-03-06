@@ -4,6 +4,7 @@ public enum FileType {
 
 	CSV,
 	EXCEL,
-	SQL;
+	SQL,
+	DAT;
 	
 }

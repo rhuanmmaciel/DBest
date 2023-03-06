@@ -38,9 +38,9 @@ public class ImportFile {
 		}else if(fileType == FileType.EXCEL) {
 			
 			filter = new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
-			
-		}
 		
+		}
+			
 		fileUpload.setFileFilter(filter);
 		
 		int res = fileUpload.showOpenDialog(null);
@@ -105,7 +105,7 @@ public class ImportFile {
 			    while (cellIterator.hasNext()) {
 			    	
 			    	Cell cell = cellIterator.next();
-			    	switch (cell.getCellTypeEnum()) {
+			    	switch (cell.getCellType()) {
 			        	
 				    	case NUMERIC:
 				        	
@@ -118,6 +118,9 @@ public class ImportFile {
 				        	break;
 				        	
 						case BLANK:
+							
+							line.add("");
+							
 						case BOOLEAN:
 						case ERROR:
 						case FORMULA:
@@ -125,7 +128,6 @@ public class ImportFile {
 				        	
 				        default:
 							
-				        	System.out.println("Null");
 				        	break;
 			    	
 			    	}
@@ -133,8 +135,6 @@ public class ImportFile {
 			    
 			    lines.add(line);
 			    
-			    System.out.println("");
-			
 			}
 			    
             file.close();

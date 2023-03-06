@@ -88,6 +88,7 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
+		
 		table.setShowHorizontalLines(true);
 	    table.setGridColor(Color.blue);
 	    table.setColumnSelectionAllowed(true);
@@ -184,15 +185,14 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 		
 		if(createColumn) {
 			
-			name = "Chave";
+			name = "Id(PK)";
 			for(int i = 0; i < table.getRowCount(); i++) {
 				
-				values[i] = i;
+				values[i] = i + 1;
 				
 			}
 			
-		}
-		if(!createColumn) {
+		}else{
 			
 			name = table.getColumnName(table.getSelectedColumn());
 			for(int i = 0; i < table.getRowCount(); i++) {

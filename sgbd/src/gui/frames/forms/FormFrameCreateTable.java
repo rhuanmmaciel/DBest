@@ -35,6 +35,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 	private JButton btnCancel;
 	private JButton btnAddRow;
 	private JButton btnAddColumn;
+	private JButton btnRandomData;
 	private JTextField textFieldTableName;
 	private TableCell tableCell;
 	private List<Column> columns;
@@ -92,31 +93,38 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 		
 		btnAddRow = new JButton("Adicionar linha");
 		btnAddRow.addActionListener(this);
+		btnAddRow.setEnabled(false);
 		
 		textFieldTableName = new JTextField();
 		textFieldTableName.setColumns(10);
 		
 		JLabel lblTableName = new JLabel("Nome da tabela:");
 		
+		btnRandomData = new JButton("Gerar dados aleatórios");
+		btnRandomData.addActionListener(this);
+		btnRandomData.setEnabled(false);
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(37)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lblNewLabel)
+							.addGap(303)
+							.addComponent(lblTableName)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(textFieldTableName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addContainerGap())
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addComponent(btnAddColumn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addGap(18)
-								.addComponent(btnAddRow)
-								.addGap(217)
-								.addComponent(lblTableName)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(textFieldTableName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addGap(632))
+								.addComponent(btnAddRow)
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addComponent(btnRandomData)
+								.addGap(981))
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 									.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1171, GroupLayout.PREFERRED_SIZE)
@@ -130,8 +138,15 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblNewLabel)
-					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblNewLabel)
+								.addComponent(lblTableName))
+							.addGap(18))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(textFieldTableName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)))
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
@@ -139,8 +154,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(btnAddColumn)
 								.addComponent(btnAddRow)
-								.addComponent(textFieldTableName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblTableName))
+								.addComponent(btnRandomData))
 							.addGap(55))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(71)
@@ -174,13 +188,16 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 		}
 		if(e.getSource() == btnAddRow) {
 			
-			if(table.getColumnCount() > 0)
-				model.insertRow(0,new Object[]{});
-			else
-				JOptionPane.showMessageDialog(null, "Não é possível adicionar linhas sem colunas já existentes!", "Erro", JOptionPane.ERROR_MESSAGE);
-			
+			model.insertRow(0,new Object[]{});
 			
 		}
+		if(e.getSource() == btnRandomData) {
+			
+			new FormFrameRandomData(columns, model, table);
+			
+		}
+		btnAddRow.setEnabled(table.getColumnCount() > 0);
+		btnRandomData.setEnabled(table.getRowCount() > 0);
 		
 	}	
 	

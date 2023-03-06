@@ -83,7 +83,7 @@ public class FormFrameAddColumn extends JDialog implements ActionListener{
 		
 		JLabel lblTypeq = new JLabel("Tipo de dado");
 		
-		String[] options = {"Integer", "Float", "Character", "String", "Boolean"};
+		String[] options = {"None", "Integer", "Float", "Character", "String", "Boolean"};
 		comboBox = new JComboBox<Object>(options);
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -154,7 +154,11 @@ public class FormFrameAddColumn extends JDialog implements ActionListener{
 				
 				String itemSelected = comboBox.getSelectedItem().toString();
 				
-				if(itemSelected == "Integer") {
+				if(itemSelected == "None") {
+					
+					type = ColumnDataType.NONE;
+					
+				} else if(itemSelected == "Integer") {
 					
 					type = ColumnDataType.INTEGER;
 					

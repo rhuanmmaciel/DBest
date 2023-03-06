@@ -77,29 +77,24 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 		
 		lblPickFileExtension = new JLabel("Escolha a extensão do arquivo:");
 		
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(194, Short.MAX_VALUE)
-					.addComponent(btnCancel)
-					.addContainerGap())
-				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(34)
 					.addComponent(lblPickFileExtension)
-					.addContainerGap(0, Short.MAX_VALUE))
+					.addContainerGap(47, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(contentPane.getWidth()/2 + 100)
-					.addComponent(btnSql, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(0, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(contentPane.getWidth()/2 + 100)
-					.addComponent(btnCsv, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(0, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(contentPane.getWidth()/2 + 100)
-					.addComponent(btnXlsXlsxOdt, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(0, Short.MAX_VALUE))
+					.addGap(100)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnXlsXlsxOdt, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnCsv, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnSql, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(102, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+					.addContainerGap(206, Short.MAX_VALUE)
+					.addComponent(btnCancel))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -112,7 +107,7 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 					.addComponent(btnXlsXlsxOdt)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnSql)
-					.addPreferredGap(ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
 					.addComponent(btnCancel))
 		);
 
