@@ -1,29 +1,34 @@
 package gui.frames.forms;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Label;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
 import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
 import entities.Column;
@@ -31,15 +36,17 @@ import enums.ColumnDataType;
 import net.datafaker.Faker;
 
 @SuppressWarnings("serial")
-public class FormFrameRandomData extends JDialog implements ActionListener{
-	
-	private JPanel contentPane;
+public class FormFrameRandomData extends JDialog implements ActionListener, ChangeListener{
 	
 	private List<Column> columns;
 	
 	private JComboBox<Object> comboBox; 
+	private JLabel lblColumnType;
+	
 	private JButton btnReady;
 	private JButton btnCancel;
+	
+	private JTabbedPane tabbedPane;
 	
 	private List<Component> everyTypeComponents;
 	private List<Component> stringComponents;
@@ -50,26 +57,31 @@ public class FormFrameRandomData extends JDialog implements ActionListener{
 	
 	private ButtonGroup jRadioGroup;
 	
-	private JRadioButton rdbtnName;
-	private JRadioButton rdbtnCPF;
-	private JRadioButton rdbtnCNPJ;
-	private JRadioButton rdbtnFirstName;
-	private JRadioButton rdbtnLastName;
-	private JRadioButton rdbtnCity;
-	private JRadioButton rdbtnCountry;
-	private JRadioButton rdbtnState;
-	private JRadioButton rdbtnRandomInteger;
-	private JRadioButton rdbtnRandomIntegerDigits;
-	private JRadioButton rdbtnRandomFloat;
+	private JRadioButton rdbtnStringName;
+	private JRadioButton rdbtnStringCPF;
+	private JRadioButton rdbtnStringCNPJ;
+	private JRadioButton rdbtnStringFirstName;
+	private JRadioButton rdbtnStringLastName;
+	private JRadioButton rdbtnStringCity;
+	private JRadioButton rdbtnStringCountry;
+	private JRadioButton rdbtnStringState;
+	private JRadioButton rdbtnStringPhone;
+	private JRadioButton rdbtnStringJob;
+	private JRadioButton rdbtnIntRandom;
+	private JRadioButton rdbtnIntRandomDigits;
+	private JRadioButton rdbtnIntSequence;
+	private JRadioButton rdbtnFloatRandom;
 	
-	private JSpinner spinnerRandomIntegerMin;
-	private JSpinner spinnerRandomIntegerMax;
+	private JSpinner spinnerIntRandomMin;
+	private JSpinner spinnerIntRandomMax;
 	
-	private JSpinner spinnerRandomIntegerNDigits;
+	private JSpinner spinnerIntRandomDigits;
 	
-	private JSpinner spinnerRandomFloatDecimals;
-	private JSpinner spinnerRandomFloatMin;
-	private JSpinner spinnerRandomFloatMax;
+	private JSpinner spinnerIntSequence;
+	
+	private JSpinner spinnerFloatRandomDecimals;
+	private JSpinner spinnerFloatRandomMin;
+	private JSpinner spinnerFloatRandomMax;
 	
 	private DefaultTableModel model;
 	private JTable table;
@@ -97,99 +109,217 @@ public class FormFrameRandomData extends JDialog implements ActionListener{
 		this.table = table;
 		this.columns = new ArrayList<>(columns);
 		this.faker = new Faker(new Locale("pt", "BR"));
-				
-		initializeGUI();
 		
+	    initializeGUI();
 	}
 
 	private void initializeGUI() {
-		
-		setBounds(100, 100, 1000, 821);
-		setLocationRelativeTo(null);
-		
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		setContentPane(contentPane);
+	    setBounds(100, 100, 1000, 830);
+	    setLocationRelativeTo(null);
+	    
+	    // componentes do topPane
+	    List<String> columnsName = new ArrayList<>();
+	    columns.forEach(x -> columnsName.add(x.getName()));
+
+	    comboBox = new JComboBox<>(columnsName.toArray());
+	    comboBox.addActionListener(this);
+	    
+	    Label lblComboBox = new Label("Nome da coluna: ");
 		
-		JLabel lblGeradorDeDados = new JLabel("Gerador de dados aleatórios");
+	    lblColumnType = new JLabel();
+	    
+		JPanel topPane = new JPanel();
+		topPane.add(lblComboBox);
+		topPane.add(comboBox);
+		topPane.add(lblColumnType);
+	    
+	    // VBox que vai conter o topPane e o jtabbedPane
+		Box mainVBox = Box.createVerticalBox();
+		mainVBox.setSize(getMaximumSize());
+		getContentPane().add(mainVBox, BorderLayout.NORTH);
 		
-		List<String> columnsName = new ArrayList<>();
-		columns.forEach(x-> columnsName.add(x.getName()));
+		mainVBox.add(topPane);
 		
-		comboBox = new JComboBox<Object>(columnsName.toArray());
-		comboBox.addActionListener(this);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		mainVBox.add(tabbedPane);
 		
-		btnReady = new JButton("Pronto");
-		btnReady.addActionListener(this);
+		// criação das telas de cada tipo
+		JPanel stringPane = new JPanel();
+		tabbedPane.addTab("String", null, stringPane, null);
 		
-		btnCancel = new JButton("Cancelar");
-		btnCancel.addActionListener(this);
+		JPanel intPane = new JPanel();
+		tabbedPane.addTab("Inteiro", null, intPane, null);
 		
-		everyTypeComponents = new ArrayList<>();
-		stringComponents = new ArrayList<>();
-		intComponents = new ArrayList<>();
-		floatComponents = new ArrayList<>();
-		charComponents = new ArrayList<>();
-		boolComponents = new ArrayList<>();
+		JPanel floatPane = new JPanel();
+		tabbedPane.addTab("Ponto Flutuante", null, floatPane, null);
 		
-		jRadioGroup = new ButtonGroup();
+		JPanel charPane = new JPanel();
+		tabbedPane.addTab("Caractere", null, charPane, null);
 		
-		rdbtnName = new JRadioButton("Nome Completo");
-		createButton(rdbtnName, ColumnDataType.STRING);
+		JPanel boolPane = new JPanel();
+		tabbedPane.addTab("Booleano", null, boolPane, null);
+
+	    // listas que armazenarão os componentes de cada tipo para poder desabilitá-los todos juntos
+	    everyTypeComponents = new ArrayList<>();
+	    stringComponents = new ArrayList<>();
+	    intComponents = new ArrayList<>();
+	    floatComponents = new ArrayList<>();
+	    charComponents = new ArrayList<>();
+	    boolComponents = new ArrayList<>();
+
+	    jRadioGroup = new ButtonGroup();
+	    
+	    intPane.setLayout(new BoxLayout(intPane, BoxLayout.Y_AXIS));
+		stringPane.setLayout(new BoxLayout(stringPane, BoxLayout.Y_AXIS));
+		floatPane.setLayout(new BoxLayout(floatPane, BoxLayout.Y_AXIS));
+						
+		// VBox's que armazenarão cada radioButton para ficarem um abaixo do outro
+		Box stringBox = Box.createVerticalBox();
+		stringBox.setAlignmentX(LEFT_ALIGNMENT);
+		stringPane.add(stringBox);
 		
-		rdbtnFirstName = new JRadioButton("Nome");
-		createButton(rdbtnFirstName, ColumnDataType.STRING);
+		Box intBox = Box.createVerticalBox();
+		intBox.setAlignmentX(LEFT_ALIGNMENT);
+		intPane.add(intBox);	
 		
-		rdbtnLastName = new JRadioButton("Sobrenome");
-		createButton(rdbtnLastName, ColumnDataType.STRING);
+		Box floatBox = Box.createVerticalBox();
+		floatBox.setAlignmentX(LEFT_ALIGNMENT);
+		floatPane.add(floatBox);
 		
-		rdbtnCPF = new JRadioButton("CPF");
-		createButton(rdbtnCPF, ColumnDataType.STRING);
+		// Strings:
+		rdbtnStringName = new JRadioButton("Nome Completo");
+		createButton(rdbtnStringName, ColumnDataType.STRING);
+		stringBox.add(rdbtnStringName);
 		
-		rdbtnCNPJ = new JRadioButton("CNPJ");
-		createButton(rdbtnCNPJ, ColumnDataType.STRING);
+		rdbtnStringFirstName = new JRadioButton("Nome");
+		createButton(rdbtnStringFirstName, ColumnDataType.STRING);
+		stringBox.add(rdbtnStringFirstName);
 		
-		rdbtnCity = new JRadioButton("Cidade");
-		createButton(rdbtnCity, ColumnDataType.STRING);
+		rdbtnStringLastName = new JRadioButton("Sobrenome");
+		createButton(rdbtnStringLastName, ColumnDataType.STRING);
+		stringBox.add(rdbtnStringLastName);
 		
-		rdbtnCountry = new JRadioButton("País");;
-		createButton(rdbtnCountry, ColumnDataType.STRING);
+		rdbtnStringCPF = new JRadioButton("CPF");
+		createButton(rdbtnStringCPF, ColumnDataType.STRING);
+		stringBox.add(rdbtnStringCPF);
 		
-		rdbtnState = new JRadioButton("Estado");
-		createButton(rdbtnState, ColumnDataType.STRING);	
+		rdbtnStringCNPJ = new JRadioButton("CNPJ");
+		createButton(rdbtnStringCNPJ, ColumnDataType.STRING);
+		stringBox.add(rdbtnStringCNPJ);
 		
-		rdbtnRandomInteger = new JRadioButton("Número entre");
-		createButton(rdbtnRandomInteger, ColumnDataType.INTEGER);
-		spinnerRandomIntegerMax = new JSpinner();
-		intComponents.add(spinnerRandomIntegerMax);
-		JLabel lblRandomIntegerText_1 = new JLabel("e");
-		intComponents.add(lblRandomIntegerText_1);
-		spinnerRandomIntegerMin = new JSpinner();
-		intComponents.add(spinnerRandomIntegerMin);
+		rdbtnStringCity = new JRadioButton("Cidade");
+		createButton(rdbtnStringCity, ColumnDataType.STRING);
+		stringBox.add(rdbtnStringCity);
 		
-		rdbtnRandomIntegerDigits = new JRadioButton("Número com");
-		createButton(rdbtnRandomIntegerDigits, ColumnDataType.INTEGER);
-		spinnerRandomIntegerNDigits = new JSpinner();
-		intComponents.add(spinnerRandomIntegerNDigits);
-		JLabel lblRandomIntegerDigitsText_1 = new JLabel("digítos");
+		rdbtnStringCountry = new JRadioButton("País");
+		createButton(rdbtnStringCountry, ColumnDataType.STRING);
+		stringBox.add(rdbtnStringCountry);
+		
+		rdbtnStringState = new JRadioButton("Estado");
+		createButton(rdbtnStringState, ColumnDataType.STRING);	
+		stringBox.add(rdbtnStringState);
+		
+		rdbtnStringPhone = new JRadioButton("Número de telefone");
+		createButton(rdbtnStringPhone, ColumnDataType.STRING);	
+		stringBox.add(rdbtnStringPhone);
+		
+		rdbtnStringJob = new JRadioButton("Área de atuação");
+		createButton(rdbtnStringJob, ColumnDataType.STRING);
+		stringBox.add(rdbtnStringJob);
+
+	    // Inteiros:
+		Box intItem = Box.createHorizontalBox();
+		intItem.setAlignmentX(LEFT_ALIGNMENT);
+		
+	    rdbtnIntRandom = new JRadioButton("Número entre ");
+	    createButton(rdbtnIntRandom, ColumnDataType.INTEGER);
+	    spinnerIntRandomMin = new JSpinner();
+		createSpinner(spinnerIntRandomMin, ColumnDataType.INTEGER);
+	    JLabel lblRandomIntegerText_1 = new JLabel(" e ");
+	    spinnerIntRandomMax = new JSpinner();
+		createSpinner(spinnerIntRandomMax, ColumnDataType.INTEGER);
+	    intComponents.add(lblRandomIntegerText_1);
+	    
+	    intItem.add(rdbtnIntRandom);
+	    intItem.add(spinnerIntRandomMin);
+	    intItem.add(lblRandomIntegerText_1);
+	    intItem.add(spinnerIntRandomMax);
+	    
+	    intBox.add(intItem);
+	    
+	    
+	    intItem = Box.createHorizontalBox();
+	    intItem.setAlignmentX(LEFT_ALIGNMENT);
+	    
+		rdbtnIntRandomDigits = new JRadioButton("Número com ");
+		createButton(rdbtnIntRandomDigits, ColumnDataType.INTEGER);
+		spinnerIntRandomDigits = new JSpinner();
+		createSpinner(spinnerIntRandomDigits, ColumnDataType.INTEGER);
+		JLabel lblRandomIntegerDigitsText_1 = new JLabel(" digítos");
 		intComponents.add(lblRandomIntegerDigitsText_1);
 		
-		rdbtnRandomFloat = new JRadioButton("Número com");
-		createButton(rdbtnRandomFloat, ColumnDataType.FLOAT);
-		spinnerRandomFloatDecimals = new JSpinner();
-		floatComponents.add(spinnerRandomFloatDecimals);
-		JLabel lblRandomFloatText_1 = new JLabel("casa decimais");
-		floatComponents.add(lblRandomFloatText_1);
-		JLabel lblRandomFloatText_2 = new JLabel("entre");
-		floatComponents.add(lblRandomFloatText_2);
-		spinnerRandomFloatMin = new JSpinner();
-		floatComponents.add(spinnerRandomFloatMin);
-		JLabel lblRandomFloatText_3 = new JLabel("e");
-		floatComponents.add(lblRandomFloatText_3);
-		spinnerRandomFloatMax = new JSpinner();
-		floatComponents.add(spinnerRandomFloatMax);
+		intItem.add(rdbtnIntRandomDigits);
+		intItem.add(spinnerIntRandomDigits);
+		intItem.add(lblRandomIntegerDigitsText_1);
 		
+	    intBox.add(intItem);
+	    
+	    
+	    intItem = Box.createHorizontalBox();
+	    intItem.setAlignmentX(LEFT_ALIGNMENT);
+	    
+		rdbtnIntSequence = new JRadioButton("Sequência com início em ");
+		createButton(rdbtnIntSequence, ColumnDataType.INTEGER);
+		spinnerIntSequence = new JSpinner();
+		createSpinner(spinnerIntSequence, ColumnDataType.INTEGER);
+		
+		intItem.add(rdbtnIntSequence);
+		intItem.add(spinnerIntSequence);
+		
+	    intBox.add(intItem);
+		
+	    
+		// Floats:
+		Box floatItem = Box.createHorizontalBox();
+		floatItem.setAlignmentX(LEFT_ALIGNMENT);
+	    
+		rdbtnFloatRandom = new JRadioButton("Número com ");
+		createButton(rdbtnFloatRandom, ColumnDataType.FLOAT);
+		spinnerFloatRandomDecimals = new JSpinner();
+		createSpinner(spinnerFloatRandomDecimals, ColumnDataType.FLOAT);
+		JLabel lblRandomFloatText_1 = new JLabel(" casa decimais entre ");
+		floatComponents.add(lblRandomFloatText_1);
+		spinnerFloatRandomMin = new JSpinner();
+		createSpinner(spinnerFloatRandomMin, ColumnDataType.FLOAT);
+		JLabel lblRandomFloatText_2 = new JLabel(" e ");
+		floatComponents.add(lblRandomFloatText_2);
+		spinnerFloatRandomMax = new JSpinner();
+		createSpinner(spinnerFloatRandomMax, ColumnDataType.FLOAT);
+		
+		floatItem.add(rdbtnFloatRandom);
+		floatItem.add(spinnerFloatRandomDecimals);
+		floatItem.add(lblRandomFloatText_1);
+		floatItem.add(spinnerFloatRandomMin);
+		floatItem.add(lblRandomFloatText_2);
+		floatItem.add(spinnerFloatRandomMax);
+		
+		floatBox.add(floatItem);
+		
+		JPanel bottomPane = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) bottomPane.getLayout();
+		flowLayout.setAlignment(FlowLayout.RIGHT);
+		getContentPane().add(bottomPane, BorderLayout.SOUTH);
+		
+	    btnCancel = new JButton("Cancelar");
+	    bottomPane.add(btnCancel);
+	    
+	    btnReady = new JButton("Pronto");
+	    bottomPane.add(btnReady);
+
+	    btnCancel.addActionListener(this);
+	    btnReady.addActionListener(this);
+	    
 		everyTypeComponents.addAll(boolComponents);
 		everyTypeComponents.addAll(intComponents);
 		everyTypeComponents.addAll(floatComponents);
@@ -198,186 +328,12 @@ public class FormFrameRandomData extends JDialog implements ActionListener{
 		
 		int columnIndex = table.getColumnModel().getColumnIndex(comboBox.getSelectedItem().toString().toUpperCase());
 		
-		Column selectedColumn = columns.get(columnIndex);
+		ColumnDataType selectedColumnType = columns.get(columnIndex).getType();
 		
-		disableButtons(selectedColumn);
+		lblColumnType.setText("Tipo: " + selectedColumnType.toString());
+		setDefaultTab(selectedColumnType);
+		disableButtons(selectedColumnType);
 		
-		JLabel lblStrings = new JLabel("Strings");
-		JLabel lblInteiro = new JLabel("Inteiros");
-		JLabel lblFloat = new JLabel("Ponto Flutuante");
-		
-		JSeparator separator = new JSeparator();
-		separator.setOrientation(SwingConstants.VERTICAL);
-		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setOrientation(SwingConstants.VERTICAL);
-		
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(274)
-							.addComponent(lblGeradorDeDados))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(365)
-							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(50)
-							.addComponent(lblStrings)
-							.addGap(216)
-							.addComponent(lblInteiro)
-							.addGap(250)
-							.addComponent(lblFloat))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(8)
-									.addComponent(rdbtnName))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addContainerGap()
-									.addComponent(rdbtnFirstName))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addContainerGap()
-									.addComponent(rdbtnLastName))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addContainerGap()
-									.addComponent(rdbtnCPF))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addContainerGap()
-									.addComponent(rdbtnCNPJ))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addContainerGap()
-									.addComponent(rdbtnCity))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addContainerGap()
-									.addComponent(rdbtnState))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addContainerGap()
-									.addComponent(rdbtnCountry)))
-							.addGap(26)
-							.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(rdbtnRandomInteger)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(spinnerRandomIntegerMin, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(lblRandomIntegerText_1)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(spinnerRandomIntegerMax, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(rdbtnRandomIntegerDigits)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(spinnerRandomIntegerNDigits, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(lblRandomIntegerDigitsText_1)))
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED, 274, Short.MAX_VALUE)
-									.addComponent(btnCancel)
-									.addGap(18)
-									.addComponent(btnReady))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(18)
-									.addComponent(separator_1, GroupLayout.PREFERRED_SIZE, 2, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_contentPane.createSequentialGroup()
-											.addComponent(rdbtnRandomFloat)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(spinnerRandomFloatDecimals, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(lblRandomFloatText_1))
-										.addGroup(gl_contentPane.createSequentialGroup()
-											.addGap(21)
-											.addComponent(lblRandomFloatText_2)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(spinnerRandomFloatMin, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(lblRandomFloatText_3)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(spinnerRandomFloatMax, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)))
-									.addGap(225)))))
-					.addContainerGap())
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblGeradorDeDados)
-									.addGap(18)
-									.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addGap(12)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-										.addComponent(lblStrings)
-										.addComponent(lblInteiro))
-									.addGap(18))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblFloat)
-									.addGap(18)))
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-									.addComponent(btnCancel)
-									.addComponent(btnReady))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_contentPane.createSequentialGroup()
-											.addGap(7)
-											.addComponent(rdbtnName)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(rdbtnFirstName)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(rdbtnLastName)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(rdbtnCPF)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(rdbtnCNPJ)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(rdbtnCity)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(rdbtnState)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(rdbtnCountry))
-										.addGroup(gl_contentPane.createSequentialGroup()
-											.addGap(6)
-											.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(separator_1, GroupLayout.PREFERRED_SIZE, 451, GroupLayout.PREFERRED_SIZE)
-												.addGroup(gl_contentPane.createSequentialGroup()
-													.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-														.addComponent(spinnerRandomIntegerMin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-														.addComponent(lblRandomIntegerText_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-														.addComponent(spinnerRandomIntegerMax, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-														.addComponent(rdbtnRandomInteger))
-													.addPreferredGap(ComponentPlacement.RELATED)
-													.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-														.addComponent(rdbtnRandomIntegerDigits)
-														.addComponent(spinnerRandomIntegerNDigits, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-														.addComponent(lblRandomIntegerDigitsText_1)))
-												.addGroup(gl_contentPane.createSequentialGroup()
-													.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-														.addComponent(rdbtnRandomFloat)
-														.addComponent(spinnerRandomFloatDecimals, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-														.addComponent(lblRandomFloatText_1))
-													.addPreferredGap(ComponentPlacement.RELATED)
-													.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-														.addComponent(lblRandomFloatText_2)
-														.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-															.addComponent(spinnerRandomFloatMin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-															.addComponent(lblRandomFloatText_3)
-															.addComponent(spinnerRandomFloatMax, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))))
-									.addGap(140))))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(102)
-							.addComponent(separator, GroupLayout.PREFERRED_SIZE, 451, GroupLayout.PREFERRED_SIZE)))
-					.addGap(75))
-		);
-		contentPane.setLayout(gl_contentPane);
 		this.setVisible(true);
 	}
 	
@@ -409,15 +365,70 @@ public class FormFrameRandomData extends JDialog implements ActionListener{
 		}
 		
 	}
+	
+	private void createSpinner(JSpinner spinner, ColumnDataType type) {
+		
+		spinner.addChangeListener(this);
+		spinner.setMaximumSize(new Dimension(50, 20));
+		
+		if(type == ColumnDataType.STRING) {
+		
+			stringComponents.add(spinner);
+		
+		}else if(type == ColumnDataType.INTEGER) {
+			
+			intComponents.add(spinner);
+			
+		}else if(type == ColumnDataType.FLOAT) {
+			
+			floatComponents.add(spinner);
+			
+		}else if(type == ColumnDataType.CHARACTER) {
+			
+			charComponents.add(spinner);
+			
+		}else if(type == ColumnDataType.BOOLEAN) {
+			
+			boolComponents.add(spinner);
+			
+		}	
+		
+	}
+	
+	private void setDefaultTab(ColumnDataType selectedColumnType) {
+			
+		if(selectedColumnType == ColumnDataType.STRING) {
+		
+			tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("String"));			
+			
+		}else if(selectedColumnType == ColumnDataType.INTEGER) {
+			
+			tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Inteiro"));
+			
+		}else if(selectedColumnType == ColumnDataType.FLOAT) {
+			
+			tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Ponto Flutuante"));
+			
+		}else if(selectedColumnType == ColumnDataType.CHARACTER) {
+			
+			tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Caractere"));
+			
+		}else if(selectedColumnType == ColumnDataType.BOOLEAN) {
+			
+			tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Booleano"));
+			
+		}
+		
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 		int columnIndex = table.getColumnModel().getColumnIndex(comboBox.getSelectedItem().toString().toUpperCase());
 		
-		Column selectedColumn = columns.get(columnIndex);
+		ColumnDataType selectedColumnType = columns.get(columnIndex).getType();
 		
-		disableButtons(selectedColumn);
+		disableButtons(selectedColumnType);
 		
 		if(e.getSource() == btnCancel) {
 			
@@ -426,41 +437,63 @@ public class FormFrameRandomData extends JDialog implements ActionListener{
 		}
 		if(e.getSource() == btnReady) {
 			
-			insertItems(columnIndex, selectedColumn.getType());
+			insertItems(columnIndex, selectedColumnType);
 
 			dispose();
 			
 		}
+		if(e.getSource() == comboBox) {
+			
+			setDefaultTab(selectedColumnType);
+			lblColumnType.setText("Tipo: " + selectedColumnType.toString());
+			jRadioGroup.clearSelection();
+			
+		}
+		
+		verifyReady();
 		
 	}
 	
-	private void disableButtons(Column selectedColumn) {
+	@Override
+	public void stateChanged(ChangeEvent e) {
+
+		verifyReady();
+		
+	}
+	
+	private void verifyReady() {
+		
+		btnReady.setEnabled(jRadioGroup.getSelection() != null);
+			
+	}
+	
+	private void disableButtons(ColumnDataType selectedColumnType) {
 		
 		everyTypeComponents.forEach(c -> c.setEnabled(false));
 		
 		List<Component> group = null;
 		
-		if(selectedColumn.getType() == ColumnDataType.NONE) {
+		if(selectedColumnType == ColumnDataType.NONE) {
 			
 			group = everyTypeComponents;
 			
-		}else if(selectedColumn.getType() == ColumnDataType.STRING) {
+		}else if(selectedColumnType == ColumnDataType.STRING) {
 			
 			group = stringComponents;
 			
-		}else if(selectedColumn.getType() == ColumnDataType.INTEGER) {
+		}else if(selectedColumnType == ColumnDataType.INTEGER) {
 			
 			group = intComponents;
 			
-		}else if(selectedColumn.getType() == ColumnDataType.FLOAT) {
+		}else if(selectedColumnType == ColumnDataType.FLOAT) {
 			
 			group = floatComponents;
 			
-		}else if(selectedColumn.getType() == ColumnDataType.CHARACTER) {
+		}else if(selectedColumnType == ColumnDataType.CHARACTER) {
 			
 			group = charComponents;
 			
-		}else if(selectedColumn.getType() == ColumnDataType.BOOLEAN) {
+		}else if(selectedColumnType == ColumnDataType.BOOLEAN) {
 			
 			group = boolComponents;
 			
@@ -494,14 +527,18 @@ public class FormFrameRandomData extends JDialog implements ActionListener{
 		
 		if(type == ColumnDataType.INTEGER || type == ColumnDataType.NONE) {
 			
-			if(rdbtnRandomInteger.isSelected()) {
+			if(rdbtnIntRandom.isSelected()) {
 				
-				randomItems = faker.collection(() -> faker.number().numberBetween((int)spinnerRandomIntegerMin.getValue(),
-																				  (int)spinnerRandomIntegerMax.getValue())).len(rowsCount).generate();
+				randomItems = faker.collection(() -> faker.number().numberBetween((int)spinnerIntRandomMin.getValue(),
+																				  (int)spinnerIntRandomMax.getValue())).len(rowsCount).generate();
 				
-			}else if(rdbtnRandomIntegerDigits.isSelected()) {
+			}else if(rdbtnIntRandomDigits.isSelected()) {
 				
-				randomItems = faker.collection(() -> faker.number().randomNumber((int)spinnerRandomIntegerNDigits.getValue(), true)).len(rowsCount).generate();
+				randomItems = faker.collection(() -> faker.number().randomNumber((int)spinnerIntRandomDigits.getValue(), true)).len(rowsCount).generate();
+				
+			}else if(rdbtnIntSequence.isSelected()) {
+				
+				randomItems = IntStream.rangeClosed((int)spinnerIntSequence.getValue(), (int)spinnerIntSequence.getValue() + rowsCount).boxed().collect(Collectors.toList());
 				
 			}
 			
@@ -509,49 +546,57 @@ public class FormFrameRandomData extends JDialog implements ActionListener{
 		
 		if(type == ColumnDataType.STRING || (type == ColumnDataType.NONE && randomItems == null)) {
 			
-			if(rdbtnName.isSelected()) {
+			if(rdbtnStringName.isSelected()) {
 				
 				randomItems = faker.collection(() -> faker.name().fullName()).len(rowsCount).generate();
 				
-			}else if(rdbtnCPF.isSelected()) {
+			}else if(rdbtnStringCPF.isSelected()) {
 				
 				randomItems = faker.collection(() -> faker.cpf().invalid()).len(rowsCount).generate();	
 				
-			}else if(rdbtnCNPJ.isSelected()) {
+			}else if(rdbtnStringCNPJ.isSelected()) {
 
 				randomItems = faker.collection(() -> faker.cnpj().invalid()).len(rowsCount).generate();
 
-			}else if(rdbtnFirstName.isSelected()) {
+			}else if(rdbtnStringFirstName.isSelected()) {
 					
 				randomItems = faker.collection(() -> faker.name().firstName()).len(rowsCount).generate();
 				
-			}else if(rdbtnLastName.isSelected()) {
+			}else if(rdbtnStringLastName.isSelected()) {
 					
 				randomItems = faker.collection(() -> faker.name().lastName()).len(rowsCount).generate();
 				
-			}else if(rdbtnCity.isSelected()) {
+			}else if(rdbtnStringCity.isSelected()) {
 				
 				randomItems = faker.collection(() -> faker.address().city()).len(rowsCount).generate();
 				
-			}else if(rdbtnState.isSelected()) {
+			}else if(rdbtnStringState.isSelected()) {
 				
 				randomItems = faker.collection(() -> faker.address().state()).len(rowsCount).generate();
 				
-			}else if(rdbtnCountry.isSelected()) {
+			}else if(rdbtnStringCountry.isSelected()) {
 
 				randomItems = faker.collection(() -> faker.address().country()).len(rowsCount).generate();
 				
-			}			
+			}else if(rdbtnStringPhone.isSelected()) {
+				
+				randomItems = faker.collection(() -> faker.phoneNumber().phoneNumber()).len(rowsCount).generate();
+				
+			}else if(rdbtnStringJob.isSelected()) {
+				
+				randomItems = faker.collection(() -> faker.job().field()).len(rowsCount).generate();;
+				
+			}
 			
 		}
 		
 		if(type == ColumnDataType.FLOAT || (type == ColumnDataType.NONE && randomItems == null)) {
 			
-			if(rdbtnRandomFloat.isSelected()) {
+			if(rdbtnFloatRandom.isSelected()) {
 				
-				randomItems = faker.collection(() -> faker.number().randomDouble((int)spinnerRandomFloatDecimals.getValue(),
-																				 (int)spinnerRandomFloatMin.getValue(),
-																				 (int)spinnerRandomFloatMax.getValue())).len(rowsCount).generate();
+				randomItems = faker.collection(() -> faker.number().randomDouble((int)spinnerFloatRandomDecimals.getValue(),
+																				 (int)spinnerFloatRandomMin.getValue(),
+																				 (int)spinnerFloatRandomMax.getValue())).len(rowsCount).generate();
 				
 			}
 			
@@ -560,4 +605,5 @@ public class FormFrameRandomData extends JDialog implements ActionListener{
 		return randomItems;
 		
 	}
+
 }

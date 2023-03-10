@@ -188,7 +188,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 		}
 		if(e.getSource() == btnAddRow) {
 			
-			model.insertRow(0,new Object[]{});
+			model.insertRow(table.getRowCount(),new Object[]{});
 			
 		}
 		if(e.getSource() == btnRandomData) {
