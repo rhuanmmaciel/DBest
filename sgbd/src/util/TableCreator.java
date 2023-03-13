@@ -36,10 +36,15 @@ public class TableCreator {
 			
 			for(String data : line) {
 				
-				if(columns.get(i).getType() == ColumnDataType.INTEGER) {
+				if(data.isEmpty()) {
+					
+					rowData.setString(columns.get(i).getName(), data);
+					
+				} else if(columns.get(i).getType() == ColumnDataType.INTEGER) {
 					
 					rowData.setInt(columns.get(i).getName(), (int)(Double.parseDouble(data)));
-			
+					
+					
 				}else if(columns.get(i).getType() == ColumnDataType.FLOAT) {
 					
 					rowData.setFloat(columns.get(i).getName(), Float.parseFloat(data));

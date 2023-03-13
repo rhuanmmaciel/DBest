@@ -1,5 +1,6 @@
 package gui.frames.forms;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -15,15 +16,18 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import entities.Column;
 import enums.ColumnDataType;
 
 @SuppressWarnings("serial")
-public class FormFrameAddColumn extends JDialog implements ActionListener{
+public class FormFrameAddColumn extends JDialog implements ActionListener, DocumentListener{
 
 	private JPanel contentPane;
 	private JTextField txtColumnName;
@@ -79,6 +83,7 @@ public class FormFrameAddColumn extends JDialog implements ActionListener{
 		lblColumnName = new JLabel("Nome da coluna");
 		
 		txtColumnName = new JTextField();
+		txtColumnName.getDocument().addDocumentListener(this);
 		txtColumnName.setColumns(10);
 		
 		JLabel lblTypeq = new JLabel("Tipo de dado");
@@ -123,6 +128,7 @@ public class FormFrameAddColumn extends JDialog implements ActionListener{
 					.addContainerGap())
 		);
 		
+		updateButton();
 		contentPane.setLayout(gl_contentPane);
 		this.setVisible(true);
 	}
@@ -197,5 +203,53 @@ public class FormFrameAddColumn extends JDialog implements ActionListener{
 			
 		}
 		
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+
+		updateButton();
+		
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+
+		updateButton();
+		
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+
+		updateButton();
+		
 	}	
+	
+	private void updateButton() {
+		
+		btnReady.setEnabled(!txtColumnName.getText().isEmpty() && table.findColumn(txtColumnName.getText().toUpperCase()) == -1);
+		updateToolTipText();
+		
+	}
+	
+	private void updateToolTipText() {
+		
+		String btnCreateColumnToolTipText = new String();
+		
+		if(txtColumnName.getText().isEmpty()) {
+			
+			btnCreateColumnToolTipText = "- Não existe nome para a coluna";
+			
+		}else if(table.findColumn(txtColumnName.getText().toUpperCase()) != -1) {
+			
+			btnCreateColumnToolTipText = "- Não é possível 2 colunas terem o mesmo nome";
+			
+		}
+		
+		UIManager.put("ToolTip.foreground", Color.RED);
+		
+		btnReady.setToolTipText(btnCreateColumnToolTipText.isEmpty() ? null : btnCreateColumnToolTipText);
+		
+	}
 }

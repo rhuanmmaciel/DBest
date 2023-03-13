@@ -4,6 +4,9 @@ import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -26,14 +29,15 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 	private JButton btnXlsXlsxOdt; 
 	private JButton btnSql;
 	private JButton btnCsv;
+	private AtomicReference<Boolean> deleteCellReference;
 	private TableCell tableCell;
 	private JLabel lblPickFileExtension;
 	
-	public static void main(TableCell tableCell) {
+	public static void main(TableCell tableCell, AtomicReference<Boolean> deleteCellReference) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormFrameImportFile frame = new FormFrameImportFile(tableCell);
+					FormFrameImportFile frame = new FormFrameImportFile(tableCell, deleteCellReference);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,12 +46,13 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 		});
 	}
 	
-	public FormFrameImportFile(TableCell tableCell) {
+	public FormFrameImportFile(TableCell tableCell, AtomicReference<Boolean> deleteCellReference) {
 
 		super((Window)null);
 		setModal(true);
 		
 		this.tableCell = tableCell;
+		this.deleteCellReference = deleteCellReference;
 		
 		initializeGUI();
 		
@@ -111,6 +116,16 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 					.addComponent(btnCancel))
 		);
 
+		addWindowListener(new WindowAdapter() {
+			
+			public void windowClosing(WindowEvent e) {
+				  
+				deleteCellReference.set(true);
+    
+			}
+			
+		 });
+		
 		contentPane.setLayout(gl_contentPane);
 		this.setVisible(true);
 	}
@@ -120,16 +135,17 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 		
 		if(e.getSource() == btnCancel) {
 			
+			deleteCellReference.set(true);
 			dispose();
 			
 		}else if(e.getSource() == btnCsv) {
 			
-			new ImportFile(tableCell, FileType.CSV);
+			new ImportFile(tableCell, FileType.CSV, deleteCellReference);
 			dispose();
 			
 		}else if(e.getSource() == btnXlsXlsxOdt) {
 			
-			new ImportFile(tableCell, FileType.EXCEL);
+			new ImportFile(tableCell, FileType.EXCEL, deleteCellReference);
 			dispose();
 			
 		}else if(e.getSource() == btnSql) {

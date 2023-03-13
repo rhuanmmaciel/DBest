@@ -1,24 +1,30 @@
 package gui.frames.forms;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import entities.Column;
@@ -26,7 +32,7 @@ import entities.TableCell;
 import util.TableCreator;
 
 @SuppressWarnings("serial")
-public class FormFrameCreateTable extends JDialog implements ActionListener{
+public class FormFrameCreateTable extends JDialog implements ActionListener, DocumentListener{
 
 	private JPanel contentPane;
 	private JTable table;
@@ -35,12 +41,13 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 	private JButton btnCancel;
 	private JButton btnAddRow;
 	private JButton btnAddColumn;
-	private JButton btnRandomData;
+	private JButton btnCreateData;
 	private JTextField textFieldTableName;
 	private TableCell tableCell;
+	private AtomicReference<TableCell> tableCellReference;
 	private List<Column> columns;
 	
-	public static void main(TableCell tableCell) {
+	public static void main(AtomicReference<TableCell> tableCell) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -53,13 +60,14 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 		});
 	}
 	
-	public FormFrameCreateTable(TableCell tableCell) {
+	public FormFrameCreateTable(AtomicReference<TableCell> tableCell) {
 		
 		super((Window)null);
 		setModal(true);
 		
 		columns = new ArrayList<>();
-		this.tableCell = tableCell;
+		this.tableCellReference = tableCell;
+		this.tableCell = tableCell.get();
 				
 		initializeGUI();
 		
@@ -93,16 +101,15 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 		
 		btnAddRow = new JButton("Adicionar linha");
 		btnAddRow.addActionListener(this);
-		btnAddRow.setEnabled(false);
 		
 		textFieldTableName = new JTextField();
+		textFieldTableName.getDocument().addDocumentListener(this);
 		textFieldTableName.setColumns(10);
 		
 		JLabel lblTableName = new JLabel("Nome da tabela:");
 		
-		btnRandomData = new JButton("Gerar dados aleatórios");
-		btnRandomData.addActionListener(this);
-		btnRandomData.setEnabled(false);
+		btnCreateData = new JButton("Gerador de dados");
+		btnCreateData.addActionListener(this);
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -123,7 +130,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 								.addPreferredGap(ComponentPlacement.RELATED)
 								.addComponent(btnAddRow)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(btnRandomData)
+								.addComponent(btnCreateData)
 								.addGap(981))
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
@@ -154,7 +161,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(btnAddColumn)
 								.addComponent(btnAddRow)
-								.addComponent(btnRandomData))
+								.addComponent(btnCreateData))
 							.addGap(55))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(71)
@@ -164,6 +171,17 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 							.addContainerGap())))
 		);
 		
+		addWindowListener(new WindowAdapter() {
+			
+			public void windowClosing(WindowEvent e) {
+				  
+				tableCellReference.set(null);
+    
+			}
+			
+		 });
+		 
+		updateButtons();
 		contentPane.setLayout(gl_contentPane);
 		this.setVisible(true);
 	}
@@ -173,12 +191,13 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 		
 		if(e.getSource() == btnCancel) {
 			
+			tableCellReference.set(null);
 			dispose();
 			
 		}
 		if(e.getSource() == btnCreateTable) {
 			
-			getVerification();
+			createTable();
 			
 		}
 		if(e.getSource() == btnAddColumn) {
@@ -191,49 +210,75 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 			model.insertRow(table.getRowCount(),new Object[]{});
 			
 		}
-		if(e.getSource() == btnRandomData) {
+		if(e.getSource() == btnCreateData) {
 			
 			new FormFrameRandomData(columns, model, table);
 			
 		}
-		btnAddRow.setEnabled(table.getColumnCount() > 0);
-		btnRandomData.setEnabled(table.getRowCount() > 0);
+		
+		updateButtons();
 		
 	}	
 	
-	private void getVerification() {
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+
+		updateButtons();
 		
-		boolean isThereAnyNullValue = false;
-		for(int i = 0; i < table.getColumnCount(); i++) {
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		
+		updateButtons();
+		
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		
+		updateButtons();
+		
+	}
+	
+	private void updateButtons() {
+		
+		btnCreateTable.setEnabled(table.getRowCount() > 0 && !textFieldTableName.getText().isEmpty());
+		btnAddRow.setEnabled(table.getColumnCount() > 0);
+		btnCreateData.setEnabled(table.getRowCount() > 0);
+		updateToolTipText();	
+		
+	}
+	
+	private void updateToolTipText() {
+		
+		String btnCreateDataToolTipText = new String();
+		String btnAddRowToolTipText = new String();
+		String btnCreateTableToolTipText = new String();
+		
+		if(table.getColumnCount() <= 0) {
 			
-			for(int j = 0; j < table.getRowCount(); j++) {
-				
-				if(table.getValueAt(j, i) == null) isThereAnyNullValue = true;
-				
-			}
+			btnCreateDataToolTipText = btnAddRowToolTipText = btnCreateTableToolTipText = "- Não existem colunas na tabela";
+			
+		}else if(table.getRowCount() <= 0) {
+			
+			btnCreateDataToolTipText = btnCreateTableToolTipText = "- Não existem linhas na tabela";
+			
+		}else if(textFieldTableName.getText().isEmpty()) {
+			
+			btnCreateTableToolTipText = "- A table não possui nome";
 			
 		}
 		
-		if(table.getRowCount() <= 0) {
+		UIManager.put("ToolTip.foreground", Color.RED);
 		
-			JOptionPane.showMessageDialog(null, "Não é possível criar tabela sem linhas!", "Erro", JOptionPane.ERROR_MESSAGE);
-			return;
+		btnAddRow.setToolTipText(btnAddRowToolTipText.isEmpty() ? null : btnAddRowToolTipText);
+		btnCreateData.setToolTipText(btnCreateDataToolTipText.isEmpty() ? null : btnCreateDataToolTipText);	
+		btnCreateTable.setToolTipText(btnCreateTableToolTipText.isEmpty() ? null : btnCreateTableToolTipText);
 		
-		}
-		
-		if(isThereAnyNullValue) {
-			
-			JOptionPane.showMessageDialog(null, "Não é possível criar tabela com campo em branco!", "Erro", JOptionPane.ERROR_MESSAGE);
-			return;
-		
-		}
-		
-		if(textFieldTableName.getText().isEmpty()) {
-			
-			JOptionPane.showMessageDialog(null, "Não é possível criar tabela sem nome!", "Erro", JOptionPane.ERROR_MESSAGE);
-			return;
-			
-		}
+	}
+	
+	private void createTable() {
 		
 		List<String> columnsName = new ArrayList<>();
 		
@@ -248,18 +293,35 @@ public class FormFrameCreateTable extends JDialog implements ActionListener{
 			List<String> line = new ArrayList<>();
 			for(int j = 0; j < table.getColumnCount(); j++) {
 				
-				line.add(table.getValueAt(i, j).toString());
+				if(table.getValueAt(i, j) == null || table.getValueAt(i, j).toString() == null)
+					line.add("");
+				
+				else
+					line.add(table.getValueAt(i, j).toString());
 				
 			}
 			lines.add(line);
 			
 		}
 		
-		new FormFramePrimaryKey(lines);
-		lines.remove(0);
+		boolean exit = false;		
+		AtomicReference<Boolean> exitReference = new AtomicReference<>(exit);
 		
-		TableCreator.createTable(tableCell, textFieldTableName.getText(), columns, lines);
-		dispose();
+		new FormFramePrimaryKey(lines, exitReference);
+		
+		if(!exitReference.get()) {
+		
+			lines.remove(0);
+			TableCreator.createTable(tableCell, textFieldTableName.getText(), columns, lines);
+		
+		}else {
+			
+			tableCellReference.set(null);
+			
+		}
+				
+		dispose();		
 		
 	}
+
 }

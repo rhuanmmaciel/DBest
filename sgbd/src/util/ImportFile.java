@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -25,7 +26,7 @@ import gui.frames.forms.FormFramePrimaryKey;
 
 public class ImportFile {
 	
-	public ImportFile(TableCell tableCell, FileType fileType){
+	public ImportFile(TableCell tableCell, FileType fileType, AtomicReference<Boolean> deleteCellReference){
 		
 		JFileChooser fileUpload = new JFileChooser();
 		
@@ -54,25 +55,26 @@ public class ImportFile {
 			
 			if(fileType == FileType.CSV) {
 			
-				csv(fileUpload, fileName, columnsName, lines, columns);
+				csv(fileUpload, fileName, columnsName, lines, columns, deleteCellReference);
 			
 			}else if(fileType == FileType.EXCEL) {
 				
-				excel(fileUpload, fileName, columnsName, lines, columns);
+				excel(fileUpload, fileName, columnsName, lines, columns, deleteCellReference);
 				
 			}
 			
-			TableCreator.createTable(tableCell, fileName.toString(), columns, lines);
+			if(!deleteCellReference.get())
+				TableCreator.createTable(tableCell, fileName.toString(), columns, lines);
 			
 		}else {
 			
-			tableCell = null;
+			deleteCellReference.set(true);;
 			
 		}
 		
 	}
 	
-	private void excel(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns) {
+	private void excel(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns, AtomicReference<Boolean> exitReference) {
 		
 		try {
 		
@@ -143,8 +145,11 @@ public class ImportFile {
 			List<List<String>> aux = new ArrayList<>();
 			aux.add(columnsName);
 			aux.addAll(lines);
-			new FormFramePrimaryKey(aux);
-			new FormFrameColumnType(columns, columnsName);
+			
+			new FormFramePrimaryKey(aux, exitReference);
+			
+			if(!exitReference.get())
+				new FormFrameColumnType(columns, columnsName, exitReference);
 			
 		} catch (IOException e) {
 
@@ -154,7 +159,7 @@ public class ImportFile {
 		
 	}
 	
-	private void csv(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns){
+	private void csv(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns, AtomicReference<Boolean> exitReference){
 		
 		try(BufferedReader br = new BufferedReader(new FileReader(fileUpload.getSelectedFile().getAbsolutePath()))){
 			
@@ -172,8 +177,11 @@ public class ImportFile {
 			List<List<String>> aux = new ArrayList<>();
 			aux.add(columnsName);
 			aux.addAll(lines);
-			new FormFramePrimaryKey(aux);
-			new FormFrameColumnType(columns, columnsName);
+			
+			new FormFramePrimaryKey(aux, exitReference);
+			
+			if(!exitReference.get())
+				new FormFrameColumnType(columns, columnsName, exitReference);
 			
 		}catch(IOException e) {
 			

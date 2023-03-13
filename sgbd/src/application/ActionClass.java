@@ -5,12 +5,13 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -39,11 +40,12 @@ import gui.frames.forms.operations.FormFrameSelecao;
 import util.ExportTable;
 
 @SuppressWarnings("serial")
-public class ActionClass extends JFrame implements ActionListener{
+public class ActionClass extends JFrame implements ActionListener, MouseListener, KeyListener{
 	
 	private mxGraph graph;
 	private mxGraphComponent graphComponent;
 	private JPanel containerPanel;
+	private Object parent;
 	private Object newCell;
 	private Boolean createCell=false;
 	private String style;
@@ -172,7 +174,7 @@ public class ActionClass extends JFrame implements ActionListener{
 
 		setVisible(true);
 		
-		Object parent = graph.getDefaultParent();
+		parent = graph.getDefaultParent();
 		graph.getModel().beginUpdate();
 		
 		mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
@@ -182,110 +184,9 @@ public class ActionClass extends JFrame implements ActionListener{
 		this.cells = new ArrayList<>();
 		this.leafs = new ArrayList<>();
 		
-		graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-
-				jCell = graphComponent.getCellAt(e.getX(), e.getY());
-				Cell cell = cells.stream().filter(x -> x.getCell().equals((mxCell)jCell)).findFirst().orElse(null);
-				
-				if(createCell == true ) {
-
-					newCell = graph.insertVertex(parent,null, name, e.getX(), e.getY(), 80, 30, style);
-					
-					if(!isOperation) {
-						
-						currentTableCell.setJGraphCell(newCell);
-						cells.add(currentTableCell);
-						currentTableCell.setX(e.getX());
-						currentTableCell.setY(e.getY());
-					
-					}else {
-						
-						cells.add(new OperatorCell(name, style, newCell, currentType, e.getX(), e.getY(), 80, 30));
-						
-					}
-					
-					createCell = false;
-					
-				}
-				
-				if(jCell != null) {
-					
-					if(createEdge == true && newParent == null) {
-						newParent = jCell;
-					}
-					
-					Cell parentCell = newParent != null ? cells.stream().filter(x -> x.getCell().equals((mxCell)newParent)).findFirst().orElse(null) : null;
-					
-					if( createEdge == true && jCell != newParent) {
-						
-						graph.insertEdge(newParent, null,"", newParent, jCell);
-						((mxCell) jCell).setParent((mxCell)newParent);
-						
-						cell.addParent(parentCell);
-						
-						if(parentCell != null) parentCell.setChild(cell);
-						
-						if(cell instanceof OperatorCell) {
-							
-							if(((OperatorCell)cell).getType() == OperationType.PROJECAO && cell.checkRules(OperationTypeEnums.UNARIA) == true) new FormFrameProjecao(jCell, cells);
-								
-							else if(((OperatorCell)cell).getType() == OperationType.SELECAO && cell.checkRules(OperationTypeEnums.UNARIA) == true) new FormFrameSelecao(jCell, cells);
-								
-							else if(((OperatorCell)cell).getType() == OperationType.JUNCAO && cell.getParents().size() == 2 && cell.checkRules(OperationTypeEnums.BINARIA) == true) new FormFrameJuncao(jCell, cells);
-							
-						}
-						leafs.add(cell);
-						leafs.remove(parentCell.getCell());
-						
-						newParent = null;
-						createEdge = false;
-						
-					}
-					
-					if(deleteCell == true) {
-						
-						graph.getModel().remove(jCell);	
-						deleteCell = false;
-						
-					}
-				}
-
-				if(e.getButton() == MouseEvent.BUTTON3 && jCell != null) {
-					
-					graph.getModel().remove(jCell);	
-
-				}
-				if(e.getButton() == MouseEvent.BUTTON2 && jCell != null) {
-					
-					cell.getSourceTableName(name);
-					
-				}
-				
-			}
-			
-		});
+		graphComponent.getGraphControl().addMouseListener(this);
 		
-		graphComponent.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				
-				Cell cell = jCell != null ? cells.stream().filter(x -> x.getCell().equals((mxCell)jCell)).findFirst().orElse(null) : null;
-				
-				if (e.getKeyCode() == KeyEvent.VK_S && jCell != null) {
-
-					new ResultFrame(cell.getContent());
-				
-				}else if(e.getKeyCode() == KeyEvent.VK_DELETE && jCell != null) {
-					
-					graph.getModel().remove(jCell);	
-				
-				}
-				
-			}
-			
-		});
+		graphComponent.addKeyListener(this);
 		
 		graph.getModel().endUpdate();
 			
@@ -345,17 +246,41 @@ public class ActionClass extends JFrame implements ActionListener{
 		}else if(e.getSource() == importButton) {
 			
 			TableCell tableCell = new TableCell(80, 30);
-			new FormFrameImportFile(tableCell);
-			assignVariables(tableCell.getStyle(), tableCell.getName(), false, null);
-			currentTableCell = tableCell;
+			
+			Boolean deleteCell = false;
+			AtomicReference<Boolean> deleteCellReference = new AtomicReference<>(deleteCell);
+			
+			new FormFrameImportFile(tableCell, deleteCellReference);
+			
+			if(!deleteCellReference.get()) {
+				
+				assignVariables(tableCell.getStyle(), tableCell.getName(), false, null);
+				currentTableCell = tableCell;
+			
+			}else {
+				
+				tableCell = null;
+				
+			}
 			
 		}else if(e.getSource() == btnCreateTable) {
 			
 			TableCell tableCell = new TableCell(80, 30);
-			new FormFrameCreateTable(tableCell);
 			
-			assignVariables(tableCell.getStyle(), tableCell.getName(), false, null);
-			currentTableCell = tableCell;
+			AtomicReference<TableCell> tableCellReference = new AtomicReference<>(tableCell);
+			
+			new FormFrameCreateTable(tableCellReference);
+			
+			if(tableCellReference.get() != null) {
+				
+				assignVariables(tableCell.getStyle(), tableCell.getName(), false, null);
+				currentTableCell = tableCell;
+				
+			}else {
+				
+				tableCell = null;
+				
+			}
 			
 		}else if(e.getSource() == saveTableButton) {	
 			
@@ -371,6 +296,145 @@ public class ActionClass extends JFrame implements ActionListener{
 			
 		}
 			
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		
+		if(currentTableCell == null) {
+			return;
+		}
+		
+		jCell = graphComponent.getCellAt(e.getX(), e.getY());
+		Cell cell = cells.stream().filter(x -> x.getCell().equals((mxCell)jCell)).findFirst().orElse(null);
+		
+		if(createCell == true ) {
+
+			newCell = graph.insertVertex(parent, null, name, e.getX(), e.getY(), 80, 30, style);
+			
+			if(!isOperation) {
+				
+				currentTableCell.setJGraphCell(newCell);
+				cells.add(currentTableCell);
+				currentTableCell.setX(e.getX());
+				currentTableCell.setY(e.getY());
+			
+			}else {
+				
+				cells.add(new OperatorCell(name, style, newCell, currentType, e.getX(), e.getY(), 80, 30));
+				
+			}
+			
+			createCell = false;
+			
+		}
+		
+		if(jCell != null) {
+			
+			if(createEdge == true && newParent == null) {
+				newParent = jCell;
+			}
+			
+			Cell parentCell = newParent != null ? cells.stream().filter(x -> x.getCell().equals((mxCell)newParent)).findFirst().orElse(null) : null;
+			
+			if( createEdge == true && jCell != newParent) {
+				
+				graph.insertEdge(newParent, null,"", newParent, jCell);
+				((mxCell) jCell).setParent((mxCell)newParent);
+				
+				cell.addParent(parentCell);
+				
+				if(parentCell != null) parentCell.setChild(cell);
+				
+				if(cell instanceof OperatorCell) {
+					
+					if(((OperatorCell)cell).getType() == OperationType.PROJECAO && cell.checkRules(OperationTypeEnums.UNARIA) == true) new FormFrameProjecao(jCell, cells);
+						
+					else if(((OperatorCell)cell).getType() == OperationType.SELECAO && cell.checkRules(OperationTypeEnums.UNARIA) == true) new FormFrameSelecao(jCell, cells);
+						
+					else if(((OperatorCell)cell).getType() == OperationType.JUNCAO && cell.getParents().size() == 2 && cell.checkRules(OperationTypeEnums.BINARIA) == true) new FormFrameJuncao(jCell, cells);
+					
+				}
+				leafs.add(cell);
+				leafs.remove(parentCell.getCell());
+				
+				newParent = null;
+				createEdge = false;
+				
+			}
+			
+			if(deleteCell == true) {
+				
+				graph.getModel().remove(jCell);	
+				deleteCell = false;
+				
+			}
+		}
+
+		if(e.getButton() == MouseEvent.BUTTON3 && jCell != null) {
+			
+			graph.getModel().remove(jCell);	
+
+		}
+		if(e.getButton() == MouseEvent.BUTTON2 && jCell != null) {
+			
+			cell.getSourceTableName(name);
+			
+		}
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+
+		Cell cell = jCell != null ? cells.stream().filter(x -> x.getCell().equals((mxCell)jCell)).findFirst().orElse(null) : null;
+		
+		if (e.getKeyCode() == KeyEvent.VK_S && jCell != null) {
+
+			new ResultFrame(cell.getContent());
+		
+		}else if(e.getKeyCode() == KeyEvent.VK_DELETE && jCell != null) {
+			
+			graph.getModel().remove(jCell);	
+		
+		}
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

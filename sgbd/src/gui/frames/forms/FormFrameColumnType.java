@@ -6,8 +6,11 @@ import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -33,12 +36,13 @@ public class FormFrameColumnType extends JDialog implements ActionListener {
 	private List<JLabel> labels;
 	private List<JComboBox<String>> comboBoxes;
 	private List<String> columnsName;	
+	private AtomicReference<Boolean> exitReference;
 	
-	public static void main(List<Column> columns, List<String> columnsName) {
+	public static void main(List<Column> columns, List<String> columnsName, AtomicReference<Boolean> exitReference) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormFrameColumnType frame = new FormFrameColumnType(columns, columnsName);
+					FormFrameColumnType frame = new FormFrameColumnType(columns, columnsName, exitReference);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,7 +51,7 @@ public class FormFrameColumnType extends JDialog implements ActionListener {
 		});
 	}
 	
-	public FormFrameColumnType(List<Column> columns, List<String> columnsName) {
+	public FormFrameColumnType(List<Column> columns, List<String> columnsName, AtomicReference<Boolean> exitReference) {
 		
 		super((Window)null);
 		setModal(true);
@@ -55,6 +59,8 @@ public class FormFrameColumnType extends JDialog implements ActionListener {
 		this.columns = columns; 
 		this.columnsName = columnsName;
 			
+		this.exitReference = exitReference;
+		
 		initializeGUI();
 		
 	}
@@ -127,6 +133,16 @@ public class FormFrameColumnType extends JDialog implements ActionListener {
 						.addComponent(btnContinue))
 					.addContainerGap())
 		);
+		
+		addWindowListener(new WindowAdapter() {
+			
+			public void windowClosing(WindowEvent e) {
+				  
+				exitReference.set(true);
+    
+			}
+			
+		 });
 		
 		contentPane.setLayout(gl_contentPane);
 		this.setVisible(true);
