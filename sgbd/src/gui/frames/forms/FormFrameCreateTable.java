@@ -44,14 +44,14 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 	private JButton btnCreateData;
 	private JTextField textFieldTableName;
 	private TableCell tableCell;
-	private AtomicReference<TableCell> tableCellReference;
+	private AtomicReference<Boolean> exitReference;
 	private List<Column> columns;
 	
-	public static void main(AtomicReference<TableCell> tableCell) {
+	public static void main(TableCell tableCell, AtomicReference<Boolean> exitReference) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormFrameCreateTable frame = new FormFrameCreateTable(tableCell);
+					FormFrameCreateTable frame = new FormFrameCreateTable(tableCell, exitReference);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -60,14 +60,14 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 		});
 	}
 	
-	public FormFrameCreateTable(AtomicReference<TableCell> tableCell) {
+	public FormFrameCreateTable(TableCell tableCell, AtomicReference<Boolean> exitReference) {
 		
 		super((Window)null);
 		setModal(true);
 		
 		columns = new ArrayList<>();
-		this.tableCellReference = tableCell;
-		this.tableCell = tableCell.get();
+		this.tableCell = tableCell;
+		this.exitReference = exitReference;
 				
 		initializeGUI();
 		
@@ -175,7 +175,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 			
 			public void windowClosing(WindowEvent e) {
 				  
-				tableCellReference.set(null);
+				exitReference.set(true);
     
 			}
 			
@@ -191,7 +191,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 		
 		if(e.getSource() == btnCancel) {
 			
-			tableCellReference.set(null);
+			exitReference.set(true);
 			dispose();
 			
 		}
@@ -316,7 +316,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 		
 		}else {
 			
-			tableCellReference.set(null);
+			exitReference.set(true);
 			
 		}
 				

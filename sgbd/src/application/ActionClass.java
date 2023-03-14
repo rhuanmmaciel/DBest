@@ -267,11 +267,12 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			
 			TableCell tableCell = new TableCell(80, 30);
 			
-			AtomicReference<TableCell> tableCellReference = new AtomicReference<>(tableCell);
+			Boolean deleteCell = false;
+			AtomicReference<Boolean> deleteCellReference = new AtomicReference<>(deleteCell);
 			
-			new FormFrameCreateTable(tableCellReference);
+			new FormFrameCreateTable(tableCell, deleteCellReference);
 			
-			if(tableCellReference.get() != null) {
+			if(!deleteCellReference.get()) {
 				
 				assignVariables(tableCell.getStyle(), tableCell.getName(), false, null);
 				currentTableCell = tableCell;
