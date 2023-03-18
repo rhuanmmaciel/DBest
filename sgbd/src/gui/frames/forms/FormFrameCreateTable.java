@@ -212,7 +212,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 		}
 		if(e.getSource() == btnCreateData) {
 			
-			new FormFrameRandomData(columns, model, table);
+			new FormFrameCreateData(columns, model, table);
 			
 		}
 		
@@ -306,13 +306,14 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 		
 		boolean exit = false;		
 		AtomicReference<Boolean> exitReference = new AtomicReference<>(exit);
+		StringBuilder pkName = new StringBuilder();
 		
-		new FormFramePrimaryKey(lines, exitReference);
+		new FormFramePrimaryKey(lines, pkName, exitReference);
 		
 		if(!exitReference.get()) {
 		
 			lines.remove(0);
-			TableCreator.createTable(tableCell, textFieldTableName.getText(), columns, lines);
+			TableCreator.createTable(tableCell, textFieldTableName.getText(), pkName.toString(), columns, lines);
 		
 		}else {
 			

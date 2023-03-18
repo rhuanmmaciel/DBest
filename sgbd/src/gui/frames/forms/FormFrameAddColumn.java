@@ -6,6 +6,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -37,7 +38,7 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 	private JButton btnCancel;
 	private JLabel lblColumnName;
 	private List<Column> columns;
-	
+
 	public static void main(DefaultTableModel table, List<Column> columns) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -160,27 +161,27 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 				
 				String itemSelected = comboBox.getSelectedItem().toString();
 				
-				if(itemSelected == "None") {
+				if(Objects.equals(itemSelected, "None")) {
 					
 					type = ColumnDataType.NONE;
 					
-				} else if(itemSelected == "Integer") {
+				} else if(Objects.equals(itemSelected, "Integer")) {
 					
 					type = ColumnDataType.INTEGER;
 					
-				}else if(itemSelected == "Float") {
+				}else if(Objects.equals(itemSelected, "Float")) {
 					
 					type = ColumnDataType.FLOAT;
 					
-				}else if(itemSelected == "String") {
+				}else if(Objects.equals(itemSelected, "String")) {
 					
 					type = ColumnDataType.STRING;
 					
-				}else if(itemSelected == "Character") {
+				}else if(Objects.equals(itemSelected, "Character")) {
 					
 					type = ColumnDataType.CHARACTER;
 					
-				}else if(itemSelected == "Boolean") {
+				}else if(Objects.equals(itemSelected, "Boolean")) {
 					
 					type = ColumnDataType.BOOLEAN;
 					
@@ -235,7 +236,7 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 	
 	private void updateToolTipText() {
 		
-		String btnCreateColumnToolTipText = new String();
+		String btnCreateColumnToolTipText = "";
 		
 		if(txtColumnName.getText().isEmpty()) {
 			

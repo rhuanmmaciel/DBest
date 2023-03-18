@@ -5,30 +5,33 @@ import java.util.List;
 
 import entities.TableCell;
 import enums.ColumnDataType;
-import gui.frames.forms.FormFramePrimaryKey;
 import sgbd.prototype.Column;
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
 import sgbd.table.SimpleTable;
 import sgbd.table.Table;
+import sgbd.table.components.Header;
 
 public class TableCreator {
 	
-	private static List<RowData> getRowData(String tableName, List<entities.Column> columns, List<List<String>> lines){
+	private static List<RowData> getRowData(String tableName, String pkName, List<entities.Column> columns, List<List<String>> lines){
 		
 		List<RowData> rows = new ArrayList<>();
 		
 		for(int i = 0; i < columns.size(); i++) {
 			
 			String name = columns.get(i).getName();
-			name += "."+tableName;
 			ColumnDataType type = columns.get(i).getType();
+			Boolean pk = name.equals(pkName);
+			
 			columns.remove(i);
-			columns.add(i, new entities.Column(name, type));
+			columns.add(i, new entities.Column(name, tableName, type, pk));
 			
 		}
 		
-		int k = 0;
+		Boolean isPKCreated = !columns.stream().anyMatch(x -> x.isPK());
+		
+		int k = 1;
 		for(List<String> line : lines) {
 
 			RowData rowData = new RowData();
@@ -57,32 +60,36 @@ public class TableCreator {
 				i++;
 				
 			}
-			if(FormFramePrimaryKey.getValues()[0] != null)
-				rowData.setInt(FormFramePrimaryKey.getColumnName()+"."+tableName, FormFramePrimaryKey.getValues()[k++]);
+			
+			
+			if(isPKCreated) {
+				
+				rowData.setInt(tableName + "." + pkName, k++);
+				
+			}
+				
 			
 			rows.add(rowData);
 			
 		}
 		
-		if(FormFramePrimaryKey.getValues()[0] != null)			
-			columns.add(new entities.Column(FormFramePrimaryKey.getColumnName()+"."+tableName, ColumnDataType.INTEGER));
+		if(isPKCreated)			
+			columns.add(new entities.Column(pkName, tableName, ColumnDataType.INTEGER, true));
 		
 		return rows;
 		
 	}
 	
-	public static void createTable(TableCell tableCell, String tableName, List<entities.Column> columns, List<List<String>> lines) {
+	public static void createTable(TableCell tableCell, String tableName, String pkName, List<entities.Column> columns, List<List<String>> lines) {
 		
-		List<RowData> rows = new ArrayList<>(getRowData(tableName, columns, lines));
+		List<RowData> rows = new ArrayList<>(getRowData(tableName, pkName, columns, lines));
 		
 		Prototype prototype = new Prototype();
 		 
-		String primaryKeyName = FormFramePrimaryKey.getColumnName();
-		
 		int index = -1;
 		for(int i = 0; i < columns.size(); i++) {
 			
-			if(columns.get(i).getName().toLowerCase().contains(primaryKeyName.toLowerCase()) && index < 0) index = i;
+			if(columns.get(i).getName().toLowerCase().contains(pkName.toLowerCase()) && index < 0) index = i;
 			
 		}
 				
@@ -112,7 +119,7 @@ public class TableCreator {
 			
 		}
 		
-	    Table table = SimpleTable.openTable(tableName, prototype);
+	    Table table = SimpleTable.openTable(new Header(prototype, tableName));
 	    table.open();
 	    rows.stream().forEach(x -> {table.insert(x);});
 	    

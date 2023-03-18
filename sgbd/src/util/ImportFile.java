@@ -26,7 +26,7 @@ import gui.frames.forms.FormFramePrimaryKey;
 
 public class ImportFile {
 	
-	public ImportFile(TableCell tableCell, FileType fileType, AtomicReference<Boolean> deleteCellReference){
+	public ImportFile(TableCell tableCell, FileType fileType, List<String> tablesName, AtomicReference<Boolean> deleteCellReference){
 		
 		JFileChooser fileUpload = new JFileChooser();
 		
@@ -48,23 +48,24 @@ public class ImportFile {
 		
 		if(res == JFileChooser.APPROVE_OPTION) {
 			
-			StringBuilder fileName = new StringBuilder();
+			StringBuilder pkName = new StringBuilder();
+			StringBuilder tableName = new StringBuilder();
 			List<String> columnsName = new ArrayList<>();
 			List<List<String>> lines = new ArrayList<>();
 			List<Column> columns = new ArrayList<>();
 			
 			if(fileType == FileType.CSV) {
 			
-				csv(fileUpload, fileName, columnsName, lines, columns, deleteCellReference);
+				csv(fileUpload, tableName, columnsName, lines, columns, tablesName, pkName, deleteCellReference);
 			
 			}else if(fileType == FileType.EXCEL) {
 				
-				excel(fileUpload, fileName, columnsName, lines, columns, deleteCellReference);
+				excel(fileUpload, tableName, columnsName, lines, columns, tablesName, pkName, deleteCellReference);
 				
 			}
 			
 			if(!deleteCellReference.get())
-				TableCreator.createTable(tableCell, fileName.toString(), columns, lines);
+				TableCreator.createTable(tableCell, tableName.toString(), pkName.toString(), columns, lines);
 			
 		}else {
 			
@@ -74,13 +75,15 @@ public class ImportFile {
 		
 	}
 	
-	private void excel(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns, AtomicReference<Boolean> exitReference) {
+	private void excel(JFileChooser fileUpload, StringBuilder tableName, List<String> columnsName,
+					   List<List<String>> lines, List<Column> columns, List<String> tablesName,
+					   StringBuilder pkName, AtomicReference<Boolean> exitReference) {
 		
 		try {
 		
 			FileInputStream file = new FileInputStream(fileUpload.getSelectedFile().getAbsolutePath());
 			
-			fileName.append(fileUpload.getSelectedFile().getName().toUpperCase().substring(0, fileUpload.getSelectedFile().getName().indexOf(".")));
+			tableName.append(fileUpload.getSelectedFile().getName().toUpperCase().substring(0, fileUpload.getSelectedFile().getName().indexOf(".")));
 			
 			XSSFWorkbook workbook = new XSSFWorkbook(file);
 			XSSFSheet sheet = workbook.getSheetAt(0);
@@ -146,10 +149,10 @@ public class ImportFile {
 			aux.add(columnsName);
 			aux.addAll(lines);
 			
-			new FormFramePrimaryKey(aux, exitReference);
+			new FormFramePrimaryKey(aux, pkName, exitReference);
 			
 			if(!exitReference.get())
-				new FormFrameColumnType(columns, columnsName, exitReference);
+				new FormFrameColumnType(columns, aux, tableName, tablesName, exitReference);
 			
 		} catch (IOException e) {
 
@@ -159,12 +162,14 @@ public class ImportFile {
 		
 	}
 	
-	private void csv(JFileChooser fileUpload, StringBuilder fileName, List<String> columnsName, List<List<String>> lines, List<Column> columns, AtomicReference<Boolean> exitReference){
+	private void csv(JFileChooser fileUpload, StringBuilder tableName, List<String> columnsName,
+					 List<List<String>> lines, List<Column> columns, List<String> tablesName,
+					 StringBuilder pkName, AtomicReference<Boolean> exitReference){
 		
 		try(BufferedReader br = new BufferedReader(new FileReader(fileUpload.getSelectedFile().getAbsolutePath()))){
 			
 			columnsName.addAll(Arrays.asList(br.readLine().replace("\"", "").replace(" ", "").split(",")));
-			fileName.append(fileUpload.getSelectedFile().getName().toUpperCase().substring(0, fileUpload.getSelectedFile().getName().indexOf(".")));
+			tableName.append(fileUpload.getSelectedFile().getName().toUpperCase().substring(0, fileUpload.getSelectedFile().getName().indexOf(".")));
 			
 			String line = br.readLine();
 			while(line != null) {
@@ -178,10 +183,10 @@ public class ImportFile {
 			aux.add(columnsName);
 			aux.addAll(lines);
 			
-			new FormFramePrimaryKey(aux, exitReference);
+			new FormFramePrimaryKey(aux, pkName, exitReference);
 			
 			if(!exitReference.get())
-				new FormFrameColumnType(columns, columnsName, exitReference);
+				new FormFrameColumnType(columns, aux, tableName, tablesName, exitReference);
 			
 		}catch(IOException e) {
 			

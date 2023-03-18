@@ -73,7 +73,7 @@ public class ExportTable extends JPanel {
 	}
 	
 	
-	public static void exportToImage(JFrame frame) {
+	public static void exportToImage(JFrame frame,String path) {
 		
         try {
             Container contentPane = frame.getContentPane();
@@ -84,7 +84,7 @@ public class ExportTable extends JPanel {
             g2d.dispose();
 
             // replace this path to your image
-            ImageIO.write(image, "jpeg", new File("Print.png"));
+            ImageIO.write(image, "jpeg", new File(path));
         } catch (IOException e) {
 		    System.out.println("Error "+e);
         }

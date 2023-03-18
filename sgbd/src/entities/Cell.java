@@ -128,7 +128,7 @@ public abstract class Cell {
 	
 	public Boolean checkRules(OperationTypeEnums type) {
 	
-		if(type == OperationTypeEnums.UNARIA) {
+		if(type == OperationTypeEnums.UNARY) {
 			
 			if(this.getParents().size() != 1) {
 				
@@ -137,7 +137,7 @@ public abstract class Cell {
 			
 			}
 			
-		}else if(type == OperationTypeEnums.BINARIA){
+		}else if(type == OperationTypeEnums.BINARY){
 			
 			if(this.getParents().size() > 2) {
 				

@@ -34,14 +34,13 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 	private JButton btnPickColumn;
 	private JButton btnCreatePK;
 	private AtomicReference<Boolean> exitReference;
-	private static Integer[] values;
-	private static String name;
+	private StringBuilder pkName;
 	
-	public static void main(List<List<String>> data, AtomicReference<Boolean> exitReference) {
+	public static void main(List<List<String>> data, StringBuilder pkName, AtomicReference<Boolean> exitReference) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormFramePrimaryKey frame = new FormFramePrimaryKey(data, exitReference);
+					FormFramePrimaryKey frame = new FormFramePrimaryKey(data, pkName, exitReference);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,7 +49,7 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 		});
 	}
 	
-	public FormFramePrimaryKey(List<List<String>> data, AtomicReference<Boolean> exitReference) {
+	public FormFramePrimaryKey(List<List<String>> data, StringBuilder pkName, AtomicReference<Boolean> exitReference) {
 		
 		super((Window)null);
 		setModal(true);
@@ -75,6 +74,7 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 		}
 		
 		this.exitReference = exitReference;
+		this.pkName = pkName;
 		
 		initializeGUI();
 		
@@ -112,8 +112,6 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 	    });
 	    
 		JScrollPane scrollPane = new JScrollPane(table);
-		
-		values = new Integer[table.getRowCount()];
 		
 		JLabel lblNewLabel = new JLabel("Selecione a Chave Primária da tabela: ");
 		
@@ -168,12 +166,14 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 		
 		if(e.getSource() == btnPickColumn) {
 			
-			returnColumn(false);
+			pkName.append(table.getColumnName(table.getSelectedColumn()));
+			dispose();
 			
 		}
 		if(e.getSource() == btnCreatePK) {
 			
-			returnColumn(true);
+			pkName.append("Id_PK");
+			dispose();
 			
 		}
 		
@@ -236,44 +236,5 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 		btnPickColumn.setToolTipText(btnPickColumnToolTipText.isEmpty() ? null : btnPickColumnToolTipText);
 		
 	}
-	
-	private void returnColumn(boolean createColumn) {
-		
-		if(createColumn) {
-			
-			name = "Id(PK)";
-			for(int i = 0; i < table.getRowCount(); i++) {
-				
-				values[i] = i + 1;
-				
-			}
-			
-		}else{
-			
-			name = table.getColumnName(table.getSelectedColumn());
-			for(int i = 0; i < table.getRowCount(); i++) {
-				
-				values[i] = null;
-				
-			}
-			
-		}
-		
-        dispose();
-		
-	}
-
-	public static Integer[] getValues() {
-		
-		return values;
-		
-	}
-	
-	public static String getColumnName() {
-		
-		return name;
-		
-	}
-	
 	
 }

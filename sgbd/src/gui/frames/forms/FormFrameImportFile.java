@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
@@ -32,12 +33,13 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 	private AtomicReference<Boolean> deleteCellReference;
 	private TableCell tableCell;
 	private JLabel lblPickFileExtension;
+	private List<String> tablesName;
 	
-	public static void main(TableCell tableCell, AtomicReference<Boolean> deleteCellReference) {
+	public static void main(TableCell tableCell, List<String> tablesName, AtomicReference<Boolean> deleteCellReference) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormFrameImportFile frame = new FormFrameImportFile(tableCell, deleteCellReference);
+					FormFrameImportFile frame = new FormFrameImportFile(tableCell, tablesName, deleteCellReference);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,11 +48,12 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 		});
 	}
 	
-	public FormFrameImportFile(TableCell tableCell, AtomicReference<Boolean> deleteCellReference) {
+	public FormFrameImportFile(TableCell tableCell, List<String> tablesName, AtomicReference<Boolean> deleteCellReference) {
 
 		super((Window)null);
 		setModal(true);
 		
+		this.tablesName = tablesName;
 		this.tableCell = tableCell;
 		this.deleteCellReference = deleteCellReference;
 		
@@ -140,12 +143,12 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 			
 		}else if(e.getSource() == btnCsv) {
 			
-			new ImportFile(tableCell, FileType.CSV, deleteCellReference);
+			new ImportFile(tableCell, FileType.CSV, tablesName, deleteCellReference);
 			dispose();
 			
 		}else if(e.getSource() == btnXlsXlsxOdt) {
 			
-			new ImportFile(tableCell, FileType.EXCEL, deleteCellReference);
+			new ImportFile(tableCell, FileType.EXCEL, tablesName, deleteCellReference);
 			dispose();
 			
 		}else if(e.getSource() == btnSql) {

@@ -21,7 +21,7 @@ public class TableFormat {
 		List<String> columnsName = new ArrayList<>();
 		
 		Tuple tuple = aux.hasNext() ? aux.next() : null;
-		
+
 		if(tuple != null) {
 	        for (Map.Entry<String, ComplexRowData> line : tuple)
 	    		for(Map.Entry<String,byte[]> data:line.getValue()) 
@@ -29,8 +29,7 @@ public class TableFormat {
 	    	
 	    	rows.add(columnsName);
 		}
-		
-	    while(aux.hasNext()){
+	    while(aux.hasNext() || tuple != null){
 	    	
 	        Tuple t = tuple == null ? aux.next() : tuple;
 
