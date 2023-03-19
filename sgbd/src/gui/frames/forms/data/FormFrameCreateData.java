@@ -1,8 +1,7 @@
-package gui.frames.forms;
+package gui.frames.forms.data;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -20,6 +19,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -35,6 +35,7 @@ import javax.swing.table.DefaultTableModel;
 
 import entities.Column;
 import enums.ColumnDataType;
+import gui.frames.forms.data.CustomProviders.MyCustomFaker;
 import net.datafaker.Faker;
 
 @SuppressWarnings("serial")
@@ -50,13 +51,6 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 	
 	private JTabbedPane tabbedPane;
 	
-	private List<Component> everyTypeComponents;
-	private List<Component> stringComponents;
-	private List<Component> intComponents;
-	private List<Component> floatComponents;
-	private List<Component>charComponents;
-	private List<Component> boolComponents;
-	
 	private ButtonGroup jRadioGroup;
 	
 	private JRadioButton rdbtnStringName;
@@ -69,25 +63,33 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 	private JRadioButton rdbtnStringState;
 	private JRadioButton rdbtnStringPhone;
 	private JRadioButton rdbtnStringJob;
-	private JRadioButton rdbtnIntRandom;
-	private JRadioButton rdbtnIntRandomDigits;
-	private JRadioButton rdbtnIntSequence;
-	private JRadioButton rdbtnFloatRandom;
 	
+	private JRadioButton rdbtnIntRandom;
 	private JSpinner spinnerIntRandomMin;
 	private JSpinner spinnerIntRandomMax;
-	
+	private JRadioButton rdbtnIntRandomDigits;
 	private JSpinner spinnerIntRandomDigits;
-	
+	private JRadioButton rdbtnIntSequence;
 	private JSpinner spinnerIntSequence;
 	
+	private JRadioButton rdbtnFloatRandom;
 	private JSpinner spinnerFloatRandomDecimals;
 	private JSpinner spinnerFloatRandomMin;
 	private JSpinner spinnerFloatRandomMax;
 	
+	private JRadioButton rdbtnCharRandom;
+	private JCheckBox checkBoxCharUppercaseLetter;
+	private JCheckBox checkBoxCharLowercaseLetter;
+	private JCheckBox checkBoxCharSpecial;
+	private JCheckBox checkBoxCharNumbers;
+	private List<JCheckBox> charCheckBoxes;
+	
+	private JRadioButton rdbtnBoolRandom;
+	
 	private DefaultTableModel model;
 	private JTable table;
 	private Faker faker;
+	private MyCustomFaker myFaker;
 
 	public static void main(List<Column> columns, DefaultTableModel model, JTable table) {
 		EventQueue.invokeLater(new Runnable() {
@@ -111,6 +113,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		this.table = table;
 		this.columns = new ArrayList<>(columns);
 		this.faker = new Faker(new Locale("pt", "BR"));
+		this.myFaker = new MyCustomFaker();
 		
 	    initializeGUI();
 	}
@@ -162,19 +165,13 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		JPanel boolPane = new JPanel();
 		tabbedPane.addTab("Booleano", null, boolPane, null);
 
-	    // listas que armazenarão os componentes de cada tipo para poder desabilitá-los todos juntos
-	    everyTypeComponents = new ArrayList<>();
-	    stringComponents = new ArrayList<>();
-	    intComponents = new ArrayList<>();
-	    floatComponents = new ArrayList<>();
-	    charComponents = new ArrayList<>();
-	    boolComponents = new ArrayList<>();
-
 	    jRadioGroup = new ButtonGroup();
 	    
 	    intPane.setLayout(new BoxLayout(intPane, BoxLayout.Y_AXIS));
 		stringPane.setLayout(new BoxLayout(stringPane, BoxLayout.Y_AXIS));
 		floatPane.setLayout(new BoxLayout(floatPane, BoxLayout.Y_AXIS));
+		charPane.setLayout(new BoxLayout(charPane, BoxLayout.Y_AXIS));
+		boolPane.setLayout(new BoxLayout(boolPane, BoxLayout.Y_AXIS));
 						
 		// VBox's que armazenarão cada radioButton para ficarem um abaixo do outro
 		Box stringBox = Box.createVerticalBox();
@@ -189,45 +186,53 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		floatBox.setAlignmentX(LEFT_ALIGNMENT);
 		floatPane.add(floatBox);
 		
+		Box charBox = Box.createVerticalBox();
+		charBox.setAlignmentX(LEFT_ALIGNMENT);
+		charPane.add(charBox);
+		
+		Box boolBox = Box.createVerticalBox();
+		boolBox.setAlignmentX(LEFT_ALIGNMENT);
+		boolPane.add(boolBox);
+		
 		// Strings:
 		rdbtnStringName = new JRadioButton("Nome Completo");
-		createButton(rdbtnStringName, ColumnDataType.STRING);
+		createButton(rdbtnStringName);
 		stringBox.add(rdbtnStringName);
 		
 		rdbtnStringFirstName = new JRadioButton("Nome");
-		createButton(rdbtnStringFirstName, ColumnDataType.STRING);
+		createButton(rdbtnStringFirstName);
 		stringBox.add(rdbtnStringFirstName);
 		
 		rdbtnStringLastName = new JRadioButton("Sobrenome");
-		createButton(rdbtnStringLastName, ColumnDataType.STRING);
+		createButton(rdbtnStringLastName);
 		stringBox.add(rdbtnStringLastName);
 		
 		rdbtnStringCPF = new JRadioButton("CPF");
-		createButton(rdbtnStringCPF, ColumnDataType.STRING);
+		createButton(rdbtnStringCPF);
 		stringBox.add(rdbtnStringCPF);
 		
 		rdbtnStringCNPJ = new JRadioButton("CNPJ");
-		createButton(rdbtnStringCNPJ, ColumnDataType.STRING);
+		createButton(rdbtnStringCNPJ);
 		stringBox.add(rdbtnStringCNPJ);
 		
 		rdbtnStringCity = new JRadioButton("Cidade");
-		createButton(rdbtnStringCity, ColumnDataType.STRING);
+		createButton(rdbtnStringCity);
 		stringBox.add(rdbtnStringCity);
 		
 		rdbtnStringCountry = new JRadioButton("País");
-		createButton(rdbtnStringCountry, ColumnDataType.STRING);
+		createButton(rdbtnStringCountry);
 		stringBox.add(rdbtnStringCountry);
 		
 		rdbtnStringState = new JRadioButton("Estado");
-		createButton(rdbtnStringState, ColumnDataType.STRING);	
+		createButton(rdbtnStringState);	
 		stringBox.add(rdbtnStringState);
 		
 		rdbtnStringPhone = new JRadioButton("Número de telefone");
-		createButton(rdbtnStringPhone, ColumnDataType.STRING);	
+		createButton(rdbtnStringPhone);	
 		stringBox.add(rdbtnStringPhone);
 		
 		rdbtnStringJob = new JRadioButton("Área de atuação");
-		createButton(rdbtnStringJob, ColumnDataType.STRING);
+		createButton(rdbtnStringJob);
 		stringBox.add(rdbtnStringJob);
 
 	    // Inteiros:
@@ -235,13 +240,12 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		intItem.setAlignmentX(LEFT_ALIGNMENT);
 		
 	    rdbtnIntRandom = new JRadioButton("Número entre ");
-	    createButton(rdbtnIntRandom, ColumnDataType.INTEGER);
+	    createButton(rdbtnIntRandom);
 	    spinnerIntRandomMin = new JSpinner();
-		createSpinner(spinnerIntRandomMin, ColumnDataType.INTEGER);
+		createSpinner(spinnerIntRandomMin);
 	    JLabel lblRandomIntegerText_1 = new JLabel(" e ");
 	    spinnerIntRandomMax = new JSpinner();
-		createSpinner(spinnerIntRandomMax, ColumnDataType.INTEGER);
-	    intComponents.add(lblRandomIntegerText_1);
+		createSpinner(spinnerIntRandomMax);
 	    
 	    intItem.add(rdbtnIntRandom);
 	    intItem.add(spinnerIntRandomMin);
@@ -255,11 +259,10 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 	    intItem.setAlignmentX(LEFT_ALIGNMENT);
 	    
 		rdbtnIntRandomDigits = new JRadioButton("Número com ");
-		createButton(rdbtnIntRandomDigits, ColumnDataType.INTEGER);
+		createButton(rdbtnIntRandomDigits);
 		spinnerIntRandomDigits = new JSpinner();
-		createSpinner(spinnerIntRandomDigits, ColumnDataType.INTEGER);
+		createSpinner(spinnerIntRandomDigits);
 		JLabel lblRandomIntegerDigitsText_1 = new JLabel(" digítos");
-		intComponents.add(lblRandomIntegerDigitsText_1);
 		
 		intItem.add(rdbtnIntRandomDigits);
 		intItem.add(spinnerIntRandomDigits);
@@ -272,32 +275,31 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 	    intItem.setAlignmentX(LEFT_ALIGNMENT);
 	    
 		rdbtnIntSequence = new JRadioButton("Sequência com início em ");
-		createButton(rdbtnIntSequence, ColumnDataType.INTEGER);
+		createButton(rdbtnIntSequence);
 		spinnerIntSequence = new JSpinner();
-		createSpinner(spinnerIntSequence, ColumnDataType.INTEGER);
+		createSpinner(spinnerIntSequence);
 		
 		intItem.add(rdbtnIntSequence);
 		intItem.add(spinnerIntSequence);
 		
 	    intBox.add(intItem);
 		
+	    intBox.add(Box.createVerticalStrut(15));
 	    
 		// Floats:
 		Box floatItem = Box.createHorizontalBox();
 		floatItem.setAlignmentX(LEFT_ALIGNMENT);
 	    
 		rdbtnFloatRandom = new JRadioButton("Número com ");
-		createButton(rdbtnFloatRandom, ColumnDataType.FLOAT);
+		createButton(rdbtnFloatRandom);
 		spinnerFloatRandomDecimals = new JSpinner();
-		createSpinner(spinnerFloatRandomDecimals, ColumnDataType.FLOAT);
+		createSpinner(spinnerFloatRandomDecimals);
 		JLabel lblRandomFloatText_1 = new JLabel(" casa decimais entre ");
-		floatComponents.add(lblRandomFloatText_1);
 		spinnerFloatRandomMin = new JSpinner();
-		createSpinner(spinnerFloatRandomMin, ColumnDataType.FLOAT);
+		createSpinner(spinnerFloatRandomMin);
 		JLabel lblRandomFloatText_2 = new JLabel(" e ");
-		floatComponents.add(lblRandomFloatText_2);
 		spinnerFloatRandomMax = new JSpinner();
-		createSpinner(spinnerFloatRandomMax, ColumnDataType.FLOAT);
+		createSpinner(spinnerFloatRandomMax);
 		
 		floatItem.add(rdbtnFloatRandom);
 		floatItem.add(spinnerFloatRandomDecimals);
@@ -307,6 +309,48 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		floatItem.add(spinnerFloatRandomMax);
 		
 		floatBox.add(floatItem);
+		floatBox.add(Box.createVerticalStrut(15));
+		
+		// Caracteres
+		
+		Box charItem = Box.createHorizontalBox();
+		charItem.setAlignmentX(LEFT_ALIGNMENT);
+		
+		charCheckBoxes = new ArrayList<>();
+		
+		rdbtnCharRandom = new JRadioButton("Caractere aleatório: ");
+		createButton(rdbtnCharRandom);
+		checkBoxCharUppercaseLetter = new JCheckBox("Letras maiúsculas ");
+		createCheckBox(checkBoxCharUppercaseLetter);
+		checkBoxCharLowercaseLetter = new JCheckBox("Letras minúsculas ");
+		createCheckBox(checkBoxCharLowercaseLetter);
+		checkBoxCharSpecial= new JCheckBox("Especiais ");
+		createCheckBox(checkBoxCharSpecial);
+		checkBoxCharNumbers= new JCheckBox("Números ");
+		createCheckBox(checkBoxCharNumbers);
+		
+		charItem.add(rdbtnCharRandom);
+		charItem.add(checkBoxCharLowercaseLetter);
+		charItem.add(checkBoxCharUppercaseLetter);
+		charItem.add(checkBoxCharSpecial);
+		charItem.add(checkBoxCharNumbers);
+		
+		charBox.add(charItem);
+		charBox.add(Box.createVerticalStrut(15));
+		
+		
+		// Booleanos
+		
+		Box boolItem = Box.createHorizontalBox();
+		boolItem.setAlignmentX(LEFT_ALIGNMENT);
+		
+		rdbtnBoolRandom = new JRadioButton("Booleano aleatório");
+		createButton(rdbtnBoolRandom);
+		
+		boolItem.add(rdbtnBoolRandom);
+		
+		boolBox.add(boolItem);
+		boolBox.add(Box.createVerticalStrut(15));
 		
 		JPanel bottomPane = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) bottomPane.getLayout();
@@ -321,12 +365,6 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 
 	    btnCancel.addActionListener(this);
 	    btnReady.addActionListener(this);
-	    
-		everyTypeComponents.addAll(boolComponents);
-		everyTypeComponents.addAll(intComponents);
-		everyTypeComponents.addAll(floatComponents);
-		everyTypeComponents.addAll(stringComponents);
-		everyTypeComponents.addAll(charComponents);
 		
 		int columnIndex = table.getColumnModel().getColumnIndex(comboBox.getSelectedItem().toString().toUpperCase());
 		
@@ -338,61 +376,24 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		this.setVisible(true);
 	}
 	
-	private void createButton(JRadioButton button, ColumnDataType type) {
+	private void createCheckBox(JCheckBox check) {
+		
+		check.addActionListener(this);
+		charCheckBoxes.add(check);
+		
+	}
+	
+	private void createButton(JRadioButton button) {
 		
 		button.addActionListener(this);
 		jRadioGroup.add(button);
 		
-		if(type == ColumnDataType.STRING) {
-		
-			stringComponents.add(button);
-		
-		}else if(type == ColumnDataType.INTEGER) {
-			
-			intComponents.add(button);
-			
-		}else if(type == ColumnDataType.FLOAT) {
-			
-			floatComponents.add(button);
-			
-		}else if(type == ColumnDataType.CHARACTER) {
-			
-			charComponents.add(button);
-			
-		}else if(type == ColumnDataType.BOOLEAN) {
-			
-			boolComponents.add(button);
-			
-		}
-		
 	}
 	
-	private void createSpinner(JSpinner spinner, ColumnDataType type) {
+	private void createSpinner(JSpinner spinner) {
 		
 		spinner.addChangeListener(this);
-		spinner.setMaximumSize(new Dimension(50, 20));
-		
-		if(type == ColumnDataType.STRING) {
-		
-			stringComponents.add(spinner);
-		
-		}else if(type == ColumnDataType.INTEGER) {
-			
-			intComponents.add(spinner);
-			
-		}else if(type == ColumnDataType.FLOAT) {
-			
-			floatComponents.add(spinner);
-			
-		}else if(type == ColumnDataType.CHARACTER) {
-			
-			charComponents.add(spinner);
-			
-		}else if(type == ColumnDataType.BOOLEAN) {
-			
-			boolComponents.add(spinner);
-			
-		}	
+		spinner.setMaximumSize(new Dimension(100, 20));
 		
 	}
 	
@@ -462,6 +463,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 			setAllowedTabs(selectedColumnType);
 			lblColumnType.setText("Tipo: " + selectedColumnType.toString());
 			jRadioGroup.clearSelection();
+			charCheckBoxes.forEach(x -> x.setSelected(false));
 			
 		}
 		
@@ -478,19 +480,25 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 	
 	private void verifyReady() {
 		
-		boolean isAnySelected = jRadioGroup.getSelection() != null;
-		
-		btnReady.setEnabled(isAnySelected);
+		boolean isAnyCharCheckBoxSelected = rdbtnCharRandom.isSelected() && charCheckBoxes.stream().anyMatch(x -> x.isSelected());
+		boolean isAnySelected = jRadioGroup.getSelection() != null && !rdbtnCharRandom.isSelected();
+
+		btnReady.setEnabled(isAnySelected || isAnyCharCheckBoxSelected);
 			
-		updateToolTipText(isAnySelected);
+		updateToolTipText(isAnySelected, isAnyCharCheckBoxSelected);
 		
 	}
 	
-	private void updateToolTipText(boolean isAnySelected) {
+	private void updateToolTipText(boolean isAnySelected, boolean isAnyCharCheckBoxSelected) {
 		
 		String btnReadyToolTipText = new String();
 		
-		if(!isAnySelected) {
+		if(!isAnyCharCheckBoxSelected) {
+			
+			btnReadyToolTipText = "- Selecione alguma check box";
+			
+		}
+		if(!isAnySelected && !rdbtnCharRandom.isSelected()) {
 			
 			btnReadyToolTipText = "- Nenhum botão selecionado";
 			
@@ -592,6 +600,29 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 				randomItems = faker.collection(() -> faker.number().randomDouble((int)spinnerFloatRandomDecimals.getValue(),
 																				 (int)spinnerFloatRandomMin.getValue(),
 																				 (int)spinnerFloatRandomMax.getValue())).len(rowsCount).generate();
+				
+			}
+			
+		}
+		
+		if(type == ColumnDataType.CHARACTER || (type == ColumnDataType.NONE && randomItems == null)) {
+			
+			if(rdbtnCharRandom.isSelected()) {
+				
+				randomItems = myFaker.collection(() -> myFaker.character().anyChar(checkBoxCharUppercaseLetter.isSelected(),
+																				   checkBoxCharLowercaseLetter.isSelected(),
+																				   checkBoxCharSpecial.isSelected(),
+																				   checkBoxCharNumbers.isSelected())).len(rowsCount).generate();
+				
+			}
+			
+		}
+		
+		if(type == ColumnDataType.BOOLEAN || (type == ColumnDataType.NONE && randomItems == null)) {
+		
+			if(rdbtnBoolRandom.isSelected()) {
+				
+				randomItems = faker.collection(() -> faker.bool().bool()).len(rowsCount).generate();
 				
 			}
 			

@@ -14,11 +14,10 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -139,63 +138,43 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 		
 		if(e.getSource() == btnReady) {
 			
-			boolean isAllRight = true;
+			ColumnDataType type;
 			
-			if(txtColumnName.getText().isEmpty()) {
+			String itemSelected = comboBox.getSelectedItem().toString();
+			
+			if(Objects.equals(itemSelected, "None")) {
 				
-				JOptionPane.showMessageDialog(null, "A coluna não pode ficar sem nome!", "Erro", JOptionPane.ERROR_MESSAGE);
-				isAllRight = false;
-			
+				type = ColumnDataType.NONE;
+				
+			} else if(Objects.equals(itemSelected, "Integer")) {
+				
+				type = ColumnDataType.INTEGER;
+				
+			}else if(Objects.equals(itemSelected, "Float")) {
+				
+				type = ColumnDataType.FLOAT;
+				
+			}else if(Objects.equals(itemSelected, "String")) {
+				
+				type = ColumnDataType.STRING;
+				
+			}else if(Objects.equals(itemSelected, "Character")) {
+				
+				type = ColumnDataType.CHARACTER;
+				
+			}else if(Objects.equals(itemSelected, "Boolean")) {
+				
+				type = ColumnDataType.BOOLEAN;
+				
+			}else {
+				
+				type = ColumnDataType.NONE;
+				
 			}
 			
-			if(table.findColumn(txtColumnName.getText().toUpperCase()) != -1) {
-
-				JOptionPane.showMessageDialog(null, "A tabela não pode possuir colunas com nomes iguais!", "Erro", JOptionPane.ERROR_MESSAGE);
-				isAllRight = false;
-				
-			}
-			
-			if(isAllRight) {
-				
-				ColumnDataType type;
-				
-				String itemSelected = comboBox.getSelectedItem().toString();
-				
-				if(Objects.equals(itemSelected, "None")) {
-					
-					type = ColumnDataType.NONE;
-					
-				} else if(Objects.equals(itemSelected, "Integer")) {
-					
-					type = ColumnDataType.INTEGER;
-					
-				}else if(Objects.equals(itemSelected, "Float")) {
-					
-					type = ColumnDataType.FLOAT;
-					
-				}else if(Objects.equals(itemSelected, "String")) {
-					
-					type = ColumnDataType.STRING;
-					
-				}else if(Objects.equals(itemSelected, "Character")) {
-					
-					type = ColumnDataType.CHARACTER;
-					
-				}else if(Objects.equals(itemSelected, "Boolean")) {
-					
-					type = ColumnDataType.BOOLEAN;
-					
-				}else {
-					
-					type = ColumnDataType.NONE;
-					
-				}
-				
-				table.addColumn(txtColumnName.getText().toUpperCase());
-				columns.add(new Column(txtColumnName.getText(), type));
-				dispose();
-			
-			}
+			table.addColumn(txtColumnName.getText().toUpperCase().replaceAll("[^\\p{Alnum}_-]", ""));
+			columns.add(new Column(txtColumnName.getText().replaceAll("[^\\p{Alnum}_-]", ""), type));
+			dispose();
 			
 		}
 		if(e.getSource() == btnCancel) {
@@ -229,7 +208,8 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 	
 	private void updateButton() {
 		
-		btnReady.setEnabled(!txtColumnName.getText().isEmpty() && table.findColumn(txtColumnName.getText().toUpperCase()) == -1);
+		btnReady.setEnabled(!txtColumnName.getText().isEmpty() &&
+							table.findColumn(txtColumnName.getText().toUpperCase().replaceAll("[^\\p{Alnum}_-]", "")) == -1);
 		updateToolTipText();
 		
 	}
@@ -242,7 +222,7 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 			
 			btnCreateColumnToolTipText = "- Não existe nome para a coluna";
 			
-		}else if(table.findColumn(txtColumnName.getText().toUpperCase()) != -1) {
+		}else if(table.findColumn(txtColumnName.getText().toUpperCase().replaceAll("[^\\p{Alnum}_-]", "")) != -1) {
 			
 			btnCreateColumnToolTipText = "- Não é possível 2 colunas terem o mesmo nome";
 			

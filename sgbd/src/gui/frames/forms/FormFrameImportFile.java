@@ -79,6 +79,7 @@ public class FormFrameImportFile extends JDialog implements ActionListener{
 		
 		btnSql= new JButton(".sql");
 		btnSql.addActionListener(this);
+		btnSql.setEnabled(false);
 		
 		btnCsv = new JButton(".csv");
 		btnCsv.addActionListener(this);

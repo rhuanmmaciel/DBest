@@ -29,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
 
 import entities.Column;
 import entities.TableCell;
+import gui.frames.forms.data.FormFrameCreateData;
 import util.TableCreator;
 
 @SuppressWarnings("serial")
