@@ -18,17 +18,11 @@ public class TableFormat {
 		aux.open();
 		
 		List<List<String>> rows = new ArrayList<>();
-		List<String> columnsName = new ArrayList<>();
 		
 		Tuple tuple = aux.hasNext() ? aux.next() : null;
-
-		if(tuple != null) {
-	        for (Map.Entry<String, ComplexRowData> line : tuple)
-	    		for(Map.Entry<String,byte[]> data:line.getValue()) 
-	    			columnsName.add(data.getKey());
-	    	
-	    	rows.add(columnsName);
-		}
+		
+		System.out.println(tuple.getSources().toString());
+		
 	    while(aux.hasNext() || tuple != null){
 	    	
 	        Tuple t = tuple == null ? aux.next() : tuple;
@@ -62,7 +56,7 @@ public class TableFormat {
 	            }
 	    
 	        }
-
+	        
 	        rows.add(row);
 	        tuple = null;
 	        

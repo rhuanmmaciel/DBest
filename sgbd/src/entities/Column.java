@@ -10,7 +10,7 @@ public class Column{
 	
 	public Column(String name, ColumnDataType type) {
 		
-		this.name = name.replaceAll("[^a-zA-Z0-9_-]", "");;;
+		this.name = name.replaceAll("[^a-zA-Z0-9_-]", "");
 		this.type = type;
 		this.pk = false;
 		

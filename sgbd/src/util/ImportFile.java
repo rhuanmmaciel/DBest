@@ -21,8 +21,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import entities.Column;
 import entities.TableCell;
 import enums.FileType;
-import gui.frames.forms.FormFrameColumnType;
-import gui.frames.forms.FormFramePrimaryKey;
+import gui.frames.forms.create.FormFrameColumnType;
+import gui.frames.forms.create.FormFramePrimaryKey;
+import sgbd.table.Table;
 
 public class ImportFile {
 	
@@ -40,6 +41,10 @@ public class ImportFile {
 			
 			filter = new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
 		
+		}else if(fileType == FileType.DAT) {
+			
+			filter = new FileNameExtensionFilter("Headers files", "head");
+			
 		}
 			
 		fileUpload.setFileFilter(filter);
@@ -62,9 +67,15 @@ public class ImportFile {
 				
 				excel(fileUpload, tableName, columnsName, lines, columns, tablesName, pkName, deleteCellReference);
 				
+			}else if(fileType == FileType.DAT) {
+				
+				AtomicReference<Table> table = new AtomicReference<>();
+				header(fileUpload, table);
+				TableCreator.importTable(tableCell, table);
+				
 			}
 			
-			if(!deleteCellReference.get())
+			if(!deleteCellReference.get() && FileType.DAT != fileType)
 				TableCreator.createTable(tableCell, tableName.toString(), pkName.toString(), columns, lines);
 			
 		}else {
@@ -72,6 +83,14 @@ public class ImportFile {
 			deleteCellReference.set(true);;
 			
 		}
+		
+	}
+	
+	private void header(JFileChooser fileUpload, AtomicReference<Table> table) {
+		
+		String file = fileUpload.getSelectedFile().getAbsolutePath();
+		
+		table.set(Table.loadFromHeader(file));
 		
 	}
 	
@@ -83,7 +102,9 @@ public class ImportFile {
 		
 			FileInputStream file = new FileInputStream(fileUpload.getSelectedFile().getAbsolutePath());
 			
-			tableName.append(fileUpload.getSelectedFile().getName().toUpperCase().substring(0, fileUpload.getSelectedFile().getName().indexOf(".")));
+			tableName.append(fileUpload.getSelectedFile().getName().toUpperCase()
+							 .substring(0, fileUpload.getSelectedFile().getName().indexOf("."))
+							 .replaceAll("[^a-zA-Z0-9_-]", ""));
 			
 			XSSFWorkbook workbook = new XSSFWorkbook(file);
 			XSSFSheet sheet = workbook.getSheetAt(0);
@@ -169,7 +190,9 @@ public class ImportFile {
 		try(BufferedReader br = new BufferedReader(new FileReader(fileUpload.getSelectedFile().getAbsolutePath()))){
 			
 			columnsName.addAll(Arrays.asList(br.readLine().replace("\"", "").replace(" ", "").split(",")));
-			tableName.append(fileUpload.getSelectedFile().getName().toUpperCase().substring(0, fileUpload.getSelectedFile().getName().indexOf(".")));
+			tableName.append(fileUpload.getSelectedFile().getName().toUpperCase()
+					 .substring(0, fileUpload.getSelectedFile().getName().indexOf("."))
+					 .replaceAll("[^a-zA-Z0-9_-]", ""));
 			
 			String line = br.readLine();
 			while(line != null) {

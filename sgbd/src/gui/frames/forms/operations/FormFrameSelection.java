@@ -31,7 +31,6 @@ import com.mxgraph.view.mxGraph;
 
 import entities.Cell;
 import entities.OperatorCell;
-import entities.util.TableFormat;
 import enums.ColumnDataType;
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
@@ -381,9 +380,9 @@ public class FormFrameSelection extends JFrame implements ActionListener, Docume
 
                 }
             }
-
+            
             try {
-
+            	
                 return evaluator.evaluate(formatString(textArea.getText())).equals("1.0");
 
             } catch (EvaluationException e) {
@@ -393,13 +392,11 @@ public class FormFrameSelection extends JFrame implements ActionListener, Docume
 
         });
 
-        operator.open();
 
-        ((OperatorCell) cell).setOperator(operator, TableFormat.getRows(operator, parentCell.getColumns()));
-        ((OperatorCell)cell).setColumns();
+        ((OperatorCell)cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
+        ((OperatorCell) cell).setOperator(operator);
+
         cell.setName("σ  " + textArea.getText());
-
-        operator.close();
 
         dispose();
 
@@ -439,7 +436,6 @@ public class FormFrameSelection extends JFrame implements ActionListener, Docume
 
                 }
 
-                System.out.println(columnName);
                 evaluator.putVariable(columnName, data);
 
             }

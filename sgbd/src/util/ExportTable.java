@@ -7,87 +7,189 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import entities.Cell;
+import enums.FileType;
+import sgbd.table.Table;
 
 @SuppressWarnings("serial")
 public class ExportTable extends JPanel {
 	
-	private static JTable table;
-
+	private JTable table;
 	
-	public static void exportToCsv(List<List<String>> data,String path) {
+	public ExportTable(JFrame frame) {
 		
-		 try {
-			 List<String> columnsName = new ArrayList<>();
-				
-				if(data != null && !data.isEmpty()) {
-					
-					columnsName = data.get(0);
-					List<String> firstLine = new ArrayList<>(data.remove(0));
-				
-					String[][] dataArray = data.stream()
-			                .map(l -> l.stream().toArray(String[]::new))
-			                .toArray(String[][]::new);;
-			                
-			        data.add(0, firstLine);        
-			                
-			        String[] columnsNameArray = columnsName.stream().toArray(String[]::new); 
-			        
-					
-					
-					table = new JTable(dataArray, columnsNameArray);
-				
-				}
-			 
-			 
-		        TableModel model = table.getModel();
-		        FileWriter csv = new FileWriter(new File(path));
-		        
-		        for (int i = 0; i < model.getColumnCount(); i++) {
-		            csv.write(model.getColumnName(i) + ",");
+		exportToImage(frame);
+	
+	}
+	
+	public ExportTable(AtomicReference<Cell> cell, FileType type) {
+		
+		if(type == FileType.CSV)
+			exportToCsv(cell.get().getContent());
+		
+		else if(type == FileType.DAT)
+			exportToDat(cell.get().getData().getSources().get(0));
+		
+	}
+	
+	public ExportTable( List<Cell> cells, String path, int a){
+		
+		saveGraph(cells, path);
+		
+	}
+	
+	public void exportToDat(Table table) {
+		
+	    JFileChooser fileChooser = new JFileChooser();
+	    fileChooser.setDialogTitle("Salvar arquivo");
+	    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+	    
+	    String defaultFileName = "tabela.head";
+	    fileChooser.setSelectedFile(new File(defaultFileName));
+	    
+	    int userSelection = fileChooser.showSaveDialog(null);
+	    
+	    if (userSelection == JFileChooser.APPROVE_OPTION) {
+	    	
+	        File fileToSave = fileChooser.getSelectedFile();
+	        String filePath = fileToSave.getAbsolutePath();
+	        
+	        if (!filePath.endsWith(".head")) {
+	        	
+	            filePath += ".head";
+	            fileToSave = new File(filePath);
+	            
+	        }
+	        
+	        table.saveHeader(fileChooser.getSelectedFile().getName());
+	      
+			Path source = Paths.get(fileChooser.getSelectedFile().getName());
+	        
+	        Path destination = Paths.get(filePath);
+	        
+	        try {
+	        	
+	        	Files.move(source, destination);
+	        
+	        } catch (Exception e) {
+	        
+	        	System.err.println("Ocorreu um erro ao mover o arquivo: " + e.getMessage());
+	        
+	        }
+			
+	    }
+	    
+	}
+	
+	public void exportToCsv(List<List<String>> data) {
+		
+		try {
+		    
+		    JFileChooser fileChooser = new JFileChooser();
+		    fileChooser.setDialogTitle("Salvar arquivo");
+		    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		    
+		    String defaultFileName = "tabela.csv";
+		    fileChooser.setSelectedFile(new File(defaultFileName));
+		    
+		    int userSelection = fileChooser.showSaveDialog(null);
+		    
+		    if (userSelection == JFileChooser.APPROVE_OPTION) {
+		    	
+		        File fileToSave = fileChooser.getSelectedFile();
+		        String filePath = fileToSave.getAbsolutePath();
+		        if (!filePath.endsWith(".csv")) {
+		            filePath += ".csv";
+		            fileToSave = new File(filePath);
 		        }
-
+		        
+		        FileWriter csv = new FileWriter(fileToSave);
+		        
+		        for (String columnName : data.get(0)) {
+		        	
+		            csv.write(columnName.substring(columnName.indexOf(".")+1) + ",");
+		        
+		        }
+		        
 		        csv.write("\n");
-
-		        for (int i = 0; i < model.getRowCount(); i++) {
-		            for (int j = 0; j < model.getColumnCount(); j++) {
-		                csv.write(model.getValueAt(i, j).toString() + ",");
+		        
+		        data.remove(0);
+		        
+		        for (List<String> row : data) {
+		        	
+		            for (String inf : row) {
+		                
+		            	csv.write(inf + ",");
+		            
 		            }
 		            csv.write("\n");
+		            
 		        }
-
+		        
 		        csv.close();
-		    } catch (IOException e) {
-		       System.out.println("Error "+e);
+		        
 		    }
+		    
+		} catch (IOException e) {
+		    
+			System.out.println("Error "+e);
+		
+		}
+
+
 		
 	}
 	
 	
-	public static void exportToImage(JFrame frame,String path) {
+	public void exportToImage(JFrame frame) {
 		
-        try {
-            Container contentPane = frame.getContentPane();
-            BufferedImage image = new BufferedImage(contentPane.getWidth(), contentPane.getHeight(),
-                    BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2d = image.createGraphics();
-            contentPane.printAll(g2d);
-            g2d.dispose();
+		try {
 
-            // replace this path to your image
-            ImageIO.write(image, "jpeg", new File(path));
-        } catch (IOException e) {
-		    System.out.println("Error "+e);
-        }
+			JFileChooser fileChooser = new JFileChooser();
+		    fileChooser.setDialogTitle("Salvar imagem");
+		    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		    
+		    String defaultFileName = "arvore.jpg";
+		    fileChooser.setSelectedFile(new File(defaultFileName));
+		    
+		    
+		    int userSelection = fileChooser.showSaveDialog(frame);
+
+		    if (userSelection == JFileChooser.APPROVE_OPTION) {
+
+		    	File fileToSave = fileChooser.getSelectedFile();
+		        
+		        String path = fileToSave.getPath();
+		        if (!path.toLowerCase().endsWith(".jpeg") && !path.toLowerCase().endsWith(".jpg")) {
+		            path += ".jpeg";
+		        }
+
+		        Container contentPane = frame.getContentPane();
+		        BufferedImage image = new BufferedImage(contentPane.getWidth(), contentPane.getHeight(),
+		                								BufferedImage.TYPE_INT_RGB);
+		        Graphics2D g2d = image.createGraphics();
+		        contentPane.printAll(g2d);
+		        g2d.dispose();
+		        ImageIO.write(image, "jpeg", new File(path));
+		    }
+		} catch (IOException e) {
+		    System.out.println("Error " + e);
+		}
+
 
         
 	}
@@ -97,7 +199,7 @@ public class ExportTable extends JPanel {
         g.drawRect(50,50,50,50);
     }
 	
-	public static void saveGraph( List<Cell> cells,String path) {
+	public void saveGraph( List<Cell> cells,String path) {
 		try {
 	        FileWriter csv = new FileWriter(new File(path));
 	        

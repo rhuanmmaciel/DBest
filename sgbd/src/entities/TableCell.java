@@ -2,7 +2,6 @@ package entities;
 
 import java.util.List;
 
-import entities.util.Columns;
 import entities.util.TableFormat;
 import sgbd.prototype.Prototype;
 import sgbd.query.Operator;
@@ -19,7 +18,10 @@ public class TableCell extends Cell{
 	}
 	
 	public void setTable(Table table) {
+		
 		this.table = table;
+		table.open();
+		content = TableFormat.getRows(new TableScan(table, getColumnsName()), getColumns());
 	}
 	
 	public Table getTable() {
@@ -32,18 +34,6 @@ public class TableCell extends Cell{
 	
 	public Prototype getPrototype() {
 		return prototype;
-	}
-	
-	public List<String> getColumnsName(){
-		
-		return Columns.getColumns(prototype.getColumns());
-		
-	}
-	
-	public List<List<String>> getContent(){
-		
-		return TableFormat.getRows(new TableScan(table, getColumnsName()), getColumns());
-		
 	}
 	
 	public Operator getData() {

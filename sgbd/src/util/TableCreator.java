@@ -2,6 +2,7 @@ package util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import entities.TableCell;
 import enums.ColumnDataType;
@@ -125,11 +126,25 @@ public class TableCreator {
 	    
 	    tableCell.setName(tableName);
 	    tableCell.setStyle("tabela");
-	    tableCell.setTable(table);
-	    tableCell.setPrototype(prototype);
 	    columns.add(primaryKeyColumn);
 	    tableCell.setColumns(columns);
+	    tableCell.setTable(table);
+	    tableCell.setPrototype(prototype);
 	    
+	}
+	
+	public static void importTable(TableCell tableCell, AtomicReference<Table> table) {
+		
+		
+		table.get().open();
+		
+		tableCell.setName(table.get().getTableName());
+		tableCell.setStyle("tabela");
+		tableCell.setTable(table.get());
+		tableCell.setPrototype(table.get().getHeader().getPrototype());
+		
+		table.get().close();
+		
 	}
 	
 }

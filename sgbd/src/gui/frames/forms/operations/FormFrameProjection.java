@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.GroupLayout;
@@ -19,14 +18,13 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
 import com.mxgraph.model.mxCell;
+import com.mxgraph.view.mxGraph;
 
 import entities.Cell;
 import entities.OperatorCell;
-import entities.util.TableFormat;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.table.Table;
-import com.mxgraph.view.mxGraph;
 
 
 @SuppressWarnings("serial")
@@ -163,14 +161,15 @@ public class FormFrameProjection extends JFrame implements ActionListener {
 			
 		}else if(e.getSource() == btnReady) {
 	        
-	        columnsResult = Arrays.asList(textArea.getText().split("\n"));
+	        columnsResult = new ArrayList<>(List.of(textArea.getText().split("\n")));
+	        columnsResult.remove(0);
 	        graph.getModel().setValue(jCell,"π  "+ columnsResult.toString());
-	        executeOperation(columnsResult);		
+	        executeOperation();		
 	        
 		}
 	}
 	
-	public void executeOperation(List<String> columnsResult) {
+	public void executeOperation() {
 		
 		List<String> aux = parentCell.getColumnsName();
 		aux.removeAll(columnsResult);
@@ -183,14 +182,12 @@ public class FormFrameProjection extends JFrame implements ActionListener {
 		
 		}
 		
-	    operator.open();
-	    
-	    ((OperatorCell) cell).setOperator(operator, TableFormat.getRows(operator, parentCell.getColumns()));
-		((OperatorCell)cell).setColumns();
-		cell.setName("π  "+ columnsResult.toString());
-	    
-        operator.close();
+		((OperatorCell)cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
 		
+	    ((OperatorCell) cell).setOperator(operator);
+
+	    cell.setName("π  "+ columnsResult.toString());
+	    
         dispose();
 		
 	}

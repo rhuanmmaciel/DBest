@@ -20,11 +20,9 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
 import entities.Cell;
-import entities.Column;
 import entities.OperatorCell;
-import entities.util.TableFormat;
 import sgbd.query.Operator;
-import sgbd.query.binaryop.BlockNestedLoopJoin;
+import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
 
 @SuppressWarnings("serial")
 public class FormFrameJoin extends JFrame implements ActionListener {
@@ -140,7 +138,6 @@ public class FormFrameJoin extends JFrame implements ActionListener {
 
 		if(e.getSource() == btnPronto) {
 			executeOperation(colunasComboBox.getSelectedItem().toString(),colunasComboBox_1.getSelectedItem().toString());
-	        graph.getModel().setValue(jCell,"|X|   "+ colunasComboBox.getSelectedItem().toString()+" = "+colunasComboBox_1.getSelectedItem().toString());
 	        
 		}
 	}
@@ -153,20 +150,14 @@ public class FormFrameJoin extends JFrame implements ActionListener {
 		Operator operator = new BlockNestedLoopJoin(table_1,table_2,(t1, t2) -> {
 			return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
         });
+
 		
-		
-		
-		operator.open();
-		    
-		List<Column> columns = new ArrayList<>(parentCell1.getColumns());
-		columns.addAll(parentCell2.getColumns());
-		
-		((OperatorCell) cell).setOperator(operator, TableFormat.getRows(operator, columns));
-		((OperatorCell)cell).setColumns();
+		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
+		((OperatorCell) cell).setOperator(operator);
 		cell.setName("|X|   " + colunasComboBox.getSelectedItem().toString()+" = "+colunasComboBox_1.getSelectedItem().toString());    
 		
-	    operator.close();
-			
+        graph.getModel().setValue(jCell,"|X|   "+ colunasComboBox.getSelectedItem().toString()+" = "+colunasComboBox_1.getSelectedItem().toString());
+	    
 	    dispose();
 		
 	}

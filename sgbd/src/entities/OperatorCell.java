@@ -1,18 +1,16 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
+import entities.util.TableFormat;
 import enums.OperationType;
-import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
-import sgbd.query.Tuple;
 
 public class OperatorCell extends Cell{
 
 	private Operator operator;
-	private List<List<String>> content;
 	private OperationType type;
 	
 	public OperatorCell(String name, String style, Object cell, OperationType type, int x,int y,int length,int width) {
@@ -23,24 +21,10 @@ public class OperatorCell extends Cell{
 		
 	}
 	
-	public void setOperator(Operator operator, List<List<String>> result) {
+	public void setOperator(Operator operator) {
 		
 		this.operator = operator;
-		this.content = result;
-		
-	}
-	
-	public List<List<String>> getContent() {
-
-		return content;
-	
-	}
-	
-	public List<String> getColumnsName(){
-		
-		List<String> columnsName = new ArrayList<>();
-		getColumns().forEach(x -> columnsName.add(x.getName()));
-		return columnsName;
+		this.content = TableFormat.getRows(operator, getColumns());
 		
 	}
 	
@@ -55,47 +39,30 @@ public class OperatorCell extends Cell{
 		return type;
 		
 	}
-
-	public void setColumns() {
+	
+	public void setColumns(List<List<Column>> parentColumns, Collection<List<String>> cellColumnsName) {
 		
-		Operator aux = operator;
-		aux.open();
-		List<String> columnsName = new ArrayList<>();
+		List<Column> cellColumns = new ArrayList<>();
 		
-		if(aux.hasNext()) {
-		
-			Tuple t = aux.next();
-			for (Map.Entry<String, ComplexRowData> row: t){
-	             for(Map.Entry<String,byte[]> data:row.getValue()) {
-	            	 
-	            	 columnsName.add(data.getKey().toLowerCase());
-	            	 
-	             }
-			 }
-		
-		}
-		aux.close();
-		
-		List<Column> columns = new ArrayList<>();
-		
-		getParents().forEach(x -> columns.addAll(x.getColumns()));
-		
-		for(Cell cell : getParents()) {
+		for(List<String> columnsName : cellColumnsName) {
 			
-			for(Column column : cell.getColumns()) {
+			for(List<Column> columns : parentColumns) {
 				
-				if(!columnsName.contains(column.getName().toLowerCase())) {
+				for(Column column : columns) {
 					
-					columns.remove(columns.indexOf(column));
+					if(columnsName.contains(column.getName())) {
+						
+						cellColumns.add(column);
+						
+					}
 					
 				}
 				
 			}
 			
 		}
-
 		
-		this.columns = columns;
+		this.columns = cellColumns;
 		
 	}
 	
