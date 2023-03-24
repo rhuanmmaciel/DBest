@@ -83,7 +83,14 @@
     		<artifactId>datafaker</artifactId>
     		<version>1.8.0</version>
 		</dependency>
-				
+		
+		<dependency>
+   			<groupId>net.coobird</groupId>
+    		<artifactId>thumbnailator</artifactId>
+		    <version>0.4.13</version>
+		</dependency>
+
+		
 	</dependencies>  
 
 </project>

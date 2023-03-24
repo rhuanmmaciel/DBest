@@ -463,7 +463,7 @@ public class FormFrameSelection extends JFrame implements ActionListener, Docume
     }
     private String formatString(String input) {
 
-    	input = input.replaceAll("(?<=\\s*|^)([\\w.()-<>]+\\.[\\w.()-<>]+)(?=\\s*|$)", "#{$1}");
+    	input = input.replaceAll("(?<=\\s*|^)([\\w.()-<>]+\\_[\\w.()-<>]+)(?=\\s*|$)", "#{$1}");
 
         input = input.replaceAll("\\bAND\\b", "&&");
 

@@ -209,7 +209,8 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 	private void updateButton() {
 		
 		btnReady.setEnabled(!txtColumnName.getText().isEmpty() &&
-							table.findColumn(txtColumnName.getText().toUpperCase().replaceAll("[^\\p{Alnum}_-]", "")) == -1);
+							table.findColumn(txtColumnName.getText()) == -1
+							&& txtColumnName.getText().matches("^[\\p{Alnum}_-]*$"));
 		updateToolTipText();
 		
 	}
@@ -222,9 +223,13 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 			
 			btnCreateColumnToolTipText = "- Não existe nome para a coluna";
 			
-		}else if(table.findColumn(txtColumnName.getText().toUpperCase().replaceAll("[^\\p{Alnum}_-]", "")) != -1) {
+		}else if(table.findColumn(txtColumnName.getText()) != -1) {
 			
 			btnCreateColumnToolTipText = "- Não é possível 2 colunas terem o mesmo nome";
+			
+		}else if(!txtColumnName.getText().matches("^[\\p{Alnum}_-]*$")) {
+			
+			btnCreateColumnToolTipText = "- Apenas letras, números, hífens e underlines podem ser utilizados para o nome";
 			
 		}
 		

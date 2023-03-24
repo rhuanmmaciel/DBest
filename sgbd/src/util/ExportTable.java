@@ -1,7 +1,7 @@
 package util;
 
-import java.awt.Container;
-import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,15 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
+import com.mxgraph.swing.mxGraphComponent;
+
 import entities.Cell;
 import enums.FileType;
+import net.coobird.thumbnailator.Thumbnails;
 import sgbd.table.Table;
 
 @SuppressWarnings("serial")
@@ -30,7 +31,7 @@ public class ExportTable extends JPanel {
 	
 	private JTable table;
 	
-	public ExportTable(JFrame frame) {
+	public ExportTable(mxGraphComponent frame) {
 		
 		exportToImage(frame);
 	
@@ -52,7 +53,7 @@ public class ExportTable extends JPanel {
 		
 	}
 	
-	public void exportToDat(Table table) {
+	private void exportToDat(Table table) {
 		
 	    JFileChooser fileChooser = new JFileChooser();
 	    fileChooser.setDialogTitle("Salvar arquivo");
@@ -95,7 +96,7 @@ public class ExportTable extends JPanel {
 	    
 	}
 	
-	public void exportToCsv(List<List<String>> data) {
+	private void exportToCsv(List<List<String>> data) {
 		
 		try {
 		    
@@ -121,7 +122,7 @@ public class ExportTable extends JPanel {
 		        
 		        for (String columnName : data.get(0)) {
 		        	
-		            csv.write(columnName.substring(columnName.indexOf(".")+1) + ",");
+		        	csv.write(columnName.substring(columnName.indexOf("_")+1) + ",");
 		        
 		        }
 		        
@@ -150,60 +151,44 @@ public class ExportTable extends JPanel {
 		
 		}
 
-
-		
 	}
 	
-	
-	public void exportToImage(JFrame frame) {
-		
-		try {
+	private void exportToImage(mxGraphComponent component) {
+	    try {
+	        JFileChooser fileChooser = new JFileChooser();
+	        fileChooser.setDialogTitle("Salvar imagem");
+	        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-			JFileChooser fileChooser = new JFileChooser();
-		    fileChooser.setDialogTitle("Salvar imagem");
-		    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		    
-		    String defaultFileName = "arvore.jpg";
-		    fileChooser.setSelectedFile(new File(defaultFileName));
-		    
-		    
-		    int userSelection = fileChooser.showSaveDialog(frame);
+	        String defaultFileName = "arvore.jpeg";
+	        fileChooser.setSelectedFile(new File(defaultFileName));
 
-		    if (userSelection == JFileChooser.APPROVE_OPTION) {
+	        int userSelection = fileChooser.showSaveDialog(component);
 
-		    	File fileToSave = fileChooser.getSelectedFile();
-		        
-		        String path = fileToSave.getPath();
-		        if (!path.toLowerCase().endsWith(".jpeg") && !path.toLowerCase().endsWith(".jpg")) {
-		            path += ".jpeg";
-		        }
+	        if (userSelection == JFileChooser.APPROVE_OPTION) {
+	            File fileToSave = fileChooser.getSelectedFile();
+	            String path = fileToSave.getPath();
+	            if (!path.toLowerCase().endsWith(".jpeg") && !path.toLowerCase().endsWith(".jpg")) {
+	                path += ".jpeg";
+	            }
 
-		        Container contentPane = frame.getContentPane();
-		        BufferedImage image = new BufferedImage(contentPane.getWidth(), contentPane.getHeight(),
-		                								BufferedImage.TYPE_INT_RGB);
-		        Graphics2D g2d = image.createGraphics();
-		        contentPane.printAll(g2d);
-		        g2d.dispose();
-		        ImageIO.write(image, "jpeg", new File(path));
-		    }
-		} catch (IOException e) {
-		    System.out.println("Error " + e);
-		}
+	            Dimension size = component.getGraphControl().getSize();
+	            BufferedImage image = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
+	            Graphics2D g2d = image.createGraphics();
+	            g2d.setColor(Color.WHITE);
+	            g2d.fillRect(0, 0, size.width, size.height);
+	            component.getGraphControl().paint(g2d);
+	            g2d.dispose();
 
-
-        
+	            Thumbnails.of(image).size(size.width, size.height).outputQuality(1.0f).toFile(new File(path));
+	        }
+	    } catch (IOException e) {
+	        System.out.println("Error " + e);
+	    }
 	}
 	
-	protected void paintComponent(Graphics g)
-    {
-        g.drawRect(50,50,50,50);
-    }
-	
-	public void saveGraph( List<Cell> cells,String path) {
+	private void saveGraph( List<Cell> cells,String path) {
 		try {
 	        FileWriter csv = new FileWriter(new File(path));
-	        
-            
 
 	        for(int i=0; i< cells.size();i++) {
 	        	csv.write("Cell,Name,Style,Length,Width,X,Y");
@@ -240,7 +225,6 @@ public class ExportTable extends JPanel {
 				
 				}
 			 
-			 
 		        TableModel model = table.getModel();		        
 		        for (int j = 0; j < model.getColumnCount(); j++) {
 		            csv.write(model.getColumnName(j) + ",");
@@ -260,17 +244,10 @@ public class ExportTable extends JPanel {
 	        
 	        csv.close();
 	        
-	        
 		}catch (IOException e) {
 		    System.out.println("Error "+e);
         }
 
 	}
-
-	
-
-    
-	
-	
 	
 }

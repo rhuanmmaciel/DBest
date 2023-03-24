@@ -36,14 +36,13 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 	
 	private JLabel lblPickFileExtension;
 	private List<Cell> cells;
-	private JFrame exportframe;
 	private mxGraphComponent graph;
 	
 	public static void main(List<Cell> cells,JFrame exportframe,List<List<String>> data, mxGraphComponent graph) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormFrameExportTable frame = new FormFrameExportTable(cells,exportframe,data,graph);
+					FormFrameExportTable frame = new FormFrameExportTable(cells, data,graph);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -52,13 +51,12 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 		});
 	}
 	
-	public FormFrameExportTable(List<Cell> cells,JFrame exportframe,List<List<String>> data, mxGraphComponent graph) {
+	public FormFrameExportTable(List<Cell> cells, List<List<String>> data, mxGraphComponent graph) {
 
 		super((Window)null);
 		setModal(true);
 		
 		this.graph = graph;
-		this.exportframe = exportframe;
 		this.cells = cells;
 		//this.data = data;
 		
@@ -152,7 +150,7 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 		}else if(e.getSource() == btnPNG) {
 			
 			dispose();
-			new ExportTable(exportframe);
+			new ExportTable(graph);
 			
 		}else if(e.getSource() == btnTableCSV) {
 			

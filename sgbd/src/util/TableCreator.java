@@ -65,7 +65,7 @@ public class TableCreator {
 			
 			if(isPKCreated) {
 				
-				rowData.setInt(tableName + "." + pkName, k++);
+				rowData.setInt(tableName + "_" + pkName, k++);
 				
 			}
 				

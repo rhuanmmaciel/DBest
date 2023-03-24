@@ -87,9 +87,9 @@ public class FormFrameJoin extends JFrame implements ActionListener {
 		
 		colunasComboBox_1 = new JComboBox(columnsList_2.toArray(new String[0]));
 		
-		JLabel lblNewLabel = new JLabel("Coluna");
+		JLabel lblNewLabel = new JLabel(parentCell1.getName());
 		
-		JLabel lblNewLabel_1 = new JLabel("Coluna");
+		JLabel lblNewLabel_1 = new JLabel(parentCell2.getName());
 		
 		JLabel lblNewLabel_2 = new JLabel("=");
 		
@@ -102,18 +102,23 @@ public class FormFrameJoin extends JFrame implements ActionListener {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(40)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(colunasComboBox, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel))
-					.addGap(18)
-					.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(colunasComboBox_1, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-							.addGap(28)
-							.addComponent(btnPronto))
-						.addComponent(lblNewLabel_1))
-					.addContainerGap(91, Short.MAX_VALUE))
+							.addComponent(colunasComboBox, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblNewLabel_1)
+									.addContainerGap(169, Short.MAX_VALUE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(colunasComboBox_1, 0, 158, Short.MAX_VALUE)
+									.addGap(66))))))
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+					.addContainerGap(352, Short.MAX_VALUE)
+					.addComponent(btnPronto)
+					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -125,10 +130,13 @@ public class FormFrameJoin extends JFrame implements ActionListener {
 					.addGap(5)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(colunasComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-						.addComponent(colunasComboBox_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnPronto))
-					.addContainerGap(198, Short.MAX_VALUE))
+						.addComponent(colunasComboBox_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+					.addComponent(btnPronto))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(30)
+					.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(52, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
@@ -150,7 +158,6 @@ public class FormFrameJoin extends JFrame implements ActionListener {
 		Operator operator = new BlockNestedLoopJoin(table_1,table_2,(t1, t2) -> {
 			return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
         });
-
 		
 		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
 		((OperatorCell) cell).setOperator(operator);

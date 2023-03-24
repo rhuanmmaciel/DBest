@@ -243,9 +243,15 @@ public class FormFrameUnion extends JFrame implements ActionListener{
 		selectedColumns1.remove(0);
 		selectedColumns2.remove(0);
 		
+		selectedColumns1.replaceAll(s -> parentCell1.getSourceTableName(s) + "." + s);
+		selectedColumns2.replaceAll(s -> parentCell2.getSourceTableName(s) + "." + s);
+		
 		Operator operator = new UnionOperator(table1, table2, selectedColumns1, selectedColumns2);
 
-		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), Stream.of(selectedColumns1, selectedColumns2).collect(Collectors.toList()));
+		selectedColumns1.replaceAll(s -> s.substring(s.indexOf(".")+1));
+		selectedColumns2.replaceAll(s -> s.substring(s.indexOf(".")+1));
+
+		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), Stream.of(selectedColumns1).collect(Collectors.toList()));
 
 		((OperatorCell) cell).setOperator(operator);
 		cell.setName("U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());    

@@ -11,8 +11,6 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxStylesheet;
 
-
-
 public class TypesButtons{
 	private JButton typeButton;
 	private JPanel typePanel;

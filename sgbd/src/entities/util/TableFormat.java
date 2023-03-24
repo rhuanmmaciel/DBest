@@ -21,8 +21,6 @@ public class TableFormat {
 		
 		Tuple tuple = aux.hasNext() ? aux.next() : null;
 		
-		System.out.println(tuple.getSources().toString());
-		
 	    while(aux.hasNext() || tuple != null){
 	    	
 	        Tuple t = tuple == null ? aux.next() : tuple;
