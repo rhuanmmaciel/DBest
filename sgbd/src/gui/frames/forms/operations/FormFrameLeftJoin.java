@@ -22,10 +22,10 @@ import com.mxgraph.view.mxGraph;
 import entities.Cell;
 import entities.OperatorCell;
 import sgbd.query.Operator;
-import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
+import sgbd.query.binaryop.joins.LeftNestedLoopJoin;
 
 @SuppressWarnings("serial")
-public class FormFrameJoin extends JDialog implements ActionListener {
+public class FormFrameLeftJoin extends JDialog implements ActionListener {
 
 	private JPanel contentPane;
 	private JComboBox<?> colunasComboBox;
@@ -40,11 +40,11 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 	private Object jCell;
 	private mxGraph graph;
 
-	public FormFrameJoin(Object cell, List<Cell> cells, mxGraph graph) {
-		
+	public FormFrameLeftJoin(Object cell, List<Cell> cells, mxGraph graph) {
+
 		super((Window)null);
 		setModal(true);
-		setTitle("Junção");
+		setTitle("Junção à esquerda");
 		
 		this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell)cell))).findFirst().orElse(null);
 		this.parentCell1 = this.cell.getParents().get(0);
@@ -68,12 +68,14 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 		
 		columnsList_1 = new ArrayList<String>();
 		columnsList_1 = parentCell1.getColumnsName();
+		columnsList_1.add("natural");
 		
 		colunasComboBox = new JComboBox(columnsList_1.toArray(new String[0]));
 		
 		columnsList_2 = new ArrayList<String>();
 		columnsList_2 = parentCell2.getColumnsName();
-		
+		columnsList_2.add("natural");
+
 		colunasComboBox_1 = new JComboBox(columnsList_2.toArray(new String[0]));
 		
 		JLabel lblNewLabel = new JLabel(parentCell1.getName());
@@ -129,7 +131,6 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 		);
 		contentPane.setLayout(gl_contentPane);
 		this.setVisible(true);
-
 	}
 
 	@Override
@@ -146,15 +147,18 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 		Operator table_1 = parentCell1.getData();
 		Operator table_2 = parentCell2.getData();
 		
-		Operator operator = new BlockNestedLoopJoin(table_1,table_2,(t1, t2) -> {
-			return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
+		Operator operator = new LeftNestedLoopJoin(table_1,table_2,(t1, t2) -> {
+			if(item1.equals("natural") || item2.equals("natural")) return true;
+			else return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
         });
 		
 		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
 		((OperatorCell) cell).setOperator(operator);
 		cell.setName("|X|   " + colunasComboBox.getSelectedItem().toString()+" = "+colunasComboBox_1.getSelectedItem().toString());    
-		
-        graph.getModel().setValue(jCell,"|X|   "+ colunasComboBox.getSelectedItem().toString()+" = "+colunasComboBox_1.getSelectedItem().toString());
+		if(item1.equals("natural") || item2.equals("natural")) {
+			graph.getModel().setValue(jCell,parentCell1.getName() + " ⟕ " + parentCell2.getName());
+		}
+		else graph.getModel().setValue(jCell,"⟕   "+ colunasComboBox.getSelectedItem().toString()+" = "+colunasComboBox_1.getSelectedItem().toString());
 	    
 	    dispose();
 		

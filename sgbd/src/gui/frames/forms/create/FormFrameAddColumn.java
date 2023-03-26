@@ -172,8 +172,8 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 				
 			}
 			
-			table.addColumn(txtColumnName.getText().replaceAll("[^\\p{Alnum}_-]", ""));
-			columns.add(new Column(txtColumnName.getText().replaceAll("[^\\p{Alnum}_-]", ""), type));
+			table.addColumn(txtColumnName.getText().replaceAll("[^\\p{Alnum}]", ""));
+			columns.add(new Column(txtColumnName.getText().replaceAll("[^\\p{Alnum}]", ""), type));
 			dispose();
 			
 		}
@@ -210,7 +210,7 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 		
 		btnReady.setEnabled(!txtColumnName.getText().isEmpty() &&
 							table.findColumn(txtColumnName.getText()) == -1
-							&& txtColumnName.getText().matches("^[\\p{Alnum}_-]*$"));
+							&& txtColumnName.getText().matches("^[\\p{Alnum}]*$"));
 		updateToolTipText();
 		
 	}
@@ -227,9 +227,9 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 			
 			btnCreateColumnToolTipText = "- Não é possível 2 colunas terem o mesmo nome";
 			
-		}else if(!txtColumnName.getText().matches("^[\\p{Alnum}_-]*$")) {
+		}else if(!txtColumnName.getText().matches("^[\\p{Alnum}]*$")) {
 			
-			btnCreateColumnToolTipText = "- Apenas letras, números, hífens e underlines podem ser utilizados para o nome";
+			btnCreateColumnToolTipText = "- Apenas letras e números podem ser utilizados para o nome";
 			
 		}
 		

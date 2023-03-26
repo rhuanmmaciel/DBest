@@ -1,6 +1,6 @@
 package gui.frames.forms.operations;
 
-import java.awt.EventQueue;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -30,7 +30,7 @@ import sgbd.query.Operator;
 import sgbd.query.binaryop.UnionOperator;
 
 @SuppressWarnings("serial")
-public class FormFrameUnion extends JFrame implements ActionListener{
+public class FormFrameUnion extends JDialog implements ActionListener{
 
 	private JPanel contentPane;
 	private JComboBox<?> columnsComboBox1;
@@ -55,22 +55,11 @@ public class FormFrameUnion extends JFrame implements ActionListener{
 	private Object jCell;
 	private mxGraph graph;
 
-	public static void main(Object cell, List<Cell> cells, mxGraph graph) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {					
-					FormFrameProjection frame = new FormFrameProjection(cell, cells,graph);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	public FormFrameUnion(Object cell, List<Cell> cells, mxGraph graph) {
 		
-		this.setVisible(true);
+		super((Window)null);
+		setModal(true);
+		setTitle("União");
 		
 		this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell)cell))).findFirst().orElse(null);
 		this.parentCell1 = this.cell.getParents().get(0);
@@ -191,6 +180,7 @@ public class FormFrameUnion extends JFrame implements ActionListener{
 					.addContainerGap())
 		);
 		contentPane.setLayout(groupLayout);
+		this.setVisible(true);
 	}
 
 	@Override
@@ -208,7 +198,7 @@ public class FormFrameUnion extends JFrame implements ActionListener{
 
 		}else if(e.getSource() == btnRemove1) {
 			
-			System.out.println("botao remove");
+			textArea1.setText(textArea1.getText().replace(textArea1.getSelectedText(),""));
 			
 		}else if(e.getSource() == btnAdd2){
 
@@ -222,7 +212,7 @@ public class FormFrameUnion extends JFrame implements ActionListener{
 
 		}else if(e.getSource() == btnRemove2) {
 			
-			System.out.println("botao remove II");
+			textArea2.setText(textArea2.getText().replace(textArea2.getSelectedText(),""));
 		
 		}else if(e.getSource() == btnReady) {
 	        
@@ -248,12 +238,13 @@ public class FormFrameUnion extends JFrame implements ActionListener{
 		
 		Operator operator = new UnionOperator(table1, table2, selectedColumns1, selectedColumns2);
 
+		((OperatorCell) cell).setOperator(operator);
+
 		selectedColumns1.replaceAll(s -> s.substring(s.indexOf(".")+1));
 		selectedColumns2.replaceAll(s -> s.substring(s.indexOf(".")+1));
-
+		
 		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), Stream.of(selectedColumns1).collect(Collectors.toList()));
-
-		((OperatorCell) cell).setOperator(operator);
+		
 		cell.setName("U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());    
 		
         graph.getModel().setValue(jCell,"U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());

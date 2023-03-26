@@ -19,8 +19,9 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 	private mxGraphComponent graph;
 	private mxCell jCell;
 	private List<Cell> cells;
+	private AtomicReference<Boolean> cancelService;
 	
-	public FormFrameExportAs(mxCell cell, mxGraphComponent graph, List<Cell> cells) {
+	public FormFrameExportAs(mxCell cell, mxGraphComponent graph, List<Cell> cells, AtomicReference<Boolean> cancelService) {
 
 		super((Window)null);
 		setModal(true);
@@ -28,6 +29,7 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 		this.cells = cells;
 		this.jCell = cell;
 		this.graph = graph;
+		this.cancelService = cancelService;
 		
 		this.setVisible(true);
 
@@ -46,8 +48,8 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 			
 			AtomicReference<Cell> cell = new AtomicReference<>();
 			
-			new FormFrameSelectCell(jCell, graph, cells, cell);
-			new ExportTable(cell, FileType.CSV);
+			new FormFrameSelectCell(jCell, graph, cells, cell, cancelService);
+			new ExportTable(cell, FileType.CSV, cancelService);
 			
 		}else if(e.getSource() == btnXlsXlsxOdt) {
 			
@@ -63,8 +65,8 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 			
 			AtomicReference<Cell> cell = new AtomicReference<>();
 			
-			new FormFrameSelectCell(jCell, graph, cells, cell);
-			new ExportTable(cell, FileType.DAT);
+			new FormFrameSelectCell(jCell, graph, cells, cell, cancelService);
+			new ExportTable(cell, FileType.DAT, cancelService);
 			
 		}
 		

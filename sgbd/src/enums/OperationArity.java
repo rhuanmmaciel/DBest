@@ -1,6 +1,6 @@
 package enums;
 
-public enum OperationTypeEnums {
+public enum OperationArity {
 	UNARY,
 	BINARY;
 }

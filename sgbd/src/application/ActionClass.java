@@ -31,8 +31,8 @@ import com.mxgraph.view.mxStylesheet;
 import entities.Cell;
 import entities.OperatorCell;
 import entities.TableCell;
+import enums.OperationArity;
 import enums.OperationType;
-import enums.OperationTypeEnums;
 import gui.buttons.TypesButtons;
 import gui.frames.ResultFrame;
 import gui.frames.forms.create.FormFrameCreateTable;
@@ -41,6 +41,7 @@ import gui.frames.forms.importexport.FormFrameImportAs;
 import gui.frames.forms.operations.CartesianProduct;
 import gui.frames.forms.operations.FormFrameAggregation;
 import gui.frames.forms.operations.FormFrameJoin;
+import gui.frames.forms.operations.FormFrameLeftJoin;
 import gui.frames.forms.operations.FormFrameProjection;
 import gui.frames.forms.operations.FormFrameRename;
 import gui.frames.forms.operations.FormFrameSelection;
@@ -52,12 +53,12 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private mxGraph graph;
 	private mxGraphComponent graphComponent;
 	private JPanel containerPanel;
-	private Object parent;
-	private Object newCell;
+	private mxCell parent;
+	private mxCell newCell;
 	private Boolean createCell = false;
 	private String style;
 	private String name;
-	private Object jCell;
+	private mxCell jCell;
 	private Boolean isOperation;
 	private OperationType currentType;
 
@@ -66,12 +67,12 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private TypesButtons btnTypeCartesianProduct;
 	private TypesButtons btnTypeUnion;
 	// private TypesButtons tipoDiferenca;
-	private TypesButtons btnTypeRename;
-	private TypesButtons btnTypeAggregation;
+	//private TypesButtons btnTypeRename;
+	//private TypesButtons btnTypeAggregation;
 	private TypesButtons btnTypeJoin;
+	private TypesButtons btnTypeLeftJoin;
 
-	private Object newParent;
-	// private JPanel edgePanel;
+	private mxCell newParent;
 
 	private JButton edgeButton;
 	private Boolean createEdge = false;
@@ -91,20 +92,21 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private JButton btnCreateTable;
 
 	public ActionClass() {
-		super("OurDB");
+		super("DBest");
 		initGUI();
 	}
 
 	private void initGUI() {
+		
 		setSize(800, 600);
 		setLocationRelativeTo(null);
-
+		
 		graph = new mxGraph();
 		graphComponent = new mxGraphComponent(graph);
 		graphComponent.setPreferredSize(new Dimension(400, 400));
 		getContentPane().add(graphComponent);
 
-		containerPanel = new JPanel(new GridLayout(7, 1));
+		containerPanel = new JPanel(new GridLayout(6, 1));
 		mxStylesheet stylesheet = graph.getStylesheet();
 
 		btnTypeProjection = new TypesButtons(stylesheet, "π Projeção", "Projeção");
@@ -126,7 +128,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		btnTypeUnion = new TypesButtons(stylesheet, "∪ União", "União");
 		btnTypeUnion.getButton().addActionListener(this);
 		containerPanel.add(btnTypeUnion.getPanel());
-
+		/*
 		btnTypeAggregation = new TypesButtons(stylesheet, "G Agregação", "Agregação");
 		btnTypeAggregation.getButton().addActionListener(this);
 		containerPanel.add(btnTypeAggregation.getPanel());
@@ -135,11 +137,16 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		 * tipoDiferenca = new TypesButtons(stylesheet,"- Diferenca","diferenca");
 		 * tipoDiferenca.getButton().addActionListener(this);
 		 * containerPanel.add(tipoDiferenca.getPanel());
-		 */
+		 
 		btnTypeRename = new TypesButtons(stylesheet, "ρ Renomeação", "Renomeação");
 		btnTypeRename.getButton().addActionListener(this);
 		containerPanel.add(btnTypeRename.getPanel());
-
+		*/
+		
+		btnTypeLeftJoin = new TypesButtons(stylesheet, "⟕ Left Join", "Left Join");
+		btnTypeLeftJoin.getButton().addActionListener(this);
+		containerPanel.add(btnTypeLeftJoin.getPanel());
+		
 		toolBar = new JToolBar();
 		getContentPane().add(toolBar, BorderLayout.SOUTH);
 
@@ -172,7 +179,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		setVisible(true);
 
-		parent = graph.getDefaultParent();
+		parent = (mxCell)graph.getDefaultParent();
 		graph.getModel().beginUpdate();
 
 		mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
@@ -185,9 +192,14 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		graphComponent.getGraphControl().addMouseListener(this);
 
 		graphComponent.addKeyListener(this);
-
+		graph.setAutoSizeCells(false);
+		graph.setCellsResizable(false);
+		graph.setAutoOrigin(false);
+		graph.setCellsEditable(false);
+		
 		graph.getModel().endUpdate();
 
+		
 		addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
@@ -243,7 +255,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			 * assignVariables("diferenca","-  diferenca", true, OperationType.DIFERENCA);
 			 * 
 			 * }
-			 */else if (e.getSource() == btnTypeRename.getButton()) {
+			 else if (e.getSource() == btnTypeRename.getButton()) {
 
 			assignVariables("Renomeação", "ρ  Renomeação", true, OperationType.RENAME);
 
@@ -251,9 +263,13 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 			assignVariables("Agregação", "G Agregação", true, OperationType.AGGREGATION);
 
-		} else if (e.getSource() == btnTypeJoin.getButton()) {
+		} */else if (e.getSource() == btnTypeJoin.getButton()) {
 
 			assignVariables("Junção", "|X| Junção", true, OperationType.JOIN);
+
+		}else if (e.getSource() == btnTypeLeftJoin.getButton()) {
+
+			assignVariables("Left Join", "⟕ Left Join", true, OperationType.LEFTJOIN);
 
 		} else if (e.getSource() == edgeButton) {
 
@@ -267,15 +283,15 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 			TableCell tableCell = new TableCell(80, 30);
 
-			Boolean deleteCell = false;
-			AtomicReference<Boolean> deleteCellReference = new AtomicReference<>(deleteCell);
+			Boolean cancelService = false;
+			AtomicReference<Boolean> cancelServiceReference = new AtomicReference<>(cancelService);
 
 			List<String> tablesName = new ArrayList<>();
 			cells.forEach(x -> tablesName.add(x.getName().toUpperCase()));
 
-			new FormFrameImportAs(tableCell, tablesName, deleteCellReference);
+			new FormFrameImportAs(tableCell, tablesName, cancelServiceReference);
 
-			if (!deleteCellReference.get()) {
+			if (!cancelServiceReference.get()) {
 
 				assignVariables(tableCell.getStyle(), tableCell.getName(), false, null);
 				currentTableCell = tableCell;
@@ -290,12 +306,12 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 			TableCell tableCell = new TableCell(80, 30);
 
-			Boolean deleteCell = false;
-			AtomicReference<Boolean> deleteCellReference = new AtomicReference<>(deleteCell);
+			Boolean cancelService = false;
+			AtomicReference<Boolean> cancelServiceReference = new AtomicReference<>(cancelService);
 
-			new FormFrameCreateTable(tableCell, deleteCellReference);
+			new FormFrameCreateTable(tableCell, cancelServiceReference);
 
-			if (!deleteCellReference.get()) {
+			if (!cancelServiceReference.get()) {
 
 				assignVariables(tableCell.getStyle(), tableCell.getName(), false, null);
 				currentTableCell = tableCell;
@@ -307,9 +323,12 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			}
 
 		} else if (e.getSource() == saveTableButton) {
+			
+			Boolean cancelService = false;
+			AtomicReference<Boolean> cancelServiceReference = new AtomicReference<>(cancelService);
 
 			if (!cells.isEmpty())
-				new FormFrameExportTable(cells, cells.get(cells.size() - 1).getContent(), graphComponent);
+				new FormFrameExportTable(cells, graphComponent, cancelServiceReference);
 
 		}
 
@@ -321,13 +340,13 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		if (currentTableCell == null) {
 			return;
 		}
-
-		jCell = graphComponent.getCellAt(e.getX(), e.getY());
+		
+		jCell = (mxCell)graphComponent.getCellAt(e.getX(), e.getY());
 		Cell cell = cells.stream().filter(x -> x.getCell().equals((mxCell) jCell)).findFirst().orElse(null);
 
 		if (createCell == true) {
 
-			newCell = graph.insertVertex(parent, null, name, e.getX(), e.getY(), 80, 30, style);
+			newCell = (mxCell)graph.insertVertex(parent, null, name, e.getX(), e.getY(), 80, 30, style);
 
 			if (!isOperation) {
 
@@ -348,11 +367,10 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		if (jCell != null) {
 			graph.getModel().getValue(jCell);
-
 			if (createEdge == true && newParent == null) {
 				newParent = jCell;
 			}
-
+			
 			Cell parentCell = newParent != null
 					? cells.stream().filter(x -> x.getCell().equals((mxCell) newParent)).findFirst().orElse(null)
 					: null;
@@ -360,51 +378,56 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			if (createEdge == true && jCell != newParent) {
 
 				graph.insertEdge(newParent, null, "", newParent, jCell);
-				((mxCell) jCell).setParent((mxCell) newParent);
-
+				jCell.setParent(newParent);
+				
 				cell.addParent(parentCell);
 
 				if (parentCell != null)
 					parentCell.setChild(cell);
 
 				if (cell instanceof OperatorCell) {
-
+					
 					if (((OperatorCell) cell).getType() == OperationType.PROJECTION
-							&& cell.checkRules(OperationTypeEnums.UNARY) == true)
+							&& cell.checkRules(OperationArity.UNARY) == true)
 
 						new FormFrameProjection(jCell, cells, graph);
 
 					else if (((OperatorCell) cell).getType() == OperationType.SELECTION
-							&& cell.checkRules(OperationTypeEnums.UNARY) == true)
+							&& cell.checkRules(OperationArity.UNARY) == true)
 
 						new FormFrameSelection(jCell, cells, graph);
 
 					else if (((OperatorCell) cell).getType() == OperationType.AGGREGATION &&
 					// tem q ver se eh unario
-							cell.checkRules(OperationTypeEnums.UNARY) == true)
+							cell.checkRules(OperationArity.UNARY) == true)
 
 						new FormFrameAggregation(jCell, cells, graph);
 
 					else if (((OperatorCell) cell).getType() == OperationType.RENAME
-							&& cell.checkRules(OperationTypeEnums.UNARY) == true)
+							&& cell.checkRules(OperationArity.UNARY) == true)
 
 						new FormFrameRename(jCell, cells, graph);
 
 					else if (((OperatorCell) cell).getType() == OperationType.JOIN && cell.getParents().size() == 2
-							&& cell.checkRules(OperationTypeEnums.BINARY) == true)
+							&& cell.checkRules(OperationArity.BINARY) == true)
 
 						new FormFrameJoin(jCell, cells, graph);
 
 					else if (((OperatorCell) cell).getType() == OperationType.CARTESIANPRODUCT
-							&& cell.getParents().size() == 2 && cell.checkRules(OperationTypeEnums.BINARY) == true)
+							&& cell.getParents().size() == 2 && cell.checkRules(OperationArity.BINARY) == true)
 
 						new CartesianProduct(jCell, cells, graph);
 
 					else if (((OperatorCell) cell).getType() == OperationType.UNION && cell.getParents().size() == 2
-							&& cell.checkRules(OperationTypeEnums.BINARY) == true)
+							&& cell.checkRules(OperationArity.BINARY) == true)
 
 						new FormFrameUnion(jCell, cells, graph);
+					
+					else if (((OperatorCell) cell).getType() == OperationType.LEFTJOIN
+							&& cell.getParents().size() == 2 && cell.checkRules(OperationArity.BINARY) == true)
 
+						new FormFrameLeftJoin(jCell, cells, graph);
+					
 				}
 				leafs.add(cell);
 				leafs.remove(parentCell.getCell());

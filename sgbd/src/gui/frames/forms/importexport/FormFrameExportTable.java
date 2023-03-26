@@ -7,12 +7,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -31,18 +31,20 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 	
 	private JButton btnCancel;
 	private JButton btnPNG; 
-	private JButton btnTableCSV;
+	private JButton btnTable;
 	private JButton btnGraph;
 	
 	private JLabel lblPickFileExtension;
 	private List<Cell> cells;
 	private mxGraphComponent graph;
+	private AtomicReference<Boolean> cancelService;
+
 	
-	public static void main(List<Cell> cells,JFrame exportframe,List<List<String>> data, mxGraphComponent graph) {
+	public static void main(List<Cell> cells, mxGraphComponent graph, AtomicReference<Boolean> cancelService) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormFrameExportTable frame = new FormFrameExportTable(cells, data,graph);
+					FormFrameExportTable frame = new FormFrameExportTable(cells, graph, cancelService);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -51,14 +53,14 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 		});
 	}
 	
-	public FormFrameExportTable(List<Cell> cells, List<List<String>> data, mxGraphComponent graph) {
+	public FormFrameExportTable(List<Cell> cells, mxGraphComponent graph, AtomicReference<Boolean> cancelService) {
 
 		super((Window)null);
 		setModal(true);
 		
+		this.cancelService = cancelService;
 		this.graph = graph;
 		this.cells = cells;
-		//this.data = data;
 		
 		initializeGUI();
 		
@@ -80,8 +82,8 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 		btnPNG = new JButton("Imagem da árvore");
 		btnPNG.addActionListener(this);
 		
-		btnTableCSV= new JButton("Tabela");
-		btnTableCSV.addActionListener(this);
+		btnTable= new JButton("Tabela");
+		btnTable.addActionListener(this);
 		
 		btnGraph = new JButton("Árvore");
 		btnGraph.setEnabled(false);
@@ -100,7 +102,7 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnPNG, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnGraph, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnTableCSV, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnTable, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(56, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(104)
@@ -117,7 +119,7 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 					.addGap(8)
 					.addComponent(btnPNG)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnTableCSV)
+					.addComponent(btnTable)
 					.addPreferredGap(ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
 					.addComponent(btnCancel))
 		);
@@ -152,13 +154,13 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 			dispose();
 			new ExportTable(graph);
 			
-		}else if(e.getSource() == btnTableCSV) {
+		}else if(e.getSource() == btnTable) {
 			
 			dispose();
 	
 			mxCell cell = null;
 			
-			new FormFrameExportAs(cell, graph, cells);
+			new FormFrameExportAs(cell, graph, cells, cancelService);
 			
 		}
 		

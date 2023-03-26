@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import entities.util.FindRoots;
-import enums.OperationTypeEnums;
+import enums.OperationArity;
 import sgbd.query.Operator;
 
 public abstract class Cell {
@@ -84,6 +84,16 @@ public abstract class Cell {
 		
 	}
 	
+	public List<String> getOnlyColumnsName(){
+		
+		List<String> names = new ArrayList<>();
+		
+		columns.forEach(x -> names.add(x.getName().substring(x.getName().indexOf("_")+1)));
+		
+		return names;
+		
+	}
+	
 	public List<List<String>> getContent(){
 		
 		return content;
@@ -149,9 +159,9 @@ public abstract class Cell {
 		
 	}
 	
-	public Boolean checkRules(OperationTypeEnums type) {
+	public Boolean checkRules(OperationArity type) {
 	
-		if(type == OperationTypeEnums.UNARY) {
+		if(type == OperationArity.UNARY) {
 			
 			if(this.getParents().size() != 1) {
 				
@@ -160,7 +170,7 @@ public abstract class Cell {
 			
 			}
 			
-		}else if(type == OperationTypeEnums.BINARY){
+		}else if(type == OperationArity.BINARY){
 			
 			if(this.getParents().size() > 2) {
 				
@@ -177,6 +187,70 @@ public abstract class Cell {
 		return true;
 	
 	}
+	
+	@Override
+	public String toString() {
+
+	    List<Integer> columnWidths = new ArrayList<>();
+	    for (String column : getColumnsName()) {
+	        int maxWidth = column.length();
+	        for (List<String> row : getContent()) {
+	            int width = row.get(getColumnsName().indexOf(column)).length();
+	            maxWidth = Math.max(maxWidth, width);
+	        }
+	        columnWidths.add(maxWidth);
+	    }
+
+	    StringBuilder tableFormatted = new StringBuilder();
+
+	    for (int i = 0; i < columnWidths.size(); i++) {
+	        tableFormatted.append("+");
+	        for (int j = 0; j < columnWidths.get(i) + 2; j++) {
+	            tableFormatted.append("-");
+	        }
+	    }
+	    tableFormatted.append("+\n");
+
+	    for (int i = 0; i < getColumnsName().size(); i++) {
+	        String column = getColumnsName().get(i);
+	        int width = columnWidths.get(i);
+	        tableFormatted.append("| ");
+	        tableFormatted.append(String.format("%-" + width + "s", column));
+	        tableFormatted.append(" ");
+	    }
+	    tableFormatted.append("|\n");
+
+	    for (int i = 0; i < columnWidths.size(); i++) {
+	        tableFormatted.append("+");
+	        for (int j = 0; j < columnWidths.get(i) + 2; j++) {
+	            tableFormatted.append("-");
+	        }
+	    }
+	    tableFormatted.append("+\n");
+
+	    for (List<String> row : getContent()) {
+	        for (int i = 0; i < row.size(); i++) {
+	            String value = row.get(i);
+	            int width = columnWidths.get(i);
+	            tableFormatted.append("| ");
+	            tableFormatted.append(String.format("%-" + width + "s", value));
+	            tableFormatted.append(" ");
+	        }
+	        tableFormatted.append("|\n");
+	    }
+
+	    for (int i = 0; i < columnWidths.size(); i++) {
+	        tableFormatted.append("+");
+	        for (int j = 0; j < columnWidths.get(i) + 2; j++) {
+	            tableFormatted.append("-");
+	        }
+	    }
+	    tableFormatted.append("+\n");
+
+	    return tableFormatted.toString();
+
+	}
+
 	
 	public abstract Operator getData();
 	

@@ -3,7 +3,7 @@ package gui.frames.forms.operations;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -16,8 +16,8 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -38,467 +38,458 @@ import sgbd.query.Operator;
 import sgbd.query.Tuple;
 import sgbd.query.unaryop.FilterOperator;
 
-
 @SuppressWarnings("serial")
-public class FormFrameSelection extends JFrame implements ActionListener, DocumentListener{
+public class FormFrameSelection extends JDialog implements ActionListener, DocumentListener {
 
-    private List<String> columnsList;
+	private List<String> columnsList;
 
-    private JTextArea textArea;
+	private JTextArea textArea;
 
-    private JButton btnColumnAdd;
-    private JButton btnOperatorAdd;
-    private JButton btnLogicalOperatorAdd;
-    private JButton btnNumberAdd;
-    private JButton btnStringAdd;
-    private JButton btnRemoveLastOne;
-    private JButton btnRemoveAll;
+	private JButton btnColumnAdd;
+	private JButton btnOperatorAdd;
+	private JButton btnLogicalOperatorAdd;
+	private JButton btnNumberAdd;
+	private JButton btnStringAdd;
+	private JButton btnRemoveLastOne;
+	private JButton btnRemoveAll;
 
-    private JComboBox<List<String>> comboBoxColumns;
-    private JComboBox<List<String>> comboBoxOperator;
-    private JComboBox<List<String>> comboBoxLogicalOperator;
-    private JFormattedTextField formattedTextFieldNumber;
-    private JTextField textFieldString;
+	private JComboBox<List<String>> comboBoxColumns;
+	private JComboBox<List<String>> comboBoxOperator;
+	private JComboBox<List<String>> comboBoxLogicalOperator;
+	private JFormattedTextField formattedTextFieldNumber;
+	private JTextField textFieldString;
 
-    private JButton btnReady;
-    private JButton btnCancel;
+	private JButton btnReady;
+	private JButton btnCancel;
 
-    private Cell cell;
-    private Cell parentCell;
+	private Cell cell;
+	private Cell parentCell;
 
-    private Evaluator evaluator;
+	private Evaluator evaluator;
 
-    private Object jCell;
-    private mxGraph graph;
-    private JPanel panel;
+	private Object jCell;
+	private mxGraph graph;
+	private JPanel panel;
 
-    public static void main(Object cell, List<Cell> cells,mxGraph graph) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    FormFrameSelection frame = new FormFrameSelection(cell, cells,graph);
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+	public FormFrameSelection(Object cell, List<Cell> cells, mxGraph graph) {
 
-    public FormFrameSelection(Object cell, List<Cell> cells, mxGraph graph) {
+		super((Window) null);
+		setModal(true);
+		setTitle("Seleção");
 
-        this.setVisible(true);
+		this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell) cell))).findFirst().orElse(null);
+		parentCell = this.cell.getParents().get(0);
+		this.jCell = cell;
+		this.graph = graph;
 
-        this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell)cell))).findFirst().orElse(null);
-        parentCell = this.cell.getParents().get(0);
-        this.jCell = cell;
-        this.graph = graph;
+		this.evaluator = new Evaluator();
 
-        this.evaluator = new Evaluator();
+		initializeGUI();
 
-        initializeGUI();
+	}
 
-    }
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void initializeGUI() {
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void initializeGUI() {
+		setBounds(100, 100, 800, 400);
+		setLocationRelativeTo(null);
 
-        setBounds(100, 100, 800, 400);
-        setLocationRelativeTo(null);
+		JPanel centerPane = new JPanel();
+		getContentPane().add(centerPane, BorderLayout.CENTER);
 
-        JPanel centerPane = new JPanel();
-        getContentPane().add(centerPane, BorderLayout.CENTER);
+		textArea = new JTextArea();
+		textArea.getDocument().addDocumentListener(this);
+		;
+		textArea.setMaximumSize(new Dimension(750, 50));
+		textArea.setEditable(false);
+		centerPane.add(textArea);
 
-        textArea = new JTextArea();
-        textArea.getDocument().addDocumentListener(this);;
-        textArea.setMaximumSize(new Dimension(750, 50));
-        textArea.setEditable(false);
-        centerPane.add(textArea);
+		Dimension buttonsDimension = new Dimension(350, 25);
 
-        Dimension buttonsDimension = new Dimension(350, 25);
+		Box operatorsHBox = Box.createHorizontalBox();
+		operatorsHBox.setMaximumSize(buttonsDimension);
+		operatorsHBox.setAlignmentX(LEFT_ALIGNMENT);
 
-        Box operatorsHBox = Box.createHorizontalBox();
-        operatorsHBox.setMaximumSize(buttonsDimension);
-        operatorsHBox.setAlignmentX(LEFT_ALIGNMENT);
+		Box columnsHBox = Box.createHorizontalBox();
+		columnsHBox.setMaximumSize(buttonsDimension);
+		columnsHBox.setAlignmentX(LEFT_ALIGNMENT);
 
-        Box columnsHBox = Box.createHorizontalBox();
-        columnsHBox.setMaximumSize(buttonsDimension);
-        columnsHBox.setAlignmentX(LEFT_ALIGNMENT);
+		Box logicalOperatorsHBox = Box.createHorizontalBox();
+		logicalOperatorsHBox.setMaximumSize(buttonsDimension);
+		logicalOperatorsHBox.setAlignmentX(LEFT_ALIGNMENT);
 
-        Box logicalOperatorsHBox = Box.createHorizontalBox();
-        logicalOperatorsHBox.setMaximumSize(buttonsDimension);
-        logicalOperatorsHBox.setAlignmentX(LEFT_ALIGNMENT);
+		Box numberHBox = Box.createHorizontalBox();
+		numberHBox.setMaximumSize(buttonsDimension);
+		numberHBox.setAlignmentX(LEFT_ALIGNMENT);
 
-        Box numberHBox = Box.createHorizontalBox();
-        numberHBox.setMaximumSize(buttonsDimension);
-        numberHBox.setAlignmentX(LEFT_ALIGNMENT);
+		Box stringHBox = Box.createHorizontalBox();
+		stringHBox.setMaximumSize(buttonsDimension);
+		stringHBox.setAlignmentX(LEFT_ALIGNMENT);
 
-        Box stringHBox = Box.createHorizontalBox();
-        stringHBox.setMaximumSize(buttonsDimension);
-        stringHBox.setAlignmentX(LEFT_ALIGNMENT);
+		Box removeHBox = Box.createHorizontalBox();
+		removeHBox.setMaximumSize(buttonsDimension);
+		removeHBox.setAlignmentX(LEFT_ALIGNMENT);
 
-        Box removeHBox = Box.createHorizontalBox();
-        removeHBox.setMaximumSize(buttonsDimension);
-        removeHBox.setAlignmentX(LEFT_ALIGNMENT);
+		// HBox das operações
 
-        // HBox das operações
+		JLabel lblOperators = new JLabel("Operações: ");
+		operatorsHBox.add(lblOperators);
 
-        JLabel lblOperators = new JLabel("Operações: ");
-        operatorsHBox.add(lblOperators);
+		String operators[] = { ">", "<", "=", "≠", "≥", "≤", "(", ")" };
+		comboBoxOperator = new JComboBox(operators);
+		operatorsHBox.add(comboBoxOperator);
 
-        String operators[] = {">","<","=","≠","≥", "≤", "(", ")"};
-        comboBoxOperator = new JComboBox(operators);
-        operatorsHBox.add(comboBoxOperator);
+		btnOperatorAdd = new JButton("Add");
+		btnOperatorAdd.addActionListener(this);
+		operatorsHBox.add(Box.createHorizontalStrut(5));
+		operatorsHBox.add(btnOperatorAdd);
 
-        btnOperatorAdd = new JButton("Add");
-        btnOperatorAdd.addActionListener(this);
-        operatorsHBox.add(Box.createHorizontalStrut(5));
-        operatorsHBox.add(btnOperatorAdd);
+		// HBox das colunas
 
-        // HBox das colunas
+		JLabel lblColumns = new JLabel("Colunas: ");
+		columnsHBox.add(lblColumns);
 
-        JLabel lblColumns = new JLabel("Colunas: ");
-        columnsHBox.add(lblColumns);
+		columnsList = new ArrayList<String>();
+		columnsList = parentCell.getColumnsName();
+		comboBoxColumns = new JComboBox(columnsList.toArray(new String[0]));
+		columnsHBox.add(comboBoxColumns);
 
-        columnsList = new ArrayList<String>();
-        columnsList = parentCell.getColumnsName();
-        comboBoxColumns = new JComboBox(columnsList.toArray(new String[0]));
-        columnsHBox.add(comboBoxColumns);
+		btnColumnAdd = new JButton("Add");
+		btnColumnAdd.addActionListener(this);
+		columnsHBox.add(Box.createHorizontalStrut(5));
+		columnsHBox.add(btnColumnAdd);
 
-        btnColumnAdd = new JButton("Add");
-        btnColumnAdd.addActionListener(this);
-        columnsHBox.add(Box.createHorizontalStrut(5));
-        columnsHBox.add(btnColumnAdd);
-
-        // HBox dos operadores lógicos
-
-        JLabel lblLogicalOperators = new JLabel("Operadores Lógicos: ");
-        logicalOperatorsHBox.add(lblLogicalOperators);
-
-        String logicalOperators[] = {"AND", "OR"};
-        comboBoxLogicalOperator = new JComboBox(logicalOperators);
-        logicalOperatorsHBox.add(comboBoxLogicalOperator);
-
-        btnLogicalOperatorAdd = new JButton("Add");
-        btnLogicalOperatorAdd.addActionListener(this);
-        logicalOperatorsHBox.add(Box.createHorizontalStrut(5));
-        logicalOperatorsHBox.add(btnLogicalOperatorAdd);
-
-        // HBox dos números
-
-        JLabel lblNumber = new JLabel("Números: ");
-        numberHBox.add(lblNumber);
+		// HBox dos operadores lógicos
 
-        DecimalFormat decimalFormat = new DecimalFormat("#.###");
-        decimalFormat.setMaximumFractionDigits(5);
-        NumberFormatter numberFormatter = new NumberFormatter(decimalFormat);
-        formattedTextFieldNumber = new JFormattedTextField(numberFormatter);
-        numberHBox.add(formattedTextFieldNumber);
+		JLabel lblLogicalOperators = new JLabel("Operadores Lógicos: ");
+		logicalOperatorsHBox.add(lblLogicalOperators);
 
-        btnNumberAdd = new JButton("Add");
-        btnNumberAdd.addActionListener(this);
-        numberHBox.add(Box.createHorizontalStrut(5));
-        numberHBox.add(btnNumberAdd);
+		String logicalOperators[] = { "AND", "OR" };
+		comboBoxLogicalOperator = new JComboBox(logicalOperators);
+		logicalOperatorsHBox.add(comboBoxLogicalOperator);
 
-        // HBox das strings
+		btnLogicalOperatorAdd = new JButton("Add");
+		btnLogicalOperatorAdd.addActionListener(this);
+		logicalOperatorsHBox.add(Box.createHorizontalStrut(5));
+		logicalOperatorsHBox.add(btnLogicalOperatorAdd);
 
-        JLabel lblString = new JLabel("Strings: ");
-        stringHBox.add(lblString);
+		// HBox dos números
 
-        textFieldString = new JTextField();
-        stringHBox.add(textFieldString);
+		JLabel lblNumber = new JLabel("Números: ");
+		numberHBox.add(lblNumber);
 
-        btnStringAdd = new JButton("Add");
-        btnStringAdd.addActionListener(this);
-        stringHBox.add(Box.createHorizontalStrut(5));
-        stringHBox.add(btnStringAdd);
+		DecimalFormat decimalFormat = new DecimalFormat("#.###");
+		decimalFormat.setMaximumFractionDigits(5);
+		NumberFormatter numberFormatter = new NumberFormatter(decimalFormat);
+		formattedTextFieldNumber = new JFormattedTextField(numberFormatter);
+		numberHBox.add(formattedTextFieldNumber);
 
-        // HBox para remover
+		btnNumberAdd = new JButton("Add");
+		btnNumberAdd.addActionListener(this);
+		numberHBox.add(Box.createHorizontalStrut(5));
+		numberHBox.add(btnNumberAdd);
 
-        btnRemoveLastOne = new JButton("Apagar último inserido");
-        btnRemoveLastOne.addActionListener(this);
-        removeHBox.add(btnRemoveLastOne);
+		// HBox das strings
 
-        btnRemoveAll = new JButton("Apagar tudo");
-        btnRemoveAll.addActionListener(this);
-        removeHBox.add(Box.createHorizontalStrut(5));
-        removeHBox.add(btnRemoveAll);
+		JLabel lblString = new JLabel("Strings: ");
+		stringHBox.add(lblString);
 
-        // BottomPane
+		textFieldString = new JTextField();
+		stringHBox.add(textFieldString);
 
-        JPanel bottomPane = new JPanel();
-        getContentPane().add(bottomPane, BorderLayout.SOUTH);
-        bottomPane.setLayout(new BoxLayout(bottomPane, BoxLayout.X_AXIS));
-        
-        bottomPane.add(Box.createHorizontalStrut(5));
+		btnStringAdd = new JButton("Add");
+		btnStringAdd.addActionListener(this);
+		stringHBox.add(Box.createHorizontalStrut(5));
+		stringHBox.add(btnStringAdd);
 
-        Box contents = Box.createVerticalBox();
+		// HBox para remover
 
-        contents.add(columnsHBox);
-        contents.add(Box.createVerticalStrut(3));
-        contents.add(operatorsHBox);
-        contents.add(Box.createVerticalStrut(5));
-        contents.add(logicalOperatorsHBox);
-        contents.add(Box.createVerticalStrut(5));
-        contents.add(numberHBox);
-        contents.add(Box.createVerticalStrut(5));
-        contents.add(stringHBox);
-        contents.add(Box.createVerticalStrut(5));
-        contents.add(removeHBox);
-        contents.add(Box.createVerticalStrut(10));
+		btnRemoveLastOne = new JButton("Apagar último inserido");
+		btnRemoveLastOne.addActionListener(this);
+		removeHBox.add(btnRemoveLastOne);
 
-        bottomPane.add(contents);
+		btnRemoveAll = new JButton("Apagar tudo");
+		btnRemoveAll.addActionListener(this);
+		removeHBox.add(Box.createHorizontalStrut(5));
+		removeHBox.add(btnRemoveAll);
 
-        columnsList = new ArrayList<String>();
-        columnsList = parentCell.getColumnsName();
+		// BottomPane
 
-        bottomPane.add(Box.createHorizontalStrut(5));
-        
-        panel = new JPanel();
-        bottomPane.add(panel);
-        panel.setLayout(null);
+		JPanel bottomPane = new JPanel();
+		getContentPane().add(bottomPane, BorderLayout.SOUTH);
+		bottomPane.setLayout(new BoxLayout(bottomPane, BoxLayout.X_AXIS));
 
-        btnCancel = new JButton("Cancelar");
-        btnCancel.setBounds(33, 141, 96, 25);
-        panel.add(btnCancel);
-        Component horizontalStrut = Box.createHorizontalStrut(3);
-        horizontalStrut.setBounds(139, 17, 3, 12);
-        panel.add(horizontalStrut);
-        panel.add(Box.createHorizontalStrut(5));
-        
-        btnReady = new JButton("Pronto");
-        btnReady.setBounds(141, 141, 82, 25);
-        panel.add(btnReady);
-        btnReady.addActionListener(this);
-        
-        btnReady.setEnabled(isExpressionValid());
-        btnCancel.addActionListener(this);
+		bottomPane.add(Box.createHorizontalStrut(5));
 
-        this.setVisible(true);
-    }
+		Box contents = Box.createVerticalBox();
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+		contents.add(columnsHBox);
+		contents.add(Box.createVerticalStrut(3));
+		contents.add(operatorsHBox);
+		contents.add(Box.createVerticalStrut(5));
+		contents.add(logicalOperatorsHBox);
+		contents.add(Box.createVerticalStrut(5));
+		contents.add(numberHBox);
+		contents.add(Box.createVerticalStrut(5));
+		contents.add(stringHBox);
+		contents.add(Box.createVerticalStrut(5));
+		contents.add(removeHBox);
+		contents.add(Box.createVerticalStrut(10));
 
-        if(e.getSource() == btnColumnAdd) {
+		bottomPane.add(contents);
 
-            textArea.append(" ");
-            
-            textArea.append(comboBoxColumns.getSelectedItem().toString());
+		columnsList = new ArrayList<String>();
+		columnsList = parentCell.getColumnsName();
 
-        }
+		bottomPane.add(Box.createHorizontalStrut(5));
 
-        if(e.getSource() == btnOperatorAdd) {
+		panel = new JPanel();
+		bottomPane.add(panel);
+		panel.setLayout(null);
 
-            textArea.append(" ");
-            textArea.append(comboBoxOperator.getSelectedItem().toString());
+		btnCancel = new JButton("Cancelar");
+		btnCancel.setBounds(33, 141, 96, 25);
+		panel.add(btnCancel);
+		Component horizontalStrut = Box.createHorizontalStrut(3);
+		horizontalStrut.setBounds(139, 17, 3, 12);
+		panel.add(horizontalStrut);
+		panel.add(Box.createHorizontalStrut(5));
 
-        }
+		btnReady = new JButton("Pronto");
+		btnReady.setBounds(141, 141, 82, 25);
+		panel.add(btnReady);
+		btnReady.addActionListener(this);
 
-        if(e.getSource() == btnLogicalOperatorAdd) {
+		btnReady.setEnabled(isExpressionValid());
+		btnCancel.addActionListener(this);
 
-            textArea.append(" ");
-            textArea.append(comboBoxLogicalOperator.getSelectedItem().toString());
+		this.setVisible(true);
+	}
 
-        }
+	@Override
+	public void actionPerformed(ActionEvent e) {
 
-        if(e.getSource() == btnNumberAdd && !formattedTextFieldNumber.getText().isEmpty()) {
+		if (e.getSource() == btnColumnAdd) {
 
-            textArea.append(" ");
-            textArea.append(formattedTextFieldNumber.getText());
+			textArea.append(" ");
 
-        }
+			textArea.append(comboBoxColumns.getSelectedItem().toString());
 
-        if(e.getSource() == btnStringAdd && !textFieldString.getText().isEmpty()) {
+		}
 
-            textArea.append(" ");
-            textArea.append("'"+textFieldString.getText()+"'");
+		if (e.getSource() == btnOperatorAdd) {
 
-        }
+			textArea.append(" ");
+			textArea.append(comboBoxOperator.getSelectedItem().toString());
 
-        if(e.getSource() == btnRemoveLastOne && !textArea.getText().isEmpty()) {
+		}
 
-            String text = textArea.getText();
-            Pattern pattern = Pattern.compile("[^']*\\s");
-            Matcher matcher = pattern.matcher(text);
+		if (e.getSource() == btnLogicalOperatorAdd) {
 
-            if (matcher.find()) {
-                int lastIndex = matcher.end() - 1;
-                textArea.replaceRange("", lastIndex, text.length());
-            }
+			textArea.append(" ");
+			textArea.append(comboBoxLogicalOperator.getSelectedItem().toString());
 
-        }
+		}
 
-        if(e.getSource() == btnRemoveAll && !textArea.getText().isEmpty()) {
+		if (e.getSource() == btnNumberAdd && !formattedTextFieldNumber.getText().isEmpty()) {
 
-            textArea.setText("");;
+			textArea.append(" ");
+			textArea.append(formattedTextFieldNumber.getText());
 
-        }
+		}
 
-        if(e.getSource() == btnReady) {
+		if (e.getSource() == btnStringAdd && !textFieldString.getText().isEmpty()) {
 
-            executeOperation();
+			textArea.append(" ");
+			textArea.append("'" + textFieldString.getText() + "'");
 
-            graph.getModel().setValue(jCell,"σ  " + textArea.getText());
-        }
+		}
 
-    }
+		if (e.getSource() == btnRemoveLastOne && !textArea.getText().isEmpty()) {
 
-    public void executeOperation() {
+			String text = textArea.getText();
+			Pattern pattern = Pattern.compile("[^']*\\s");
+			Matcher matcher = pattern.matcher(text);
 
-        String[] formattedInput = formatString(textArea.getText()).split(" ");
+			if (matcher.find()) {
+				int lastIndex = matcher.end() - 1;
+				textArea.replaceRange("", lastIndex, text.length());
+			}
 
-        Operator operator = new FilterOperator(parentCell.getData(),(Tuple t)->{
+		}
 
-            for(String element : formattedInput) {
+		if (e.getSource() == btnRemoveAll && !textArea.getText().isEmpty()) {
 
-                if (isColumn(element)) {
+			textArea.setText("");
+			;
 
-                    String columnName = element.substring(2, element.length() - 1);
+		}
 
-                    ColumnDataType type = parentCell.getColumns().stream()
-                            .filter(col -> col.getName().equals(columnName))
-                            .findFirst().get().getType();
+		if (e.getSource() == btnReady) {
 
-                    String data;
+			executeOperation();
 
-                    if(type == ColumnDataType.INTEGER) {
+			graph.getModel().setValue(jCell, "σ  " + textArea.getText());
 
-                        data = String.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName));
+		}
 
-                    }else if(type == ColumnDataType.FLOAT) {
+	}
 
-                        data = String.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getFloat(columnName));
+	public void executeOperation() {
 
-                    }else {
+		String[] formattedInput = formatString(textArea.getText()).split(" ");
 
-                        data = "'" + t.getContent(parentCell.getSourceTableName(columnName)).getString(columnName) + "'";
+		Operator operator = new FilterOperator(parentCell.getData(), (Tuple t) -> {
 
-                    }
+			for (String element : formattedInput) {
 
-                    evaluator.putVariable(columnName, data);
+				if (isColumn(element)) {
 
-                }
-            }
-            
-            try {
-            	
-                return evaluator.evaluate(formatString(textArea.getText())).equals("1.0");
+					String columnName = element.substring(2, element.length() - 1);
 
-            } catch (EvaluationException e) {
-                e.printStackTrace();
-                return false;
-            }
+					ColumnDataType type = parentCell.getColumns().stream()
+							.filter(col -> col.getName().equals(columnName)).findFirst().get().getType();
 
-        });
+					String data;
 
+					if (type == ColumnDataType.INTEGER) {
 
-        ((OperatorCell)cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
-        ((OperatorCell) cell).setOperator(operator);
+						data = String
+								.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName));
 
-        cell.setName("σ  " + textArea.getText());
+					} else if (type == ColumnDataType.FLOAT) {
 
-        dispose();
+						data = String
+								.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getFloat(columnName));
 
-    }
+					} else {
 
-    private boolean isExpressionValid() {
+						data = "'" + t.getContent(parentCell.getSourceTableName(columnName)).getString(columnName)
+								+ "'";
 
-        String[] formattedInput = formatString(textArea.getText()).split(" ");
+					}
 
-        if(formattedInput.length <= 2) return false;
+					evaluator.putVariable(columnName, data);
 
-        for(String element : formattedInput) {
+				}
+			}
 
-            if (isColumn(element)) {
+			try {
 
-                String columnName = element.substring(2, element.length() - 1);
-                
-                
-                ColumnDataType type = parentCell.getColumns().stream()
-                        .filter(col -> col.getName().equals(columnName))
-                        .findFirst().get().getType();
+				return evaluator.evaluate(formatString(textArea.getText())).equals("1.0");
 
+			} catch (EvaluationException e) {
+				e.printStackTrace();
+				return false;
+			}
 
-                String data;
+		});
 
-                if(type == ColumnDataType.INTEGER) {
+		((OperatorCell) cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
+		((OperatorCell) cell).setOperator(operator);
 
-                    data = String.valueOf(1);
+		cell.setName("σ  " + textArea.getText());
 
-                }else if(type == ColumnDataType.FLOAT) {
+		dispose();
 
-                    data = String.valueOf(1.0);
+	}
 
-                }else {
+	private boolean isExpressionValid() {
 
-                    data = "'" + "a" + "'";
+		String[] formattedInput = formatString(textArea.getText()).split(" ");
 
-                }
+		if (formattedInput.length <= 2)
+			return false;
 
-                evaluator.putVariable(columnName, data);
+		for (String element : formattedInput) {
 
-            }
-        }
+			if (isColumn(element)) {
 
-        try {
-        	
-            evaluator.evaluate(formatString(textArea.getText()));
-            return true;
+				String columnName = element.substring(2, element.length() - 1);
 
-        } catch (EvaluationException e) {
+				ColumnDataType type = parentCell.getColumns().stream().filter(col -> col.getName().equals(columnName))
+						.findFirst().get().getType();
 
-            return false;
+				String data;
 
-        }
-    }
+				if (type == ColumnDataType.INTEGER) {
 
-    private boolean isColumn(String input) {
+					data = String.valueOf(1);
 
-        Pattern pattern = Pattern.compile("#\\{.*?\\}");
-        Matcher matcher = pattern.matcher(input);
+				} else if (type == ColumnDataType.FLOAT) {
 
-        return matcher.matches();
+					data = String.valueOf(1.0);
 
-    }
-    private String formatString(String input) {
+				} else {
 
-    	input = input.replaceAll("(?<=\\s*|^)([\\w.()-<>]+\\_[\\w.()-<>]+)(?=\\s*|$)", "#{$1}");
+					data = "'" + "a" + "'";
 
-        input = input.replaceAll("\\bAND\\b", "&&");
+				}
 
-        input = input.replaceAll("\\bOR\\b", "||");
+				evaluator.putVariable(columnName, data);
 
-        input = input.replaceAll("=", "==");
+			}
+		}
 
-        input = input.replaceAll("≠", "!=");
+		try {
 
-        input = input.replaceAll("≥", ">=");
+			evaluator.evaluate(formatString(textArea.getText()));
+			return true;
 
-        input = input.replaceAll("≤", "<=");
+		} catch (EvaluationException e) {
 
-        return input;
-    }
+			return false;
 
-    @Override
-    public void insertUpdate(DocumentEvent e) {
+		}
+	}
 
-        btnReady.setEnabled(isExpressionValid());
+	private boolean isColumn(String input) {
 
-    }
+		Pattern pattern = Pattern.compile("#\\{.*?\\}");
+		Matcher matcher = pattern.matcher(input);
 
-    @Override
-    public void removeUpdate(DocumentEvent e) {
+		return matcher.matches();
 
-        btnReady.setEnabled(isExpressionValid());
+	}
 
-    }
+	private String formatString(String input) {
 
-    @Override
-    public void changedUpdate(DocumentEvent e) {
+		input = input.replaceAll("(?<=\\s*|^)([\\w.()-<>]+\\_[\\w.()-<>]+)(?=\\s*|$)", "#{$1}");
 
-        btnReady.setEnabled(isExpressionValid());
+		input = input.replaceAll("\\bAND\\b", "&&");
 
-    }
+		input = input.replaceAll("\\bOR\\b", "||");
+
+		input = input.replaceAll("=", "==");
+
+		input = input.replaceAll("≠", "!=");
+
+		input = input.replaceAll("≥", ">=");
+
+		input = input.replaceAll("≤", "<=");
+
+		return input;
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+
+		btnReady.setEnabled(isExpressionValid());
+
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+
+		btnReady.setEnabled(isExpressionValid());
+
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+
+		btnReady.setEnabled(isExpressionValid());
+
+	}
 
 }

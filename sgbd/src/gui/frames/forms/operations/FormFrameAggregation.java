@@ -1,6 +1,6 @@
 package gui.frames.forms.operations;
 
-import java.awt.EventQueue;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -24,7 +24,7 @@ import entities.OperatorCell;
 import sgbd.query.Operator;
 
 @SuppressWarnings("serial")
-public class FormFrameAggregation extends JFrame implements ActionListener {
+public class FormFrameAggregation extends JDialog implements ActionListener {
 
 	private JPanel contentPane;
 	private JComboBox comboBoxColunas;
@@ -36,28 +36,11 @@ public class FormFrameAggregation extends JFrame implements ActionListener {
 	private mxGraph graph;
 	private List<String> columnsList;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(Object cell, List<Cell> cells, mxGraph graph) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FormFrameAggregation frame = new FormFrameAggregation(cell, cells, graph);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public FormFrameAggregation(Object cell, List<Cell> cells, mxGraph graph) {
-		this.setVisible(true);
-		this.setVisible(true);
+
+		super((Window)null);
+		setModal(true);
+		setTitle("Agregação");
 
 		this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell) cell))).findFirst().orElse(null);
 		parentCell = this.cell.getParents().get(0);
@@ -121,6 +104,7 @@ public class FormFrameAggregation extends JFrame implements ActionListener {
 										.addComponent(btnPronto))
 								.addContainerGap(85, Short.MAX_VALUE)));
 		contentPane.setLayout(gl_contentPane);
+		this.setVisible(true);
 	}
 
 	@Override

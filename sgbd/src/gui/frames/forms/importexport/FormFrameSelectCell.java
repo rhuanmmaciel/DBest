@@ -1,7 +1,6 @@
 package gui.frames.forms.importexport;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,23 +30,9 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 	private AtomicReference<Cell> cell;
 	private List<Cell> cells;
 	private JButton btnCancel;
+	private AtomicReference<Boolean> cancelService;
 	
-	public static void main(mxCell jCell, mxGraphComponent graph, List<Cell> cells, AtomicReference<Cell> cell) {
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FormFrameSelectCell frame = new FormFrameSelectCell(jCell, graph, cells, cell);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		
-	}
-	
-	public FormFrameSelectCell(mxCell jCell, mxGraphComponent graph, List<Cell> cells, AtomicReference<Cell> cell) {
+	public FormFrameSelectCell(mxCell jCell, mxGraphComponent graph, List<Cell> cells, AtomicReference<Cell> cell, AtomicReference<Boolean> cancelService) {
 		
 		super((Window)null);
 		setModal(true);
@@ -66,6 +51,7 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 		this.jCell = jCell;
 		this.cells = cells;
 		this.cell = cell;
+		this.cancelService = cancelService;
 		
 		initializeGUI();
 		
@@ -79,17 +65,14 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 
 	    graph.getGraphControl().addMouseListener(this);
 
-	    // Criar o novo JPanel para o botão
 	    JPanel buttonPanel = new JPanel();
 	    buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 
 	    btnCancel = new JButton("Cancelar");
 	    
-	    // Adicionar o Box.Filler para posicionar o botão no canto direito
 	    buttonPanel.add(Box.createHorizontalGlue());
 	    buttonPanel.add(btnCancel);
 
-	    // Adicionar o JPanel do botão ao JDialog na posição sul (BOTTOM)
 	    getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 	    this.setVisible(true);

@@ -9,6 +9,7 @@ public enum OperationType {
 	UNION,
 	DIFFERENCE,
 	RENAME,
-	AGGREGATION;
+	AGGREGATION,
+	LEFTJOIN;
 	
 }

@@ -172,7 +172,7 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 		}
 		if(e.getSource() == btnCreatePK) {
 			
-			pkName.append("Id_PK");
+			pkName.append("PrimaryKey");
 			dispose();
 			
 		}

@@ -58,7 +58,6 @@ public abstract class FormFrameImportExportAs extends JDialog implements ActionL
 		
 		btnHead = new JButton(".head");
 		btnHead.addActionListener(this);
-		btnHead.setEnabled(false);
 		
 		lblPickFileExtension = new JLabel("Escolha a extensão do arquivo:");
 		
