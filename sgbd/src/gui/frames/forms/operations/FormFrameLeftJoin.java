@@ -69,13 +69,11 @@ public class FormFrameLeftJoin extends JDialog implements ActionListener {
 		
 		columnsList_1 = new ArrayList<String>();
 		columnsList_1 = parentCell1.getColumnsName();
-		columnsList_1.add("natural");
 		
 		colunasComboBox = new JComboBox(columnsList_1.toArray(new String[0]));
 		
 		columnsList_2 = new ArrayList<String>();
 		columnsList_2 = parentCell2.getColumnsName();
-		columnsList_2.add("natural");
 
 		colunasComboBox_1 = new JComboBox(columnsList_2.toArray(new String[0]));
 		
