@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.List;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.Box;
@@ -28,11 +30,11 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 	private mxGraphComponent graph;
 	private mxCell jCell;
 	private AtomicReference<Cell> cell;
-	private List<Cell> cells;
+	private Map<mxCell, Cell> cells;
 	private JButton btnCancel;
 	private AtomicReference<Boolean> cancelService;
 	
-	public FormFrameSelectCell(mxCell jCell, mxGraphComponent graph, List<Cell> cells, AtomicReference<Cell> cell, AtomicReference<Boolean> cancelService) {
+	public FormFrameSelectCell(mxCell jCell, mxGraphComponent graph, Map<mxCell, Cell> cells, AtomicReference<Cell> cell, AtomicReference<Boolean> cancelService) {
 		
 		super((Window)null);
 		setModal(true);
@@ -69,12 +71,23 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 	    buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 
 	    btnCancel = new JButton("Cancelar");
+	    btnCancel.addActionListener(this);
 	    
 	    buttonPanel.add(Box.createHorizontalGlue());
 	    buttonPanel.add(btnCancel);
 
 	    getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
+		addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+
+				cancelService.set(true);
+				dispose();
+			}
+
+		});
+	    
 	    this.setVisible(true);
 	}
 
@@ -84,6 +97,7 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 
 		if(e.getSource() == btnCancel) {
 			
+			cancelService.set(true);
 			dispose();
 			
 		}
@@ -95,17 +109,7 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 		
 		jCell = (mxCell) graph.getCellAt(e.getX(), e.getY());
 		
-		for(Cell i : cells) {
-			
-			mxCell j = (mxCell) i.getCell();
-			
-			if(j.equals(jCell)) {
-				
-				cell.set(i);
-				
-			}
-			
-		}
+		cell.set(cells.get(jCell));
 
 		dispose();
 		

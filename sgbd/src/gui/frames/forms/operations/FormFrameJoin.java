@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -40,16 +41,16 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 	private Object jCell;
 	private mxGraph graph;
 
-	public FormFrameJoin(Object cell, List<Cell> cells, mxGraph graph) {
+	public FormFrameJoin(Object jCell, Map<mxCell, Cell> cells, mxGraph graph) {
 		
 		super((Window)null);
 		setModal(true);
 		setTitle("Junção");
 		
-		this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell)cell))).findFirst().orElse(null);
+		this.cell = cells.get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
-		this.jCell = cell;
+		this.jCell = jCell;
 		this.graph = graph;
 		initializeGUI();
 		

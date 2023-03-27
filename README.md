@@ -2,12 +2,12 @@
 
 ## Imediatos: 
 
-- melhorar o formulário de união
+- a célula pós operação não mudar de lugar
+- poder deletar visualmente todas as células
 - consertar a operação de Agregação
 - consertar a operação de Renomeação
 - adicionar a operação de Diferença
 - retirar a flechinha quando o usuário clicar no x ao invés de concluir a operação
-- não poder remover a flechinha, nem clicar s nela
 - adicionar a quebra de linha quando a condição da seleção ficar muito grande
 - consertar erro de sumir um item na exportação .dat de tabelas criadas no app
 

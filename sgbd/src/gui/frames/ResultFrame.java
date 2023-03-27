@@ -2,7 +2,7 @@ package gui.frames;
 
 import java.awt.EventQueue;
 import java.awt.Window;
-import java.util.List;
+import java.util.Map;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -14,7 +14,6 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
 import entities.Cell;
-import util.SortColumns;
 
 @SuppressWarnings("serial")
 public class ResultFrame extends JDialog{
@@ -40,23 +39,45 @@ public class ResultFrame extends JDialog{
 		super((Window)null);
 		setModal(true);
 		
-		List<List<String>> data = cell.getContent();
-        String[] columnsNameArray = cell.getColumnsName().stream().toArray(String[]::new); 
+		Map<Integer, Map<String, String>> data = cell.getMapContent();
+		
+		
 		
 		if(data != null && !data.isEmpty() && !data.get(0).isEmpty()) {
 			
-		
-			String[][] dataArray = data.stream()
-	                .map(l -> l.stream().toArray(String[]::new))
-	                .toArray(String[][]::new);;
-	                
-			SortColumns.array(cell.getData(), columnsNameArray);
+			String[] columnsNameArray = new String[data.get(0).size()];
+			
+			int i = 0;
+			for(String columnName: data.get(0).keySet()) {
+				
+				columnsNameArray[i] = columnName;
+				i++;
+				
+			}
+			
+			String[][] dataArray = new String[data.size()][];
+			int j = 0;
+		    for(Map<String, String> row : data.values()) {
+		    	
+		    	String[] line = new String[data.get(0).size()];
+		    	int k = 0;
+		    	for(String key : row.keySet()) {
+		    		
+		    		line[k] = row.get(key);
+		    		k++;
+		    		
+		    	}
+		    	
+		    	dataArray[j] = line;
+		    	j++;
+		    }
+			
 			
 			table = new JTable(dataArray, columnsNameArray);
 		
 		}else {
 			
-			table = new JTable(new String[0][], columnsNameArray);
+			table = new JTable(new String[0][], cell.getColumnsName().stream().toArray(String[]::new));
 			
 		}
 		

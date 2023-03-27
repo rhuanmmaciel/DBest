@@ -10,29 +10,22 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.TableModel;
 
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
 import entities.Cell;
 import entities.TableCell;
 import enums.FileType;
 import net.coobird.thumbnailator.Thumbnails;
-import sgbd.prototype.ComplexRowData;
 
 @SuppressWarnings("serial")
 public class ExportTable extends JPanel {
-
-	private JTable table;
 
 	public ExportTable(mxGraphComponent frame) {
 
@@ -43,14 +36,14 @@ public class ExportTable extends JPanel {
 	public ExportTable(AtomicReference<Cell> cell, FileType type, AtomicReference<Boolean> cancelService) {
 
 		if (type == FileType.CSV)
-			exportToCsv(cell.get().getContent());
+			exportToCsv(cell.get().getMapContent());
 
 		else if (type == FileType.DAT)
 			exportToDat(cell.get(), cancelService);
 
 	}
 
-	public ExportTable(List<Cell> cells, String path, int a) {
+	public ExportTable(Map<mxCell, Cell> cells, String path, int a) {
 
 		saveGraph(cells, path);
 
@@ -86,23 +79,6 @@ public class ExportTable extends JPanel {
 			
 			new OperatorToTable(createdCell, cell, fileName, cancelService);
 			
-			Iterator<ComplexRowData> c = createdCell.getTable().iterator();
-			
-			while(c.hasNext()) {
-				
-				ComplexRowData csave = c.next();
-				Iterator<Entry<String, byte[]>> d = csave.iterator(); 
-				
-				
-				
-				while(d.hasNext()) {
-					
-					System.out.println(csave.getString(d.next().getKey()));
-					
-				}
-				
-			}
-			
 			createdCell.getTable().saveHeader(headFileName);
 			createdCell.getTable().close();
 
@@ -128,7 +104,7 @@ public class ExportTable extends JPanel {
 
 	}
 
-	private void exportToCsv(List<List<String>> data) {
+	private void exportToCsv(Map<Integer, Map<String, String>> data) {
 
 		try {
 
@@ -152,7 +128,7 @@ public class ExportTable extends JPanel {
 
 				FileWriter csv = new FileWriter(fileToSave);
 
-				for (String columnName : data.get(0)) {
+				for (String columnName : data.get(0).keySet()) {
 
 					csv.write(columnName.substring(columnName.indexOf("_") + 1) + ",");
 
@@ -162,9 +138,9 @@ public class ExportTable extends JPanel {
 
 				data.remove(0);
 
-				for (List<String> row : data) {
+				for (Map<String, String> row : data.values()) {
 
-					for (String inf : row) {
+					for (String inf : row.values()) {
 
 						csv.write(inf + ",");
 
@@ -218,16 +194,16 @@ public class ExportTable extends JPanel {
 		}
 	}
 
-	private void saveGraph(List<Cell> cells, String path) {
-		try {
+	private void saveGraph(Map<mxCell, Cell> cells, String path) {
+		/*try {
 			FileWriter csv = new FileWriter(new File(path));
-
+			
 			for (int i = 0; i < cells.size(); i++) {
 				csv.write("Cell,Name,Style,Length,Width,X,Y");
 
 				csv.write("\n");
 
-				csv.write(cells.get(0).getCell().toString() + ",");
+				csv.write(cells.get(csv).getCell().toString() + ",");
 				csv.write(cells.get(0).getName() + ",");
 				csv.write(cells.get(0).getStyle() + ",");
 				csv.write(cells.get(0).getLength() + ",");
@@ -277,7 +253,7 @@ public class ExportTable extends JPanel {
 		} catch (IOException e) {
 			System.out.println("Error " + e);
 		}
-
+	*/
 	}
 
 }

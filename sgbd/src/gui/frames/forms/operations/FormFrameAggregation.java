@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -36,13 +37,13 @@ public class FormFrameAggregation extends JDialog implements ActionListener {
 	private mxGraph graph;
 	private List<String> columnsList;
 
-	public FormFrameAggregation(Object cell, List<Cell> cells, mxGraph graph) {
+	public FormFrameAggregation(Object cell, Map<mxCell, Cell> cells, mxGraph graph) {
 
 		super((Window)null);
 		setModal(true);
 		setTitle("Agregação");
 
-		this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell) cell))).findFirst().orElse(null);
+		this.cell = cells.get(cell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = cell;
 		this.graph = graph;

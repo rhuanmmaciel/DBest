@@ -50,7 +50,7 @@ public class TableCreator {
 					rowData.setInt(columns.get(i).getName(), (int) (Double.parseDouble(data)));
 
 				} else if (columns.get(i).getType() == ColumnDataType.FLOAT) {
-
+					
 					rowData.setFloat(columns.get(i).getName(), Float.parseFloat(data));
 
 				} else {
@@ -106,7 +106,7 @@ public class TableCreator {
 
 			} else if (column.getType() == ColumnDataType.FLOAT) {
 
-				prototype.addColumn(column.getName(), 100, Column.FLOATING_POINT);
+				prototype.addColumn(column.getName(), 4, Column.FLOATING_POINT);
 
 			} else if (column.getType() == ColumnDataType.STRING) {
 
@@ -118,7 +118,7 @@ public class TableCreator {
 
 			}  else {
 
-				prototype.addColumn(column.getName(), 100, Column.NONE);
+				prototype.addColumn(column.getName(), 100, Column.STRING);
 
 			}
 

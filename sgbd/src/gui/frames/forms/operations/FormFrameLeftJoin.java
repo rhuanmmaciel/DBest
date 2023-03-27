@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -40,16 +41,16 @@ public class FormFrameLeftJoin extends JDialog implements ActionListener {
 	private Object jCell;
 	private mxGraph graph;
 
-	public FormFrameLeftJoin(Object cell, List<Cell> cells, mxGraph graph) {
+	public FormFrameLeftJoin(Object jCell, Map<mxCell, Cell> cells, mxGraph graph) {
 
 		super((Window)null);
 		setModal(true);
 		setTitle("Junção à esquerda");
 		
-		this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell)cell))).findFirst().orElse(null);
+		this.cell = cells.get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
-		this.jCell = cell;
+		this.jCell = jCell;
 		this.graph = graph;
 		initializeGUI();
 		
@@ -148,17 +149,15 @@ public class FormFrameLeftJoin extends JDialog implements ActionListener {
 		Operator table_2 = parentCell2.getData();
 		
 		Operator operator = new LeftNestedLoopJoin(table_1,table_2,(t1, t2) -> {
-			if(item1.equals("natural") || item2.equals("natural")) return true;
-			else return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
-        });
+			
+			return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
+       
+		});
 		
 		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
 		((OperatorCell) cell).setOperator(operator);
 		cell.setName("|X|   " + colunasComboBox.getSelectedItem().toString()+" = "+colunasComboBox_1.getSelectedItem().toString());    
-		if(item1.equals("natural") || item2.equals("natural")) {
-			graph.getModel().setValue(jCell,parentCell1.getName() + " ⟕ " + parentCell2.getName());
-		}
-		else graph.getModel().setValue(jCell,"⟕   "+ colunasComboBox.getSelectedItem().toString()+" = "+colunasComboBox_1.getSelectedItem().toString());
+		graph.getModel().setValue(jCell,"⟕   "+ colunasComboBox.getSelectedItem().toString()+" = "+colunasComboBox_1.getSelectedItem().toString());
 	    
 	    dispose();
 		

@@ -1,13 +1,13 @@
 package gui.frames.forms.operations;
 
+import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Map;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -19,7 +19,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
@@ -30,11 +33,11 @@ import sgbd.query.Operator;
 import sgbd.query.binaryop.UnionOperator;
 
 @SuppressWarnings("serial")
-public class FormFrameUnion extends JDialog implements ActionListener{
+public class FormFrameUnion extends JDialog implements ActionListener, DocumentListener{
 
 	private JPanel contentPane;
-	private JComboBox<?> columnsComboBox1;
-	private JComboBox<?> columnsComboBox2; 
+	private JComboBox<String> columnsComboBox1;
+	private JComboBox<String> columnsComboBox2; 
 	private List<String> columnsList1;
 	private List<String> columnsList2;
 	
@@ -52,19 +55,19 @@ public class FormFrameUnion extends JDialog implements ActionListener{
 	private Cell cell;
 	private Cell parentCell1;
 	private Cell parentCell2;
-	private Object jCell;
+	private mxCell jCell;
 	private mxGraph graph;
 
-	public FormFrameUnion(Object cell, List<Cell> cells, mxGraph graph) {
+	public FormFrameUnion(mxCell jCell, Map<mxCell, Cell> cells, mxGraph graph) {
 		
 		super((Window)null);
 		setModal(true);
 		setTitle("União");
 		
-		this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell)cell))).findFirst().orElse(null);
+		this.cell = cells.get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
-		this.jCell = cell;
+		this.jCell = jCell;
 		this.graph = graph;
 		
 		initializeGUI();
@@ -90,6 +93,8 @@ public class FormFrameUnion extends JDialog implements ActionListener{
 		
 		columnsComboBox1 = new JComboBox(columnsList1.toArray(new String[0]));
 		columnsComboBox2 = new JComboBox(columnsList2.toArray(new String[0]));
+		columnsComboBox1.addActionListener(this);
+		columnsComboBox2.addActionListener(this);
 		
 		JLabel lblColumns1 = new JLabel("Colunas");
 		JLabel lblColumns2 = new JLabel("Colunas");
@@ -100,7 +105,12 @@ public class FormFrameUnion extends JDialog implements ActionListener{
 		lblColumnsPicked2.setHorizontalAlignment(SwingConstants.RIGHT);
 		
 		textArea1 = new JTextArea();
+		textArea1.getDocument().addDocumentListener(this);
 		textArea2 = new JTextArea();
+		textArea2.getDocument().addDocumentListener(this);
+		
+		textArea1.setEditable(false);
+		textArea2.setEditable(false);
 		
 		btnAdd1 = new JButton("Add");
 		btnAdd2 = new JButton("Add");
@@ -180,12 +190,14 @@ public class FormFrameUnion extends JDialog implements ActionListener{
 					.addContainerGap())
 		);
 		contentPane.setLayout(groupLayout);
+		verifyConditions();
 		this.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
+		verifyConditions();
 		if(e.getSource() == btnAdd1){
 
 			if(columnsComboBox1.getItemCount() > 0) {
@@ -198,7 +210,12 @@ public class FormFrameUnion extends JDialog implements ActionListener{
 
 		}else if(e.getSource() == btnRemove1) {
 			
-			textArea1.setText(textArea1.getText().replace(textArea1.getSelectedText(),""));
+			textArea1.setText("");
+			
+			columnsComboBox1.removeAllItems();
+			
+			for(String item : columnsList1)
+				columnsComboBox1.addItem(item);
 			
 		}else if(e.getSource() == btnAdd2){
 
@@ -212,7 +229,12 @@ public class FormFrameUnion extends JDialog implements ActionListener{
 
 		}else if(e.getSource() == btnRemove2) {
 			
-			textArea2.setText(textArea2.getText().replace(textArea2.getSelectedText(),""));
+			textArea2.setText("");
+			
+			columnsComboBox2.removeAllItems();
+			
+			for(String item : columnsList2)
+				columnsComboBox2.addItem(item);
 		
 		}else if(e.getSource() == btnReady) {
 	        
@@ -222,7 +244,42 @@ public class FormFrameUnion extends JDialog implements ActionListener{
 		}
 	}
 	
-	public void executeOperation() {
+	private void verifyConditions() {
+		
+		boolean noneSelection1 = textArea1.getText().isEmpty();
+		boolean noneSelection2 = textArea2.getText().isEmpty();
+		boolean differentAmountOfColumns = textArea2.getLineCount() != textArea1.getLineCount(); 
+		
+		btnReady.setEnabled(!noneSelection1 && !noneSelection2 && !differentAmountOfColumns);
+		
+		updateToolTipText(noneSelection1, noneSelection2 , differentAmountOfColumns);
+		
+	}
+	
+	private void updateToolTipText(boolean noneSelection1, boolean noneSelection2 , boolean differentAmountOfColumns) {
+		
+		String btnReadyToolTipText = new String();
+		
+		 if(noneSelection1) {
+				
+			btnReadyToolTipText = "- Selecione pelo menos uma coluna da primeira tabela";
+				
+		}else if(noneSelection2) {
+		
+			btnReadyToolTipText = "- Selecione pelo menos uma coluna da segunda tabela";
+		
+		}else if(differentAmountOfColumns) {
+			
+			btnReadyToolTipText = "- É necessário que seja selecionado a mesma quantidade de colunas de cada tabela";
+			
+		}
+		UIManager.put("ToolTip.foreground", Color.RED);
+		
+		btnReady.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
+		
+	}
+	
+	private void executeOperation() {
 		
 		Operator table1 = parentCell1.getData();
 		Operator table2 = parentCell2.getData();
@@ -243,7 +300,7 @@ public class FormFrameUnion extends JDialog implements ActionListener{
 		selectedColumns1.replaceAll(s -> s.substring(s.indexOf(".")+1));
 		selectedColumns2.replaceAll(s -> s.substring(s.indexOf(".")+1));
 		
-		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), Stream.of(selectedColumns1).collect(Collectors.toList()));
+		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
 		
 		cell.setName("U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());    
 		
@@ -252,4 +309,27 @@ public class FormFrameUnion extends JDialog implements ActionListener{
         dispose();
 		
 	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+
+		verifyConditions();
+		
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+
+		verifyConditions();
+		
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+
+		verifyConditions();
+		
+	}
+
+	
 }

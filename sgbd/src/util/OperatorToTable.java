@@ -32,7 +32,7 @@ public class OperatorToTable {
 
 		SortColumns.list(cell.getData(), columnsName);
 		allData.add(columnsName);
-		allData.addAll(cell.getContent());
+		allData.addAll(cell.getListContent());
 
 		new FormFramePrimaryKey(allData, pkName, cancelService);
 
@@ -140,7 +140,7 @@ public class OperatorToTable {
 
 			} else if (column.getType() == ColumnDataType.FLOAT) {
 
-				prototype.addColumn(column.getName(), 100, Column.FLOATING_POINT);
+				prototype.addColumn(column.getName(), 4, Column.FLOATING_POINT);
 
 			} else if (column.getType() == ColumnDataType.STRING) {
 

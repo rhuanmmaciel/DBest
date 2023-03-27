@@ -13,7 +13,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JButton;
@@ -61,6 +63,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private mxCell jCell;
 	private Boolean isOperation;
 	private OperationType currentType;
+	private Map<mxCell, Cell> cells;
 
 	private TypesButtons btnTypeProjection;
 	private TypesButtons btnTypeSelection;
@@ -78,14 +81,12 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private Boolean createEdge = false;
 
 	private JButton deleteButton;
-	private Boolean deleteCell = false;
 
 	private JButton importButton;
 	private JToolBar toolBar;
 
 	private JButton saveTableButton;
 
-	private List<Cell> cells;
 	private List<Cell> leafs;
 
 	private TableCell currentTableCell = null;
@@ -98,11 +99,13 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 	private void initGUI() {
 		
-		setSize(800, 600);
+		setSize(1000, 800);
 		setLocationRelativeTo(null);
 		
 		graph = new mxGraph();
 		graphComponent = new mxGraphComponent(graph);
+		graphComponent.setConnectable(false);
+
 		graphComponent.setPreferredSize(new Dimension(400, 400));
 		getContentPane().add(graphComponent);
 
@@ -141,9 +144,10 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		btnTypeRename = new TypesButtons(stylesheet, "ρ Renomeação", "Renomeação");
 		btnTypeRename.getButton().addActionListener(this);
 		containerPanel.add(btnTypeRename.getPanel());
-		*/
 		
-		btnTypeLeftJoin = new TypesButtons(stylesheet, "⟕ Left Join", "Left Join");
+				*/
+
+		btnTypeLeftJoin = new TypesButtons(stylesheet, "⟕ Junção à esquerda", "Junção à esquerda");
 		btnTypeLeftJoin.getButton().addActionListener(this);
 		containerPanel.add(btnTypeLeftJoin.getPanel());
 		
@@ -186,16 +190,17 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		layout.setUseBoundingBox(false);
 		layout.execute(parent);
 
-		this.cells = new ArrayList<>();
+		this.cells = new HashMap<>();
 		this.leafs = new ArrayList<>();
 
 		graphComponent.getGraphControl().addMouseListener(this);
-
 		graphComponent.addKeyListener(this);
+
 		graph.setAutoSizeCells(false);
 		graph.setCellsResizable(false);
 		graph.setAutoOrigin(false);
 		graph.setCellsEditable(false);
+		graph.setAllowDanglingEdges(false);
 		
 		graph.getModel().endUpdate();
 
@@ -263,22 +268,41 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 			assignVariables("Agregação", "G Agregação", true, OperationType.AGGREGATION);
 
-		} */else if (e.getSource() == btnTypeJoin.getButton()) {
+		}*/ else if (e.getSource() == btnTypeLeftJoin.getButton()) {
+
+			assignVariables("Junção à esquerda", "⟕ Junção à esquerda", true, OperationType.LEFTJOIN);
+
+		} else if (e.getSource() == btnTypeJoin.getButton()) {
 
 			assignVariables("Junção", "|X| Junção", true, OperationType.JOIN);
 
-		}else if (e.getSource() == btnTypeLeftJoin.getButton()) {
-
-			assignVariables("Left Join", "⟕ Left Join", true, OperationType.LEFTJOIN);
-
-		} else if (e.getSource() == edgeButton) {
+		}else if (e.getSource() == edgeButton) {
 
 			createEdge = true;
 
 		} else if (e.getSource() == deleteButton) {
+			
+			if(jCell != null) {
+				
+			    Object[] cellsToRemove = new Object[]{jCell};
+			    Object[] edges = graph.getEdges(jCell);
+			    
+			    graph.getModel().beginUpdate();
+			    try {
+			    	
+			        graph.removeCells(edges, true);
+			        graph.removeCells(cellsToRemove, true);
+			        
+			    } finally {
+			        graph.getModel().endUpdate();
+			    }
+			    
+			    graph.refresh();
+			    cells.remove(jCell);
+			    
+			}
 
-			deleteCell = true;
-
+			
 		} else if (e.getSource() == importButton) {
 
 			TableCell tableCell = new TableCell(80, 30);
@@ -287,7 +311,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			AtomicReference<Boolean> cancelServiceReference = new AtomicReference<>(cancelService);
 
 			List<String> tablesName = new ArrayList<>();
-			cells.forEach(x -> tablesName.add(x.getName().toUpperCase()));
+			cells.values().forEach(x -> tablesName.add(x.getName().toUpperCase()));
 
 			new FormFrameImportAs(tableCell, tablesName, cancelServiceReference);
 
@@ -342,7 +366,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		}
 		
 		jCell = (mxCell)graphComponent.getCellAt(e.getX(), e.getY());
-		Cell cell = cells.stream().filter(x -> x.getCell().equals((mxCell) jCell)).findFirst().orElse(null);
+		Cell cell = cells.get(jCell);
 
 		if (createCell == true) {
 
@@ -351,13 +375,13 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			if (!isOperation) {
 
 				currentTableCell.setJGraphCell(newCell);
-				cells.add(currentTableCell);
+				cells.put(newCell, currentTableCell); 
 				currentTableCell.setX(e.getX());
 				currentTableCell.setY(e.getY());
 
 			} else {
-
-				cells.add(new OperatorCell(name, style, newCell, currentType, e.getX(), e.getY(), 80, 30));
+				
+				cells.put(newCell, new OperatorCell(name, style, newCell, currentType, e.getX(), e.getY(), 80, 30));
 
 			}
 
@@ -372,7 +396,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			}
 			
 			Cell parentCell = newParent != null
-					? cells.stream().filter(x -> x.getCell().equals((mxCell) newParent)).findFirst().orElse(null)
+					? cells.get(newParent)
 					: null;
 
 			if (createEdge == true && jCell != newParent) {
@@ -437,48 +461,27 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 			}
 
-			if (deleteCell == true) {
-
-				graph.getModel().remove(jCell);
-				deleteCell = false;
-
-			}
-		}
-
-		if (e.getButton() == MouseEvent.BUTTON3 && jCell != null) {
-
-			graph.getModel().remove(jCell);
-
-		}
-		if (e.getButton() == MouseEvent.BUTTON2 && jCell != null) {
-
-			cell.getSourceTableName(name);
-
 		}
 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -491,25 +494,32 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	public void keyPressed(KeyEvent e) {
 
 		Cell cell = jCell != null
-				? cells.stream().filter(x -> x.getCell().equals((mxCell) jCell)).findFirst().orElse(null)
+				? cells.get(jCell)
 				: null;
-
-		if (e.getKeyCode() == KeyEvent.VK_S && jCell != null) {
-
-			new ResultFrame(cell);
-
-		} else if (e.getKeyCode() == KeyEvent.VK_DELETE && jCell != null) {
-
-			graph.getModel().remove(jCell);
-
+		
+		if(cell != null) {
+			
+			if (e.getKeyCode() == KeyEvent.VK_S) {
+	
+				new ResultFrame(cell);
+	
+			} else if (e.getKeyCode() == KeyEvent.VK_DELETE ) {
+	
+				graph.getModel().remove(jCell);
+	
+			}else if(e.getKeyCode() == KeyEvent.VK_J) {
+				
+				System.out.println(cells.keySet());
+				
+			}
+		
 		}
 
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 
 	}
-
+	
 }

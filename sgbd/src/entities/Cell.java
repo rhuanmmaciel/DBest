@@ -2,6 +2,7 @@ package entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 
@@ -21,7 +22,7 @@ public abstract class Cell {
 	private int y;
 	private int length;
 	private int width;
-	protected List<List<String>> content;
+	protected Map<Integer, Map<String, String>> content;
 	
 	public Cell(String name, String style, Object cell, int x, int y, int length, int width) {
 		
@@ -94,11 +95,26 @@ public abstract class Cell {
 		
 	}
 	
-	public List<List<String>> getContent(){
+	public Map<Integer, Map<String, String>> getMapContent(){
 		
 		return content;
 		
 	}
+	
+	public List<List<String>> getListContent() {
+		
+	    List<List<String>> result = new ArrayList<>();
+	    for (Map.Entry<Integer, Map<String, String>> entry : content.entrySet()) {
+	        List<String> row = new ArrayList<>();
+	        for (String value : entry.getValue().values()) {
+	            row.add(value);
+	        }
+	        result.add(row);
+	    }
+	    return result;
+	    
+	}
+
 	
 	public Object getCell() {
 		return cell;
@@ -188,9 +204,9 @@ public abstract class Cell {
 	
 	}
 	
-	@Override
-	public String toString() {
-
+	
+	public String console() {
+		/*
 	    List<Integer> columnWidths = new ArrayList<>();
 	    for (String column : getColumnsName()) {
 	        int maxWidth = column.length();
@@ -248,7 +264,8 @@ public abstract class Cell {
 	    tableFormatted.append("+\n");
 
 	    return tableFormatted.toString();
-
+		 */
+		return "";
 	}
 
 	

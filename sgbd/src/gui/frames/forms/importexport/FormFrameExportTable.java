@@ -1,12 +1,11 @@
 package gui.frames.forms.importexport;
 
-import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
@@ -35,25 +34,11 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 	private JButton btnGraph;
 	
 	private JLabel lblPickFileExtension;
-	private List<Cell> cells;
+	private Map<mxCell, Cell> cells;
 	private mxGraphComponent graph;
 	private AtomicReference<Boolean> cancelService;
-
 	
-	public static void main(List<Cell> cells, mxGraphComponent graph, AtomicReference<Boolean> cancelService) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FormFrameExportTable frame = new FormFrameExportTable(cells, graph, cancelService);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	public FormFrameExportTable(List<Cell> cells, mxGraphComponent graph, AtomicReference<Boolean> cancelService) {
+	public FormFrameExportTable(Map<mxCell, Cell> cells, mxGraphComponent graph, AtomicReference<Boolean> cancelService) {
 
 		super((Window)null);
 		setModal(true);

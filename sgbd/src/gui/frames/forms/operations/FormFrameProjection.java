@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -30,7 +31,7 @@ import sgbd.table.Table;
 public class FormFrameProjection extends JDialog implements ActionListener {
 
 	private JPanel contentPane;
-	private JComboBox<?> columnsComboBox;
+	private JComboBox<String> columnsComboBox;
 	private List<String> columnsList;
 
 	private JButton btnAdd;
@@ -45,15 +46,15 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 	private Object jCell;
 	private mxGraph graph;
 
-	public FormFrameProjection(Object cell, List<Cell> cells, mxGraph graph) {
+	public FormFrameProjection(Object jCell, Map<mxCell, Cell> cells, mxGraph graph) {
 
 		super((Window)null);
 		setModal(true);
 		setTitle("Projeção");
 		
-		this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell) cell))).findFirst().orElse(null);
+		this.cell = cells.get(jCell);
 		parentCell = this.cell.getParents().get(0);
-		this.jCell = cell;
+		this.jCell = jCell;
 		this.graph = graph;
 		initializeGUI();
 
@@ -153,7 +154,12 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 
 		} else if (e.getSource() == btnRemove) {
 			
-			textArea.setText(textArea.getText().replace(textArea.getSelectedText(),""));
+			textArea.setText("");
+			
+			columnsComboBox.removeAllItems();
+			
+			for(String item : columnsList)
+				columnsComboBox.addItem(item);
 
 		} else if (e.getSource() == btnReady) {
 

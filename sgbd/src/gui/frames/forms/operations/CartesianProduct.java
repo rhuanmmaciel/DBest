@@ -1,6 +1,7 @@
 package gui.frames.forms.operations;
 
 import java.util.List;
+import java.util.Map;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
@@ -19,12 +20,12 @@ public class CartesianProduct{
 	private mxGraph graph;
 	
 
-	public CartesianProduct(Object cell, List<Cell> cells, mxGraph graph) {
+	public CartesianProduct(Object jCell, Map<mxCell, Cell> cells, mxGraph graph) {
 		
-		this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell)cell))).findFirst().orElse(null);
+		this.cell = cells.get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
-		this.jCell = cell;
+		this.jCell = jCell;
 		this.graph = graph;
 		executeOperation();
 		

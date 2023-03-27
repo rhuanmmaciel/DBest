@@ -296,7 +296,7 @@ public class FormFrameColumnType extends JDialog implements ActionListener, Docu
 	
 	private void disableComboBoxOptions(){
 		
-		List<String> order = new ArrayList<>(List.of("None", "Boolean", "String", "Char", "Float", "Integer"));
+		List<String> order = new ArrayList<>(List.of("None", "Boolean", "String", "Character", "Float", "Integer"));
 		
 		for(ColumnData column : columnsData) {
 			

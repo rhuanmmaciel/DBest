@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,15 +72,15 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 	private mxGraph graph;
 	private JPanel panel;
 
-	public FormFrameSelection(Object cell, List<Cell> cells, mxGraph graph) {
+	public FormFrameSelection(Object jCell, Map<mxCell, Cell> cells, mxGraph graph) {
 
 		super((Window) null);
 		setModal(true);
 		setTitle("Seleção");
 
-		this.cell = cells.stream().filter(x -> x.getCell().equals(((mxCell) cell))).findFirst().orElse(null);
+		this.cell = cells.get(jCell);
 		parentCell = this.cell.getParents().get(0);
-		this.jCell = cell;
+		this.jCell = jCell;
 		this.graph = graph;
 
 		this.evaluator = new Evaluator();
