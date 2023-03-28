@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -36,10 +37,10 @@ public class ExportTable extends JPanel {
 	public ExportTable(AtomicReference<Cell> cell, FileType type, AtomicReference<Boolean> cancelService) {
 
 		if (type == FileType.CSV)
-			exportToCsv(cell.get().getMapContent());
+			exportToCsv(cell.get().getMapContent(), cell.get());
 
 		else if (type == FileType.DAT)
-			exportToDat(cell.get(), cancelService);
+			exportToDat(cell.get());
 
 	}
 
@@ -49,13 +50,39 @@ public class ExportTable extends JPanel {
 
 	}
 
-	private void exportToDat(Cell cell, AtomicReference<Boolean> cancelService) {
+	private void exportToDat(Cell cell) {
 
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Salvar arquivo");
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-		String defaultFileName = "tabela.head";
+		Map<String, Integer> amount = new HashMap<>();
+		for(String columnName : cell.getColumnsName()) {
+			
+			String sourceTable = cell.getSourceTableName(columnName);
+			
+			int i = 1;
+			
+			if(amount.containsKey(sourceTable)) {
+				
+				i = amount.get(sourceTable) + 1;
+				amount.put(sourceTable, i);
+				
+			}else {
+				
+				amount.put(sourceTable, i);
+				
+			}
+			
+		}
+		
+		String defaultFileName = amount.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null)+".head";
+		
+		
 		fileChooser.setSelectedFile(new File(defaultFileName));
 
 		int userSelection = fileChooser.showSaveDialog(null);
@@ -105,15 +132,15 @@ public class ExportTable extends JPanel {
 
 	}
 
-	private void exportToCsv(Map<Integer, Map<String, String>> data) {
+	private void exportToCsv(Map<Integer, Map<String, String>> data, Cell cell) {
 
 		try {
 
 			JFileChooser fileChooser = new JFileChooser();
 			fileChooser.setDialogTitle("Salvar arquivo");
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-			String defaultFileName = "tabela.csv";
+			
+			String defaultFileName = cell.getAllSourceTables().stream().findFirst().orElse(null).getName()+".csv";
 			fileChooser.setSelectedFile(new File(defaultFileName));
 
 			int userSelection = fileChooser.showSaveDialog(null);

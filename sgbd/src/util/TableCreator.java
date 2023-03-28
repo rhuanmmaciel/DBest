@@ -97,7 +97,7 @@ public class TableCreator {
 
 		}
 
-		prototype.addColumn(columns.get(index).getName(), 15, Column.PRIMARY_KEY);
+		prototype.addColumn(columns.get(index).getName(), 100, Column.PRIMARY_KEY);
 		entities.Column primaryKeyColumn = columns.get(index);
 		columns.remove(index);
 
