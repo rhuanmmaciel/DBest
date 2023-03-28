@@ -2,6 +2,7 @@ package util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import entities.TableCell;
@@ -16,49 +17,51 @@ import sgbd.table.components.Header;
 public class TableCreator {
 
 	private static List<RowData> getRowData(String tableName, String pkName, List<entities.Column> columns,
-			List<List<String>> lines) {
+			Map<Integer, Map<String, String>> content, boolean isColumnsReady) {
 
 		List<RowData> rows = new ArrayList<>();
-
-		for (int i = 0; i < columns.size(); i++) {
-
-			String name = columns.get(i).getName();
-			ColumnDataType type = columns.get(i).getType();
-			Boolean pk = name.equals(pkName);
-
-			columns.remove(i);
-			columns.add(i, new entities.Column(name, tableName, type, pk, false));
-
-		}
+		
+		if(!isColumnsReady)
+			for (int i = 0; i < columns.size(); i++) {
+	
+				String name = columns.get(i).getName();
+				ColumnDataType type = columns.get(i).getType();
+				Boolean pk = name.equals(pkName);
+	
+				columns.remove(i);
+				columns.add(i, new entities.Column(name, tableName, type, pk, false));
+	
+			}
 
 		Boolean isPKCreated = !columns.stream().anyMatch(x -> x.isPK());
 		
 		int k = 1;
-		for (List<String> line : lines) {
+		for (Map<String, String> line : content.values()) {
 
 			RowData rowData = new RowData();
-			int i = 0;
 			
-			for (String data : line) {
-
-				if (data.isEmpty()) {
+			for (String data : line.keySet()) {
+				
+				entities.Column column = !isColumnsReady ?
+						columns.stream().filter(x -> x.getName().substring(x.getName().indexOf("_")+1).equals(data)).findFirst().orElse(null) :
+							columns.stream().filter(x -> x.getName().equals(data)).findFirst().orElse(null);
+				if (line.get(data).isEmpty()) {
 					
-					rowData.setString(columns.get(i).getName(), data);
+					rowData.setString(column.getName(), data);
 
-				} else if (columns.get(i).getType() == ColumnDataType.INTEGER) {
+				} else if (column.getType() == ColumnDataType.INTEGER) {
 
-					rowData.setInt(columns.get(i).getName(), (int) (Double.parseDouble(data)));
+					rowData.setInt(column.getName(), (int) (Double.parseDouble(line.get(data))));
 
-				} else if (columns.get(i).getType() == ColumnDataType.FLOAT) {
+				} else if (column.getType() == ColumnDataType.FLOAT) {
 					
-					rowData.setFloat(columns.get(i).getName(), Float.parseFloat(data));
+					rowData.setFloat(column.getName(), Float.parseFloat(line.get(data)));
 
 				} else {
 
-					rowData.setString(columns.get(i).getName(), data);
+					rowData.setString(column.getName(), line.get(data));
 
 				}
-				i++;
 
 			}
 
@@ -80,9 +83,9 @@ public class TableCreator {
 	}
 
 	public static void createTable(TableCell tableCell, String tableName, String pkName, List<entities.Column> columns,
-			List<List<String>> lines) {
+			Map<Integer, Map<String, String>> data, boolean isColumnsReady) {
 
-		List<RowData> rows = new ArrayList<>(getRowData(tableName, pkName, columns, lines));
+		List<RowData> rows = new ArrayList<>(getRowData(tableName, pkName, columns, data, isColumnsReady));
 
 		Prototype prototype = new Prototype();
 

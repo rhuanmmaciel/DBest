@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import entities.Column;
 import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
@@ -62,6 +63,23 @@ public class SortColumns {
 	   
 	    }
 	    aux.close();
+	}
+
+	public static void columnsWithMap(List<Column> columns, Map<String, String> firstLine) {
+		
+	    Comparator<Column> comparator = new Comparator<Column>() {
+	        @Override
+	        public int compare(Column c1, Column c2) {
+	            int index1 = columns.indexOf(c1);
+	            int index2 = columns.indexOf(c2);
+	            int keyIndex1 = new ArrayList<>(firstLine.keySet()).indexOf(c1.getName());
+	            int keyIndex2 = new ArrayList<>(firstLine.keySet()).indexOf(c2.getName());
+	            return Integer.compare(index1, index2) - Integer.compare(keyIndex1, keyIndex2);
+	        }
+	    };
+	    
+	    Collections.sort(columns, comparator);
+	    
 	}
 
 	

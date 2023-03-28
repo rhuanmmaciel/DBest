@@ -77,7 +77,8 @@ public class ExportTable extends JPanel {
 
 			TableCell createdCell = new TableCell(10, 10);
 			
-			new OperatorToTable(createdCell, cell, fileName, cancelService);
+			String pkName = cell.getColumns().stream().filter(x -> x.isPK()).findFirst().orElse(null).getName();
+			TableCreator.createTable(createdCell, fileName, pkName, cell.getColumns(), cell.getMapContent(), true);
 			
 			createdCell.getTable().saveHeader(headFileName);
 			createdCell.getTable().close();
@@ -135,8 +136,6 @@ public class ExportTable extends JPanel {
 				}
 
 				csv.write("\n");
-
-				data.remove(0);
 
 				for (Map<String, String> row : data.values()) {
 

@@ -462,6 +462,13 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			}
 
 		}
+		
+		if(jCell != null && e.getClickCount() == 2) {
+			
+			new ResultFrame(cells.get(jCell));
+
+			
+		}
 
 	}
 

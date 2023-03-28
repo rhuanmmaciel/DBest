@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,6 +15,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -52,34 +52,19 @@ public class FormFrameColumnType extends JDialog implements ActionListener, Docu
 	private AtomicReference<Boolean> exitReference;
 	private StringBuilder tableName;
 	private List<String> tablesName;
-	private List<List<String>> data;
+	private Map<Integer, Map<String, String>> data;
 	private List<ColumnData> columnsData;
 	
-	public static void main(List<Column> columns, List<List<String>> data, StringBuilder tableName,
-							List<String> tablesName, AtomicReference<Boolean> exitReference) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FormFrameColumnType frame = new FormFrameColumnType(columns, data, tableName, tablesName, exitReference);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	public FormFrameColumnType(List<Column> columns, List<List<String>> data, StringBuilder tableName,
+	public FormFrameColumnType(List<Column> columns, Map<Integer, Map<String, String>> data, StringBuilder tableName,
 							   List<String> tablesName, AtomicReference<Boolean> exitReference) {
 		
 		super((Window)null);
 		setModal(true);
 		
 		this.columns = columns; 
-		this.columnsName = data.get(0);
+		this.columnsName = new ArrayList<>(data.get(0).keySet());
 		this.tableName = tableName;	
 		this.tablesName = tablesName;
-		data.remove(0);
 		this.data = data;
 		
 		this.columnsData = new ArrayList<>();
@@ -207,7 +192,6 @@ public class FormFrameColumnType extends JDialog implements ActionListener, Docu
 	    gbc.insets = new Insets(5, 5, 5, 5);
 	    
 	    int i = 2;
-	    int columnIndex = 0;
 	    for (String element : columnsName) {
 	    	
 	        JLabel label = new JLabel(element + ":");
@@ -245,12 +229,11 @@ public class FormFrameColumnType extends JDialog implements ActionListener, Docu
 	        
 	        List<String> dataColumn = new ArrayList<>();
 	        
-	        final int lambdaIndex = columnIndex;
-	        data.forEach(x -> dataColumn.add(x.get(lambdaIndex)));
+	        for(Map<String, String> line : data.values()) {
+	        	dataColumn.add(line.get(element));
+	        }
 	        
 	        columnsData.add(new ColumnData(dataColumn, comboBox, label.getText()));
-	        
-	        columnIndex++;
 	        
 	    }		
 		

@@ -1,15 +1,13 @@
 package gui.frames.forms.create;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
@@ -36,36 +34,33 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 	private AtomicReference<Boolean> exitReference;
 	private StringBuilder pkName;
 	
-	public static void main(List<List<String>> data, StringBuilder pkName, AtomicReference<Boolean> exitReference) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FormFramePrimaryKey frame = new FormFramePrimaryKey(data, pkName, exitReference);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	public FormFramePrimaryKey(List<List<String>> data, StringBuilder pkName, AtomicReference<Boolean> exitReference) {
+	public FormFramePrimaryKey(Map<Integer, Map<String, String>> data, List<String> columnsName, StringBuilder pkName, AtomicReference<Boolean> exitReference) {
 		
 		super((Window)null);
 		setModal(true);
 		
-		List<String> columnsName = new ArrayList<>();
 		
-		if(data != null && !data.isEmpty()) {
+		if(data != null && !data.isEmpty() && data.get(0) != null) {
 			
-			columnsName = data.get(0);
-			List<String> firstLine = new ArrayList<>(data.remove(0));
 		
-			String[][] dataArray = data.stream()
-	                .map(l -> l.stream().toArray(String[]::new))
-	                .toArray(String[][]::new);;
+			String[][] dataArray = new String[data.size()][columnsName.size()];
 	                
-	        data.add(0, firstLine);        
+			int i = 0;
+			for(Map<String, String> inf : data.values()) {
+				
+				String[] line = new String[columnsName.size()];
+				
+				int j = 0;
+				for(String columnName : columnsName) {
+
+					line[j] = inf.get(columnName);
+					j++;
+					
+				}
+				
+				dataArray[i] = line;
+				i++;
+			}
 	                
 	        String[] columnsNameArray = columnsName.stream().toArray(String[]::new); 
 			
@@ -103,13 +98,16 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 	    table.setRowSelectionAllowed(false);
 	    
 	    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-	        @Override
-	        public void valueChanged(ListSelectionEvent event) {
-	        	
-	        	getVerification();
-	        	
-	        }
+	    	
+	    	@Override
+	    	public void valueChanged(ListSelectionEvent event) {
+	    		
+	    		getVerification();
+	    		
+	    	}
+	    	
 	    });
+
 	    
 		JScrollPane scrollPane = new JScrollPane(table);
 		
@@ -163,6 +161,8 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
+		getVerification();
 		
 		if(e.getSource() == btnPickColumn) {
 			
@@ -177,43 +177,19 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 			
 		}
 		
-		getVerification();
-		
 	}	
 	
 	private void getVerification() {
 		
 		boolean noColumnSelected = table.getSelectedColumn() == -1;
-		boolean repeatedElements = false;
-		boolean emptyCell = false;
 		
-		if(!noColumnSelected) {
+		updateToolTipText(noColumnSelected);
 		
-			List<String> columnData = new ArrayList<>();
-			for(int i = 0; i < table.getRowCount(); i++) {
-				
-				columnData.add(String.valueOf(table.getValueAt(i, table.getSelectedColumn())));			
-				
-			}
-			
-			TreeSet<String> unique = new TreeSet<>();
-			unique.addAll(columnData);
-			
-			List<String> auxList = new ArrayList<>(unique);
-			columnData.sort(null);
-			
-			repeatedElements = !auxList.equals(columnData);
-			emptyCell = columnData.contains("") || columnData.contains(null);
-		
-		}
-		
-		updateToolTipText(repeatedElements, emptyCell, noColumnSelected);
-		
-		btnPickColumn.setEnabled(!repeatedElements && !emptyCell && !noColumnSelected);
+		btnPickColumn.setEnabled(!noColumnSelected);
 		
 	}
 	
-	private void updateToolTipText(boolean repeatedElements, boolean emptyCell, boolean noColumnSelected) {
+	private void updateToolTipText(boolean noColumnSelected) {
 		
 		String btnPickColumnToolTipText = new String();
 		
@@ -221,20 +197,12 @@ public class FormFramePrimaryKey extends JDialog implements ActionListener{
 			
 			btnPickColumnToolTipText = "- Não foi selecionada nenhuma coluna";
 			
-		}else if(repeatedElements) {
-			
-			btnPickColumnToolTipText = "- Não podem existir elementos repetidos na PK";
-			
-		}else if(emptyCell) {
-			
-			btnPickColumnToolTipText = "- Não podem existir valores nulos na PK";
-			
-		}		
+		}	
 		
 		UIManager.put("ToolTip.foreground", Color.RED);
 		
 		btnPickColumn.setToolTipText(btnPickColumnToolTipText.isEmpty() ? null : btnPickColumnToolTipText);
 		
 	}
-	
+
 }

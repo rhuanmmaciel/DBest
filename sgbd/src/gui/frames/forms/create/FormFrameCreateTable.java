@@ -8,7 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
@@ -280,39 +282,33 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 	
 	private void createTable() {
 		
-		List<String> columnsName = new ArrayList<>();
-		
-		for(int i = 0; i < table.getColumnCount(); i++)
-			columnsName.add(table.getColumnName(i));
-		
-		List<List<String>> lines = new ArrayList<>();
-		lines.add(columnsName);
+		Map<Integer, Map<String, String>> content = new HashMap<>();
 		
 		for(int i = 0; i < table.getRowCount(); i++) {
 				
-			List<String> line = new ArrayList<>();
+			Map<String, String> line = new HashMap<>();
 			for(int j = 0; j < table.getColumnCount(); j++) {
 				
 				if(table.getValueAt(i, j) == null || table.getValueAt(i, j).toString() == null)
-					line.add("");
+					line.put(table.getColumnName(j), "");
 				
 				else
-					line.add(table.getValueAt(i, j).toString());
+					line.put(table.getColumnName(j), table.getValueAt(i, j).toString());
 				
 			}
-			lines.add(line);
+			content.put(i, line);
 			
 		}
 		
 		boolean exit = false;		
 		AtomicReference<Boolean> exitReference = new AtomicReference<>(exit);
 		StringBuilder pkName = new StringBuilder();
-		new FormFramePrimaryKey(lines, pkName, exitReference);
+		
+		new PrimaryKey(content, pkName, exitReference);
 		
 		if(!exitReference.get()) {
 			
-			lines.remove(0);
-			TableCreator.createTable(tableCell, textFieldTableName.getText(), pkName.toString(), columns, lines);
+			TableCreator.createTable(tableCell, textFieldTableName.getText(), pkName.toString(), columns, content, false);
 		
 		}else {
 			
