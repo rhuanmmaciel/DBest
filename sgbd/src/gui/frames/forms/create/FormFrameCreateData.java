@@ -28,6 +28,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -262,6 +263,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		createButton(rdbtnIntRandomDigits);
 		spinnerIntRandomDigits = new JSpinner();
 		createSpinner(spinnerIntRandomDigits);
+		spinnerIntRandomDigits.setModel(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
 		JLabel lblRandomIntegerDigitsText_1 = new JLabel(" digítos");
 		
 		intItem.add(rdbtnIntRandomDigits);

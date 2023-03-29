@@ -109,9 +109,13 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 		
 		jCell = (mxCell) graph.getCellAt(e.getX(), e.getY());
 		
-		cell.set(cells.get(jCell));
-
-		dispose();
+		if(jCell != null) {
+			
+			cell.set(cells.get(jCell));
+	
+			dispose();
+		
+		}
 		
 	}
 

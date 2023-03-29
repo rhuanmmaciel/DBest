@@ -1,6 +1,7 @@
 package util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entities.Column;
@@ -25,9 +27,13 @@ import sgbd.table.Table;
 
 public class ImportFile {
 	
-	public ImportFile(TableCell tableCell, FileType fileType, List<String> tablesName, AtomicReference<Boolean> deleteCellReference){
+	public ImportFile(TableCell tableCell, FileType fileType, List<String> tablesName, 
+					  AtomicReference<Boolean> exitReference, AtomicReference<File> lastDirectoryRef){
+		
 		
 		JFileChooser fileUpload = new JFileChooser();
+		
+		fileUpload.setCurrentDirectory(lastDirectoryRef.get());
 		
 		FileNameExtensionFilter filter = null; 
 		
@@ -51,6 +57,7 @@ public class ImportFile {
 		
 		if(res == JFileChooser.APPROVE_OPTION) {
 			
+			lastDirectoryRef.set(new File(fileUpload.getCurrentDirectory().getAbsolutePath()));
 			StringBuilder pkName = new StringBuilder();
 			StringBuilder tableName = new StringBuilder();
 			Map<Integer, Map<String, String>> content = new LinkedHashMap<>();
@@ -58,33 +65,43 @@ public class ImportFile {
 			
 			if(fileType == FileType.CSV) {
 			
-				csv(fileUpload, tableName, content, columns, tablesName, pkName, deleteCellReference);
+				csv(fileUpload, tableName, content, columns, tablesName, pkName, exitReference);
 			
 			}else if(fileType == FileType.EXCEL) {
 				
-				excel(fileUpload, tableName, content, columns, tablesName, pkName, deleteCellReference);
+				excel(fileUpload, tableName, content, columns, tablesName, pkName, exitReference);
 				
 			}else if(fileType == FileType.DAT) {
 				
 				AtomicReference<Table> table = new AtomicReference<>();
-				header(fileUpload, table);
-				TableCreator.importTable(tableCell, table);
+				header(fileUpload, table, exitReference);
+				
+				if(!exitReference.get())
+					TableCreator.importTable(tableCell, table);
 				
 			}
 			
-			if(!deleteCellReference.get() && FileType.DAT != fileType)
+			if(!exitReference.get() && FileType.DAT != fileType)
 				TableCreator.createTable(tableCell, tableName.toString(), pkName.toString(), columns, content, false);
 			
 		}else {
 			
-			deleteCellReference.set(true);;
+			exitReference.set(true);;
 			
 		}
 		
 	}
 	
-	private void header(JFileChooser fileUpload, AtomicReference<Table> table) {
+	private void header(JFileChooser fileUpload, AtomicReference<Table> table, AtomicReference<Boolean> exitReference) {
 		
+		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(".head")) {
+		  
+			JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo .head");
+		    exitReference.set(true);
+		    return;
+		
+		}
+
 		String file = fileUpload.getSelectedFile().getAbsolutePath();
 		
 		table.set(Table.loadFromHeader(file));
@@ -183,6 +200,14 @@ public class ImportFile {
 	private void csv(JFileChooser fileUpload, StringBuilder tableName,Map<Integer, Map<String, String>> content,
 						List<Column> columns, List<String> tablesName,
 						StringBuilder pkName, AtomicReference<Boolean> exitReference){
+		
+		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(".csv")) {
+
+			JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo CSV.");
+		    exitReference.set(true);
+		    return;
+		
+		}
 		
 		try(BufferedReader br = new BufferedReader(new FileReader(fileUpload.getSelectedFile().getAbsolutePath()))){
 			

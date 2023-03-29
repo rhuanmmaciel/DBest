@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.mxgraph.model.mxCell;
@@ -34,13 +35,19 @@ public class ExportTable extends JPanel {
 
 	}
 
-	public ExportTable(AtomicReference<Cell> cell, FileType type, AtomicReference<Boolean> cancelService) {
+	public ExportTable(AtomicReference<Cell> cell, FileType type, AtomicReference<Boolean> cancelService,
+					   AtomicReference<File> lastDirectoryRef) {
 
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Salvar arquivo");
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fileChooser.setCurrentDirectory(lastDirectoryRef.get());
+		
 		if (type == FileType.CSV)
-			exportToCsv(cell.get().getMapContent(), cell.get());
+			exportToCsv(cell.get().getMapContent(), cell.get(), fileChooser);
 
 		else if (type == FileType.DAT)
-			exportToDat(cell.get());
+			exportToDat(cell.get(), fileChooser);
 
 	}
 
@@ -50,39 +57,33 @@ public class ExportTable extends JPanel {
 
 	}
 
-	private void exportToDat(Cell cell) {
+	private void exportToDat(Cell cell, JFileChooser fileChooser) {
 
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Salvar arquivo");
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		
 
 		Map<String, Integer> amount = new HashMap<>();
-		for(String columnName : cell.getColumnsName()) {
-			
+		for (String columnName : cell.getColumnsName()) {
+
 			String sourceTable = cell.getSourceTableName(columnName);
-			
+
 			int i = 1;
-			
-			if(amount.containsKey(sourceTable)) {
-				
+
+			if (amount.containsKey(sourceTable)) {
+
 				i = amount.get(sourceTable) + 1;
 				amount.put(sourceTable, i);
-				
-			}else {
-				
+
+			} else {
+
 				amount.put(sourceTable, i);
-				
+
 			}
-			
+
 		}
-		
-		String defaultFileName = amount.entrySet()
-                .stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse(null)+".head";
-		
-		
+
+		String defaultFileName = amount.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey)
+				.orElse(null) + ".head";
+
 		fileChooser.setSelectedFile(new File(defaultFileName));
 
 		int userSelection = fileChooser.showSaveDialog(null);
@@ -102,11 +103,20 @@ public class ExportTable extends JPanel {
 			String headFileName = fileChooser.getSelectedFile().getName();
 			String fileName = headFileName.substring(0, headFileName.indexOf("."));
 
+			if (fileToSave.exists()) {
+				int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
+						"Confirmar substituição", JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.NO_OPTION) {
+					exportToDat(cell, fileChooser);
+					return;
+				}
+			}
+
 			TableCell createdCell = new TableCell(10, 10);
-			
+
 			String pkName = cell.getColumns().stream().filter(x -> x.isPK()).findFirst().orElse(null).getName();
 			TableCreator.createTable(createdCell, fileName, pkName, cell.getColumns(), cell.getMapContent(), true);
-			
+
 			createdCell.getTable().saveHeader(headFileName);
 			createdCell.getTable().close();
 
@@ -116,12 +126,12 @@ public class ExportTable extends JPanel {
 
 			Path destination = Paths.get(filePath);
 			Path destination2 = Paths.get(filePath.replace(headFileName, datFileName));
-			
+
 			try {
 
 				Files.move(source, destination);
 				Files.move(source1, destination2);
-				
+
 			} catch (Exception e) {
 
 				System.err.println("Ocorreu um erro ao mover o arquivo: " + e.getMessage());
@@ -132,15 +142,11 @@ public class ExportTable extends JPanel {
 
 	}
 
-	private void exportToCsv(Map<Integer, Map<String, String>> data, Cell cell) {
-
+	private void exportToCsv(Map<Integer, Map<String, String>> data, Cell cell, JFileChooser fileChooser) {
+		
 		try {
 
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setDialogTitle("Salvar arquivo");
-			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			
-			String defaultFileName = cell.getAllSourceTables().stream().findFirst().orElse(null).getName()+".csv";
+			String defaultFileName = cell.getAllSourceTables().stream().findFirst().orElse(null).getName() + ".csv";
 			fileChooser.setSelectedFile(new File(defaultFileName));
 
 			int userSelection = fileChooser.showSaveDialog(null);
@@ -152,6 +158,15 @@ public class ExportTable extends JPanel {
 				if (!filePath.endsWith(".csv")) {
 					filePath += ".csv";
 					fileToSave = new File(filePath);
+				}
+
+				if (fileToSave.exists()) {
+					int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
+							"Confirmar substituição", JOptionPane.YES_NO_OPTION);
+					if (result == JOptionPane.NO_OPTION) {
+						exportToDat(cell, fileChooser);
+						return;
+					}
 				}
 
 				FileWriter csv = new FileWriter(fileToSave);
@@ -221,65 +236,54 @@ public class ExportTable extends JPanel {
 	}
 
 	private void saveGraph(Map<mxCell, Cell> cells, String path) {
-		/*try {
-			FileWriter csv = new FileWriter(new File(path));
-			
-			for (int i = 0; i < cells.size(); i++) {
-				csv.write("Cell,Name,Style,Length,Width,X,Y");
-
-				csv.write("\n");
-
-				csv.write(cells.get(csv).getCell().toString() + ",");
-				csv.write(cells.get(0).getName() + ",");
-				csv.write(cells.get(0).getStyle() + ",");
-				csv.write(cells.get(0).getLength() + ",");
-				csv.write(cells.get(0).getWidth() + ",");
-				csv.write(cells.get(0).getX() + ",");
-				csv.write(cells.get(0).getY() + ",");
-				List<List<String>> data = cells.get(0).getContent();
-
-				List<String> columnsName = new ArrayList<>();
-
-				if (data != null && !data.isEmpty()) {
-
-					columnsName = data.get(0);
-					List<String> firstLine = new ArrayList<>(data.remove(0));
-
-					String[][] dataArray = data.stream().map(l -> l.stream().toArray(String[]::new))
-							.toArray(String[][]::new);
-					;
-
-					data.add(0, firstLine);
-
-					String[] columnsNameArray = columnsName.stream().toArray(String[]::new);
-
-					table = new JTable(dataArray, columnsNameArray);
-
-				}
-
-				TableModel model = table.getModel();
-				for (int j = 0; j < model.getColumnCount(); j++) {
-					csv.write(model.getColumnName(j) + ",");
-				}
-
-				csv.write("\n");
-
-				for (int j = 0; j < model.getRowCount(); j++) {
-					for (int k = 0; k < model.getColumnCount(); k++) {
-						csv.write(model.getValueAt(j, k).toString() + ",");
-					}
-					csv.write("\n");
-				}
-
-				csv.write("\n");
-			}
-
-			csv.close();
-
-		} catch (IOException e) {
-			System.out.println("Error " + e);
-		}
-	*/
+		/*
+		 * try { FileWriter csv = new FileWriter(new File(path));
+		 * 
+		 * for (int i = 0; i < cells.size(); i++) {
+		 * csv.write("Cell,Name,Style,Length,Width,X,Y");
+		 * 
+		 * csv.write("\n");
+		 * 
+		 * csv.write(cells.get(csv).getCell().toString() + ",");
+		 * csv.write(cells.get(0).getName() + ","); csv.write(cells.get(0).getStyle() +
+		 * ","); csv.write(cells.get(0).getLength() + ",");
+		 * csv.write(cells.get(0).getWidth() + ","); csv.write(cells.get(0).getX() +
+		 * ","); csv.write(cells.get(0).getY() + ","); List<List<String>> data =
+		 * cells.get(0).getContent();
+		 * 
+		 * List<String> columnsName = new ArrayList<>();
+		 * 
+		 * if (data != null && !data.isEmpty()) {
+		 * 
+		 * columnsName = data.get(0); List<String> firstLine = new
+		 * ArrayList<>(data.remove(0));
+		 * 
+		 * String[][] dataArray = data.stream().map(l ->
+		 * l.stream().toArray(String[]::new)) .toArray(String[][]::new); ;
+		 * 
+		 * data.add(0, firstLine);
+		 * 
+		 * String[] columnsNameArray = columnsName.stream().toArray(String[]::new);
+		 * 
+		 * table = new JTable(dataArray, columnsNameArray);
+		 * 
+		 * }
+		 * 
+		 * TableModel model = table.getModel(); for (int j = 0; j <
+		 * model.getColumnCount(); j++) { csv.write(model.getColumnName(j) + ","); }
+		 * 
+		 * csv.write("\n");
+		 * 
+		 * for (int j = 0; j < model.getRowCount(); j++) { for (int k = 0; k <
+		 * model.getColumnCount(); k++) { csv.write(model.getValueAt(j, k).toString() +
+		 * ","); } csv.write("\n"); }
+		 * 
+		 * csv.write("\n"); }
+		 * 
+		 * csv.close();
+		 * 
+		 * } catch (IOException e) { System.out.println("Error " + e); }
+		 */
 	}
 
 }

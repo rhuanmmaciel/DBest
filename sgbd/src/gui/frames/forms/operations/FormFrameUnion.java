@@ -4,10 +4,13 @@ import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -46,6 +49,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 	private JButton btnRemove1;
 	private JButton btnRemove2;
 
+	private JButton btnCancel;
 	private JButton btnReady;
 	private String textColumnsPicked1;
 	private String textColumnsPicked2;
@@ -57,8 +61,10 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 	private Cell parentCell2;
 	private mxCell jCell;
 	private mxGraph graph;
+	
+	private AtomicReference<Boolean> exitRef;
 
-	public FormFrameUnion(mxCell jCell, Map<mxCell, Cell> cells, mxGraph graph) {
+	public FormFrameUnion(mxCell jCell, Map<mxCell, Cell> cells, mxGraph graph, AtomicReference<Boolean> exitRef) {
 		
 		super((Window)null);
 		setModal(true);
@@ -69,6 +75,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
 		this.graph = graph;
+		this.exitRef = exitRef;
 		
 		initializeGUI();
 
@@ -125,12 +132,15 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 		btnReady = new JButton("Pronto");
 		btnReady.addActionListener(this);
 		
+		btnCancel = new JButton("Cancelar");
+		btnCancel.addActionListener(this);
+		
 		GroupLayout groupLayout = new GroupLayout(contentPane);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(33, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addContainerGap(39, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(columnsComboBox1, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
@@ -145,18 +155,16 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblColumnsPicked2, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 151, GroupLayout.PREFERRED_SIZE)
 								.addComponent(textArea2, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE))
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(18)
-									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-										.addComponent(columnsComboBox2, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnAdd2, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnRemove2, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)))
-								.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-									.addGap(119)
-									.addComponent(lblColumns2, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)))
+							.addGap(18)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addComponent(columnsComboBox2, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnAdd2, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnRemove2, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblColumns2, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE))
 							.addGap(58))
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(btnCancel)
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(btnReady)
 							.addContainerGap())))
 		);
@@ -186,12 +194,26 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 							.addGap(16)
 							.addComponent(btnRemove2)))
 					.addPreferredGap(ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
-					.addComponent(btnReady)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnReady)
+						.addComponent(btnCancel))
 					.addContainerGap())
 		);
 		contentPane.setLayout(groupLayout);
 		verifyConditions();
 		this.setVisible(true);
+		
+		addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+
+				exitRef.set(true);
+				dispose();
+				
+			}
+
+		});
+		
 	}
 
 	@Override
@@ -241,7 +263,13 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 			executeOperation();
 			dispose();
 	        
+		}else if(e.getSource() == btnCancel) {
+			
+			exitRef.set(true);
+			dispose();
+			
 		}
+		
 	}
 	
 	private void verifyConditions() {
@@ -330,6 +358,4 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 		verifyConditions();
 		
 	}
-
-	
 }

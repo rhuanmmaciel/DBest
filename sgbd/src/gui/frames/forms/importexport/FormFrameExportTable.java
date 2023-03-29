@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -37,8 +38,10 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 	private Map<mxCell, Cell> cells;
 	private mxGraphComponent graph;
 	private AtomicReference<Boolean> cancelService;
+	private AtomicReference<File> lastDirectoryRef;
 	
-	public FormFrameExportTable(Map<mxCell, Cell> cells, mxGraphComponent graph, AtomicReference<Boolean> cancelService) {
+	public FormFrameExportTable(Map<mxCell, Cell> cells, mxGraphComponent graph, AtomicReference<Boolean> cancelService,
+								AtomicReference<File> lastDirectoryRef) {
 
 		super((Window)null);
 		setModal(true);
@@ -46,6 +49,7 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 		this.cancelService = cancelService;
 		this.graph = graph;
 		this.cells = cells;
+		this.lastDirectoryRef = lastDirectoryRef;
 		
 		initializeGUI();
 		
@@ -145,7 +149,7 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 	
 			mxCell cell = null;
 			
-			new FormFrameExportAs(cell, graph, cells, cancelService);
+			new FormFrameExportAs(cell, graph, cells, cancelService, lastDirectoryRef);
 			
 		}
 		

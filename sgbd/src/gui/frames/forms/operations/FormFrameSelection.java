@@ -6,10 +6,13 @@ import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,8 +74,10 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 	private Object jCell;
 	private mxGraph graph;
 	private JPanel panel;
+	
+	private AtomicReference<Boolean> exitReference;
 
-	public FormFrameSelection(Object jCell, Map<mxCell, Cell> cells, mxGraph graph) {
+	public FormFrameSelection(Object jCell, Map<mxCell, Cell> cells, mxGraph graph, AtomicReference<Boolean> exitReference) {
 
 		super((Window) null);
 		setModal(true);
@@ -82,6 +87,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		this.graph = graph;
+		this.exitReference = exitReference;
 
 		this.evaluator = new Evaluator();
 
@@ -265,6 +271,17 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		btnCancel.addActionListener(this);
 
 		this.setVisible(true);
+		
+		addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+
+				exitReference.set(true);
+				dispose();
+				
+			}
+
+		});
 	}
 
 	@Override
@@ -332,6 +349,13 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 			graph.getModel().setValue(jCell, "σ  " + textArea.getText());
 
+		}
+		
+		if(e.getSource() == btnCancel) {
+			
+			exitReference.set(true);
+			dispose();
+			
 		}
 
 	}

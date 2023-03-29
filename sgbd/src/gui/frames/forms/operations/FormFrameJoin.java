@@ -3,9 +3,12 @@ package gui.frames.forms.operations;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -40,8 +43,11 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 	private Cell parentCell2;
 	private Object jCell;
 	private mxGraph graph;
+	private JButton btnCancel;
+	
+	private AtomicReference<Boolean> exitRef;
 
-	public FormFrameJoin(Object jCell, Map<mxCell, Cell> cells, mxGraph graph) {
+	public FormFrameJoin(Object jCell, Map<mxCell, Cell> cells, mxGraph graph, AtomicReference<Boolean> exitRef) {
 		
 		super((Window)null);
 		setModal(true);
@@ -52,6 +58,8 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
 		this.graph = graph;
+		this.exitRef = exitRef;
+		
 		initializeGUI();
 		
 	}
@@ -85,10 +93,13 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 		
 		btnPronto = new JButton("Pronto");
 		btnPronto.addActionListener(this);
+		
+		btnCancel = new JButton("Cancelar");
+		btnCancel.addActionListener(this);
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(40)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -101,12 +112,14 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(lblNewLabel_1)
-									.addContainerGap(169, Short.MAX_VALUE))
+									.addContainerGap(140, Short.MAX_VALUE))
 								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(colunasComboBox_1, 0, 158, Short.MAX_VALUE)
+									.addComponent(colunasComboBox_1, 0, 152, Short.MAX_VALUE)
 									.addGap(66))))))
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addContainerGap(352, Short.MAX_VALUE)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap(223, Short.MAX_VALUE)
+					.addComponent(btnCancel)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnPronto)
 					.addContainerGap())
 		);
@@ -122,7 +135,9 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 						.addComponent(colunasComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(colunasComboBox_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-					.addComponent(btnPronto))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnPronto)
+						.addComponent(btnCancel)))
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(30)
 					.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
@@ -131,6 +146,17 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 		contentPane.setLayout(gl_contentPane);
 		this.setVisible(true);
 
+		addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+
+				exitRef.set(true);
+				dispose();
+				
+			}
+
+		});
+		
 	}
 
 	@Override
@@ -139,6 +165,11 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 		if(e.getSource() == btnPronto) {
 			executeOperation(colunasComboBox.getSelectedItem().toString(),colunasComboBox_1.getSelectedItem().toString());
 	        
+		}else if(e.getSource() == btnCancel) {
+			
+			exitRef.set(true);
+			dispose();
+			
 		}
 	}
 

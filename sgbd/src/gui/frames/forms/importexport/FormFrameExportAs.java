@@ -3,6 +3,7 @@ package gui.frames.forms.importexport;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -20,8 +21,10 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 	private mxCell jCell;
 	private Map<mxCell, Cell> cells;
 	private AtomicReference<Boolean> cancelService;
+	private AtomicReference<File> lastDirectoryRef;
 	
-	public FormFrameExportAs(mxCell cell, mxGraphComponent graph, Map<mxCell, Cell> cells, AtomicReference<Boolean> cancelService) {
+	public FormFrameExportAs(mxCell cell, mxGraphComponent graph, Map<mxCell, Cell> cells, AtomicReference<Boolean> cancelService,
+							 AtomicReference<File> lastDirectoryRef) {
 
 		super((Window)null);
 		setModal(true);
@@ -30,6 +33,7 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 		this.jCell = cell;
 		this.graph = graph;
 		this.cancelService = cancelService;
+		this.lastDirectoryRef= lastDirectoryRef; 
 		
 		this.setVisible(true);
 
@@ -52,7 +56,7 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 			new FormFrameSelectCell(jCell, graph, cells, cell, cancelService);
 			
 			if(!cancelService.get())
-				new ExportTable(cell, FileType.CSV, cancelService);
+				new ExportTable(cell, FileType.CSV, cancelService, lastDirectoryRef);
 			
 		}else if(e.getSource() == btnXlsXlsxOdt) {
 			
@@ -71,7 +75,7 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 			new FormFrameSelectCell(jCell, graph, cells, cell, cancelService);
 			
 			if(!cancelService.get())
-				new ExportTable(cell, FileType.DAT, cancelService);
+				new ExportTable(cell, FileType.DAT, cancelService, lastDirectoryRef);
 			
 		}
 		

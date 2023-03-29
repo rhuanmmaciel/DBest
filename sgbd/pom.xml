@@ -70,11 +70,13 @@
     		<version>2.20.0</version>
 		</dependency>
 		
+		<!-- https://mvnrepository.com/artifact/org.nasdanika.core/mxgraph -->
 		<dependency>
-		    <groupId>com.github.vlsi.mxgraph</groupId>
-		    <artifactId>jgraphx</artifactId>
-		    <version>4.2.2</version>
+		    <groupId>org.nasdanika.core</groupId>
+		    <artifactId>mxgraph</artifactId>
+		    <version>4.2.2.1</version>
 		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/net.datafaker/datafaker -->
 		<dependency>
