@@ -45,13 +45,11 @@ public class TableCreator {
 				entities.Column column = !isColumnsReady ?
 						columns.stream().filter(x -> x.getName().substring(x.getName().indexOf("_")+1).equals(data)).findFirst().orElse(null) :
 							columns.stream().filter(x -> x.getName().equals(data)).findFirst().orElse(null);
-				if (line.get(data).isEmpty()) {
+
+				if (column.getType() == ColumnDataType.INTEGER) {
 					
-					rowData.setString(column.getName(), data);
-
-				} else if (column.getType() == ColumnDataType.INTEGER) {
-
-					rowData.setInt(column.getName(), (int) (Double.parseDouble(line.get(data))));
+					if(!line.get(data).equals("null")) 
+						rowData.setInt(column.getName(), (int) (Double.parseDouble(line.get(data))));
 
 				} else if (column.getType() == ColumnDataType.FLOAT) {
 					
@@ -104,24 +102,24 @@ public class TableCreator {
 		for (entities.Column column : columns) {
 
 			if (column.getType() == ColumnDataType.INTEGER) {
-
-				prototype.addColumn(column.getName(), 100, Column.SIGNED_INTEGER_COLUMN);
+				
+				prototype.addColumn(column.getName(), 100, Column.SIGNED_INTEGER_COLUMN | Column.CAN_NULL_COLUMN);
 
 			} else if (column.getType() == ColumnDataType.FLOAT) {
 
-				prototype.addColumn(column.getName(), 4, Column.FLOATING_POINT);
+				prototype.addColumn(column.getName(), 4, Column.FLOATING_POINT | Column.CAN_NULL_COLUMN);
 
 			} else if (column.getType() == ColumnDataType.STRING) {
 
-				prototype.addColumn(column.getName(), 100, Column.STRING);
+				prototype.addColumn(column.getName(), 100, Column.STRING | Column.CAN_NULL_COLUMN);
 
 			}else if (column.getType() == ColumnDataType.CHARACTER) {
 
-				prototype.addColumn(column.getName(), 1, Column.STRING);
+				prototype.addColumn(column.getName(), 1, Column.STRING | Column.CAN_NULL_COLUMN);
 
 			}  else {
 
-				prototype.addColumn(column.getName(), 100, Column.STRING);
+				prototype.addColumn(column.getName(), 100, Column.STRING | Column.CAN_NULL_COLUMN);
 
 			}
 

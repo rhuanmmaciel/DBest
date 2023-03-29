@@ -81,7 +81,8 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private Boolean createEdge = false;
 
 	private JButton deleteButton;
-
+	private JButton deleteAllButton;
+	
 	private JButton importButton;
 	private JToolBar toolBar;
 
@@ -168,11 +169,16 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		edgeButton.setHorizontalAlignment(SwingConstants.LEFT);
 		edgeButton.addActionListener(this);
 
-		deleteButton = new JButton("Delete Cell");
+		deleteButton = new JButton("Remover tabela");
 		toolBar.add(deleteButton);
 		deleteButton.setHorizontalAlignment(SwingConstants.LEFT);
 		deleteButton.addActionListener(this);
 
+		deleteAllButton = new JButton("Remover todas tabelas");
+		toolBar.add(deleteAllButton);
+		deleteAllButton.setHorizontalAlignment(SwingConstants.LEFT);
+		deleteAllButton.addActionListener(this);
+		
 		saveTableButton = new JButton("Exportar");
 		toolBar.add(saveTableButton);
 		saveTableButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -285,7 +291,11 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 			deleteCell(jCell);
 
-		} else if (e.getSource() == importButton) {
+		}else if (e.getSource() == deleteAllButton) {
+
+			deleteAllGraph(jCell);
+		
+		}else if (e.getSource() == importButton) {
 
 			TableCell tableCell = new TableCell(80, 30);
 
@@ -476,6 +486,21 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			graph.refresh();
 
 		}
+		
+	}
+	
+	public void deleteAllGraph(mxCell jCell) {
+		
+		graph.getModel().beginUpdate();
+		try {
+			graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
+			cells.clear();
+
+		} finally {
+			graph.getModel().endUpdate();
+		}
+
+		graph.refresh();
 		
 	}
 

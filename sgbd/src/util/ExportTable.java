@@ -44,10 +44,10 @@ public class ExportTable extends JPanel {
 		fileChooser.setCurrentDirectory(lastDirectoryRef.get());
 		
 		if (type == FileType.CSV)
-			exportToCsv(cell.get().getMapContent(), cell.get(), fileChooser);
+			exportToCsv(cell.get().getMapContent(), cell.get(), fileChooser, lastDirectoryRef);
 
 		else if (type == FileType.DAT)
-			exportToDat(cell.get(), fileChooser);
+			exportToDat(cell.get(), fileChooser, lastDirectoryRef);
 
 	}
 
@@ -57,7 +57,7 @@ public class ExportTable extends JPanel {
 
 	}
 
-	private void exportToDat(Cell cell, JFileChooser fileChooser) {
+	private void exportToDat(Cell cell, JFileChooser fileChooser, AtomicReference<File> lastDirectoryRef) {
 
 		
 
@@ -89,7 +89,8 @@ public class ExportTable extends JPanel {
 		int userSelection = fileChooser.showSaveDialog(null);
 
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
-
+			
+			lastDirectoryRef.set(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
 			File fileToSave = fileChooser.getSelectedFile();
 			String filePath = fileToSave.getAbsolutePath();
 
@@ -107,7 +108,7 @@ public class ExportTable extends JPanel {
 				int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
 						"Confirmar substituição", JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.NO_OPTION) {
-					exportToDat(cell, fileChooser);
+					exportToDat(cell, fileChooser, lastDirectoryRef);
 					return;
 				}
 			}
@@ -142,7 +143,7 @@ public class ExportTable extends JPanel {
 
 	}
 
-	private void exportToCsv(Map<Integer, Map<String, String>> data, Cell cell, JFileChooser fileChooser) {
+	private void exportToCsv(Map<Integer, Map<String, String>> data, Cell cell, JFileChooser fileChooser, AtomicReference<File> lastDirectoryRef) {
 		
 		try {
 
@@ -153,6 +154,8 @@ public class ExportTable extends JPanel {
 
 			if (userSelection == JFileChooser.APPROVE_OPTION) {
 
+				lastDirectoryRef.set(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
+				
 				File fileToSave = fileChooser.getSelectedFile();
 				String filePath = fileToSave.getAbsolutePath();
 				if (!filePath.endsWith(".csv")) {
@@ -164,7 +167,7 @@ public class ExportTable extends JPanel {
 					int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
 							"Confirmar substituição", JOptionPane.YES_NO_OPTION);
 					if (result == JOptionPane.NO_OPTION) {
-						exportToDat(cell, fileChooser);
+						exportToCsv(data, cell, fileChooser, lastDirectoryRef);
 						return;
 					}
 				}

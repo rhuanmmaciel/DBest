@@ -60,7 +60,7 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 	}
 	
 	private void initializeGUI() {
-	    setBounds(100, 100, 700, 500);
+	    setBounds(100, 100, 800, 800);
 	    setLocationRelativeTo(null);
 
 	    getContentPane().add(graph);

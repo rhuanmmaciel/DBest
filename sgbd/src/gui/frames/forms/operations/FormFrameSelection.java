@@ -368,7 +368,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		Operator operator = new FilterOperator(parentCell.getData(), (Tuple t) -> {
 
 			for (String element : formattedInput) {
-
+				
 				if (isColumn(element)) {
 
 					String columnName = element.substring(2, element.length() - 1);
@@ -394,7 +394,9 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 								+ "'";
 
 					}
-
+					
+					if(data == null) return false;
+					
 					evaluator.putVariable(columnName, data);
 
 				}
@@ -406,7 +408,6 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 			} catch (EvaluationException e) {
 				
-				e.printStackTrace();
 				return false;
 				
 			}

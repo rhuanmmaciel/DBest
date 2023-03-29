@@ -264,6 +264,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		spinnerIntRandomDigits = new JSpinner();
 		createSpinner(spinnerIntRandomDigits);
 		spinnerIntRandomDigits.setModel(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+		spinnerIntRandomDigits.setMaximumSize(new Dimension(180, 20));
 		JLabel lblRandomIntegerDigitsText_1 = new JLabel(" digítos");
 		
 		intItem.add(rdbtnIntRandomDigits);
@@ -424,7 +425,6 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		}else if(selectedColumnType == ColumnDataType.FLOAT) {
 			
 			tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Ponto Flutuante"));
-			tabbedPane.setEnabledAt(1, true);
 			tabbedPane.setEnabledAt(2, true);
 			
 		}else if(selectedColumnType == ColumnDataType.CHARACTER) {

@@ -245,32 +245,35 @@ public class FormFrameColumnType extends JDialog implements ActionListener, Docu
 			
 			for(String inf : column.getData()) {
 				
-				if(inf.length() > 1) {
+				if(!inf.equals("null")) {
 					
-					column.removeType(ColumnDataType.CHARACTER);
+					if(inf.length() > 1) {
+						
+						column.removeType(ColumnDataType.CHARACTER);
+						
+					}
 					
-				}
-				
-				try{
+					try{
+						
+						Integer.parseInt(inf);
+						
+					}catch(NumberFormatException e) {
+						
+						column.removeType(ColumnDataType.INTEGER);
+						
+					}
 					
-					Integer.parseInt(inf);
+					try{
+						
+						Float.parseFloat(inf);
+						
+					}catch(NumberFormatException e) {
+						
+						column.removeType(ColumnDataType.FLOAT);
+						
+					}
 					
-				}catch(NumberFormatException e) {
-					
-					column.removeType(ColumnDataType.INTEGER);
-					
-				}
-				
-				try{
-					
-					Float.parseFloat(inf);
-					
-				}catch(NumberFormatException e) {
-					
-					column.removeType(ColumnDataType.FLOAT);
-					
-				}
-				
+				}	
 			}
 			
 		}
