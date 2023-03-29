@@ -144,7 +144,6 @@ public class FormFrameLeftJoin extends JDialog implements ActionListener {
 					.addContainerGap(52, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
-		this.setVisible(true);
 		
 		addWindowListener(new WindowAdapter() {
 
@@ -156,6 +155,8 @@ public class FormFrameLeftJoin extends JDialog implements ActionListener {
 			}
 
 		});
+		
+		this.setVisible(true);
 		
 	}
 

@@ -2,10 +2,10 @@
 
 ## Imediatos: 
 
+- exceção com operadores pós leftJoin
 - não permitir criar aresta no sentido inverso
 - dar algum tipo de dica visual quando se está criando um edge ou um nó (ver brModelo)
 - mover todos os componentes selecionados 
-- finalizar execução do jar
 
 - exportar tabela sem PK
 - pk composto

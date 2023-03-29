@@ -1,10 +1,13 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+
+import com.mxgraph.model.mxCell;
 
 import entities.util.FindRoots;
 import enums.OperationArity;
@@ -15,7 +18,7 @@ public abstract class Cell {
 	protected List<Column> columns;
 	private String style;
 	private String name;
-	private Object cell;
+	private mxCell jCell;
 	protected List<Cell> parents;
 	private Cell child;
 	private int x;
@@ -24,13 +27,13 @@ public abstract class Cell {
 	private int width;
 	protected Map<Integer, Map<String, String>> content;
 	
-	public Cell(String name, String style, Object cell, int x, int y, int length, int width) {
+	public Cell(String name, String style, mxCell jCell, int x, int y, int length, int width) {
 		
 		this.columns = new ArrayList<>();
 		this.parents = new ArrayList<>();
 		this.style = style;
 		this.name = name;
-		this.cell = cell;
+		this.jCell = jCell;
 		this.child= null;
 		this.x = x;
 		this.y = y;
@@ -39,8 +42,13 @@ public abstract class Cell {
 		
 	}
 	
-	public void setJGraphCell(Object cell) {
-		this.cell = cell;
+	
+	public mxCell getJGraphCell() {
+		return jCell;
+	}
+	
+	public void setJGraphCell(mxCell jCell) {
+		this.jCell = jCell;
 	}
 	
 	public Cell getChild() {
@@ -115,11 +123,6 @@ public abstract class Cell {
 	    
 	}
 
-	
-	public Object getCell() {
-		return cell;
-	}
-	
 	public void addParent(Cell parent) {
 		parents.add(parent);
 	}
@@ -206,67 +209,77 @@ public abstract class Cell {
 	
 	
 	public String console() {
-		/*
-	    List<Integer> columnWidths = new ArrayList<>();
-	    for (String column : getColumnsName()) {
-	        int maxWidth = column.length();
-	        for (List<String> row : getContent()) {
-	            int width = row.get(getColumnsName().indexOf(column)).length();
-	            maxWidth = Math.max(maxWidth, width);
+		
+	    Map<Integer, Map<String, String>> content = getMapContent();
+
+	    Map<String, Integer> columnWidths = new HashMap<>();
+	    for (Map<String, String> row : content.values()) {
+	        for (Map.Entry<String, String> entry : row.entrySet()) {
+	            String column = entry.getKey();
+	            String value = entry.getValue();
+	            int width = Math.max(columnWidths.getOrDefault(column, 0), value.length());
+	            columnWidths.put(column, width);
 	        }
-	        columnWidths.add(maxWidth);
 	    }
 
 	    StringBuilder tableFormatted = new StringBuilder();
-
-	    for (int i = 0; i < columnWidths.size(); i++) {
-	        tableFormatted.append("+");
-	        for (int j = 0; j < columnWidths.get(i) + 2; j++) {
+	    tableFormatted.append("+");
+	    for (String column : getColumnsName()) {
+	        int width = columnWidths.get(column);
+	        tableFormatted.append("-");
+	        for (int i = 0; i < width + 2; i++) {
 	            tableFormatted.append("-");
 	        }
+	        tableFormatted.append("+");
 	    }
-	    tableFormatted.append("+\n");
+	    tableFormatted.append("\n");
 
-	    for (int i = 0; i < getColumnsName().size(); i++) {
-	        String column = getColumnsName().get(i);
-	        int width = columnWidths.get(i);
-	        tableFormatted.append("| ");
-	        tableFormatted.append(String.format("%-" + width + "s", column));
+	    tableFormatted.append("|");
+	    for (String column : getColumnsName()) {
+	        int width = columnWidths.get(column);
 	        tableFormatted.append(" ");
+	        tableFormatted.append(String.format("%-" + width + "s", column));
+	        tableFormatted.append(" |");
 	    }
-	    tableFormatted.append("|\n");
+	    tableFormatted.append("\n");
 
-	    for (int i = 0; i < columnWidths.size(); i++) {
-	        tableFormatted.append("+");
-	        for (int j = 0; j < columnWidths.get(i) + 2; j++) {
+	    tableFormatted.append("+");
+	    for (String column : getColumnsName()) {
+	        int width = columnWidths.get(column);
+	        tableFormatted.append("-");
+	        for (int i = 0; i < width + 2; i++) {
 	            tableFormatted.append("-");
 	        }
+	        tableFormatted.append("+");
 	    }
-	    tableFormatted.append("+\n");
+	    tableFormatted.append("\n");
 
-	    for (List<String> row : getContent()) {
-	        for (int i = 0; i < row.size(); i++) {
-	            String value = row.get(i);
-	            int width = columnWidths.get(i);
-	            tableFormatted.append("| ");
-	            tableFormatted.append(String.format("%-" + width + "s", value));
+	    for (Map<String, String> row : content.values()) {
+	        tableFormatted.append("|");
+	        for (String column : getColumnsName()) {
+	            String value = row.getOrDefault(column, "");
+	            int width = columnWidths.get(column);
 	            tableFormatted.append(" ");
+	            tableFormatted.append(String.format("%-" + width + "s", value));
+	            tableFormatted.append(" |");
 	        }
-	        tableFormatted.append("|\n");
+	        tableFormatted.append("\n");
 	    }
 
-	    for (int i = 0; i < columnWidths.size(); i++) {
-	        tableFormatted.append("+");
-	        for (int j = 0; j < columnWidths.get(i) + 2; j++) {
+	    tableFormatted.append("+");
+	    for (String column : getColumnsName()) {
+	        int width = columnWidths.get(column);
+	        tableFormatted.append("-");
+	        for (int i = 0; i < width + 2; i++) {
 	            tableFormatted.append("-");
 	        }
+	        tableFormatted.append("+");
 	    }
-	    tableFormatted.append("+\n");
+	    tableFormatted.append("\n");
 
 	    return tableFormatted.toString();
-		 */
-		return "";
 	}
+
 
 	
 	public abstract Operator getData();

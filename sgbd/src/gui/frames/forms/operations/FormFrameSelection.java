@@ -75,9 +75,9 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 	private mxGraph graph;
 	private JPanel panel;
 	
-	private AtomicReference<Boolean> exitReference;
+	private AtomicReference<Boolean> exitRef;
 
-	public FormFrameSelection(Object jCell, Map<mxCell, Cell> cells, mxGraph graph, AtomicReference<Boolean> exitReference) {
+	public FormFrameSelection(Object jCell, Map<mxCell, Cell> cells, mxGraph graph, AtomicReference<Boolean> exitRef) {
 
 		super((Window) null);
 		setModal(true);
@@ -87,7 +87,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		this.graph = graph;
-		this.exitReference = exitReference;
+		this.exitRef = exitRef;
 
 		this.evaluator = new Evaluator();
 
@@ -270,18 +270,19 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		btnReady.setEnabled(isExpressionValid());
 		btnCancel.addActionListener(this);
 
-		this.setVisible(true);
-		
 		addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
 
-				exitReference.set(true);
+				exitRef.set(true);
 				dispose();
 				
 			}
 
 		});
+		
+		this.setVisible(true);
+		
 	}
 
 	@Override
@@ -353,7 +354,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		
 		if(e.getSource() == btnCancel) {
 			
-			exitReference.set(true);
+			exitRef.set(true);
 			dispose();
 			
 		}
@@ -404,8 +405,10 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 				return evaluator.evaluate(formatString(textArea.getText())).equals("1.0");
 
 			} catch (EvaluationException e) {
+				
 				e.printStackTrace();
 				return false;
+				
 			}
 
 		});
@@ -425,6 +428,13 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 		if (formattedInput.length <= 2)
 			return false;
+		
+		Pattern pattern = Pattern.compile("[(|)|&|\\|]");
+		Matcher matcher = pattern.matcher(textArea.getText());
+		if (!matcher.find()) {
+		    // Input contains no operators or parentheses
+		    formattedInput[0] = "#¨#$¨%$&$%";
+		}
 
 		for (String element : formattedInput) {
 

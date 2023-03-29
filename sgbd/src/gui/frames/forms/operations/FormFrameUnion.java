@@ -201,7 +201,6 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 		);
 		contentPane.setLayout(groupLayout);
 		verifyConditions();
-		this.setVisible(true);
 		
 		addWindowListener(new WindowAdapter() {
 
@@ -213,6 +212,8 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 			}
 
 		});
+		
+		this.setVisible(true);
 		
 	}
 

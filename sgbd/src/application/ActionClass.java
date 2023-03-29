@@ -93,7 +93,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private AtomicReference<File> lastDirectoryRef = new AtomicReference<>();
 
 	public ActionClass() {
-		super("DBest");
+		super("DBest: Database Basics for Engaging Students and Teachers");
 		initGUI();
 	}
 
@@ -216,6 +216,8 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 					}
 				}
 
+				System.exit(0);
+				
 			}
 
 		});
@@ -281,7 +283,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		} else if (e.getSource() == deleteButton) {
 
-			deleteCell();
+			deleteCell(jCell);
 
 		} else if (e.getSource() == importButton) {
 
@@ -378,7 +380,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			Cell parentCell = newParent != null ? cells.get(newParent) : null;
 
 			if (createEdge == true && jCell != newParent) {
-
+				
 				graph.insertEdge(newParent, null, "", newParent, jCell);
 
 				cell.addParent(parentCell);
@@ -386,8 +388,10 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 				if (parentCell != null)
 					parentCell.setChild(cell);
 
-				AtomicReference<Boolean> exitRef = new AtomicReference<>(false);
-
+				Boolean exit = false;
+				AtomicReference<Boolean> exitRef = new AtomicReference<>();
+				exitRef.set(exit);
+				
 				if (cell instanceof OperatorCell) {
 
 					if (((OperatorCell) cell).getType() == OperationType.PROJECTION
@@ -401,7 +405,6 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 						new FormFrameSelection(jCell, cells, graph, exitRef);
 
 					else if (((OperatorCell) cell).getType() == OperationType.AGGREGATION &&
-					// tem q ver se eh unario
 							cell.checkRules(OperationArity.UNARY) == true)
 
 						new FormFrameAggregation(jCell, cells, graph);
@@ -435,9 +438,9 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 				if (exitRef.get()) {
 
-					
-
-				} else {
+					cells.remove(jCell);
+					deleteCell(jCell);
+					parentCell.setChild(null);
 
 				}
 
@@ -456,7 +459,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 	}
 	
-	public void deleteCell() {
+	public void deleteCell(mxCell jCell) {
 		
 		if (jCell != null) {
 
@@ -514,7 +517,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 			} else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 
-				deleteCell();
+				deleteCell(jCell);
 				
 			} else if (e.getKeyCode() == KeyEvent.VK_J) {
 
