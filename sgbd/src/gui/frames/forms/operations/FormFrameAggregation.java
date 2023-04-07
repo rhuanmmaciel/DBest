@@ -31,7 +31,7 @@ public class FormFrameAggregation extends JDialog implements ActionListener {
 	private JComboBox comboBoxColunas;
 	private JComboBox comboBoxOp;
 	private JButton btnPronto;
-	private Cell cell;
+	private OperatorCell cell;
 	private Cell parentCell;
 	private Object jCell;
 	private mxGraph graph;
@@ -43,7 +43,7 @@ public class FormFrameAggregation extends JDialog implements ActionListener {
 		setModal(true);
 		setTitle("Agregação");
 
-		this.cell = cells.get(cell);
+		this.cell = (OperatorCell) cells.get(cell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = cell;
 		this.graph = graph;
@@ -120,20 +120,16 @@ public class FormFrameAggregation extends JDialog implements ActionListener {
 
 	public void executeOperation(String column, String op) {
 
-		Operator operator = parentCell.getData();
-
+		Operator operator = parentCell.getOperator();
+		
 		// if(op == "max") operator = new GroupOperator(new
 		// MaxOperator(parentCell.getData(),parentCell.getSourceTableName(column),column),parentCell.getSourceTableName(column),column);
 		// else if(op == "min") operator = new GroupOperator(new
 		// MinOperator(parentCell.getData(),parentCell.getSourceTableName(column),column),parentCell.getSourceTableName(column),column);
 
-		operator.open();
-
 		((OperatorCell) cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
 
 		((OperatorCell) cell).setOperator(operator);
-
-		operator.close();
 
 		dispose();
 

@@ -34,7 +34,6 @@ public class SortColumns {
 		    Arrays.sort(columnsName, Comparator.comparingInt(keyOrder::indexOf));
 		    
 	    }
-	    aux.close();
 	    
 	}
 	
@@ -62,7 +61,6 @@ public class SortColumns {
 		    Collections.sort(columnsName, Comparator.comparing(column -> columnPositions.get(column)));
 	   
 	    }
-	    aux.close();
 	}
 
 	public static void columnsWithMap(List<Column> columns, Map<String, String> firstLine) {

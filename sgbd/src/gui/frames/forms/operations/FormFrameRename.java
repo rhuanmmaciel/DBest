@@ -39,7 +39,7 @@ public class FormFrameRename extends JDialog implements ActionListener {
 	private List<String> columnsList;
 
 	
-	private Cell cell;
+	private OperatorCell cell;
 	private Cell parentCell;
 	private Object jCell;
 	private mxGraph graph;
@@ -50,7 +50,7 @@ public class FormFrameRename extends JDialog implements ActionListener {
 		setModal(true);
 		setTitle("Renomeação");
 		
-		this.cell = cells.get(jCell);
+		this.cell = (OperatorCell) cells.get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		this.graph = graph;
@@ -131,7 +131,9 @@ public class FormFrameRename extends JDialog implements ActionListener {
 		//List<String> aux = parentCell.getColumnsName();
 		//aux.removeAll(columnsResult);
 		
-		Operator operator = parentCell.getData();
+		Operator operator = parentCell.getOperator();
+		
+		operator.open();
 		
 		operator = new AsOperator(operator,(Conversor) new Conversor() {
           @Override
@@ -148,14 +150,11 @@ public class FormFrameRename extends JDialog implements ActionListener {
 
       }, formatedString);
 		System.out.println("old " +column+" new : "+formatedString);
-	    operator.open();
 	    
 	    ((OperatorCell)cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
         ((OperatorCell) cell).setOperator(operator);
 		cell.setName("ρ  "+ formatedString);
 	    
-        operator.close();
-		
         dispose();
 		
 	}

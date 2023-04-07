@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import com.mxgraph.model.mxCell;
 
-import entities.util.TableFormat;
+import enums.OperationArity;
 import enums.OperationType;
 import sgbd.query.Operator;
 
@@ -14,32 +16,67 @@ public class OperatorCell extends Cell{
 
 	private Operator operator;
 	private OperationType type;
+	private List<Cell> parents;
+	private OperationArity arity;
 	
-	public OperatorCell(String name, String style, mxCell jCell, OperationType type, int x,int y,int length,int width) {
+	public OperatorCell(String name, String style, mxCell jCell, OperationType type, List<Cell> parents, int x, int y, int length, int width) {
 	
-		super(name, style, jCell, x, y, length, width);
+		super(name, style, jCell, length, width);
 		this.operator = null;
 		this.type = type;
+		this.parents = new ArrayList<>();
+		
+		switch(type) {
+		
+			case SELECTION:
+			case PROJECTION:
+			case AGGREGATION:
+			case RENAME:
+				arity = OperationArity.UNARY;
+			break;
+			
+			case UNION:
+			case JOIN:
+			case LEFTJOIN:
+			case CARTESIANPRODUCT:
+			case DIFFERENCE:
+				arity = OperationArity.BINARY;
+		
+		}
 		
 	}
-	
-	public void setOperator(Operator operator) {
-		
-		this.operator = operator;
-		this.content = TableFormat.getRows(operator);
-		
-	}
-	
-	public Operator getData() {
-		
-		return operator;
-		
-	}
-	
 	public OperationType getType() {
 		
 		return type;
 		
+	}
+	
+	public OperationArity getArity() {
+		
+		return arity;
+		
+	}
+	
+	public List<Cell> getParents(){
+		
+		return parents;
+		
+	}
+	
+	public void addParent(Cell cell) {
+		parents.add(cell);
+	}
+	
+	public void clearParents() {
+		parents = new ArrayList<>();
+	}
+	
+	public Boolean hasParents() {
+		return parents.size() != 0;
+	}
+	
+	public Boolean hasTree() {
+		return operator != null;
 	}
 	
 	public void setColumns(List<List<Column>> parentColumns, Collection<List<String>> cellColumnsName) {
@@ -66,6 +103,35 @@ public class OperatorCell extends Cell{
 		
 		this.columns = cellColumns;
 		
+	}
+	
+	public Boolean checkRules(OperationArity type) {
+		
+		if(type == OperationArity.UNARY) {
+			
+			if(this.getParents().size() != 1) {
+				
+				JOptionPane.showMessageDialog(null, "Operacao unaria", "Erro", JOptionPane.ERROR_MESSAGE);
+				return false;
+			
+			}
+			
+		}else if(type == OperationArity.BINARY){
+			
+			if(this.getParents().size() > 2) {
+				
+				JOptionPane.showMessageDialog(null, "Operacao binaria", "Erro", JOptionPane.ERROR_MESSAGE);
+				return false;
+				
+			}else if(this.getParents().size() < 2) {
+				
+				return false;
+				
+			}
+		}
+		
+		return true;
+	
 	}
 	
 }

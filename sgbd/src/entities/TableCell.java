@@ -3,7 +3,6 @@ package entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import entities.util.TableFormat;
 import enums.ColumnDataType;
 import sgbd.prototype.Prototype;
 import sgbd.query.Operator;
@@ -17,23 +16,23 @@ public class TableCell extends Cell{
 	private Prototype prototype;
 	
 	public TableCell(int length, int width) {
-		super(null, null, null, 0, 0, length, width);
+		super(null, null, null, length, width);
 	}
 	
 	public void setTable(Table table) {
 		
 		this.table = table;
 		
-	}
-	
-	public void setContent() {
+		Operator operator = new TableScan(table);
+		operator.open();
 		
-		table.open();
-		content = TableFormat.getRows(new TableScan(table, getColumnsName()));
-	
+		setOperator(operator);
+		
 	}
 	
 	public Table getTable() {
+		
+		table.open();
 		return table;
 	}
 	
@@ -43,12 +42,6 @@ public class TableCell extends Cell{
 	
 	public Prototype getPrototype() {
 		return prototype;
-	}
-	
-	public Operator getData() {
-		
-		return new TableScan(table);
-	
 	}
 
 	public void setColumns(List<Column> columns) {

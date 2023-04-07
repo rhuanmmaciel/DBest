@@ -5,7 +5,15 @@
   <artifactId>sgbd</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+  
   <build>
+	  
     <sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>
@@ -15,11 +23,22 @@
           <release>17</release>
         </configuration>
       </plugin>
+      
     </plugins>
+
   </build>
   
    <dependencies> 
-
+		
+		<!-- 
+		<dependency>
+		    <groupId>com.github.crazynds</groupId>
+		    <artifactId>FyDatabase-Java</artifactId>
+		    <version>0.3v</version>
+		</dependency>
+		-->
+		
+	
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
 		    <groupId>com.google.code.gson</groupId>
@@ -88,7 +107,6 @@
     		<artifactId>thumbnailator</artifactId>
 		    <version>0.4.13</version>
 		</dependency>
-
 		
 	</dependencies>  
 

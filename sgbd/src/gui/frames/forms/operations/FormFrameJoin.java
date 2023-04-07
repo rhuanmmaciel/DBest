@@ -1,4 +1,4 @@
-package gui.frames.forms.operations;
+	package gui.frames.forms.operations;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -38,7 +38,7 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 	private List<String> columnsList_1;
 	private List<String> columnsList_2;
 	
-	private Cell cell;
+	private OperatorCell cell;
 	private Cell parentCell1;
 	private Cell parentCell2;
 	private Object jCell;
@@ -53,7 +53,7 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 		setModal(true);
 		setTitle("Junção");
 		
-		this.cell = cells.get(jCell);
+		this.cell = (OperatorCell) cells.get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
@@ -176,8 +176,10 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 
 	public void executeOperation(String item1, String item2) {
 		
-		Operator table_1 = parentCell1.getData();
-		Operator table_2 = parentCell2.getData();
+		Operator table_1 = parentCell1.getOperator();
+		Operator table_2 = parentCell2.getOperator();
+		
+		
 		
 		Operator operator = new BlockNestedLoopJoin(table_1,table_2,(t1, t2) -> {
 			return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);

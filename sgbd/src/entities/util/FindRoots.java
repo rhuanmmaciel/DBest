@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entities.Cell;
+import entities.OperatorCell;
+import entities.TableCell;
 
 public class FindRoots {
 
@@ -16,12 +18,19 @@ public class FindRoots {
 	}
 	
     public static void getSourcesRecursive(Cell cell, List<Cell> sources) {
-        if (cell.getParents().isEmpty()) {
+    	
+        if (cell instanceof TableCell) {
+        	
             sources.add(cell);
+            
         } else {
-            for (Cell parent : cell.getParents()) {
+        	
+            for (Cell parent : ((OperatorCell)cell).getParents()) {
+            	
                 getSourcesRecursive(parent, sources);
+                
             }
+            
         }
     }
 	

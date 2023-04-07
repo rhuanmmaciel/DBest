@@ -66,7 +66,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 	private JButton btnReady;
 	private JButton btnCancel;
 
-	private Cell cell;
+	private OperatorCell cell;
 	private Cell parentCell;
 
 	private Evaluator evaluator;
@@ -83,7 +83,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		setModal(true);
 		setTitle("Seleção");
 
-		this.cell = cells.get(jCell);
+		this.cell = (OperatorCell) cells.get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		this.graph = graph;
@@ -365,7 +365,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 		String[] formattedInput = formatString(textArea.getText()).split(" ");
 
-		Operator operator = new FilterOperator(parentCell.getData(), (Tuple t) -> {
+		Operator operator = new FilterOperator(parentCell.getOperator(), (Tuple t) -> {
 
 			for (String element : formattedInput) {
 				
@@ -413,7 +413,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 			}
 
 		});
-
+		
 		((OperatorCell) cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
 		((OperatorCell) cell).setOperator(operator);
 

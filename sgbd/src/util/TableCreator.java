@@ -48,16 +48,18 @@ public class TableCreator {
 
 				if (column.getType() == ColumnDataType.INTEGER) {
 					
-					if(!line.get(data).equals("null")) 
-						rowData.setInt(column.getName(), (int) (Double.parseDouble(line.get(data))));
+					if(!line.get(data).equals("null") && !line.get(data).equals("")) 
+						rowData.setInt(column.getName(), (int) (Double.parseDouble(line.get(data).strip())));
 
 				} else if (column.getType() == ColumnDataType.FLOAT) {
 					
-					rowData.setFloat(column.getName(), Float.parseFloat(line.get(data)));
+					if(!line.get(data).equals("null") && !line.get(data).equals("")) 
+						rowData.setFloat(column.getName(), Float.parseFloat(line.get(data).strip()));
 
 				} else {
-
-					rowData.setString(column.getName(), line.get(data));
+					
+					if(!line.get(data).equals("null") && !line.get(data).equals("")) 
+						rowData.setString(column.getName(), line.get(data).strip());
 
 				}
 
@@ -139,8 +141,8 @@ public class TableCreator {
 		columns.add(primaryKeyColumn);
 		tableCell.setColumns(columns);
 		tableCell.setTable(table);
-		tableCell.setContent();
 		tableCell.setPrototype(prototype);
+		
 		
 	}
 
@@ -153,7 +155,6 @@ public class TableCreator {
 		tableCell.setTable(table.get());
 		tableCell.setPrototype(table.get().getHeader().getPrototype());
 		tableCell.setColumns();		
-		tableCell.setContent();
 		
 	}
 

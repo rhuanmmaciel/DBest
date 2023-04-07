@@ -48,7 +48,7 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 	private JTextArea textArea;
 
 	private List<String> columnsResult;
-	private Cell cell;
+	private OperatorCell cell;
 	private Cell parentCell;
 	private Object jCell;
 	private mxGraph graph;
@@ -64,7 +64,7 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 		setModal(true);
 		setTitle("Projeção");
 
-		this.cell = cells.get(jCell);
+		this.cell = (OperatorCell) cells.get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		this.graph = graph;
@@ -103,23 +103,23 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 			public void insertUpdate(DocumentEvent e) {
 
 				verifyConditions();
-				
+
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 
 				verifyConditions();
-				
+
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
 
 				verifyConditions();
-				
+
 			}
-			
+
 		});
 
 		columnsResult = new ArrayList<String>();
@@ -135,63 +135,46 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 
 		btnCancel = new JButton("Cancelar");
 		btnCancel.addActionListener(this);
-		
+
 		btnAddAll = new JButton("Adicionar todas");
 		btnAddAll.addActionListener(this);
 
 		GroupLayout groupLayout = new GroupLayout(contentPane);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(23)
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(btnCancel)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnReady))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
+				.createSequentialGroup()
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
+						.createSequentialGroup().addGap(23)
+						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addGroup(groupLayout.createSequentialGroup().addComponent(btnCancel)
+										.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnReady))
+								.addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout
+										.createParallelGroup(Alignment.TRAILING)
 										.addComponent(columnsComboBox, Alignment.LEADING, 0, 444, Short.MAX_VALUE)
 										.addGroup(groupLayout.createSequentialGroup()
-											.addComponent(btnAdd, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addComponent(btnAddAll)
-											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addComponent(btnRemove, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
+												.addComponent(btnAdd, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+												.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(btnAddAll)
+												.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(btnRemove,
+														GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
 										.addComponent(textArea, GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE))
-									.addGap(11))))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(205)
-							.addComponent(lblTermos)))
-					.addContainerGap())
+										.addGap(11))))
+						.addGroup(groupLayout.createSequentialGroup().addGap(205).addComponent(lblTermos)))
+				.addContainerGap())
+				.addGroup(groupLayout.createSequentialGroup().addContainerGap(211, Short.MAX_VALUE)
+						.addComponent(lblColumns, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
+						.addGap(180)));
+		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(211, Short.MAX_VALUE)
-					.addComponent(lblColumns, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
-					.addGap(180))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(lblColumns, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
-					.addGap(17)
-					.addComponent(columnsComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnAdd)
-						.addComponent(btnRemove)
-						.addComponent(btnAddAll))
-					.addGap(37)
-					.addComponent(lblTermos)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnReady)
-						.addComponent(btnCancel))
-					.addContainerGap())
-		);
+						.addComponent(lblColumns, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE).addGap(17)
+						.addComponent(columnsComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+								GroupLayout.PREFERRED_SIZE)
+						.addGap(18)
+						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(btnAdd)
+								.addComponent(btnRemove).addComponent(btnAddAll))
+						.addGap(37).addComponent(lblTermos).addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED, 55, Short.MAX_VALUE).addGroup(groupLayout
+								.createParallelGroup(Alignment.BASELINE).addComponent(btnReady).addComponent(btnCancel))
+						.addContainerGap()));
 		contentPane.setLayout(groupLayout);
 		verifyConditions();
 
@@ -205,7 +188,7 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 			}
 
 		});
-		
+
 		this.setVisible(true);
 
 	}
@@ -228,8 +211,8 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 
 			btnReadyToolTipText = "- Selecione pelo menos uma coluna";
 
-		} 
-		
+		}
+
 		UIManager.put("ToolTip.foreground", Color.RED);
 
 		btnReady.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
@@ -238,9 +221,9 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 		verifyConditions();
-		
+
 		if (e.getSource() == btnAdd) {
 
 			if (columnsComboBox.getItemCount() > 0) {
@@ -270,16 +253,16 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 			exitReference.set(true);
 			dispose();
 
-		}else if(e.getSource() == btnAddAll) {
-			
-			while(columnsComboBox.getItemCount() != 0) {
-				
+		} else if (e.getSource() == btnAddAll) {
+
+			while (columnsComboBox.getItemCount() != 0) {
+
 				textColumnsPicked = textArea.getText() + "\n" + columnsComboBox.getSelectedItem().toString();
 				columnsComboBox.removeItemAt(columnsComboBox.getSelectedIndex());
 				textArea.setText(textColumnsPicked);
-				
+
 			}
-			
+
 		}
 	}
 
@@ -288,20 +271,20 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 		List<String> aux = parentCell.getColumnsName();
 		aux.removeAll(columnsResult);
 
-		Operator operator = parentCell.getData();
-
-		for (Table table : parentCell.getData().getSources()) {
-
+		Operator operator = parentCell.getOperator();
+		
+		for (Table table : parentCell.getOperator().getSources()) {
+			
 			operator = new FilterColumnsOperator(operator, table.getTableName(), aux);
-
+			
 		}
-
+		
 		((OperatorCell) cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
 
 		((OperatorCell) cell).setOperator(operator);
 
 		cell.setName("π  " + columnsResult.toString());
-
+		
 		dispose();
 
 	}

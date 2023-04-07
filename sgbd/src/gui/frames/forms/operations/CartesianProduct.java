@@ -11,41 +11,40 @@ import entities.OperatorCell;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
 
-public class CartesianProduct{
+public class CartesianProduct {
 
-	private Cell cell;
+	private OperatorCell cell;
 	private Cell parentCell1;
 	private Cell parentCell2;
 	private Object jCell;
 	private mxGraph graph;
-	
 
 	public CartesianProduct(Object jCell, Map<mxCell, Cell> cells, mxGraph graph) {
-		
-		this.cell = cells.get(jCell);
+
+		this.cell = (OperatorCell) cells.get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
 		this.graph = graph;
 		executeOperation();
-		
+
 	}
-	
 
 	public void executeOperation() {
+
+		Operator table1 = parentCell1.getOperator();
+		Operator table2 = parentCell2.getOperator();
 		
-		Operator table_1 = parentCell1.getData();
-		Operator table_2 = parentCell2.getData();
-		
-		Operator operator = new BlockNestedLoopJoin(table_1,table_2,(t1, t2) -> {
+		Operator operator = new BlockNestedLoopJoin(table1, table2, (t1, t2) -> {
 			return true;
-        });
-		
-		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
+		});
+
+		((OperatorCell) cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()),
+				operator.getContentInfo().values());
 		((OperatorCell) cell).setOperator(operator);
 		cell.setName(parentCell1.getName() + " X " + parentCell2.getName());
-		    
-		graph.getModel().setValue(jCell,parentCell1.getName() + " X " + parentCell2.getName());
-		
+
+		graph.getModel().setValue(jCell, "X");
+
 	}
 }

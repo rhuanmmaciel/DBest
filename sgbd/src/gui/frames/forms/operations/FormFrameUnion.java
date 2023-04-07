@@ -56,7 +56,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 	private JTextArea textArea1;
 	private JTextArea textArea2;
 	
-	private Cell cell;
+	private OperatorCell cell;
 	private Cell parentCell1;
 	private Cell parentCell2;
 	private mxCell jCell;
@@ -70,7 +70,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 		setModal(true);
 		setTitle("União");
 		
-		this.cell = cells.get(jCell);
+		this.cell = (OperatorCell) cells.get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
@@ -310,8 +310,8 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 	
 	private void executeOperation() {
 		
-		Operator table1 = parentCell1.getData();
-		Operator table2 = parentCell2.getData();
+		Operator table1 = parentCell1.getOperator();
+		Operator table2 = parentCell2.getOperator();
 		
 		List<String> selectedColumns1 = new ArrayList<>(Arrays.asList(textArea1.getText().split("\n"))) ;
 		List<String> selectedColumns2 = new ArrayList<>(Arrays.asList(textArea2.getText().split("\n")));
