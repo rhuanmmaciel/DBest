@@ -9,19 +9,19 @@ import entities.TableCell;
 
 public class FindRoots {
 
-	public static List<Cell> getRoots(Cell cell){
+	public static List<TableCell> getRoots(Cell cell){
 			
-		List<Cell> parents = new ArrayList<>();
+		List<TableCell> parents = new ArrayList<>();
 		getSourcesRecursive(cell, parents);
 		
 		return parents;
 	}
 	
-    public static void getSourcesRecursive(Cell cell, List<Cell> sources) {
+    public static void getSourcesRecursive(Cell cell, List<TableCell> sources) {
     	
         if (cell instanceof TableCell) {
         	
-            sources.add(cell);
+            sources.add((TableCell)cell);
             
         } else {
         	

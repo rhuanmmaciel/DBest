@@ -3,6 +3,8 @@ package application;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import controller.ActionClass;
+
 public class MainClass {
 	public MainClass() {
 		ActionClass a = new ActionClass();

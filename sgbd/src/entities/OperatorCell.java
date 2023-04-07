@@ -10,11 +10,9 @@ import com.mxgraph.model.mxCell;
 
 import enums.OperationArity;
 import enums.OperationType;
-import sgbd.query.Operator;
 
 public class OperatorCell extends Cell{
 
-	private Operator operator;
 	private OperationType type;
 	private List<Cell> parents;
 	private OperationArity arity;
@@ -22,7 +20,6 @@ public class OperatorCell extends Cell{
 	public OperatorCell(String name, String style, mxCell jCell, OperationType type, List<Cell> parents, int x, int y, int length, int width) {
 	
 		super(name, style, jCell, length, width);
-		this.operator = null;
 		this.type = type;
 		this.parents = new ArrayList<>();
 		
@@ -76,7 +73,7 @@ public class OperatorCell extends Cell{
 	}
 	
 	public Boolean hasTree() {
-		return operator != null;
+		return getOperator() != null;
 	}
 	
 	public void setColumns(List<List<Column>> parentColumns, Collection<List<String>> cellColumnsName) {

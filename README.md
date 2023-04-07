@@ -1,6 +1,5 @@
 # Implementar:
 
-## Imediatos: 
 
 - exceção com operadores pós leftJoin
 - dar algum tipo de dica visual quando se está criando um edge ou um nó (ver brModelo)

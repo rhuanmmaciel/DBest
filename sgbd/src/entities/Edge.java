@@ -25,7 +25,7 @@ public class Edge {
 		boolean cellHasTree; 
 		
 		if(cell instanceof OperatorCell) {
-			
+
 			cellHasTree = ((OperatorCell) cell).hasTree();
 			
 		}else {
@@ -34,6 +34,7 @@ public class Edge {
 			
 		}
 
+		
 		if (!cell.hasChild() && cellHasTree)
 			this.parent = parent;
 		

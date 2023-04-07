@@ -135,7 +135,7 @@ public abstract class Cell {
 		
 	}
 	
-	public List<Cell> getAllSourceTables(){
+	public List<TableCell> getAllSourceTables(){
 		
 		return FindRoots.getRoots(this);
 		
