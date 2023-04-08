@@ -11,7 +11,7 @@
 - consertar a operação de Renomeação
 - adicionar a operação de Diferença
 - adicionar a quebra de linha quando a condição da seleção ficar muito grande
-
+- nome das células nas Operações seguintes
 - salvar a árvore
 
 

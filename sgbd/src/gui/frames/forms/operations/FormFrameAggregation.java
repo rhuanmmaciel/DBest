@@ -21,7 +21,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
 import entities.Cell;
-import entities.OperatorCell;
+import entities.OperationCell;
 import sgbd.query.Operator;
 
 @SuppressWarnings("serial")
@@ -31,7 +31,7 @@ public class FormFrameAggregation extends JDialog implements ActionListener {
 	private JComboBox comboBoxColunas;
 	private JComboBox comboBoxOp;
 	private JButton btnPronto;
-	private OperatorCell cell;
+	private OperationCell cell;
 	private Cell parentCell;
 	private Object jCell;
 	private mxGraph graph;
@@ -43,7 +43,7 @@ public class FormFrameAggregation extends JDialog implements ActionListener {
 		setModal(true);
 		setTitle("Agregação");
 
-		this.cell = (OperatorCell) cells.get(cell);
+		this.cell = (OperationCell) cells.get(cell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = cell;
 		this.graph = graph;
@@ -127,9 +127,9 @@ public class FormFrameAggregation extends JDialog implements ActionListener {
 		// else if(op == "min") operator = new GroupOperator(new
 		// MinOperator(parentCell.getData(),parentCell.getSourceTableName(column),column),parentCell.getSourceTableName(column),column);
 
-		((OperatorCell) cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
+		((OperationCell) cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
 
-		((OperatorCell) cell).setOperator(operator);
+		((OperationCell) cell).setOperator(operator);
 
 		dispose();
 

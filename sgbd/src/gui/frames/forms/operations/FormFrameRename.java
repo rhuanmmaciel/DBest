@@ -23,7 +23,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
 import entities.Cell;
-import entities.OperatorCell;
+import entities.OperationCell;
 import sgbd.prototype.Column;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
@@ -39,7 +39,7 @@ public class FormFrameRename extends JDialog implements ActionListener {
 	private List<String> columnsList;
 
 	
-	private OperatorCell cell;
+	private OperationCell cell;
 	private Cell parentCell;
 	private Object jCell;
 	private mxGraph graph;
@@ -50,7 +50,7 @@ public class FormFrameRename extends JDialog implements ActionListener {
 		setModal(true);
 		setTitle("Renomeação");
 		
-		this.cell = (OperatorCell) cells.get(jCell);
+		this.cell = (OperationCell) cells.get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		this.graph = graph;
@@ -151,8 +151,8 @@ public class FormFrameRename extends JDialog implements ActionListener {
       }, formatedString);
 		System.out.println("old " +column+" new : "+formatedString);
 	    
-	    ((OperatorCell)cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
-        ((OperatorCell) cell).setOperator(operator);
+	    ((OperationCell)cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
+        ((OperationCell) cell).setOperator(operator);
 		cell.setName("ρ  "+ formatedString);
 	    
         dispose();

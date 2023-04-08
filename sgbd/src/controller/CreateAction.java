@@ -8,7 +8,7 @@ public class CreateAction {
 	public static class CurrentAction{
 		
 		enum ActionType {
-			EDGE, TABLECELL, OPERATORCELL
+			EDGE, OPERATOR_CELL, DELETE_CELL, DELETE_ALL, SAVE_CELL, SHOW_CELL, IMPORT_FILE, CREATE_TABLE
 		}
 	
 		private ActionType action;

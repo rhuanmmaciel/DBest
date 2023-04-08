@@ -34,7 +34,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
 import entities.Cell;
-import entities.OperatorCell;
+import entities.OperationCell;
 import enums.ColumnDataType;
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
@@ -66,7 +66,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 	private JButton btnReady;
 	private JButton btnCancel;
 
-	private OperatorCell cell;
+	private OperationCell cell;
 	private Cell parentCell;
 
 	private Evaluator evaluator;
@@ -83,7 +83,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		setModal(true);
 		setTitle("Seleção");
 
-		this.cell = (OperatorCell) cells.get(jCell);
+		this.cell = (OperationCell) cells.get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		this.graph = graph;
@@ -414,8 +414,8 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 		});
 		
-		((OperatorCell) cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
-		((OperatorCell) cell).setOperator(operator);
+		((OperationCell) cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
+		((OperationCell) cell).setOperator(operator);
 
 		cell.setName("σ  " + textArea.getText());
 

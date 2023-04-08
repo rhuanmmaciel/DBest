@@ -24,9 +24,9 @@ public class Edge {
 		
 		boolean cellHasTree; 
 		
-		if(cell instanceof OperatorCell) {
+		if(cell instanceof OperationCell) {
 
-			cellHasTree = ((OperatorCell) cell).hasTree();
+			cellHasTree = ((OperationCell) cell).hasTree();
 			
 		}else {
 			
@@ -51,13 +51,13 @@ public class Edge {
 		
 		if(isOperatorCell) {
 			
-			if(((OperatorCell)cell).getArity() == OperationArity.UNARY) {
+			if(((OperationCell)cell).getArity() == OperationArity.UNARY) {
 					
-				hasEnoughParents =((OperatorCell) cell).getParents().size() >= 1;
+				hasEnoughParents =((OperationCell) cell).getParents().size() >= 1;
 					
 			}else{
 				
-				hasEnoughParents =((OperatorCell) cell).getParents().size() >= 2;
+				hasEnoughParents =((OperationCell) cell).getParents().size() >= 2;
 				
 			}
 			
@@ -73,11 +73,11 @@ public class Edge {
 		if (!isOperatorCell)
 			JOptionPane.showMessageDialog(null, "Uma tabela não pode ser associada a outra", "Erro", JOptionPane.ERROR_MESSAGE);
 
-		if (hasEnoughParents && ((OperatorCell)cell).getArity() == OperationArity.UNARY)
+		if (hasEnoughParents && ((OperationCell)cell).getArity() == OperationArity.UNARY)
 			JOptionPane.showMessageDialog(null, "Não é possível associar duas tabelas a uma operação unária", "Erro",
 					JOptionPane.ERROR_MESSAGE);
 
-		if (hasEnoughParents && ((OperatorCell)cell).getArity() == OperationArity.BINARY)
+		if (hasEnoughParents && ((OperationCell)cell).getArity() == OperationArity.BINARY)
 			JOptionPane.showMessageDialog(null, "Não é possível associar três tabelas a uma operação binária", "Erro",
 					JOptionPane.ERROR_MESSAGE);
 	

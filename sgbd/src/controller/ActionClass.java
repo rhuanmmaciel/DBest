@@ -14,15 +14,17 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
@@ -35,12 +37,15 @@ import controller.CreateAction.CreateTableAction;
 import controller.CreateAction.CurrentAction;
 import entities.Cell;
 import entities.Edge;
-import entities.OperatorCell;
+import entities.OperationCell;
 import entities.TableCell;
 import entities.Tree;
+import entities.buttons.Button;
+import entities.buttons.OperationButton;
+import entities.buttons.ToolBarButton;
+import entities.util.CellUtils;
 import entities.util.TreeUtils;
 import enums.OperationType;
-import gui.buttons.TypesButtons;
 import gui.frames.ResultFrame;
 import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.FormFrameExportTable;
@@ -51,38 +56,24 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 	private mxGraph graph;
 	private mxGraphComponent graphComponent;
-	private JPanel containerPanel;
 	private mxCell jCell;
-	private AtomicReference<CurrentAction> currentActionRef;
-	private Edge edge;
 
-	private Map<mxCell, Cell> cells;
-	private Map<Integer, Tree> trees;
+	private JPanel containerPanel;
 
-	private TypesButtons btnTypeProjection;
-	private TypesButtons btnTypeSelection;
-	private TypesButtons btnTypeCartesianProduct;
-	private TypesButtons btnTypeUnion;
-	// private TypesButtons tipoDiferenca;
-	// private TypesButtons btnTypeRename;
-	// private TypesButtons btnTypeAggregation;
-	private TypesButtons btnTypeJoin;
-	private TypesButtons btnTypeLeftJoin;
+	private AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>();
+	private Edge edge = new Edge();
 
-	private JButton edgeButton;
+	private Map<mxCell, Cell> cells = new HashMap<>();
+	private Map<Integer, Tree> trees = new HashMap<>();
+	private Set<Button> buttons = new HashSet<>();
 
-	private JButton deleteButton;
-	private JButton deleteAllButton;
+	private AtomicReference<File> lastDirectoryRef = new AtomicReference<>(new File(""));
 
-	private JButton importButton;
 	private JToolBar toolBar;
 
-	private JButton saveTableButton;
-	private JButton btnShowTable;
-
-	private JButton btnCreateTable;
-
-	private AtomicReference<File> lastDirectoryRef = new AtomicReference<>();
+	private JPopupMenu popupMenuJCell;
+	private JMenuItem menuItemShow;
+	private JMenuItem menuItemEdit;
 
 	public ActionClass() {
 		super("DBest: Database Basics for Engaging Students and Teachers");
@@ -104,81 +95,49 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		containerPanel = new JPanel(new GridLayout(6, 1));
 		mxStylesheet stylesheet = graph.getStylesheet();
 
-		btnTypeProjection = new TypesButtons(stylesheet, "π Projeção", "Projeção");
-		btnTypeProjection.getButton().addActionListener(this);
-		containerPanel.add(btnTypeProjection.getPanel());
-
-		btnTypeSelection = new TypesButtons(stylesheet, "σ Seleção", "Seleção");
-		btnTypeSelection.getButton().addActionListener(this);
-		containerPanel.add(btnTypeSelection.getPanel());
-
-		btnTypeJoin = new TypesButtons(stylesheet, "|X| Junção", "Junção");
-		btnTypeJoin.getButton().addActionListener(this);
-		containerPanel.add(btnTypeJoin.getPanel());
-
-		btnTypeCartesianProduct = new TypesButtons(stylesheet, "✕ Produto Cartesiano", "Produto Cartesiano");
-		btnTypeCartesianProduct.getButton().addActionListener(this);
-		containerPanel.add(btnTypeCartesianProduct.getPanel());
-
-		btnTypeUnion = new TypesButtons(stylesheet, "∪ União", "União");
-		btnTypeUnion.getButton().addActionListener(this);
-		containerPanel.add(btnTypeUnion.getPanel());
+		buttons.add(new OperationButton(stylesheet, "π Projeção", "Projeção", this, containerPanel,
+				new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL, "π  Projeção", "Projeção",
+						OperationType.PROJECTION)));
+		buttons.add(
+				new OperationButton(stylesheet, "σ Seleção", "Seleção", this, containerPanel, new CreateOperationAction(
+						CurrentAction.ActionType.OPERATOR_CELL, "σ  Seleção", "Seleção", OperationType.SELECTION)));
+		buttons.add(
+				new OperationButton(stylesheet, "|X| Junção", "Junção", this, containerPanel, new CreateOperationAction(
+						CurrentAction.ActionType.OPERATOR_CELL, "|X| Junção", "Junção", OperationType.JOIN)));
+		buttons.add(new OperationButton(stylesheet, "✕ Produto Cartesiano", "Produto Cartesiano", this, containerPanel,
+				new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL, "✕  Produto Cartesiano",
+						"Produto Cartesiano", OperationType.CARTESIANPRODUCT)));
+		buttons.add(new OperationButton(stylesheet, "∪ União", "União", this, containerPanel, new CreateOperationAction(
+				CurrentAction.ActionType.OPERATOR_CELL, "∪  União", "União", OperationType.UNION)));
+		buttons.add(new OperationButton(stylesheet, "⟕ Junção à esquerda", "Junção à esquerda", this, containerPanel,
+				new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL, "⟕ Junção à esquerda",
+						"Junção à esquerda", OperationType.LEFTJOIN)));
 		/*
 		 * btnTypeAggregation = new TypesButtons(stylesheet, "G Agregação",
-		 * "Agregação"); btnTypeAggregation.getButton().addActionListener(this);
-		 * containerPanel.add(btnTypeAggregation.getPanel());
+		 * "Agregação");
 		 * 
 		 * /* tipoDiferenca = new TypesButtons(stylesheet,"- Diferenca","diferenca");
-		 * tipoDiferenca.getButton().addActionListener(this);
-		 * containerPanel.add(tipoDiferenca.getPanel());
 		 * 
 		 * btnTypeRename = new TypesButtons(stylesheet, "ρ Renomeação", "Renomeação");
-		 * btnTypeRename.getButton().addActionListener(this);
-		 * containerPanel.add(btnTypeRename.getPanel());
-		 * 
+		 *
 		 */
-
-		btnTypeLeftJoin = new TypesButtons(stylesheet, "⟕ Junção à esquerda", "Junção à esquerda");
-		btnTypeLeftJoin.getButton().addActionListener(this);
-		containerPanel.add(btnTypeLeftJoin.getPanel());
 
 		toolBar = new JToolBar();
 		getContentPane().add(toolBar, BorderLayout.SOUTH);
 
-		importButton = new JButton(" Importar tabela(i) ");
-		toolBar.add(importButton);
-		importButton.setHorizontalAlignment(SwingConstants.LEFT);
-		importButton.addActionListener(this);
-
-		btnCreateTable = new JButton(" Criar tabela(c) ");
-		toolBar.add(btnCreateTable);
-		btnCreateTable.setHorizontalAlignment(SwingConstants.LEFT);
-		btnCreateTable.addActionListener(this);
-
-		edgeButton = new JButton(" Edge(e) ");
-		toolBar.add(edgeButton);
-		edgeButton.setHorizontalAlignment(SwingConstants.LEFT);
-		edgeButton.addActionListener(this);
-
-		deleteButton = new JButton(" Remover(del) ");
-		toolBar.add(deleteButton);
-		deleteButton.setHorizontalAlignment(SwingConstants.LEFT);
-		deleteButton.addActionListener(this);
-
-		deleteAllButton = new JButton(" Remover tudo ");
-		toolBar.add(deleteAllButton);
-		deleteAllButton.setHorizontalAlignment(SwingConstants.LEFT);
-		deleteAllButton.addActionListener(this);
-
-		saveTableButton = new JButton(" Exportar(x) ");
-		toolBar.add(saveTableButton);
-		saveTableButton.setHorizontalAlignment(SwingConstants.LEFT);
-		saveTableButton.addActionListener(this);
-
-		btnShowTable = new JButton(" Mostrar(s) ");
-		toolBar.add(btnShowTable);
-		btnShowTable.setHorizontalAlignment(SwingConstants.LEFT);
-		btnShowTable.addActionListener(this);
+		buttons.add(new ToolBarButton(" Importar tabela(i) ", this, toolBar,
+				new CurrentAction(CurrentAction.ActionType.IMPORT_FILE)));
+		buttons.add(new ToolBarButton(" Criar tabela(c) ", this, toolBar,
+				new CurrentAction(CurrentAction.ActionType.CREATE_TABLE)));
+		buttons.add(new ToolBarButton(" Edge(e) ", this, toolBar, new CurrentAction(CurrentAction.ActionType.EDGE)));
+		buttons.add(new ToolBarButton(" Remover(del) ", this, toolBar,
+				new CurrentAction(CurrentAction.ActionType.DELETE_CELL)));
+		buttons.add(new ToolBarButton(" Remover tudo ", this, toolBar,
+				new CurrentAction(CurrentAction.ActionType.DELETE_ALL)));
+		buttons.add(new ToolBarButton(" Exportar(x) ", this, toolBar,
+				new CurrentAction(CurrentAction.ActionType.SAVE_CELL)));
+		buttons.add(new ToolBarButton(" Mostrar(s) ", this, toolBar,
+				new CurrentAction(CurrentAction.ActionType.SHOW_CELL)));
 
 		this.add(containerPanel, BorderLayout.EAST);
 
@@ -186,12 +145,6 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
 		layout.setUseBoundingBox(false);
-
-		this.cells = new HashMap<>();
-		this.trees = new HashMap<>();
-
-		currentActionRef = new AtomicReference<>();
-		edge = new Edge();
 
 		graphComponent.getGraphControl().addMouseListener(this);
 		graphComponent.addKeyListener(this);
@@ -208,7 +161,12 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		graph.getModel().endUpdate();
 
-		lastDirectoryRef.set(new File(""));
+		popupMenuJCell = new JPopupMenu();
+		menuItemShow = new JMenuItem("Mostrar");
+		menuItemEdit = new JMenuItem("Editar");
+		popupMenuJCell.add(menuItemShow);
+		popupMenuJCell.add(menuItemEdit);
+		graphComponent.setComponentPopupMenu(popupMenuJCell);
 
 		addWindowListener(new WindowAdapter() {
 
@@ -227,86 +185,36 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			}
 
 		});
+
 		setVisible(true);
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		if (e.getSource() == btnTypeProjection.getButton()) {
 
-			currentActionRef.set(new CreateOperationAction(CurrentAction.ActionType.OPERATORCELL, "π  Projeção",
-					"Projeção", OperationType.PROJECTION));
+		Button btnClicked = buttons.stream().filter(x -> x.getButton() == e.getSource()).findAny().orElse(null);
 
-		} else if (e.getSource() == btnTypeSelection.getButton()) {
+		btnClicked.setCurrentAction(currentActionRef);
 
-			currentActionRef.set(new CreateOperationAction(CurrentAction.ActionType.OPERATORCELL, "σ  Seleção",
-					"Seleção", OperationType.SELECTION));
+		switch (currentActionRef.get().getType()) {
 
-		} else if (e.getSource() == btnTypeCartesianProduct.getButton()) {
-
-			currentActionRef.set(new CreateOperationAction(CurrentAction.ActionType.OPERATORCELL, "✕  Produto Cartesiano",
-					"Produto Cartesiano", OperationType.CARTESIANPRODUCT));
-
-		} else if (e.getSource() == btnTypeUnion.getButton()) {
-
-			currentActionRef.set(new CreateOperationAction(CurrentAction.ActionType.OPERATORCELL, "∪  União", "União",
-					OperationType.UNION));
-
-		} /*
-			 * else if(e.getSource() == tipoDiferenca.getButton()) {
-			 * 
-			 * assignVariables("diferenca","-  diferenca", true, OperationType.DIFERENCA);
-			 * 
-			 * } else if (e.getSource() == btnTypeRename.getButton()) {
-			 * 
-			 * assignVariables("Renomeação", "ρ  Renomeação", true, OperationType.RENAME);
-			 * 
-			 * } else if (e.getSource() == btnTypeAggregation.getButton()) {
-			 * 
-			 * assignVariables("Agregação", "G Agregação", true, OperationType.AGGREGATION);
-			 * 
-			 * }
-			 */ else if (e.getSource() == btnTypeLeftJoin.getButton()) {
-
-			currentActionRef.set(new CreateOperationAction(CurrentAction.ActionType.OPERATORCELL, "⟕ Junção à esquerda",
-					"Junção à esquerda", OperationType.LEFTJOIN));
-
-		} else if (e.getSource() == btnTypeJoin.getButton()) {
-
-			currentActionRef.set(new CreateOperationAction(CurrentAction.ActionType.OPERATORCELL, "|X| Junção",
-					"Junção", OperationType.JOIN));
-
-		} else if (e.getSource() == edgeButton) {
-
-			currentActionRef.set(new CurrentAction(CurrentAction.ActionType.EDGE));
-
-		} else if (e.getSource() == deleteButton) {
-
-			deleteCell(jCell);
-
-		} else if (e.getSource() == deleteAllButton) {
-
-			deleteAllGraph();
-
-		} else if (e.getSource() == importButton) {
-
-			currentActionRef.set(new CurrentAction(CurrentAction.ActionType.TABLECELL));
-			importFile();
-
-		} else if (e.getSource() == btnCreateTable) {
-
-			currentActionRef.set(new CurrentAction(CurrentAction.ActionType.TABLECELL));
-			createTable();
-
-		} else if (e.getSource() == saveTableButton) {
-
+		case DELETE_CELL:
+			CellUtils.deleteCell(jCell, cells, graph, trees);
+			break;
+		case DELETE_ALL:
+			CellUtils.deleteAllGraph(cells, graph, trees);
+			break;
+		case SAVE_CELL:
 			exportTable();
-
-		} else if (e.getSource() == btnShowTable) {
-
+			break;
+		case SHOW_CELL:
 			showTable();
+			break;
+		case IMPORT_FILE:
+			importFile();
+		default:
+			break;
 
 		}
 
@@ -316,8 +224,14 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
+
 		jCell = (mxCell) graphComponent.getCellAt(e.getX(), e.getY());
+
+		if (e.getButton() == MouseEvent.BUTTON3 && jCell != null) {
+
+			popupMenuJCell.show(graphComponent.getGraphControl(), e.getX(), e.getY());
+
+		}
 
 		AtomicReference<Boolean> exitRef = new AtomicReference<>(false);
 
@@ -327,83 +241,27 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 			Cell deletedCell = cells.get(jCell);
 
-			if (deletedCell instanceof OperatorCell) {
+			if (deletedCell instanceof OperationCell) {
 
-				for (Cell parent : ((OperatorCell) deletedCell).getParents()) {
+				for (Cell parent : ((OperationCell) deletedCell).getParents()) {
 					parent.setChild(null);
 				}
 
-				((OperatorCell) deletedCell).clearParents();
+				((OperationCell) deletedCell).clearParents();
 
 			}
 			cells.remove(jCell);
-			deleteCell(jCell);
+			CellUtils.deleteCell(jCell, cells, graph, trees);
 
 		}
-		
+
 		TreeUtils.updateTree(trees, cells);
-		
-		if (jCell != null && e.getClickCount() == 2) {
+
+		if (cells.get(jCell) != null && e.getClickCount() == 2) {
 
 			new ResultFrame(cells.get(jCell));
 
 		}
-
-	}
-	
-	private void deleteCell(mxCell jCell) {
-
-		if (jCell != null) {
-
-			Cell cell = cells.get(jCell);
-
-			if (cell != null) {
-
-				cell.setChild(null);
-
-				if (cell instanceof OperatorCell) {
-
-					for (Cell cellParent : ((OperatorCell) cell).getParents()) {
-
-						cellParent.setChild(null);
-
-					}
-
-					((OperatorCell) cell).clearParents();
-
-				}
-			}
-
-			graph.getModel().beginUpdate();
-			try {
-
-				graph.removeCells(new Object[] { jCell }, true);
-				cells.remove(jCell);
-
-			} finally {
-				graph.getModel().endUpdate();
-			}
-
-			graph.refresh();
-
-		}
-		
-		TreeUtils.updateTree(trees, cells);
-
-	}
-
-	private void deleteAllGraph() {
-
-		graph.getModel().beginUpdate();
-		try {
-			graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
-			cells.clear();
-
-		} finally {
-			graph.getModel().endUpdate();
-		}
-
-		graph.refresh();
 
 	}
 
@@ -421,17 +279,17 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		if (!cancelServiceReference.get()) {
 
-			currentActionRef.set(new CreateTableAction(CurrentAction.ActionType.TABLECELL, tableCell.getName(),
+			currentActionRef.set(new CreateTableAction(CurrentAction.ActionType.IMPORT_FILE, tableCell.getName(),
 					tableCell.getStyle(), tableCell));
 
 		} else {
 
 			currentActionRef.set(null);
-			
+
 		}
-		
+
 		TreeUtils.updateTree(trees, cells);
-		
+
 	}
 
 	private void createTable() {
@@ -445,15 +303,17 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		if (!cancelServiceReference.get()) {
 
-			currentActionRef.set(new CreateTableAction(CurrentAction.ActionType.TABLECELL, tableCell.getName(),
+			currentActionRef.set(new CreateTableAction(CurrentAction.ActionType.CREATE_TABLE, tableCell.getName(),
 					tableCell.getStyle(), tableCell));
 
 		} else {
 
 			currentActionRef.set(null);
-			
+
 		}
 		
+		TreeUtils.updateTree(trees, cells);
+
 	}
 
 	private void exportTable() {
@@ -509,8 +369,8 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		} else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 
-			if (jCell != null)
-				deleteCell(jCell);
+			if (jCell != null) 
+				CellUtils.deleteCell(jCell, cells, graph, trees);
 
 		} else if (e.getKeyCode() == KeyEvent.VK_E) {
 
@@ -530,17 +390,17 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			createTable();
 
 		} else if (e.getKeyCode() == KeyEvent.VK_L) {
-			
+
 			System.out.println("--------------------------");
 			System.out.println("Árvores: ");
-			for(Integer i : trees.keySet()) {
+			for (Integer i : trees.keySet()) {
 
 				System.out.println(trees.get(i));
-				
+
 			}
 			System.out.println();
 			System.out.println();
-			
+
 		}
 
 	}

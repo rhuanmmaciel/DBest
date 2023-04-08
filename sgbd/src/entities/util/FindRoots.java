@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entities.Cell;
-import entities.OperatorCell;
+import entities.OperationCell;
 import entities.TableCell;
 
 public class FindRoots {
@@ -25,7 +25,7 @@ public class FindRoots {
             
         } else {
         	
-            for (Cell parent : ((OperatorCell)cell).getParents()) {
+            for (Cell parent : ((OperationCell)cell).getParents()) {
             	
                 getSourcesRecursive(parent, sources);
                 

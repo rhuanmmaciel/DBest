@@ -29,7 +29,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
 import entities.Cell;
-import entities.OperatorCell;
+import entities.OperationCell;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.table.Table;
@@ -48,7 +48,7 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 	private JTextArea textArea;
 
 	private List<String> columnsResult;
-	private OperatorCell cell;
+	private OperationCell cell;
 	private Cell parentCell;
 	private Object jCell;
 	private mxGraph graph;
@@ -64,7 +64,7 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 		setModal(true);
 		setTitle("Projeção");
 
-		this.cell = (OperatorCell) cells.get(jCell);
+		this.cell = (OperationCell) cells.get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		this.graph = graph;
@@ -279,9 +279,9 @@ public class FormFrameProjection extends JDialog implements ActionListener {
 			
 		}
 		
-		((OperatorCell) cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
+		((OperationCell) cell).setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
 
-		((OperatorCell) cell).setOperator(operator);
+		((OperationCell) cell).setOperator(operator);
 
 		cell.setName("π  " + columnsResult.toString());
 		

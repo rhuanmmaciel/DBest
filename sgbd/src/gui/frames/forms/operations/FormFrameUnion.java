@@ -31,7 +31,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
 import entities.Cell;
-import entities.OperatorCell;
+import entities.OperationCell;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.UnionOperator;
 
@@ -56,7 +56,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 	private JTextArea textArea1;
 	private JTextArea textArea2;
 	
-	private OperatorCell cell;
+	private OperationCell cell;
 	private Cell parentCell1;
 	private Cell parentCell2;
 	private mxCell jCell;
@@ -70,7 +70,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 		setModal(true);
 		setTitle("União");
 		
-		this.cell = (OperatorCell) cells.get(jCell);
+		this.cell = (OperationCell) cells.get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
@@ -324,12 +324,12 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 		
 		Operator operator = new UnionOperator(table1, table2, selectedColumns1, selectedColumns2);
 
-		((OperatorCell) cell).setOperator(operator);
+		((OperationCell) cell).setOperator(operator);
 
 		selectedColumns1.replaceAll(s -> s.substring(s.indexOf(".")+1));
 		selectedColumns2.replaceAll(s -> s.substring(s.indexOf(".")+1));
 		
-		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
+		((OperationCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
 		
 		cell.setName("U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());    
 		

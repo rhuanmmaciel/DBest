@@ -24,7 +24,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
 import entities.Cell;
-import entities.OperatorCell;
+import entities.OperationCell;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
 
@@ -38,7 +38,7 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 	private List<String> columnsList_1;
 	private List<String> columnsList_2;
 	
-	private OperatorCell cell;
+	private OperationCell cell;
 	private Cell parentCell1;
 	private Cell parentCell2;
 	private Object jCell;
@@ -53,7 +53,7 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 		setModal(true);
 		setTitle("Junção");
 		
-		this.cell = (OperatorCell) cells.get(jCell);
+		this.cell = (OperationCell) cells.get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
@@ -185,8 +185,8 @@ public class FormFrameJoin extends JDialog implements ActionListener {
 			return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
         });
 		
-		((OperatorCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
-		((OperatorCell) cell).setOperator(operator);
+		((OperationCell)cell).setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
+		((OperationCell) cell).setOperator(operator);
 		cell.setName("|X|   " + colunasComboBox.getSelectedItem().toString()+" = "+colunasComboBox_1.getSelectedItem().toString());    
 		
         graph.getModel().setValue(jCell,"|X|   "+ colunasComboBox.getSelectedItem().toString()+" = "+colunasComboBox_1.getSelectedItem().toString());
