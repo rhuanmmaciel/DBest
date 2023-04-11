@@ -54,7 +54,7 @@ import gui.frames.forms.importexport.FormFrameImportAs;
 @SuppressWarnings("serial")
 public class ActionClass extends JFrame implements ActionListener, MouseListener, KeyListener {
 
-	private mxGraph graph;
+	private static mxGraph graph;
 	private mxGraphComponent graphComponent;
 	private mxCell jCell;
 
@@ -63,7 +63,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>();
 	private Edge edge = new Edge();
 
-	private Map<mxCell, Cell> cells = new HashMap<>();
+	private static Map<mxCell, Cell> cells = new HashMap<>();
 	private Map<Integer, Tree> trees = new HashMap<>();
 	private Set<Button> buttons = new HashSet<>();
 
@@ -163,7 +163,9 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		popupMenuJCell = new JPopupMenu();
 		menuItemShow = new JMenuItem("Mostrar");
+		menuItemShow.addActionListener(this);
 		menuItemEdit = new JMenuItem("Editar");
+		menuItemEdit.addActionListener(this);
 		popupMenuJCell.add(menuItemShow);
 		popupMenuJCell.add(menuItemEdit);
 		graphComponent.setComponentPopupMenu(popupMenuJCell);
@@ -194,30 +196,45 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	public void actionPerformed(ActionEvent e) {
 
 		Button btnClicked = buttons.stream().filter(x -> x.getButton() == e.getSource()).findAny().orElse(null);
-
-		btnClicked.setCurrentAction(currentActionRef);
-
-		switch (currentActionRef.get().getType()) {
-
-		case DELETE_CELL:
-			CellUtils.deleteCell(jCell, cells, graph, trees);
-			break;
-		case DELETE_ALL:
-			CellUtils.deleteAllGraph(cells, graph, trees);
-			break;
-		case SAVE_CELL:
-			exportTable();
-			break;
-		case SHOW_CELL:
-			showTable();
-			break;
-		case IMPORT_FILE:
-			importFile();
-		default:
-			break;
-
+		
+		if(btnClicked != null) {
+			
+			btnClicked.setCurrentAction(currentActionRef);
+			
+			switch (currentActionRef.get().getType()) {
+			
+			case DELETE_CELL:
+				CellUtils.deleteCell(jCell, cells, graph, trees);
+				break;
+			case DELETE_ALL:
+				CellUtils.deleteAllGraph(cells, graph, trees);
+				break;
+			case SAVE_CELL:
+				exportTable();
+				break;
+			case SHOW_CELL:
+				showTable();
+				break;
+			case IMPORT_FILE:
+				importFile();
+			default:
+				break;
+				
+			}
+			
 		}
-
+		
+		if(e.getSource() == menuItemShow) {
+			
+			showTable();
+			
+		}else if(e.getSource() == menuItemEdit) {
+			
+			AtomicReference<Boolean> exitRef = new AtomicReference<>(false);
+			((OperationCell)cells.get(jCell)).editOperation(jCell, exitRef);
+			
+		}
+		
 		edge.reset();
 
 	}
@@ -227,10 +244,15 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		jCell = (mxCell) graphComponent.getCellAt(e.getX(), e.getY());
 
-		if (e.getButton() == MouseEvent.BUTTON3 && jCell != null) {
-
-			popupMenuJCell.show(graphComponent.getGraphControl(), e.getX(), e.getY());
-
+		if (e.getButton() == MouseEvent.BUTTON3 && cells.get(jCell) != null) {
+			
+			popupMenuJCell.add(menuItemEdit);
+			
+			if(cells.get(jCell) instanceof TableCell || ((OperationCell)cells.get(jCell)).getType() == OperationType.CARTESIANPRODUCT) 
+				popupMenuJCell.remove(menuItemEdit);
+				
+			popupMenuJCell.show(graphComponent.getGraphControl(), e.getX(), e.getY());	
+			
 		}
 
 		AtomicReference<Boolean> exitRef = new AtomicReference<>(false);
@@ -410,4 +432,12 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 	}
 
+	public static mxGraph getGraph() {
+		return graph;
+	}
+
+	public static Map<mxCell, Cell> getCells() {
+		return cells;
+	}
+	
 }

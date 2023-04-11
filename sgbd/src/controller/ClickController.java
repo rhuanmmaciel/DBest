@@ -15,7 +15,6 @@ import entities.Cell;
 import entities.Edge;
 import entities.OperationCell;
 import entities.TableCell;
-import enums.OperationArity;
 import enums.OperationType;
 import gui.frames.forms.operations.CartesianProduct;
 import gui.frames.forms.operations.FormFrameAggregation;
@@ -96,52 +95,52 @@ public class ClickController {
 
 					if (cell instanceof OperationCell) {
 
-						if (((OperationCell) cell).getType() == OperationType.PROJECTION
-								&& ((OperationCell) cell).checkRules(OperationArity.UNARY) == true)
+						if (((OperationCell) cell).getType() == OperationType.PROJECTION) {
+							
+							new FormFrameProjection(jCell, exitRef);
+							((OperationCell)cell).setForm(FormFrameProjection.class);
+						
+						}else if (((OperationCell) cell).getType() == OperationType.SELECTION) {
 
-							new FormFrameProjection(jCell, cells, graph, exitRef);
+							new FormFrameSelection(jCell, exitRef);
+							((OperationCell)cell).setForm(FormFrameSelection.class);
 
-						else if (((OperationCell) cell).getType() == OperationType.SELECTION
-								&& ((OperationCell) cell).checkRules(OperationArity.UNARY) == true)
+						}else if (((OperationCell) cell).getType() == OperationType.AGGREGATION) {
 
-							new FormFrameSelection(jCell, cells, graph, exitRef);
+							new FormFrameAggregation(jCell, exitRef);
+							((OperationCell)cell).setForm(FormFrameAggregation.class);
 
-						else if (((OperationCell) cell).getType() == OperationType.AGGREGATION
-								&& ((OperationCell) cell).checkRules(OperationArity.UNARY) == true)
+						}else if (((OperationCell) cell).getType() == OperationType.RENAME) {
 
-							new FormFrameAggregation(jCell, cells, graph);
+							new FormFrameRename(jCell, exitRef);
+							((OperationCell)cell).setForm(FormFrameRename.class);
 
-						else if (((OperationCell) cell).getType() == OperationType.RENAME
-								&& ((OperationCell) cell).checkRules(OperationArity.UNARY) == true)
+						}else if (((OperationCell) cell).getType() == OperationType.JOIN
+								&& ((OperationCell) cell).getParents().size() == 2) {
 
-							new FormFrameRename(jCell, cells, graph);
+							new FormFrameJoin(jCell, exitRef);
+							((OperationCell)cell).setForm(FormFrameJoin.class);
 
-						else if (((OperationCell) cell).getType() == OperationType.JOIN
-								&& ((OperationCell) cell).getParents().size() == 2
-								&& ((OperationCell) cell).checkRules(OperationArity.BINARY) == true)
+						}else if (((OperationCell) cell).getType() == OperationType.CARTESIANPRODUCT
+								&& ((OperationCell) cell).getParents().size() == 2) {
 
-							new FormFrameJoin(jCell, cells, graph, exitRef);
+							new CartesianProduct(jCell, exitRef);
+							((OperationCell)cell).setForm(CartesianProduct.class);
 
-						else if (((OperationCell) cell).getType() == OperationType.CARTESIANPRODUCT
-								&& ((OperationCell) cell).getParents().size() == 2
-								&& ((OperationCell) cell).checkRules(OperationArity.BINARY) == true)
+						}else if (((OperationCell) cell).getType() == OperationType.UNION
+								&& ((OperationCell) cell).getParents().size() == 2) {
 
-							new CartesianProduct(jCell, cells, graph);
+							new FormFrameUnion(jCell, exitRef);
+							((OperationCell)cell).setForm(FormFrameUnion.class);
 
-						else if (((OperationCell) cell).getType() == OperationType.UNION
-								&& ((OperationCell) cell).getParents().size() == 2
-								&& ((OperationCell) cell).checkRules(OperationArity.BINARY) == true)
+						}else if (((OperationCell) cell).getType() == OperationType.LEFTJOIN
+								&& ((OperationCell) cell).getParents().size() == 2) {
 
-							new FormFrameUnion(jCell, cells, graph, exitRef);
+							new FormFrameLeftJoin(jCell, exitRef);
+							((OperationCell)cell).setForm(FormFrameLeftJoin.class);
 
-						else if (((OperationCell) cell).getType() == OperationType.LEFTJOIN
-								&& ((OperationCell) cell).getParents().size() == 2
-								&& ((OperationCell) cell).checkRules(OperationArity.BINARY) == true)
-
-							new FormFrameLeftJoin(jCell, cells, graph, exitRef);
-
+						}
 					}
-
 				}
 
 				edge.reset();
