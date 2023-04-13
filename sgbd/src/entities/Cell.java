@@ -17,7 +17,7 @@ public abstract class Cell {
 	private String style;
 	private String name;
 	private mxCell jCell;
-	private Cell child;
+	private OperationCell child;
 	private int length;
 	private int width;
 	protected Map<Integer, Map<String, String>> content;
@@ -54,15 +54,19 @@ public abstract class Cell {
 	
 	public Operator getOperator() {
 		
+		if(operator == null) return null;
+		
+		operator.close();
+		operator.open();
 		return operator;
 		
 	}
 	
-	public Cell getChild() {
+	public OperationCell getChild() {
 		return child;
 	}
 
-	public void setChild(Cell child) {
+	public void setChild(OperationCell child) {
 		this.child = child;
 	}
 	
@@ -135,7 +139,7 @@ public abstract class Cell {
 		
 	}
 	
-	public List<TableCell> getAllSourceTables(){
+	public List<Cell> getAllSourceTables(){
 		
 		return FindRoots.getRoots(this);
 		
@@ -161,8 +165,6 @@ public abstract class Cell {
 		return width;
 	}
 	
-	
-	
 
 	@Override
 	public String toString() {
@@ -170,5 +172,9 @@ public abstract class Cell {
 		return getName();
 		
 	}
+
+	public abstract boolean hasParents();
+	public abstract boolean hasError();
+	public abstract boolean hasParentErrors();
 	
 }

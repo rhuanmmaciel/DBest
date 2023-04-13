@@ -55,6 +55,10 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 	private JButton btnCancel;
 	private JButton btnAddAll;
 
+	public FormFrameProjection() {
+		
+	}
+	
 	public FormFrameProjection(mxCell jCell, AtomicReference<Boolean> exitReference) {
 
 		super((Window) null);
@@ -263,32 +267,47 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 
 	public void executeOperation(mxCell jCell, List<String> data) {
 
-		if(data == null) throw new RuntimeException("A lista data não pode ser nula");
-
 		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
-		Cell parentCell = cell.getParents().get(0);
+
+		try {
 		
-		List<String> aux = parentCell.getColumnsName();
-		aux.removeAll(data);
+			if (data == null || !cell.hasParents() || cell.getParents().size() != 1 || cell.hasParentErrors()) {
+	
+				throw new Exception();
+	
+			}
+	
+			Cell parentCell = cell.getParents().get(0);
+			
+			List<String> aux = parentCell.getColumnsName();
+			aux.removeAll(data);
+	
+			Operator operator = parentCell.getOperator();
+	
+			for (Table table : parentCell.getOperator().getSources()) {
+	
+				operator = new FilterColumnsOperator(operator, table.getTableName(), aux);
+	
+			}
+	
+			cell.setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
+	
+			cell.setOperator(operator);
+	
+			cell.setName("π  " + data.toString());
+	
+			cell.setData(data);
+			
+			ActionClass.getGraph().getModel().setValue(jCell, "π  " + data.toString());
+			
+			cell.removeError();
 
-		Operator operator = parentCell.getOperator();
-
-		for (Table table : parentCell.getOperator().getSources()) {
-
-			operator = new FilterColumnsOperator(operator, table.getTableName(), aux);
-
+		}catch(Exception e) {
+			
+			cell.setError();
+			
 		}
-
-		cell.setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
-
-		cell.setOperator(operator);
-
-		cell.setName("π  " + data.toString());
-
-		cell.setData(data);
 		
-		ActionClass.getGraph().getModel().setValue(jCell, "π  " + data.toString());
-
 		dispose();
 
 	}

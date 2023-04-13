@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
+import controller.ActionClass;
 import entities.Cell;
 import util.ExportTable;
 
@@ -40,15 +41,15 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 	private AtomicReference<Boolean> cancelService;
 	private AtomicReference<File> lastDirectoryRef;
 	
-	public FormFrameExportTable(Map<mxCell, Cell> cells, mxGraphComponent graph, AtomicReference<Boolean> cancelService,
+	public FormFrameExportTable(AtomicReference<Boolean> cancelService,
 								AtomicReference<File> lastDirectoryRef) {
 
 		super((Window)null);
 		setModal(true);
 		
 		this.cancelService = cancelService;
-		this.graph = graph;
-		this.cells = cells;
+		this.graph = ActionClass.getGraphComponent();
+		this.cells = ActionClass.getCells();
 		this.lastDirectoryRef = lastDirectoryRef;
 		
 		initializeGUI();

@@ -2,25 +2,36 @@ package entities.util;
 
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
+import controller.ActionClass;
 import entities.Cell;
 import entities.OperationCell;
-import entities.Tree;
+import gui.frames.ResultFrame;
 
 public class CellUtils {
 
-	public static void deleteCell(mxCell jCell, Map<mxCell, Cell> cells, mxGraph graph, Map<Integer, Tree> trees) {
+	public static void deleteCell(mxCell jCell) {
 
+		Map<mxCell, Cell> cells = ActionClass.getCells();
+		mxGraph graph = ActionClass.getGraph();
+		
 		if (jCell != null) {
 
 			Cell cell = cells.get(jCell);
-
+			
 			if (cell != null) {
 
-				cell.setChild(null);
+				if(cell.hasChild()) {
 
+					cell.getChild().removeParent(cell);
+					cell.setChild(null);
+					
+				}
+				
 				if (cell instanceof OperationCell) {
 
 					for (Cell cellParent : ((OperationCell) cell).getParents()) {
@@ -32,6 +43,14 @@ public class CellUtils {
 					((OperationCell) cell).clearParents();
 
 				}
+			}else {
+				
+				OperationCell child = (OperationCell) cells.get(jCell.getTarget());
+				Cell parent = cells.get(jCell.getSource());
+				
+				child.removeParent(parent);
+				parent.setChild(null);
+				
 			}
 
 			graph.getModel().beginUpdate();
@@ -46,14 +65,17 @@ public class CellUtils {
 
 			graph.refresh();
 
-			TreeUtils.updateTree(trees, cells);
+			TreeUtils.identifyTrees(ActionClass.getTrees());
 			
 		}
 
 	}
 
-	public static void deleteAllGraph(Map<mxCell, Cell> cells, mxGraph graph, Map<Integer, Tree> trees) {
+	public static void deleteAllGraph() {
 
+		Map<mxCell, Cell> cells = ActionClass.getCells();
+		mxGraph graph = ActionClass.getGraph();
+		
 		graph.getModel().beginUpdate();
 		try {
 			graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
@@ -64,8 +86,28 @@ public class CellUtils {
 		}
 
 		graph.refresh();
-		TreeUtils.updateTree(trees, cells);
+		TreeUtils.identifyTrees(ActionClass.getTrees());
 
+	}
+	
+	public static void showTable(mxCell jCell) {
+		
+		Cell cell = jCell != null ? ActionClass.getCells().get(jCell) : null;
+		if (cell != null) {
+			
+			if(!cell.hasError()) {
+			
+				new ResultFrame(cell);
+			
+			}else {
+				
+				JOptionPane.showMessageDialog(null, "A operação possui erros", "Erro",
+						JOptionPane.ERROR_MESSAGE);
+				
+			}
+				
+		}
+			
 	}
 	
 }

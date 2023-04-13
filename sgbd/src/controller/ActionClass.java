@@ -46,7 +46,6 @@ import entities.buttons.ToolBarButton;
 import entities.util.CellUtils;
 import entities.util.TreeUtils;
 import enums.OperationType;
-import gui.frames.ResultFrame;
 import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.FormFrameExportTable;
 import gui.frames.forms.importexport.FormFrameImportAs;
@@ -54,8 +53,8 @@ import gui.frames.forms.importexport.FormFrameImportAs;
 @SuppressWarnings("serial")
 public class ActionClass extends JFrame implements ActionListener, MouseListener, KeyListener {
 
-	private static mxGraph graph;
-	private mxGraphComponent graphComponent;
+	private mxGraph graph;
+	private static mxGraphComponent graphComponent;
 	private mxCell jCell;
 
 	private JPanel containerPanel;
@@ -64,7 +63,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private Edge edge = new Edge();
 
 	private static Map<mxCell, Cell> cells = new HashMap<>();
-	private Map<Integer, Tree> trees = new HashMap<>();
+	private static Map<Integer, Tree> trees = new HashMap<>();
 	private Set<Button> buttons = new HashSet<>();
 
 	private AtomicReference<File> lastDirectoryRef = new AtomicReference<>(new File(""));
@@ -191,7 +190,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		setVisible(true);
 
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -204,19 +203,22 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			switch (currentActionRef.get().getType()) {
 			
 			case DELETE_CELL:
-				CellUtils.deleteCell(jCell, cells, graph, trees);
+				CellUtils.deleteCell(jCell);
 				break;
 			case DELETE_ALL:
-				CellUtils.deleteAllGraph(cells, graph, trees);
+				CellUtils.deleteAllGraph();
 				break;
 			case SAVE_CELL:
 				exportTable();
 				break;
 			case SHOW_CELL:
-				showTable();
+				CellUtils.showTable(jCell);
 				break;
 			case IMPORT_FILE:
 				importFile();
+				break;
+			case CREATE_TABLE:
+				createTable();
 			default:
 				break;
 				
@@ -226,7 +228,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		
 		if(e.getSource() == menuItemShow) {
 			
-			showTable();
+			CellUtils.showTable(jCell);
 			
 		}else if(e.getSource() == menuItemEdit) {
 			
@@ -257,7 +259,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		AtomicReference<Boolean> exitRef = new AtomicReference<>(false);
 
-		ClickController.clicked(currentActionRef, cells, jCell, edge, graph, e, exitRef);
+		ClickController.clicked(currentActionRef, jCell, edge, e, exitRef);
 
 		if (exitRef.get()) {
 
@@ -273,15 +275,15 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 			}
 			cells.remove(jCell);
-			CellUtils.deleteCell(jCell, cells, graph, trees);
+			CellUtils.deleteCell(jCell);
 
 		}
 
-		TreeUtils.updateTree(trees, cells);
+		TreeUtils.identifyTrees(trees);
 
 		if (cells.get(jCell) != null && e.getClickCount() == 2) {
 
-			new ResultFrame(cells.get(jCell));
+			CellUtils.showTable(jCell);
 
 		}
 
@@ -310,7 +312,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		}
 
-		TreeUtils.updateTree(trees, cells);
+		TreeUtils.identifyTrees(trees);
 
 	}
 
@@ -318,8 +320,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		TableCell tableCell = new TableCell(80, 30);
 
-		Boolean cancelService = false;
-		AtomicReference<Boolean> cancelServiceReference = new AtomicReference<>(cancelService);
+		AtomicReference<Boolean> cancelServiceReference = new AtomicReference<>(false);
 
 		new FormFrameCreateTable(tableCell, cancelServiceReference);
 
@@ -334,7 +335,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		}
 		
-		TreeUtils.updateTree(trees, cells);
+		TreeUtils.identifyTrees(trees);
 
 	}
 
@@ -344,16 +345,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		AtomicReference<Boolean> exitRef = new AtomicReference<>(exit);
 
 		if (!cells.isEmpty())
-			new FormFrameExportTable(cells, graphComponent, exitRef, lastDirectoryRef);
-
-	}
-
-	private void showTable() {
-
-		Cell cell = jCell != null ? cells.get(jCell) : null;
-		if (cell != null)
-			new ResultFrame(cell);
-
+			new FormFrameExportTable(exitRef, lastDirectoryRef);
 	}
 
 	@Override
@@ -387,12 +379,12 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		if (e.getKeyCode() == KeyEvent.VK_S) {
 
 			if (jCell != null)
-				showTable();
+				CellUtils.showTable(jCell);
 
 		} else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 
 			if (jCell != null) 
-				CellUtils.deleteCell(jCell, cells, graph, trees);
+				CellUtils.deleteCell(jCell);
 
 		} else if (e.getKeyCode() == KeyEvent.VK_E) {
 
@@ -423,8 +415,12 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			System.out.println();
 			System.out.println();
 
+		}else if(e.getKeyCode() == KeyEvent.VK_A) {
+			
+			
+			
+			
 		}
-
 	}
 
 	@Override
@@ -433,11 +429,19 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	}
 
 	public static mxGraph getGraph() {
-		return graph;
+		return graphComponent.getGraph();
+	}
+	
+	public static mxGraphComponent getGraphComponent() {
+		return graphComponent;
 	}
 
 	public static Map<mxCell, Cell> getCells() {
 		return cells;
+	}
+
+	public static Map<Integer, Tree> getTrees() {
+		return trees;
 	}
 	
 }

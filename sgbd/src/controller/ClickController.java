@@ -1,11 +1,9 @@
 package controller;
 
 import java.awt.event.MouseEvent;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.mxgraph.model.mxCell;
-import com.mxgraph.view.mxGraph;
 
 import controller.CreateAction.CreateCellAction;
 import controller.CreateAction.CreateOperationAction;
@@ -27,10 +25,10 @@ import gui.frames.forms.operations.FormFrameUnion;
 
 public class ClickController {
 
-	public static void clicked(AtomicReference<CurrentAction> currentActionRef, Map<mxCell, Cell> cells, mxCell jCell,
-			Edge edge, mxGraph graph, MouseEvent e, AtomicReference<Boolean> exitRef) {
+	public static void clicked(AtomicReference<CurrentAction> currentActionRef, mxCell jCell,
+			Edge edge, MouseEvent e, AtomicReference<Boolean> exitRef) {
 		
-		Cell cell = cells.get(jCell);
+		Cell cell = ActionClass.getCells().get(jCell);
 
 		CurrentAction currentAction = currentActionRef.get();
 		
@@ -45,7 +43,7 @@ public class ClickController {
 			String name = ((CreateCellAction) currentAction).getName();
 			String style = ((CreateCellAction) currentAction).getStyle();
 
-			mxCell newCell = (mxCell) graph.insertVertex((mxCell) graph.getDefaultParent(), null, name, e.getX(),
+			mxCell newCell = (mxCell) ActionClass.getGraph().insertVertex((mxCell) ActionClass.getGraph().getDefaultParent(), null, name, e.getX(),
 					e.getY(), 80, 30, style);
 
 			if (createTable) {
@@ -53,13 +51,13 @@ public class ClickController {
 				TableCell tableCell = ((CreateTableAction) currentAction).getTableCell();
 
 				tableCell.setJGraphCell(newCell);
-				cells.put(newCell, tableCell);
+				ActionClass.getCells().put(newCell, tableCell);
 
 			} else {
 
 				OperationType operationType = ((CreateOperationAction)currentAction).getOperationType();
 				
-				cells.put(newCell,
+				ActionClass.getCells().put(newCell,
 						new OperationCell(name, style, newCell, operationType, null, e.getX(), e.getY(), 80, 30));
 			}
 
@@ -69,29 +67,29 @@ public class ClickController {
 
 		if (jCell != null) {
 
-			graph.getModel().getValue(jCell);
+			ActionClass.getGraph().getModel().getValue(jCell);
 			if (currentAction != null && actionType == CurrentAction.ActionType.EDGE
 					&& !edge.hasParent()) {
 
-				edge.addParent(jCell, cells);
+				edge.addParent(jCell, ActionClass.getCells());
 
 			}
 
-			Cell parentCell = edge.hasParent() != null ? cells.get(edge.getParent()) : null;
+			Cell parentCell = edge.hasParent() != null ? ActionClass.getCells().get(edge.getParent()) : null;
 
 			if (currentAction != null && actionType == CurrentAction.ActionType.EDGE
 					&& edge.isDifferent(jCell)) {
 
-				edge.addChild(jCell, cells);
+				edge.addChild(jCell, ActionClass.getCells());
 
 				if (edge.isReady()) {
 
-					graph.insertEdge(edge.getParent(), null, "", edge.getParent(), jCell);
+					ActionClass.getGraph().insertEdge(edge.getParent(), null, "", edge.getParent(), jCell);
 
 					((OperationCell) cell).addParent(parentCell);
 
 					if (parentCell != null)
-						parentCell.setChild(cell);
+						parentCell.setChild((OperationCell)cell);
 
 					if (cell instanceof OperationCell) {
 

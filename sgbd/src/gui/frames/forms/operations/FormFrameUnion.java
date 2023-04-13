@@ -62,6 +62,10 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 	
 	private AtomicReference<Boolean> exitRef;
 
+	public FormFrameUnion() {
+		
+	}
+	
 	public FormFrameUnion(mxCell jCell, AtomicReference<Boolean> exitRef) {
 		
 		super((Window)null);
@@ -316,39 +320,51 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 	
 	public void executeOperation(mxCell jCell, List<String> data) {
 		
-		if (data == null)
-			throw new RuntimeException("A lista data não pode ser nula");
-		if (data.size() % 2 != 0)
-			throw new RuntimeException("É necessário haver pares de colunas para a comparação Union");
-
 		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
-		Cell parentCell1 = cell.getParents().get(0);
-		Cell parentCell2 = cell.getParents().get(1);
-		
-		Operator table1 = parentCell1.getOperator();
-		Operator table2 = parentCell2.getOperator();
-		
-		List<String> selectedColumns1 = new ArrayList<>(data.subList(0, data.size()/2));
-		List<String> selectedColumns2 = new ArrayList<>(data.subList(data.size()/2, data.size()));
 
-		selectedColumns1.replaceAll(s -> parentCell1.getSourceTableName(s) + "." + s);
-		selectedColumns2.replaceAll(s -> parentCell2.getSourceTableName(s) + "." + s);
+		try {
 		
-		Operator operator = new UnionOperator(table1, table2, selectedColumns1, selectedColumns2);
-
-		cell.setOperator(operator);
-
-		selectedColumns1.replaceAll(s -> s.substring(s.indexOf(".")+1));
-		selectedColumns2.replaceAll(s -> s.substring(s.indexOf(".")+1));
+			if (data == null || !cell.hasParents() || cell.getParents().size() != 2 || data.size() % 2 != 0 || cell.hasParentErrors()) {
+	
+				throw new Exception();
+				
+			}
+	
+			Cell parentCell1 = cell.getParents().get(0);
+			Cell parentCell2 = cell.getParents().get(1);
+			
+			Operator table1 = parentCell1.getOperator();
+			Operator table2 = parentCell2.getOperator();
+			
+			List<String> selectedColumns1 = new ArrayList<>(data.subList(0, data.size()/2));
+			List<String> selectedColumns2 = new ArrayList<>(data.subList(data.size()/2, data.size()));
+	
+			selectedColumns1.replaceAll(s -> parentCell1.getSourceTableName(s) + "." + s);
+			selectedColumns2.replaceAll(s -> parentCell2.getSourceTableName(s) + "." + s);
+			
+			Operator operator = new UnionOperator(table1, table2, selectedColumns1, selectedColumns2);
+	
+			cell.setOperator(operator);
+	
+			selectedColumns1.replaceAll(s -> s.substring(s.indexOf(".")+1));
+			selectedColumns2.replaceAll(s -> s.substring(s.indexOf(".")+1));
+			
+			cell.setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
+			
+			cell.setName("U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());    
+			
+			cell.setData(data);
+			
+	        ActionClass.getGraph().getModel().setValue(jCell,"U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());
 		
-		cell.setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
-		
-		cell.setName("U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());    
-		
-		cell.setData(data);
-		
-        ActionClass.getGraph().getModel().setValue(jCell,"U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());
-		
+			cell.removeError();
+	        
+		}catch(Exception e) {
+			
+			cell.setError();
+			
+		}
+        
         dispose();
 		
 	}

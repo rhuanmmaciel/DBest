@@ -5,23 +5,22 @@ import java.util.List;
 
 import entities.Cell;
 import entities.OperationCell;
-import entities.TableCell;
 
 public class FindRoots {
 
-	public static List<TableCell> getRoots(Cell cell){
+	public static List<Cell> getRoots(Cell cell){
 			
-		List<TableCell> parents = new ArrayList<>();
+		List<Cell> parents = new ArrayList<>();
 		getSourcesRecursive(cell, parents);
 		
 		return parents;
 	}
 	
-    public static void getSourcesRecursive(Cell cell, List<TableCell> sources) {
+    public static void getSourcesRecursive(Cell cell, List<Cell> sources) {
     	
-        if (cell instanceof TableCell) {
+        if (!cell.hasParents()) {
         	
-            sources.add((TableCell)cell);
+            sources.add(cell);
             
         } else {
         	

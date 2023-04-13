@@ -45,6 +45,10 @@ public class FormFrameJoin extends JDialog implements ActionListener, IOperator 
 
 	private AtomicReference<Boolean> exitRef;
 
+	public FormFrameJoin() {
+		
+	}
+	
 	public FormFrameJoin(mxCell jCell, AtomicReference<Boolean> exitRef) {
 
 		super((Window) null);
@@ -164,34 +168,46 @@ public class FormFrameJoin extends JDialog implements ActionListener, IOperator 
 	}
 
 	public void executeOperation(mxCell jCell, List<String> data) {
-
-		if (data == null)
-			throw new RuntimeException("A lista data não pode ser nula");
-		if (data.size() != 2)
-			throw new RuntimeException("É necessário haver apenas duas colunas para a comparação Join");
-
-		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
-		Cell parentCell1 = cell.getParents().get(0);
-		Cell parentCell2 = cell.getParents().get(1);
-
-		Operator table_1 = parentCell1.getOperator();
-		Operator table_2 = parentCell2.getOperator();
-		String item1 = data.get(0);
-		String item2 = data.get(1);
-
-		Operator operator = new BlockNestedLoopJoin(table_1, table_2, (t1, t2) -> {
-			return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2
-					.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
-		});
-
-		cell.setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()),
-				operator.getContentInfo().values());
-		cell.setOperator(operator);
-		cell.setName("|X|   " + item1 + " = " + item2);
-		cell.setData(data);
 		
-		ActionClass.getGraph().getModel().setValue(jCell, "|X|   " + item1 + " = " + item2);
+		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
+		
+		try {
+		
+			if (data == null || data.size() != 2 || !cell.hasParents() || cell.getParents().size() != 2 || cell.hasParentErrors()) {
+				
+				throw new Exception();
+				
+			}
+			
+			Cell parentCell1 = cell.getParents().get(0);
+			Cell parentCell2 = cell.getParents().get(1);
+	
+			Operator table_1 = parentCell1.getOperator();
+			Operator table_2 = parentCell2.getOperator();
+			String item1 = data.get(0);
+			String item2 = data.get(1);
+	
+			Operator operator = new BlockNestedLoopJoin(table_1, table_2, (t1, t2) -> {
+				return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2
+						.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
+			});
+	
+			cell.setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()),
+					operator.getContentInfo().values());
+			cell.setOperator(operator);
+			cell.setName("|X|   " + item1 + " = " + item2);
+			cell.setData(data);
+			
+			ActionClass.getGraph().getModel().setValue(jCell, "|X|   " + item1 + " = " + item2);
+			
+			cell.removeError();
 
+		}catch(Exception e) {
+			
+			cell.setError();
+			
+		}
+		
 		dispose();
 
 	}

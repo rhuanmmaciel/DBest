@@ -425,6 +425,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		}else if(selectedColumnType == ColumnDataType.FLOAT) {
 			
 			tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Ponto Flutuante"));
+			tabbedPane.setEnabledAt(1, true);
 			tabbedPane.setEnabledAt(2, true);
 			
 		}else if(selectedColumnType == ColumnDataType.CHARACTER) {
@@ -530,7 +531,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		List<Object> randomItems = null;
 		int rowsCount = model.getRowCount();
 		
-		if(type == ColumnDataType.INTEGER || type == ColumnDataType.NONE) {
+		if(type == ColumnDataType.INTEGER || type == ColumnDataType.NONE || type == ColumnDataType.STRING || type == ColumnDataType.FLOAT) {
 			
 			if(rdbtnIntRandom.isSelected()) {
 				
@@ -595,7 +596,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 			
 		}
 		
-		if(type == ColumnDataType.FLOAT || (type == ColumnDataType.NONE && randomItems == null)) {
+		if(type == ColumnDataType.FLOAT || ((type == ColumnDataType.NONE || type == ColumnDataType.STRING) && randomItems == null)) {
 			
 			if(rdbtnFloatRandom.isSelected()) {
 				
@@ -607,7 +608,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 			
 		}
 		
-		if(type == ColumnDataType.CHARACTER || (type == ColumnDataType.NONE && randomItems == null)) {
+		if(type == ColumnDataType.CHARACTER || ((type == ColumnDataType.NONE || type == ColumnDataType.STRING) && randomItems == null)) {
 			
 			if(rdbtnCharRandom.isSelected()) {
 				
@@ -620,7 +621,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 			
 		}
 		
-		if(type == ColumnDataType.BOOLEAN || (type == ColumnDataType.NONE && randomItems == null)) {
+		if(type == ColumnDataType.BOOLEAN || ((type == ColumnDataType.NONE || type == ColumnDataType.STRING) && randomItems == null)) {
 		
 			if(rdbtnBoolRandom.isSelected()) {
 				

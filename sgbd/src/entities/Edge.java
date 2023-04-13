@@ -23,6 +23,8 @@ public class Edge {
 		Cell cell = cells.get(parent);
 		
 		boolean cellHasTree; 
+		boolean cellHasError = cell.hasError();
+		boolean cellIsParent = cell.hasChild();
 		
 		if(cell instanceof OperationCell) {
 
@@ -34,12 +36,18 @@ public class Edge {
 			
 		}
 
+		if(cellIsParent)
+			JOptionPane.showMessageDialog(null, "Essa célula já possui filho", "Erro", JOptionPane.ERROR_MESSAGE);
 		
-		if (!cell.hasChild() && cellHasTree)
+		else if(!cellHasTree)
+			JOptionPane.showMessageDialog(null, "Uma operação vazia não pode se associar a ninguém", "Erro", JOptionPane.ERROR_MESSAGE);
+	
+		else if(cellHasError)
+			JOptionPane.showMessageDialog(null, "Não é possível associar uma operação com erros a outra", "Erro", JOptionPane.ERROR_MESSAGE);
+	
+		else
 			this.parent = parent;
 		
-		if(!cellHasTree)
-			JOptionPane.showMessageDialog(null, "Uma operação vazia não pode se associar a ninguém", "Erro", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public void addChild(mxCell child, Map<mxCell, Cell> cells) {
@@ -73,11 +81,11 @@ public class Edge {
 		if (!isOperatorCell)
 			JOptionPane.showMessageDialog(null, "Uma tabela não pode ser associada a outra", "Erro", JOptionPane.ERROR_MESSAGE);
 
-		if (hasEnoughParents && ((OperationCell)cell).getArity() == OperationArity.UNARY)
+		else if (hasEnoughParents && ((OperationCell)cell).getArity() == OperationArity.UNARY)
 			JOptionPane.showMessageDialog(null, "Não é possível associar duas tabelas a uma operação unária", "Erro",
 					JOptionPane.ERROR_MESSAGE);
 
-		if (hasEnoughParents && ((OperationCell)cell).getArity() == OperationArity.BINARY)
+		else if (hasEnoughParents && ((OperationCell)cell).getArity() == OperationArity.BINARY)
 			JOptionPane.showMessageDialog(null, "Não é possível associar três tabelas a uma operação binária", "Erro",
 					JOptionPane.ERROR_MESSAGE);
 	

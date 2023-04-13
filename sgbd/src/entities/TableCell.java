@@ -50,6 +50,14 @@ public class TableCell extends Cell{
 		
 	}
 	
+	public boolean hasParents() {
+		return false;
+	}
+	
+	public boolean hasError() {
+		return false;
+	}
+	
 	public void setColumns() {
 		
 		List<sgbd.prototype.Column> prototypeColumns = table.getHeader().getPrototype().getColumns();
@@ -87,6 +95,11 @@ public class TableCell extends Cell{
 		
 		setColumns(columns);
 		
+	}
+
+	@Override
+	public boolean hasParentErrors() {
+		return false;
 	}
 	
 }

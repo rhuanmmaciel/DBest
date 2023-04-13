@@ -48,6 +48,12 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 		mxGraphComponent newGraphComponent = new mxGraphComponent(newGraph);
 
 		getContentPane().add(newGraphComponent, BorderLayout.CENTER);
+
+		newGraph.setAutoSizeCells(false);
+		newGraph.setCellsResizable(false);
+		newGraph.setAutoOrigin(false);
+		newGraph.setCellsEditable(false);
+		newGraph.setAllowDanglingEdges(false);
 		
 		this.graph = new mxGraphComponent(newGraph);
 		this.jCell = jCell;
@@ -109,7 +115,7 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 		
 		jCell = (mxCell) graph.getCellAt(e.getX(), e.getY());
 		
-		if(jCell != null) {
+		if(jCell != null && cells.get(jCell) != null) {
 			
 			cell.set(cells.get(jCell));
 	

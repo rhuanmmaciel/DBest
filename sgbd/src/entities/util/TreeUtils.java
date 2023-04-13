@@ -7,28 +7,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.mxgraph.model.mxCell;
-
+import controller.ActionClass;
 import entities.Cell;
-import entities.TableCell;
+import entities.OperationCell;
 import entities.Tree;
 
 public class TreeUtils {
 
-	public static void updateTree(Map<Integer, Tree> trees, Map<mxCell, Cell> cells) {
+	public static void identifyTrees(Map<Integer, Tree> trees) {
 		
 	    trees.clear();
 
-	    Set<TableCell> allRoots = new HashSet<>();
-	    List<Set<TableCell>> treeRoots = new ArrayList<>();
+	    Set<Cell> allRoots = new HashSet<>();
+	    List<Set<Cell>> treeRoots = new ArrayList<>();
 	    
 	    
-	    for(Cell cell : cells.values()) {
+	    for(Cell cell : ActionClass.getCells().values()) {
 	    	
 	    	treeRoots.add(new HashSet<>(cell.getAllSourceTables()));
-	    	for(TableCell root : cell.getAllSourceTables()) {
+	    	
+	    	if(!cell.hasParents()) {
 	    		
-	    		if(root.hasChild()) allRoots.add(root);
+	    		allRoots.add(cell);
 	    		
 	    	}
 	    	
@@ -40,12 +40,12 @@ public class TreeUtils {
 	    	int[] indexes = new int[2]; 
 	    	allListVerified = true;
 	    	
-	    	for(Set<TableCell> roots : treeRoots) {
+	    	for(Set<Cell> roots : treeRoots) {
 	    		
-	    		List<Set<TableCell>> treeRoots2 = new ArrayList<>(treeRoots);
+	    		List<Set<Cell>> treeRoots2 = new ArrayList<>(treeRoots);
 	    		treeRoots2.remove(roots);
 	    		
-	    		for(Set<TableCell> roots2 : treeRoots2) {
+	    		for(Set<Cell> roots2 : treeRoots2) {
 	    			
 	    			if(!Collections.disjoint(roots, roots2)) {
 	    				
@@ -71,12 +71,48 @@ public class TreeUtils {
 	    }
 	    
 	    int i = 0;
-	    for(Set<TableCell> roots : treeRoots) {
+	    for(Set<Cell> roots : treeRoots) {
 	    	
 	    	trees.put(i, new Tree(i++, roots));
 	    	
 	    }
+	    
+    	for(Tree tree : trees.values()) {
+    		recalculateContent(tree);
+    	}
 
+	}
+	
+	public static void recalculateContent(Tree tree) {
+		
+		List<Cell> level = tree.getRoots();
+		
+		while(!level.isEmpty()) {
+			
+			Set<Cell> children = new HashSet<>();
+			
+			for(Cell cell : level) {
+				
+				if(cell instanceof OperationCell) {
+					
+					((OperationCell)cell).updateOperation();
+				
+				}
+				
+				if(cell.hasChild()) {
+					
+					children.add(cell.getChild());
+					
+				}
+				
+			}
+			
+			level.clear();
+			level.addAll(children);
+			
+		}
+		
+		
 	}
 	
 }

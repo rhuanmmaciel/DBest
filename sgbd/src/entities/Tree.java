@@ -7,9 +7,9 @@ import java.util.Set;
 public class Tree {
 
 	private int index;
-	private List<TableCell> roots;
+	private List<Cell> roots;
 	
-	public Tree(int index, Set<TableCell> roots) {
+	public Tree(int index, Set<Cell> roots) {
 		
 		this.index = index;
 
@@ -19,7 +19,7 @@ public class Tree {
 		
 	}
 
-	public List<TableCell> getRoots() {
+	public List<Cell> getRoots() {
 		return roots;
 	}
 
@@ -27,7 +27,7 @@ public class Tree {
 		this.roots.addAll(roots);
 	}
 	
-	public void addRoot(TableCell root) {
+	public void addRoot(Cell root) {
 		this.roots.add(root);
 	}
 
@@ -42,7 +42,7 @@ public class Tree {
 		
 		text.append(index+": ");
 		
-		for(TableCell cell : roots) {
+		for(Cell cell : roots) {
 			text.append(cell.getName() + ", ");
 		}
 		

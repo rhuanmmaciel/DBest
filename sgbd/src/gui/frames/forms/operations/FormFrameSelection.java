@@ -73,6 +73,10 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 	private AtomicReference<Boolean> exitRef;
 
+	public FormFrameSelection() {
+		
+	}
+	
 	public FormFrameSelection(mxCell jCell, AtomicReference<Boolean> exitRef) {
 
 		super((Window) null);
@@ -352,75 +356,87 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 	}
 
 	public void executeOperation(mxCell jCell, List<String> data) {
-
-		if (data == null)
-			throw new RuntimeException("A lista data não pode ser nula");
-		if (data.size() != 1)
-			throw new RuntimeException("A lista data não pode ter tamanho diferente de 1");
-
-		Evaluator evaluator = new Evaluator();
 		
 		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
-		Cell parentCell = cell.getParents().get(0);
-
-		String expression = data.get(0);
-		String[] formattedInput = formatString(expression).split(" ");
-
-		Operator operator = new FilterOperator(parentCell.getOperator(), (Tuple t) -> {
-
-			for (String element : formattedInput) {
-
-				if (isColumn(element)) {
-
-					String columnName = element.substring(2, element.length() - 1);
-
-					ColumnDataType type = parentCell.getColumns().stream()
-							.filter(col -> col.getName().equals(columnName)).findFirst().get().getType();
-
-					String inf;
-
-					if (type == ColumnDataType.INTEGER) {
-
-						inf = String
-								.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName));
-
-					} else if (type == ColumnDataType.FLOAT) {
-
-						inf = String
-								.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getFloat(columnName));
-
-					} else {
-
-						inf = "'" + t.getContent(parentCell.getSourceTableName(columnName)).getString(columnName) + "'";
-
-					}
-
-					if (data == null)
-						return false;
-
-					evaluator.putVariable(columnName, inf);
-
-				}
-			}
-
-			try {
-
-				return evaluator.evaluate(formatString(expression)).equals("1.0");
-
-			} catch (EvaluationException e) {
-
-				return false;
-
-			}
-
-		});
-
-		cell.setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
-		cell.setOperator(operator);
-		cell.setName("σ  " + expression);
-		cell.setData(data);
 		
-		ActionClass.getGraph().getModel().setValue(jCell, "σ  " + expression);
+		try {
+			
+			if (data == null || data.size() != 1 || !cell.hasParents() || cell.getParents().size() != 1 || cell.hasParentErrors()) {
+				
+				throw new Exception();
+			
+			}
+	
+			Evaluator evaluator = new Evaluator();
+			
+			Cell parentCell = cell.getParents().get(0);
+	
+			String expression = data.get(0);
+			String[] formattedInput = formatString(expression).split(" ");
+	
+			Operator operator = new FilterOperator(parentCell.getOperator(), (Tuple t) -> {
+	
+				for (String element : formattedInput) {
+	
+					if (isColumn(element)) {
+	
+						String columnName = element.substring(2, element.length() - 1);
+	
+						ColumnDataType type = parentCell.getColumns().stream()
+								.filter(col -> col.getName().equals(columnName)).findFirst().get().getType();
+	
+						String inf;
+	
+						if (type == ColumnDataType.INTEGER) {
+	
+							inf = String
+									.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName));
+	 
+						} else if (type == ColumnDataType.FLOAT) {
+	
+							inf = String
+									.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getFloat(columnName));
+	
+						} else {
+	
+							inf = "'" + t.getContent(parentCell.getSourceTableName(columnName)).getString(columnName) + "'";
+	
+						}
+	
+						if (data == null)
+							return false;
+	
+						evaluator.putVariable(columnName, inf);
+	
+					}
+				}
+	
+				try {
+	
+					return evaluator.evaluate(formatString(expression)).equals("1.0");
+	
+				} catch (EvaluationException e) {
+	
+					return false;
+	
+				}
+				
+			});
+	
+			cell.setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
+			cell.setOperator(operator);
+			cell.setName("σ  " + expression);
+			cell.setData(data);
+			
+			ActionClass.getGraph().getModel().setValue(jCell, "σ  " + expression);
+
+			cell.removeError();
+			
+		}catch(Exception e) {
+			
+			cell.setError();
+			
+		}
 
 		dispose();
 
@@ -438,8 +454,9 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		Pattern pattern = Pattern.compile("[(|)|&|\\|]");
 		Matcher matcher = pattern.matcher(textArea.getText());
 		if (!matcher.find()) {
-			// Input contains no operators or parentheses
+
 			formattedInput[0] = "#¨#$¨%$&$%";
+		
 		}
 
 		for (String element : formattedInput) {
