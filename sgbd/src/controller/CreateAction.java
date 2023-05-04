@@ -1,5 +1,7 @@
 package controller;
 
+import com.mxgraph.model.mxCell;
+
 import entities.TableCell;
 import enums.OperationType;
 
@@ -49,18 +51,33 @@ public class CreateAction {
 	public static class CreateOperationAction extends CreateCellAction{
 
 		private OperationType type;
+		private mxCell parent;
 
 		public CreateOperationAction(ActionType action, String name, String style, OperationType type) {
 
 			super(action, name, style);
 			this.type = type;
+			parent = null;
 
 		}
 
 		public OperationType getOperationType() {
 			return type;
 		}
-
+		
+		public void setParent(mxCell parent) {
+			this.parent = parent;
+		}
+		
+		public mxCell getParent() {
+			
+			if(hasParent()) return parent;
+			return null;
+		}
+		
+		public boolean hasParent() {
+			return parent != null;
+		}
 	
 	}
 	

@@ -8,7 +8,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -29,6 +28,7 @@ import com.mxgraph.model.mxCell;
 import controller.ActionClass;
 import entities.Cell;
 import entities.OperationCell;
+import exceptions.TreeException;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.table.Table;
@@ -51,15 +51,14 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 	private Cell parentCell;
 	private mxCell jCell;
 
-	private AtomicReference<Boolean> exitReference;
 	private JButton btnCancel;
 	private JButton btnAddAll;
 
 	public FormFrameProjection() {
-		
+
 	}
-	
-	public FormFrameProjection(mxCell jCell, AtomicReference<Boolean> exitReference) {
+
+	public FormFrameProjection(mxCell jCell) {
 
 		super((Window) null);
 		setModal(true);
@@ -68,7 +67,6 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 		this.cell = (OperationCell) ActionClass.getCells().get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
-		this.exitReference = exitReference;
 
 		initializeGUI();
 
@@ -182,7 +180,6 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 
 			public void windowClosing(WindowEvent e) {
 
-				exitReference.set(true);
 				dispose();
 
 			}
@@ -249,7 +246,6 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 
 		} else if (e.getSource() == btnCancel) {
 
-			exitReference.set(true);
 			dispose();
 
 		} else if (e.getSource() == btnAddAll) {
@@ -269,43 +265,44 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 
 		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
 
-		try {
-		
-			if (data == null || !cell.hasParents() || cell.getParents().size() != 1 || cell.hasParentErrors()) {
-	
-				throw new Exception();
-	
-			}
-	
-			Cell parentCell = cell.getParents().get(0);
+		try {	
 			
+			if (data == null || !cell.hasParents() || cell.getParents().size() != 1 || cell.hasParentErrors()
+					|| !cell.getParents().get(0).getColumnsName().containsAll(data)) {
+
+				throw new TreeException();
+
+			}
+
+			Cell parentCell = cell.getParents().get(0);
+
 			List<String> aux = parentCell.getColumnsName();
 			aux.removeAll(data);
-	
+
 			Operator operator = parentCell.getOperator();
-	
+
 			for (Table table : parentCell.getOperator().getSources()) {
-	
+
 				operator = new FilterColumnsOperator(operator, table.getTableName(), aux);
-	
+
 			}
-	
+
 			cell.setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
-	
+
 			cell.setOperator(operator);
-	
+
 			cell.setName("π  " + data.toString());
-	
+
 			cell.setData(data);
-			
-			ActionClass.getGraph().getModel().setValue(jCell, "π  " + data.toString());
 			
 			cell.removeError();
 
-		}catch(Exception e) {
-			
+			ActionClass.getGraph().getModel().setValue(jCell, "π  " + data.toString());
+
+		} catch (TreeException e) {
+
 			cell.setError();
-			
+
 		}
 		
 		dispose();

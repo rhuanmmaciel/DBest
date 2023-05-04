@@ -44,7 +44,7 @@ public class FormFrameRename extends JDialog implements ActionListener, IOperato
 	private Cell parentCell;
 	private mxCell jCell;
 
-	public FormFrameRename(mxCell jCell, AtomicReference<Boolean> exitReference) {
+	public FormFrameRename(mxCell jCell) {
 
 		super((Window) null);
 		setModal(true);

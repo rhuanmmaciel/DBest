@@ -1,7 +1,7 @@
 package entities.util;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,14 +19,14 @@ public class TableFormat {
 	    aux.close();
 	    aux.open();
 
-	    Set<String> possibleKeys = new HashSet<>(); 
-	    Map<Integer, Map<String, String>> rows = new HashMap<>();
+	    Set<String> possibleKeys = new LinkedHashSet<>(); 
+	    Map<Integer, Map<String, String>> rows = new LinkedHashMap<>();
 	    
         for(Map.Entry<String, List<String>> content: aux.getContentInfo().entrySet()){
             for(String col:content.getValue()){
             	
             	possibleKeys.add(col);
-            	
+
             }
         }
 
@@ -36,7 +36,7 @@ public class TableFormat {
 
 	    	Tuple t = aux.next();
 	    	
-	        Map<String, String> row = new HashMap<>();
+	        Map<String, String> row = new LinkedHashMap<>();
 
 	        for (Map.Entry<String, ComplexRowData> line : t) {
 	            for (Map.Entry<String, byte[]> data : line.getValue()) {
@@ -51,8 +51,9 @@ public class TableFormat {
 	                    case "string":
 	                    default:
 	                        row.put(data.getKey(), line.getValue().getString(data.getKey()));
-            	
 	            	}
+	            	
+	            	
 	            	
 	            }
 	        }
@@ -69,9 +70,27 @@ public class TableFormat {
 	        }
 	    }
 
-	    aux.close();
+	    Map<Integer, Map<String, String>> rowsInOrder = new LinkedHashMap<>();
 	    
-	    return rows;
+	    for(Map.Entry<Integer, Map<String, String>> row : rows.entrySet()) {
+	    	
+	    	Map<String, String> newRow = new LinkedHashMap<>();
+	    	for(String key : possibleKeys) {
+	    		
+	    		if(row.getValue().containsKey(key)) {
+	    			
+	    			newRow.put(key, row.getValue().get(key));
+	    			
+	    		}
+	    		
+	    	}
+	    	rowsInOrder.put(row.getKey(), newRow);
+	    	
+	    }
+	    
+	    aux.close();
+	    	
+	    return rowsInOrder;
 	
 	}
 

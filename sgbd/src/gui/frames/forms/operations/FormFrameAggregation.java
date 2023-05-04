@@ -36,7 +36,7 @@ public class FormFrameAggregation extends JDialog implements ActionListener, IOp
 	private mxCell jCell;
 	private List<String> columnsList;
 
-	public FormFrameAggregation(mxCell jCell, AtomicReference<Boolean> exitReference) {
+	public FormFrameAggregation(mxCell jCell) {
 
 		super((Window) null);
 		setModal(true);

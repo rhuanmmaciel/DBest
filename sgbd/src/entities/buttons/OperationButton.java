@@ -15,11 +15,13 @@ import controller.CreateAction.CurrentAction;
 public class OperationButton extends Button{
 
 	private JPanel typePanel;
+	private String style;
 	
 	public OperationButton(mxStylesheet stylesheet, String name, String style, ActionListener listener, JPanel panel,
 			 CurrentAction action) {
 
 		super(name, listener, action);
+		this.style = style;
 		getButton().setBounds(600, 300, 100, 50);
 		typePanel = new JPanel();
 		typePanel.add(getButton());
@@ -30,6 +32,10 @@ public class OperationButton extends Button{
 	
 	public JPanel getPanel() {
 		return typePanel;
+	}
+	
+	public String getStyle() {
+		return style;
 	}
 	
 	private Hashtable<String, Object> createStyle() {

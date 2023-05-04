@@ -1,11 +1,10 @@
 package entities;
 
-import java.util.Map;
-
 import javax.swing.JOptionPane;
 
 import com.mxgraph.model.mxCell;
 
+import controller.ActionClass;
 import enums.OperationArity;
 
 public class Edge {
@@ -18,9 +17,9 @@ public class Edge {
 		child = null;
 	}
 
-	public void addParent(mxCell parent, Map<mxCell, Cell> cells) {
+	public void addParent(mxCell parent) {
 
-		Cell cell = cells.get(parent);
+		Cell cell = ActionClass.getCells().get(parent);
 		
 		boolean cellHasTree; 
 		boolean cellHasError = cell.hasError();
@@ -50,9 +49,9 @@ public class Edge {
 		
 	}
 
-	public void addChild(mxCell child, Map<mxCell, Cell> cells) {
+	public void addChild(mxCell child) {
 
-		Cell cell = cells.get(child);
+		Cell cell = ActionClass.getCells().get(child);
 
 		boolean isOperatorCell = !(cell instanceof TableCell);
 		boolean hasEnoughParents;
@@ -124,6 +123,11 @@ public class Edge {
 
 		return parent;
 
+	}
+	
+	@Override
+	public String toString() {
+		return parent + " " + child;
 	}
 
 }

@@ -7,7 +7,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -24,6 +23,7 @@ import com.mxgraph.model.mxCell;
 import controller.ActionClass;
 import entities.Cell;
 import entities.OperationCell;
+import exceptions.TreeException;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
 
@@ -43,13 +43,11 @@ public class FormFrameJoin extends JDialog implements ActionListener, IOperator 
 	private mxCell jCell;
 	private JButton btnCancel;
 
-	private AtomicReference<Boolean> exitRef;
-
 	public FormFrameJoin() {
-		
+
 	}
-	
-	public FormFrameJoin(mxCell jCell, AtomicReference<Boolean> exitRef) {
+
+	public FormFrameJoin(mxCell jCell) {
 
 		super((Window) null);
 		setModal(true);
@@ -59,7 +57,6 @@ public class FormFrameJoin extends JDialog implements ActionListener, IOperator 
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
-		this.exitRef = exitRef;
 
 		initializeGUI();
 
@@ -86,9 +83,9 @@ public class FormFrameJoin extends JDialog implements ActionListener, IOperator 
 
 		comboBoxColumns2 = new JComboBox(columnsList_2.toArray(new String[0]));
 
-		JLabel lblNewLabel = new JLabel(parentCell1.getName());
+		JLabel lblNewLabel = new JLabel(" ");
 
-		JLabel lblNewLabel_1 = new JLabel(parentCell2.getName());
+		JLabel lblNewLabel_1 = new JLabel(" ");
 
 		JLabel lblNewLabel_2 = new JLabel("=");
 
@@ -141,7 +138,6 @@ public class FormFrameJoin extends JDialog implements ActionListener, IOperator 
 
 			public void windowClosing(WindowEvent e) {
 
-				exitRef.set(true);
 				dispose();
 
 			}
@@ -161,53 +157,54 @@ public class FormFrameJoin extends JDialog implements ActionListener, IOperator 
 
 		} else if (e.getSource() == btnCancel) {
 
-			exitRef.set(true);
 			dispose();
 
 		}
 	}
 
 	public void executeOperation(mxCell jCell, List<String> data) {
-		
+
 		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
-		
+
 		try {
-		
-			if (data == null || data.size() != 2 || !cell.hasParents() || cell.getParents().size() != 2 || cell.hasParentErrors()) {
-				
-				throw new Exception();
-				
+
+			if (data == null || data.size() != 2 || !cell.hasParents() || cell.getParents().size() != 2
+					|| cell.hasParentErrors() || (!cell.getParents().get(0).getColumnsName().contains(data.get(0))
+							&& !cell.getParents().get(1).getColumnsName().contains(data.get(1)))) {
+
+				throw new TreeException();
+
 			}
-			
+
 			Cell parentCell1 = cell.getParents().get(0);
 			Cell parentCell2 = cell.getParents().get(1);
-	
+
 			Operator table_1 = parentCell1.getOperator();
 			Operator table_2 = parentCell2.getOperator();
 			String item1 = data.get(0);
 			String item2 = data.get(1);
-	
+
 			Operator operator = new BlockNestedLoopJoin(table_1, table_2, (t1, t2) -> {
 				return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2
 						.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
 			});
-	
+
 			cell.setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()),
 					operator.getContentInfo().values());
 			cell.setOperator(operator);
 			cell.setName("|X|   " + item1 + " = " + item2);
 			cell.setData(data);
-			
+
 			ActionClass.getGraph().getModel().setValue(jCell, "|X|   " + item1 + " = " + item2);
-			
+
 			cell.removeError();
 
-		}catch(Exception e) {
-			
+		} catch (TreeException e) {
+
 			cell.setError();
-			
+
 		}
-		
+
 		dispose();
 
 	}

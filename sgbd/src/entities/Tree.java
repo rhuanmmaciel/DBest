@@ -1,34 +1,53 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import controller.ActionClass;
 
 public class Tree {
 
 	private int index;
-	private List<Cell> roots;
 	
-	public Tree(int index, Set<Cell> roots) {
+	{
 		
-		this.index = index;
-
-		this.roots = new ArrayList<>();
+		index = 0;
 		
-		if(roots != null && !roots.isEmpty()) this.roots.addAll(roots);
+		while(ActionClass.getTrees().containsKey(index)) {
+			index++;
+		}
+			
+		ActionClass.getTrees().put(index, this);
 		
 	}
-
+	
+	public Tree() {
+				
+	}
+	
 	public List<Cell> getRoots() {
+		
+		List<Cell> roots = new ArrayList<>();
+		
+		for(Cell cell : getCells()) if(!cell.hasParents()) roots.add(cell);
+		
 		return roots;
 	}
-
-	public void addRoots(List<TableCell> roots) {
-		this.roots.addAll(roots);
-	}
 	
-	public void addRoot(Cell root) {
-		this.roots.add(root);
+	public Set<Cell> getCells(){
+		
+		Set<Cell> cells = new HashSet<>();
+		
+		for(Cell cell : ActionClass.getCells().values()) {
+			
+			if(cell.getTree() == this) cells.add(cell);
+			
+		}
+		
+		return cells;
+		
 	}
 
 	public int getIndex() {
@@ -42,7 +61,7 @@ public class Tree {
 		
 		text.append(index+": ");
 		
-		for(Cell cell : roots) {
+		for(Cell cell : getCells()) {
 			text.append(cell.getName() + ", ");
 		}
 		

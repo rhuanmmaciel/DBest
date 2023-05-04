@@ -8,6 +8,7 @@ import com.mxgraph.model.mxCell;
 
 import entities.util.FindRoots;
 import entities.util.TableFormat;
+import entities.util.TreeUtils;
 import sgbd.query.Operator;
 
 public abstract class Cell {
@@ -20,6 +21,7 @@ public abstract class Cell {
 	private OperationCell child;
 	private int length;
 	private int width;
+	private Tree tree;
 	protected Map<Integer, Map<String, String>> content;
 	
 	public Cell(String name, String style, mxCell jCell, int length, int width) {
@@ -32,6 +34,23 @@ public abstract class Cell {
 		this.length = length;
 		this.width = width;
 		this.operator = null;
+		this.tree = new Tree();
+		
+	}
+	
+	public Tree getTree() {
+		return tree;
+	}
+	
+	public void setAllNewTree() {
+		
+		TreeUtils.updateTree(this);
+		
+	}
+	
+	public void setNewTree(Tree newTree) {
+		
+		this.tree = newTree;
 		
 	}
 	

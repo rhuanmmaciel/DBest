@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.ImageIcon;
 
@@ -50,8 +49,8 @@ public class OperationCell extends Cell {
 
 		case UNION:
 		case JOIN:
-		case LEFTJOIN:
-		case CARTESIANPRODUCT:
+		case LEFT_JOIN:
+		case CARTESIAN_PRODUCT:
 		case DIFFERENCE:
 			arity = OperationArity.BINARY;
 
@@ -59,15 +58,14 @@ public class OperationCell extends Cell {
 
 	}
 
-	public IOperator editOperation(mxCell jCell, AtomicReference<Boolean> exitReference) {
+	public IOperator editOperation(mxCell jCell) {
 		
 		if(hasForm()) {
 			
 			try {
 				
-				Constructor<? extends IOperator> constructor = form.getDeclaredConstructor(mxCell.class,
-						AtomicReference.class);
-				return constructor.newInstance(jCell, exitReference);
+				Constructor<? extends IOperator> constructor = form.getDeclaredConstructor(mxCell.class);
+				return constructor.newInstance(jCell);
 				
 			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
 					| InvocationTargetException e) {
@@ -143,7 +141,6 @@ public class OperationCell extends Cell {
 
 	public void clearParents() {
 		parents.clear();
-		;
 	}
 
 	public boolean hasParents() {

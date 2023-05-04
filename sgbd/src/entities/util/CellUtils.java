@@ -10,6 +10,7 @@ import com.mxgraph.view.mxGraph;
 import controller.ActionClass;
 import entities.Cell;
 import entities.OperationCell;
+import entities.TableCell;
 import gui.frames.ResultFrame;
 
 public class CellUtils {
@@ -24,10 +25,13 @@ public class CellUtils {
 			Cell cell = cells.get(jCell);
 			
 			if (cell != null) {
-
+				
 				if(cell.hasChild()) {
-
+					
 					cell.getChild().removeParent(cell);
+
+					TreeUtils.recalculateContent(cell.getChild());
+					
 					cell.setChild(null);
 					
 				}
@@ -43,13 +47,20 @@ public class CellUtils {
 					((OperationCell) cell).clearParents();
 
 				}
+				
 			}else {
+				
 				
 				OperationCell child = (OperationCell) cells.get(jCell.getTarget());
 				Cell parent = cells.get(jCell.getSource());
 				
-				child.removeParent(parent);
-				parent.setChild(null);
+				if(parent!=null) {
+					
+					child.removeParent(parent);
+					parent.setChild(null);
+					TreeUtils.recalculateContent(child);
+				
+				}
 				
 			}
 
@@ -65,8 +76,6 @@ public class CellUtils {
 
 			graph.refresh();
 
-			TreeUtils.identifyTrees(ActionClass.getTrees());
-			
 		}
 
 	}
@@ -86,14 +95,13 @@ public class CellUtils {
 		}
 
 		graph.refresh();
-		TreeUtils.identifyTrees(ActionClass.getTrees());
-
+		
 	}
 	
 	public static void showTable(mxCell jCell) {
 		
 		Cell cell = jCell != null ? ActionClass.getCells().get(jCell) : null;
-		if (cell != null) {
+		if (cell != null && (cell instanceof TableCell || ((OperationCell) cell).hasForm())) {
 			
 			if(!cell.hasError()) {
 			

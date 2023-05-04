@@ -11,7 +11,7 @@ import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +35,7 @@ import controller.ActionClass;
 import entities.Cell;
 import entities.OperationCell;
 import enums.ColumnDataType;
+import exceptions.TreeException;
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
 import sgbd.query.Operator;
@@ -71,13 +72,11 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 	private mxCell jCell;
 	private JPanel panel;
 
-	private AtomicReference<Boolean> exitRef;
-
 	public FormFrameSelection() {
 		
 	}
 	
-	public FormFrameSelection(mxCell jCell, AtomicReference<Boolean> exitRef) {
+	public FormFrameSelection(mxCell jCell) {
 
 		super((Window) null);
 		setModal(true);
@@ -86,7 +85,6 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		this.cell = (OperationCell) ActionClass.getCells().get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
-		this.exitRef = exitRef;
 
 		initializeGUI();
 
@@ -270,7 +268,6 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 			public void windowClosing(WindowEvent e) {
 
-				exitRef.set(true);
 				dispose();
 
 			}
@@ -348,7 +345,6 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 		if (e.getSource() == btnCancel) {
 
-			exitRef.set(true);
 			dispose();
 
 		}
@@ -363,7 +359,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 			
 			if (data == null || data.size() != 1 || !cell.hasParents() || cell.getParents().size() != 1 || cell.hasParentErrors()) {
 				
-				throw new Exception();
+				throw new TreeException();
 			
 			}
 	
@@ -432,7 +428,11 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 			cell.removeError();
 			
-		}catch(Exception e) {
+		}catch(TreeException e ) {
+			
+			cell.setError();
+			
+		}catch(NoSuchElementException e){
 			
 			cell.setError();
 			

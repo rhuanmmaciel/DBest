@@ -1,13 +1,13 @@
 package gui.frames.forms.operations;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.mxgraph.model.mxCell;
 
 import controller.ActionClass;
 import entities.Cell;
 import entities.OperationCell;
+import exceptions.TreeException;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
 
@@ -17,7 +17,7 @@ public class CartesianProduct implements IOperator {
 		
 	}
 	
-	public CartesianProduct(mxCell jCell, AtomicReference<Boolean> exitReference) {
+	public CartesianProduct(mxCell jCell) {
 
 		executeOperation(jCell, null);
 
@@ -31,7 +31,7 @@ public class CartesianProduct implements IOperator {
 		
 			if (!cell.hasParents() || cell.getParents().size() != 2 || cell.hasParentErrors()) {
 				
-				throw new Exception();
+				throw new TreeException();
 				
 			}
 			
@@ -54,7 +54,7 @@ public class CartesianProduct implements IOperator {
 			
 			cell.removeError();
 		
-		}catch(Exception e) {
+		}catch(TreeException e) {
 			
 			cell.setError();
 			

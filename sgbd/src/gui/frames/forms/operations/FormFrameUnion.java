@@ -9,7 +9,6 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -31,6 +30,7 @@ import com.mxgraph.model.mxCell;
 import controller.ActionClass;
 import entities.Cell;
 import entities.OperationCell;
+import exceptions.TreeException;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.UnionOperator;
 
@@ -60,13 +60,11 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 	private Cell parentCell2;
 	private mxCell jCell;
 	
-	private AtomicReference<Boolean> exitRef;
-
 	public FormFrameUnion() {
 		
 	}
 	
-	public FormFrameUnion(mxCell jCell, AtomicReference<Boolean> exitRef) {
+	public FormFrameUnion(mxCell jCell) {
 		
 		super((Window)null);
 		setModal(true);
@@ -76,7 +74,6 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
-		this.exitRef = exitRef;
 		
 		initializeGUI();
 
@@ -207,7 +204,6 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 
 			public void windowClosing(WindowEvent e) {
 
-				exitRef.set(true);
 				dispose();
 				
 			}
@@ -276,7 +272,6 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 	        
 		}else if(e.getSource() == btnCancel) {
 			
-			exitRef.set(true);
 			dispose();
 			
 		}
@@ -326,7 +321,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 		
 			if (data == null || !cell.hasParents() || cell.getParents().size() != 2 || data.size() % 2 != 0 || cell.hasParentErrors()) {
 	
-				throw new Exception();
+				throw new TreeException();
 				
 			}
 	
@@ -351,7 +346,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 			
 			cell.setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()), operator.getContentInfo().values());
 			
-			cell.setName("U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());    
+			cell.setName(selectedColumns1.toString() + " U " + selectedColumns2.toString());    
 			
 			cell.setData(data);
 			
@@ -359,7 +354,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 		
 			cell.removeError();
 	        
-		}catch(Exception e) {
+		}catch(TreeException e) {
 			
 			cell.setError();
 			
