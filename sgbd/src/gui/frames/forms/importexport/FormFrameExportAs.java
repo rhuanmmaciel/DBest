@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
-import entities.Cell;
+import entities.cells.Cell;
 import enums.FileType;
 import util.ExportTable;
 

@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import entities.TableCell;
+import entities.cells.TableCell;
 import enums.FileType;
 import util.ImportFile;
 

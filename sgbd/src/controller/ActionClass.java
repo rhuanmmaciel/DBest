@@ -36,20 +36,20 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 
-import controller.CreateAction.CreateOperationAction;
-import controller.CreateAction.CreateTableAction;
-import controller.CreateAction.CurrentAction;
-import controller.CreateAction.CurrentAction.ActionType;
-import entities.Cell;
 import entities.Edge;
-import entities.OperationCell;
-import entities.TableCell;
 import entities.Tree;
+import entities.Action.CreateOperationAction;
+import entities.Action.CreateTableAction;
+import entities.Action.CurrentAction;
+import entities.Action.CurrentAction.ActionType;
 import entities.buttons.Button;
 import entities.buttons.OperationButton;
 import entities.buttons.ToolBarButton;
-import entities.util.CellUtils;
-import entities.util.TreeUtils;
+import entities.cells.Cell;
+import entities.cells.OperationCell;
+import entities.cells.TableCell;
+import entities.utils.CellUtils;
+import entities.utils.TreeUtils;
 import enums.OperationType;
 import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.FormFrameExportTable;
@@ -58,62 +58,57 @@ import gui.frames.forms.importexport.FormFrameImportAs;
 @SuppressWarnings("serial")
 public class ActionClass extends JFrame implements ActionListener, MouseListener, KeyListener, MouseMotionListener {
 
-	private final String selection = "Seleção", selectionSymbol = "σ Seleção", projection = "Projeção",
-			projectionSymbol = "π  Projeção", join = "Junção", joinSymbol = "|X| Junção",
-			leftJoin = "Junção à esquerda", leftJoinSymbol = "⟕ Junção à esquerda",
-			rightJoin = "Junção à direita", rightJoinSymbol = "Junção à direita",
-			cartesianProduct = "Produto Cartesiano", cartesianProductSymbol = "✕  Produto Cartesiano", union = "União",
-			unionSymbol = "∪  União";
-
-	private mxGraph graph;
-	private static mxGraphComponent graphComponent;
+	private static mxGraph graph = new mxGraph();;
+	private static mxGraphComponent graphComponent = new mxGraphComponent(graph);
+	private static Map<mxCell, Cell> cells = new HashMap<>();
+	private static Map<Integer, Tree> trees = new HashMap<>();
+	
 	private mxCell jCell;
 
 	private mxCell ghostJCell = null;
 
-	private JPanel containerPanel;
+	private JPanel containerPanel = new JPanel(new GridLayout(7, 1));;
 
 	private AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>();
-	private Edge edge = new Edge();
+	private AtomicReference<Edge> edgeRef = new AtomicReference<>(new Edge());
 
-	private static Map<mxCell, Cell> cells = new HashMap<>();
-	private static Map<Integer, Tree> trees = new HashMap<>();
 	private Set<Button> buttons = new HashSet<>();
 
 	private AtomicReference<File> lastDirectoryRef = new AtomicReference<>(new File(""));
 
-	private JToolBar toolBar;
+	private JToolBar toolBar = new JToolBar();
 
-	private JPopupMenu popupMenuJCell;
-	private JMenuItem menuItemShow;
-	private JMenuItem menuItemEdit;
-	private JMenuItem menuItemRemove;
+	private JPopupMenu popupMenuJCell = new JPopupMenu();
+	private JMenuItem menuItemShow = new JMenuItem("Mostrar");
+	private JMenuItem menuItemEdit = new JMenuItem("Editar");
+	private JMenuItem menuItemRemove = new JMenuItem("Remover");
 
-	private JMenu menuItemOperations;
-	private JMenuItem menuItemSelection;
-	private JMenuItem menuItemProjection;
-	private JMenuItem menuItemJoin;
-	private JMenuItem menuItemLeftJoin;
-	private JMenuItem menuItemRightJoin;
-	private JMenuItem menuItemCartesianProduct;
-	private JMenuItem menuItemUnion;
+	private JMenu menuItemOperations = new JMenu("Operações");
+	private JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.getName());
+	private JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.getName());
+	private JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.getName());
+	private JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.getName());
+	private JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.getName());
+	private JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getName());
+	private JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getName());
 
 	private CreateOperationAction projectionOperation = new CreateOperationAction(
-			CurrentAction.ActionType.OPERATOR_CELL, projectionSymbol, projection, OperationType.PROJECTION);
+			CurrentAction.ActionType.OPERATOR_CELL, OperationType.PROJECTION.getSymbol(),
+			OperationType.PROJECTION.getName(), OperationType.PROJECTION);
 
 	private CreateOperationAction selectionOperation = new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL,
-			selectionSymbol, selection, OperationType.SELECTION);
+			OperationType.SELECTION.getSymbol(), OperationType.SELECTION.getName(), OperationType.SELECTION);
 	private CreateOperationAction joinOperation = new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL,
-			joinSymbol, join, OperationType.JOIN);
+			OperationType.JOIN.getSymbol(), OperationType.JOIN.getName(), OperationType.JOIN);
 	private CreateOperationAction leftJoinOperation = new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL,
-			leftJoinSymbol, leftJoin, OperationType.LEFT_JOIN);
+			OperationType.LEFT_JOIN.getSymbol(), OperationType.LEFT_JOIN.getName(), OperationType.LEFT_JOIN);
 	private CreateOperationAction rightJoinOperation = new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL,
-			rightJoinSymbol, rightJoin, OperationType.RIGHT_JOIN);
+			OperationType.RIGHT_JOIN.getSymbol(), OperationType.RIGHT_JOIN.getName(), OperationType.RIGHT_JOIN);
 	private CreateOperationAction cartesianProductOperation = new CreateOperationAction(
-			CurrentAction.ActionType.OPERATOR_CELL, cartesianProductSymbol, cartesianProduct,
-			OperationType.CARTESIAN_PRODUCT);
+			CurrentAction.ActionType.OPERATOR_CELL, OperationType.CARTESIAN_PRODUCT.getSymbol(),
+			OperationType.CARTESIAN_PRODUCT.getName(), OperationType.CARTESIAN_PRODUCT);
 	private CreateOperationAction unionOperation = new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL,
-			unionSymbol, union, OperationType.UNION);
+			OperationType.UNION.getSymbol(), OperationType.UNION.getName(), OperationType.UNION);
 
 	public ActionClass() {
 		super("DBest: Database Basics for Engaging Students and Teachers");
@@ -125,27 +120,28 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		setSize(1000, 800);
 		setLocationRelativeTo(null);
 
-		graph = new mxGraph();
-		graphComponent = new mxGraphComponent(graph);
 		graphComponent.setConnectable(false);
 
 		graphComponent.setPreferredSize(new Dimension(400, 400));
 		getContentPane().add(graphComponent);
 		graphComponent.getGraphControl().addMouseMotionListener(this);
 
-		containerPanel = new JPanel(new GridLayout(7, 1));
 		mxStylesheet stylesheet = graph.getStylesheet();
 
-		buttons.add(new OperationButton(stylesheet, projectionSymbol, projection, this, containerPanel,
-				projectionOperation));
-		buttons.add(
-				new OperationButton(stylesheet, selectionSymbol, selection, this, containerPanel, selectionOperation));
-		buttons.add(new OperationButton(stylesheet, joinSymbol, join, this, containerPanel, joinOperation));
-		buttons.add(new OperationButton(stylesheet, cartesianProductSymbol, cartesianProduct, this, containerPanel,
-				cartesianProductOperation));
-		buttons.add(new OperationButton(stylesheet, unionSymbol, union, this, containerPanel, unionOperation));
-		buttons.add(new OperationButton(stylesheet, leftJoinSymbol, leftJoin, this, containerPanel, leftJoinOperation));
-		buttons.add(new OperationButton(stylesheet, rightJoinSymbol, rightJoin, this, containerPanel, rightJoinOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.PROJECTION.getSymbol(),
+				OperationType.PROJECTION.getName(), this, containerPanel, projectionOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.SELECTION.getSymbol(),
+				OperationType.SELECTION.getName(), this, containerPanel, selectionOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.JOIN.getSymbol(), OperationType.JOIN.getName(), this,
+				containerPanel, joinOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.CARTESIAN_PRODUCT.getSymbol(),
+				OperationType.CARTESIAN_PRODUCT.getName(), this, containerPanel, cartesianProductOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.UNION.getSymbol(), OperationType.UNION.getName(),
+				this, containerPanel, unionOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.LEFT_JOIN.getSymbol(),
+				OperationType.LEFT_JOIN.getName(), this, containerPanel, leftJoinOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.RIGHT_JOIN.getSymbol(),
+				OperationType.RIGHT_JOIN.getName(), this, containerPanel, rightJoinOperation));
 		/*
 		 * btnTypeAggregation = new TypesButtons(stylesheet, "G Agregação",
 		 * "Agregação");
@@ -156,7 +152,6 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		 *
 		 */
 
-		toolBar = new JToolBar();
 		getContentPane().add(toolBar, BorderLayout.SOUTH);
 
 		buttons.add(new ToolBarButton(" Importar tabela(i) ", this, toolBar,
@@ -195,31 +190,15 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		graph.getModel().endUpdate();
 
-		popupMenuJCell = new JPopupMenu();
-
-		menuItemShow = new JMenuItem("Mostrar");
 		menuItemShow.addActionListener(this);
-
-		menuItemEdit = new JMenuItem("Editar");
 		menuItemEdit.addActionListener(this);
-
-		menuItemRemove = new JMenuItem("Remover");
 		menuItemRemove.addActionListener(this);
-
-		menuItemOperations = new JMenu("Operações");
-		menuItemSelection = new JMenuItem(selection);
 		menuItemSelection.addActionListener(this);
-		menuItemProjection = new JMenuItem(projection);
 		menuItemProjection.addActionListener(this);
-		menuItemJoin = new JMenuItem(join);
 		menuItemJoin.addActionListener(this);
-		menuItemLeftJoin = new JMenuItem(leftJoin);
 		menuItemLeftJoin.addActionListener(this);
-		menuItemRightJoin = new JMenuItem(rightJoin);
-		menuItemRightJoin.addActionListener(this);		
-		menuItemCartesianProduct = new JMenuItem(cartesianProduct);
+		menuItemRightJoin.addActionListener(this);
 		menuItemCartesianProduct.addActionListener(this);
-		menuItemUnion = new JMenuItem(union);
 		menuItemUnion.addActionListener(this);
 
 		menuItemOperations.add(menuItemSelection);
@@ -260,13 +239,13 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		ActionClass.getGraph().removeCells(new Object[] { ghostJCell }, true);
 		ghostJCell = null;
-		
+
 		Button btnClicked = buttons.stream().filter(x -> x.getButton() == e.getSource()).findAny().orElse(null);
 		String style = null;
-		
+
 		if (btnClicked != null) {
-			
-			edge.reset();
+
+			edgeRef.get().reset();
 			btnClicked.setCurrentAction(currentActionRef);
 
 			switch (currentActionRef.get().getType()) {
@@ -293,8 +272,12 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 			}
 
-			if (btnClicked instanceof OperationButton)
+			if (btnClicked instanceof OperationButton) {
+
 				style = ((OperationButton) btnClicked).getStyle();
+				((CreateOperationAction) currentActionRef.get()).setParent(null);
+
+			}
 
 		}
 
@@ -316,37 +299,37 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		} else if (e.getSource() == menuItemSelection) {
 
 			opAction = selectionOperation;
-			style = selection;
+			style = OperationType.SELECTION.getName();
 
 		} else if (e.getSource() == menuItemProjection) {
 
 			opAction = projectionOperation;
-			style = projection;
+			style = OperationType.PROJECTION.getName();
 
 		} else if (e.getSource() == menuItemJoin) {
 
 			opAction = joinOperation;
-			style = join;
+			style = OperationType.JOIN.getName();
 
 		} else if (e.getSource() == menuItemLeftJoin) {
 
 			opAction = leftJoinOperation;
-			style = leftJoin;
+			style = OperationType.LEFT_JOIN.getName();
 
 		} else if (e.getSource() == menuItemRightJoin) {
 
 			opAction = rightJoinOperation;
-			style = rightJoin;
+			style = OperationType.RIGHT_JOIN.getName();
 
 		} else if (e.getSource() == menuItemCartesianProduct) {
 
 			opAction = cartesianProductOperation;
-			style = cartesianProduct;
+			style = OperationType.CARTESIAN_PRODUCT.getName();
 
 		} else if (e.getSource() == menuItemUnion) {
 
 			opAction = unionOperation;
-			style = union;
+			style = OperationType.UNION.getName();
 
 		}
 
@@ -358,13 +341,14 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		}
 
 		if (currentActionRef.get() != null && (opAction != null
-				|| (btnClicked != null && currentActionRef.get().getType() == ActionType.OPERATOR_CELL)))
+				|| (btnClicked != null && currentActionRef.get().getType() == ActionType.OPERATOR_CELL))) {
+
 			ghostJCell = (mxCell) ActionClass.getGraph().insertVertex(
 					(mxCell) ActionClass.getGraph().getDefaultParent(), "ghost", style,
 					MouseInfo.getPointerInfo().getLocation().getX() - graphComponent.getWidth(),
 					MouseInfo.getPointerInfo().getLocation().getY() - graphComponent.getHeight(), 80, 30, style);
-
-		edge.reset();
+		}
+		edgeRef.get().reset();
 
 	}
 
@@ -374,9 +358,9 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		jCell = (mxCell) graphComponent.getCellAt(e.getX(), e.getY());
 
 		if (e.getButton() == MouseEvent.BUTTON3 && cells.get(jCell) != null) {
-			
+
 			Cell cell = cells.get(jCell);
-			
+
 			popupMenuJCell.add(menuItemShow);
 			popupMenuJCell.add(menuItemEdit);
 			popupMenuJCell.add(menuItemOperations);
@@ -389,31 +373,30 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 				popupMenuJCell.remove(menuItemEdit);
 
 			}
-			if (cell instanceof TableCell
-					|| ((OperationCell) cell).getType() == OperationType.CARTESIAN_PRODUCT) {
+			if (cell instanceof TableCell || ((OperationCell) cell).getType() == OperationType.CARTESIAN_PRODUCT) {
 
 				popupMenuJCell.remove(menuItemEdit);
 
 			}
-			if(cell.hasChild()) {
-				
+			if (cell.hasChild()) {
+
 				popupMenuJCell.remove(menuItemOperations);
-				
+
 			}
-			if(cell.hasError()){
-				
+			if (cell.hasError()) {
+
 				popupMenuJCell.remove(menuItemShow);
 				popupMenuJCell.remove(menuItemOperations);
-				
-				if(!cell.hasParents())
+
+				if (!cell.hasParents())
 					popupMenuJCell.remove(menuItemEdit);
-				
+
 			}
 			popupMenuJCell.show(graphComponent.getGraphControl(), e.getX(), e.getY());
 
 		}
 
-		ClickController.clicked(currentActionRef, jCell, edge, e, ghostJCell);
+		ClickController.clicked(currentActionRef, jCell, edgeRef, e, ghostJCell);
 
 		if (cells.get(jCell) != null && e.getClickCount() == 2) {
 
@@ -441,7 +424,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 					tableCell.getStyle(), tableCell));
 
 		} else {
-			
+
 			TreeUtils.deleteTree(tableCell.getTree());
 			currentActionRef.set(null);
 
@@ -463,7 +446,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 					tableCell.getStyle(), tableCell));
 
 		} else {
-			
+
 			TreeUtils.deleteTree(tableCell.getTree());
 			currentActionRef.set(null);
 
@@ -516,10 +499,10 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		} else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 
 			if (jCell != null) {
-			
+
 				CellUtils.deleteCell(jCell);
 				currentActionRef.set(null);
-					
+
 			}
 
 		} else if (e.getKeyCode() == KeyEvent.VK_E) {
@@ -552,9 +535,9 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			System.out.println();
 
 		} else if (e.getKeyCode() == KeyEvent.VK_A) {
-	
-			System.out.println();
-		
+
+			System.out.println(edgeRef);
+
 		}
 	}
 
@@ -564,7 +547,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	}
 
 	public static mxGraph getGraph() {
-		return graphComponent.getGraph();
+		return graph;
 	}
 
 	public static mxGraphComponent getGraphComponent() {

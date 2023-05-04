@@ -22,7 +22,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
 import controller.ActionClass;
-import entities.Cell;
+import entities.cells.Cell;
 import util.ExportTable;
 
 @SuppressWarnings("serial")

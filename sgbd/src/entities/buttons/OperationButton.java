@@ -10,7 +10,7 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxStylesheet;
 
-import controller.CreateAction.CurrentAction;
+import entities.Action.CurrentAction;
 
 public class OperationButton extends Button{
 

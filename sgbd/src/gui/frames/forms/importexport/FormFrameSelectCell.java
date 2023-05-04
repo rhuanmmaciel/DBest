@@ -22,7 +22,7 @@ import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 
-import entities.Cell;
+import entities.cells.Cell;
 
 @SuppressWarnings("serial")
 public class FormFrameSelectCell extends JDialog implements ActionListener, MouseListener{

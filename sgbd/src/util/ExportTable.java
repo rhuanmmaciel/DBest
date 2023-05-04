@@ -21,8 +21,8 @@ import javax.swing.JPanel;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
-import entities.Cell;
-import entities.TableCell;
+import entities.cells.Cell;
+import entities.cells.TableCell;
 import enums.FileType;
 import net.coobird.thumbnailator.Thumbnails;
 

@@ -30,7 +30,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import entities.Column;
-import entities.TableCell;
+import entities.cells.TableCell;
 import util.TableCreator;
 
 @SuppressWarnings("serial")

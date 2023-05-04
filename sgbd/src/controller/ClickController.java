@@ -5,38 +5,40 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.mxgraph.model.mxCell;
 
-import controller.CreateAction.CreateCellAction;
-import controller.CreateAction.CreateOperationAction;
-import controller.CreateAction.CreateTableAction;
-import controller.CreateAction.CurrentAction;
-import entities.Cell;
 import entities.Edge;
-import entities.OperationCell;
-import entities.TableCell;
-import entities.util.TreeUtils;
+import entities.Action.CreateCellAction;
+import entities.Action.CreateOperationAction;
+import entities.Action.CreateTableAction;
+import entities.Action.CurrentAction;
+import entities.cells.Cell;
+import entities.cells.OperationCell;
+import entities.cells.TableCell;
+import entities.utils.TreeUtils;
 import enums.OperationType;
-import gui.frames.forms.operations.CartesianProduct;
-import gui.frames.forms.operations.FormFrameAggregation;
-import gui.frames.forms.operations.FormFrameJoin;
-import gui.frames.forms.operations.FormFrameLeftJoin;
-import gui.frames.forms.operations.FormFrameProjection;
-import gui.frames.forms.operations.FormFrameRename;
-import gui.frames.forms.operations.FormFrameRightJoin;
-import gui.frames.forms.operations.FormFrameSelection;
-import gui.frames.forms.operations.FormFrameUnion;
+import gui.frames.forms.operations.binary.CartesianProduct;
+import gui.frames.forms.operations.binary.FormFrameJoin;
+import gui.frames.forms.operations.binary.FormFrameLeftJoin;
+import gui.frames.forms.operations.binary.FormFrameRightJoin;
+import gui.frames.forms.operations.binary.FormFrameUnion;
+import gui.frames.forms.operations.unary.FormFrameAggregation;
+import gui.frames.forms.operations.unary.FormFrameProjection;
+import gui.frames.forms.operations.unary.FormFrameRename;
+import gui.frames.forms.operations.unary.FormFrameSelection;
 
 public class ClickController {
 
-	public static void clicked(AtomicReference<CurrentAction> currentActionRef, mxCell jCell, Edge edge, MouseEvent e, mxCell ghostJCell) {
-
+	public static void clicked(AtomicReference<CurrentAction> currentActionRef, mxCell jCell, AtomicReference<Edge> edgeRef, MouseEvent e,
+			mxCell ghostJCell) {
+		
 		if (currentActionRef.get() == null)
 			return;
-		
+
 		Cell cell = ActionClass.getCells().get(jCell);
-
+		
 		CurrentAction currentAction = currentActionRef.get();
-
+		
 		CurrentAction.ActionType actionType = currentAction.getType();
+		
 		boolean createTable = actionType == CurrentAction.ActionType.IMPORT_FILE
 				|| actionType == CurrentAction.ActionType.CREATE_TABLE;
 
@@ -54,7 +56,7 @@ public class ClickController {
 
 				tableCell.setJGraphCell(newCell);
 				ActionClass.getCells().put(newCell, tableCell);
-				
+
 			} else {
 
 				OperationType operationType = ((CreateOperationAction) currentAction).getOperationType();
@@ -63,24 +65,24 @@ public class ClickController {
 						new OperationCell(name, style, newCell, operationType, null, e.getX(), e.getY(), 80, 30));
 
 				if (((CreateOperationAction) currentAction).hasParent()) {
-
-					edge.addParent(((CreateOperationAction) currentAction).getParent());
-					edge.addChild(newCell);
+					
+					edgeRef.get().addParent(((CreateOperationAction) currentAction).getParent());
+					edgeRef.get().addChild(newCell);
 
 					currentActionRef.set(new CurrentAction(CurrentAction.ActionType.EDGE));
 					actionType = CurrentAction.ActionType.EDGE;
-					
+
 					cell = ActionClass.getCells().get(newCell);
 					jCell = newCell;
-					
+
 					ActionClass.getGraph().removeCells(new Object[] { ghostJCell }, true);
 					ghostJCell = null;
-					
+
 				}
 
 			}
-			
-			if(currentAction.getType() != CurrentAction.ActionType.EDGE)
+
+			if (currentAction.getType() != CurrentAction.ActionType.EDGE)
 				currentActionRef.set(null);
 
 		}
@@ -88,27 +90,27 @@ public class ClickController {
 		if (jCell != null) {
 
 			ActionClass.getGraph().getModel().getValue(jCell);
-			if (currentAction != null && actionType == CurrentAction.ActionType.EDGE && !edge.hasParent()) {
-
-				edge.addParent(jCell);
+			if (currentAction != null && actionType == CurrentAction.ActionType.EDGE && !edgeRef.get().hasParent()) {
+				
+				edgeRef.get().addParent(jCell);
 
 			}
-			
-			Cell parentCell = edge.hasParent() != null ? ActionClass.getCells().get(edge.getParent()) : null;
-			
-			if (currentAction != null && actionType == CurrentAction.ActionType.EDGE && edge.isDifferent(jCell)) {
-				
-				if(!edge.isReady())
-					edge.addChild(jCell);
 
-				if (edge.isReady()) {
-					
-					ActionClass.getGraph().insertEdge(edge.getParent(), null, "", edge.getParent(), jCell);
-					
+			Cell parentCell = edgeRef.get().hasParent() != null ? ActionClass.getCells().get(edgeRef.get().getParent()) : null;
+
+			if (currentAction != null && actionType == CurrentAction.ActionType.EDGE && edgeRef.get().isDifferent(jCell)) {
+
+				if (!edgeRef.get().isReady())
+					edgeRef.get().addChild(jCell);
+
+				if (edgeRef.get().isReady()) {
+
+					ActionClass.getGraph().insertEdge(edgeRef.get().getParent(), null, "", edgeRef.get().getParent(), jCell);
+
 					((OperationCell) cell).addParent(parentCell);
 
 					parentCell.setChild((OperationCell) cell);
-					
+
 					cell.setAllNewTree();
 					TreeUtils.recalculateContent(cell);
 
@@ -165,21 +167,21 @@ public class ClickController {
 							((OperationCell) cell).setForm(FormFrameRightJoin.class);
 
 						}
-						
+
 					}
 				}
 
-				edge.reset();
+				edgeRef.get().reset();
 				currentActionRef.set(null);
 
 			}
 
 		}
-		
+
 		ActionClass.getGraph().removeCells(new Object[] { ghostJCell }, true);
 
 		ghostJCell = null;
-		
+
 	}
 
 }

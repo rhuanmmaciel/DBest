@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entities.Column;
-import entities.TableCell;
+import entities.cells.TableCell;
 import enums.FileType;
 import gui.frames.forms.create.FormFrameColumnType;
 import gui.frames.forms.create.PrimaryKey;

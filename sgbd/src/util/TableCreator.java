@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import entities.TableCell;
+import entities.cells.TableCell;
 import enums.ColumnDataType;
 import sgbd.prototype.Column;
 import sgbd.prototype.Prototype;

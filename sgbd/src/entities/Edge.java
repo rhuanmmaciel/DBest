@@ -5,6 +5,9 @@ import javax.swing.JOptionPane;
 import com.mxgraph.model.mxCell;
 
 import controller.ActionClass;
+import entities.cells.Cell;
+import entities.cells.OperationCell;
+import entities.cells.TableCell;
 import enums.OperationArity;
 
 public class Edge {
@@ -20,7 +23,7 @@ public class Edge {
 	public void addParent(mxCell parent) {
 
 		Cell cell = ActionClass.getCells().get(parent);
-		
+
 		boolean cellHasTree; 
 		boolean cellHasError = cell.hasError();
 		boolean cellIsParent = cell.hasChild();
@@ -34,7 +37,7 @@ public class Edge {
 			cellHasTree = true;
 			
 		}
-
+		
 		if(cellIsParent)
 			JOptionPane.showMessageDialog(null, "Essa célula já possui filho", "Erro", JOptionPane.ERROR_MESSAGE);
 		

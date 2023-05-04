@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import controller.ActionClass;
+import entities.cells.Cell;
 
 public class Tree {
 

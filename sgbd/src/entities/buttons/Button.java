@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JButton;
 
-import controller.CreateAction.CurrentAction;
+import entities.Action.CurrentAction;
 
 public abstract class Button {
 	

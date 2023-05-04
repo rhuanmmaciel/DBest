@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
-import controller.CreateAction.CurrentAction;
+import entities.Action.CurrentAction;
 
 public class ToolBarButton extends Button{
 
