@@ -14,10 +14,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -36,12 +34,12 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 
-import entities.Edge;
-import entities.Tree;
 import entities.Action.CreateOperationAction;
 import entities.Action.CreateTableAction;
 import entities.Action.CurrentAction;
 import entities.Action.CurrentAction.ActionType;
+import entities.Edge;
+import entities.Tree;
 import entities.buttons.Button;
 import entities.buttons.OperationButton;
 import entities.buttons.ToolBarButton;
@@ -62,7 +60,8 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private static mxGraphComponent graphComponent = new mxGraphComponent(graph);
 	private static Map<mxCell, Cell> cells = new HashMap<>();
 	private static Map<Integer, Tree> trees = new HashMap<>();
-	
+	private static File lastDirectory = new File("");
+
 	private mxCell jCell;
 
 	private mxCell ghostJCell = null;
@@ -73,8 +72,6 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private AtomicReference<Edge> edgeRef = new AtomicReference<>(new Edge());
 
 	private Set<Button> buttons = new HashSet<>();
-
-	private AtomicReference<File> lastDirectoryRef = new AtomicReference<>(new File(""));
 
 	private JToolBar toolBar = new JToolBar();
 
@@ -234,6 +231,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -250,31 +248,18 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 			switch (currentActionRef.get().getType()) {
 
-			case DELETE_CELL:
-				CellUtils.deleteCell(jCell);
-				break;
-			case DELETE_ALL:
-				CellUtils.deleteAllGraph();
-				break;
-			case SAVE_CELL:
-				exportTable();
-				break;
-			case SHOW_CELL:
-				CellUtils.showTable(jCell);
-				break;
-			case IMPORT_FILE:
-				importFile();
-				break;
-			case CREATE_TABLE:
-				createTable();
-			default:
-				break;
+			case DELETE_CELL -> CellUtils.deleteCell(jCell);
+			case DELETE_ALL -> CellUtils.deleteAllGraph();
+			case SAVE_CELL -> exportTable();
+			case SHOW_CELL -> CellUtils.showTable(jCell);
+			case IMPORT_FILE -> importFile();
+			case CREATE_TABLE -> createTable();
 
 			}
 
-			if (btnClicked instanceof OperationButton) {
+			if (btnClicked instanceof OperationButton btnOpClicked) {
 
-				style = ((OperationButton) btnClicked).getStyle();
+				style = btnOpClicked.getStyle();
 				((CreateOperationAction) currentActionRef.get()).setParent(null);
 
 			}
@@ -366,7 +351,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			popupMenuJCell.add(menuItemOperations);
 			popupMenuJCell.add(menuItemRemove);
 
-			if (cell instanceof OperationCell && !((OperationCell) cell).hasForm()) {
+			if (cell instanceof OperationCell opCell && !opCell.hasForm()) {
 
 				popupMenuJCell.remove(menuItemShow);
 				popupMenuJCell.remove(menuItemOperations);
@@ -406,48 +391,26 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 	}
 
-	private void importFile() {
+	private void importFile() {	newTable(CurrentAction.ActionType.IMPORT_FILE);	}
 
-		TableCell tableCell = new TableCell(80, 30);
+	private void createTable() { newTable(CurrentAction.ActionType.CREATE_TABLE); }
 
-		Boolean cancelService = false;
-		AtomicReference<Boolean> cancelServiceReference = new AtomicReference<>(cancelService);
-
-		List<String> tablesName = new ArrayList<>();
-		cells.values().forEach(x -> tablesName.add(x.getName().toUpperCase()));
-
-		new FormFrameImportAs(tableCell, tablesName, cancelServiceReference, lastDirectoryRef);
-
-		if (!cancelServiceReference.get()) {
-
-			currentActionRef.set(new CreateTableAction(CurrentAction.ActionType.IMPORT_FILE, tableCell.getName(),
-					tableCell.getStyle(), tableCell));
-
-		} else {
-
-			TreeUtils.deleteTree(tableCell.getTree());
-			currentActionRef.set(null);
-
-		}
-
-	}
-
-	private void createTable() {
-
-		TableCell tableCell = new TableCell(80, 30);
+	private void newTable(CurrentAction.ActionType action) {
 
 		AtomicReference<Boolean> cancelServiceReference = new AtomicReference<>(false);
 
-		new FormFrameCreateTable(tableCell, cancelServiceReference);
+		TableCell tableCell = action == CurrentAction.ActionType.CREATE_TABLE
+				? new FormFrameCreateTable(cancelServiceReference).getResult()
+				: new FormFrameImportAs(cancelServiceReference).getResult();
 
 		if (!cancelServiceReference.get()) {
 
-			currentActionRef.set(new CreateTableAction(CurrentAction.ActionType.CREATE_TABLE, tableCell.getName(),
-					tableCell.getStyle(), tableCell));
+			currentActionRef.set(new CreateTableAction(action, tableCell.getName(), tableCell.getStyle(), tableCell));
 
 		} else {
 
-			TreeUtils.deleteTree(tableCell.getTree());
+			if (tableCell != null)
+				TreeUtils.deleteTree(tableCell.getTree());
 			currentActionRef.set(null);
 
 		}
@@ -456,11 +419,10 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 	private void exportTable() {
 
-		Boolean exit = false;
-		AtomicReference<Boolean> exitRef = new AtomicReference<>(exit);
+		AtomicReference<Boolean> exitRef = new AtomicReference<>(false);
 
 		if (!cells.isEmpty())
-			new FormFrameExportTable(exitRef, lastDirectoryRef);
+			new FormFrameExportTable(exitRef);
 	}
 
 	@Override
@@ -560,6 +522,14 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 	public static Map<Integer, Tree> getTrees() {
 		return trees;
+	}
+
+	public static File getLastDirectory() {
+		return lastDirectory;
+	}
+
+	public static void setLastDirectory(File newLastDirectory) {
+		lastDirectory = newLastDirectory;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package gui.frames.forms.create;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,19 +36,6 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 	private JButton btnCancel;
 	private JLabel lblColumnName;
 	private List<Column> columns;
-
-	public static void main(DefaultTableModel table, List<Column> columns) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FormFrameAddColumn frame = new FormFrameAddColumn(table, columns);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	public FormFrameAddColumn(DefaultTableModel table, List<Column> columns) {
 		

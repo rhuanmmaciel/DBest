@@ -82,7 +82,7 @@ public class TableCreator {
 
 	}
 
-	public static void createTable(TableCell tableCell, String tableName, String pkName, List<entities.Column> columns,
+	public static TableCell createTable(String tableName, String pkName, List<entities.Column> columns,
 			Map<Integer, Map<String, String>> data, boolean isColumnsReady) {
 
 		List<RowData> rows = new ArrayList<>(getRowData(tableName, pkName, columns, data, isColumnsReady));
@@ -136,25 +136,17 @@ public class TableCreator {
 			
 		}
 		
-		tableCell.setName(tableName);
-		tableCell.setStyle("tabela");
 		columns.add(primaryKeyColumn);
-		tableCell.setColumns(columns);
-		tableCell.setTable(table);
-		tableCell.setPrototype(prototype);
 		
+		return new TableCell(80, 50, tableName, "tabela", columns, table, prototype);
 		
 	}
 
-	public static void importTable(TableCell tableCell, AtomicReference<Table> table) {
+	public static TableCell importTable(AtomicReference<Table> table) {
 
 		table.get().open();
-
-		tableCell.setName(table.get().getTableName());
-		tableCell.setStyle("tabela");
-		tableCell.setTable(table.get());
-		tableCell.setPrototype(table.get().getHeader().getPrototype());
-		tableCell.setColumns();		
+		
+		return new TableCell(80, 50, table.get().getTableName(), "tabela", table.get(), table.get().getHeader().getPrototype());
 		
 	}
 

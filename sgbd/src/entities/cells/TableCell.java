@@ -11,16 +11,30 @@ import sgbd.query.sourceop.TableScan;
 import sgbd.table.Table;
 import sgbd.util.Util;
 
-public class TableCell extends Cell{
+public final class TableCell extends Cell{
 
 	private Table table;
 	private Prototype prototype;
 	
-	public TableCell(int length, int width) {
-		super(null, null, null, length, width);
+	public TableCell(int length, int width, String name, String style, List<Column> columns, Table table, Prototype prototype) {
+		
+		super(name, style, null, length, width);
+		setColumns(columns);
+		setTable(table);
+		setPrototype(prototype);
+		
 	}
 	
-	public void setTable(Table table) {
+	public TableCell(int length, int width, String name, String style, Table table, Prototype prototype) {
+		
+		super(name, style, null, length, width);
+		setTable(table);
+		setPrototype(prototype);
+		setColumns();
+		
+	}
+	
+	private void setTable(Table table) {
 		
 		this.table = table;
 		
@@ -37,7 +51,7 @@ public class TableCell extends Cell{
 		return table;
 	}
 	
-	public void setPrototype(Prototype prototype) {
+	private void setPrototype(Prototype prototype) {
 		this.prototype = prototype;
 	}
 	
@@ -45,7 +59,7 @@ public class TableCell extends Cell{
 		return prototype;
 	}
 
-	public void setColumns(List<Column> columns) {
+	private void setColumns(List<Column> columns) {
 		
 		this.columns = columns;
 		

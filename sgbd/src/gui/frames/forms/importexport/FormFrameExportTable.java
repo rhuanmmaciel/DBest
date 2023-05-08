@@ -5,8 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.GroupLayout;
@@ -19,10 +17,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
 import com.mxgraph.model.mxCell;
-import com.mxgraph.swing.mxGraphComponent;
 
-import controller.ActionClass;
-import entities.cells.Cell;
 import util.ExportTable;
 
 @SuppressWarnings("serial")
@@ -36,21 +31,14 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 	private JButton btnGraph;
 	
 	private JLabel lblPickFileExtension;
-	private Map<mxCell, Cell> cells;
-	private mxGraphComponent graph;
 	private AtomicReference<Boolean> cancelService;
-	private AtomicReference<File> lastDirectoryRef;
 	
-	public FormFrameExportTable(AtomicReference<Boolean> cancelService,
-								AtomicReference<File> lastDirectoryRef) {
+	public FormFrameExportTable(AtomicReference<Boolean> cancelService) {
 
 		super((Window)null);
 		setModal(true);
 		
 		this.cancelService = cancelService;
-		this.graph = ActionClass.getGraphComponent();
-		this.cells = ActionClass.getCells();
-		this.lastDirectoryRef = lastDirectoryRef;
 		
 		initializeGUI();
 		
@@ -136,13 +124,13 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 			
 		}else if(e.getSource() == btnGraph) {
 			
-			new ExportTable(cells, "", 1);
+			new ExportTable("", 1);
 			dispose();
 			
 		}else if(e.getSource() == btnPNG) {
 			
 			dispose();
-			new ExportTable(graph);
+			new ExportTable();
 			
 		}else if(e.getSource() == btnTable) {
 			
@@ -150,7 +138,7 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 	
 			mxCell cell = null;
 			
-			new FormFrameExportAs(cell, graph, cells, cancelService, lastDirectoryRef);
+			new FormFrameExportAs(cell, cancelService);
 			
 		}
 		

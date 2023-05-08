@@ -18,9 +18,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
+import controller.ActionClass;
 import entities.cells.Cell;
 import entities.cells.TableCell;
 import enums.FileType;
@@ -29,35 +29,34 @@ import net.coobird.thumbnailator.Thumbnails;
 @SuppressWarnings("serial")
 public class ExportTable extends JPanel {
 
-	public ExportTable(mxGraphComponent frame) {
+	public ExportTable() {
 
-		exportToImage(frame);
+		exportToImage();
 
 	}
 
-	public ExportTable(AtomicReference<Cell> cell, FileType type, AtomicReference<Boolean> cancelService,
-					   AtomicReference<File> lastDirectoryRef) {
+	public ExportTable(AtomicReference<Cell> cell, FileType type, AtomicReference<Boolean> cancelService) {
 
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Salvar arquivo");
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.setCurrentDirectory(lastDirectoryRef.get());
+		fileChooser.setCurrentDirectory(ActionClass.getLastDirectory());
 		
 		if (type == FileType.CSV)
-			exportToCsv(cell.get().getMapContent(), cell.get(), fileChooser, lastDirectoryRef);
+			exportToCsv(cell.get().getMapContent(), cell.get(), fileChooser);
 
 		else if (type == FileType.DAT)
-			exportToDat(cell.get(), fileChooser, lastDirectoryRef);
+			exportToDat(cell.get(), fileChooser);
 
 	}
 
-	public ExportTable(Map<mxCell, Cell> cells, String path, int a) {
+	public ExportTable(String path, int a) {
 
-		saveGraph(cells, path);
+		saveGraph(path);
 
 	}
 
-	private void exportToDat(Cell cell, JFileChooser fileChooser, AtomicReference<File> lastDirectoryRef) {
+	private void exportToDat(Cell cell, JFileChooser fileChooser) {
 
 		
 
@@ -90,7 +89,7 @@ public class ExportTable extends JPanel {
 
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 			
-			lastDirectoryRef.set(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
+			ActionClass.setLastDirectory(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
 			File fileToSave = fileChooser.getSelectedFile();
 			String filePath = fileToSave.getAbsolutePath();
 
@@ -108,15 +107,14 @@ public class ExportTable extends JPanel {
 				int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
 						"Confirmar substituição", JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.NO_OPTION) {
-					exportToDat(cell, fileChooser, lastDirectoryRef);
+					exportToDat(cell, fileChooser);
 					return;
 				}
 			}
 
-			TableCell createdCell = new TableCell(10, 10);
-
 			String pkName = cell.getColumns().stream().filter(x -> x.isPK()).findFirst().orElse(null).getName();
-			TableCreator.createTable(createdCell, fileName, pkName, cell.getColumns(), cell.getMapContent(), true);
+			
+			TableCell createdCell = TableCreator.createTable(fileName, pkName, cell.getColumns(), cell.getMapContent(), true);
 
 			createdCell.getTable().saveHeader(headFileName);
 			
@@ -144,7 +142,7 @@ public class ExportTable extends JPanel {
 
 	}
 
-	private void exportToCsv(Map<Integer, Map<String, String>> data, Cell cell, JFileChooser fileChooser, AtomicReference<File> lastDirectoryRef) {
+	private void exportToCsv(Map<Integer, Map<String, String>> data, Cell cell, JFileChooser fileChooser) {
 		
 		try {
 
@@ -155,7 +153,7 @@ public class ExportTable extends JPanel {
 
 			if (userSelection == JFileChooser.APPROVE_OPTION) {
 
-				lastDirectoryRef.set(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
+				ActionClass.setLastDirectory(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
 				
 				File fileToSave = fileChooser.getSelectedFile();
 				String filePath = fileToSave.getAbsolutePath();
@@ -168,7 +166,7 @@ public class ExportTable extends JPanel {
 					int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
 							"Confirmar substituição", JOptionPane.YES_NO_OPTION);
 					if (result == JOptionPane.NO_OPTION) {
-						exportToCsv(data, cell, fileChooser, lastDirectoryRef);
+						exportToCsv(data, cell, fileChooser);
 						return;
 					}
 				}
@@ -206,8 +204,9 @@ public class ExportTable extends JPanel {
 
 	}
 
-	private void exportToImage(mxGraphComponent component) {
+	private void exportToImage() {
 		try {
+			mxGraphComponent component = ActionClass.getGraphComponent();
 			JFileChooser fileChooser = new JFileChooser();
 			fileChooser.setDialogTitle("Salvar imagem");
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -239,7 +238,7 @@ public class ExportTable extends JPanel {
 		}
 	}
 
-	private void saveGraph(Map<mxCell, Cell> cells, String path) {
+	private void saveGraph(String path) {
 		/*
 		 * try { FileWriter csv = new FileWriter(new File(path));
 		 * 

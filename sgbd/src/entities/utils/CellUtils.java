@@ -36,15 +36,15 @@ public class CellUtils {
 					
 				}
 				
-				if (cell instanceof OperationCell) {
+				if (cell instanceof OperationCell operationCell) {
 
-					for (Cell cellParent : ((OperationCell) cell).getParents()) {
+					for (Cell cellParent : operationCell.getParents()) {
 
 						cellParent.setChild(null);
 
 					}
 
-					((OperationCell) cell).clearParents();
+					operationCell.clearParents();
 
 				}
 				

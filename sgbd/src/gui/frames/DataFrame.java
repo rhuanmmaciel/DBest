@@ -30,7 +30,6 @@ import javax.swing.table.TableModel;
 
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import entities.cells.TableCell;
 
 @SuppressWarnings("serial")
 public class DataFrame extends JDialog implements ActionListener {
@@ -58,8 +57,8 @@ public class DataFrame extends JDialog implements ActionListener {
 		super((Window) null, "DataFrame");
 		setModal(true);
 		
-		if(cell instanceof TableCell) lblText.setText(cell.getName()+":");
-		else lblText.setText(((OperationCell)cell).getType().toString()+":");
+		if(cell instanceof OperationCell operationCell) lblText.setText(operationCell.getType().getName()+":");
+		else lblText.setText(cell.getName()+":");
 		
 		data = cell.getMapContent();
 		columnsName = cell.getColumnsName();

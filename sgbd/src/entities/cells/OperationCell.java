@@ -20,7 +20,7 @@ import enums.OperationArity;
 import enums.OperationType;
 import gui.frames.forms.operations.IOperator;
 
-public class OperationCell extends Cell {
+public final class OperationCell extends Cell {
 
 	private OperationType type;
 	private List<Cell> parents;

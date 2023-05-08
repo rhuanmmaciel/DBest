@@ -18,6 +18,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import controller.ActionClass;
 import entities.Column;
 import entities.cells.TableCell;
 import enums.FileType;
@@ -27,72 +28,82 @@ import sgbd.table.Table;
 
 public class ImportFile {
 
-	public ImportFile(TableCell tableCell, FileType fileType, List<String> tablesName,
-			AtomicReference<Boolean> exitReference, AtomicReference<File> lastDirectoryRef) {
+	private List<String> tablesName = new ArrayList<>();
+	private JFileChooser fileUpload = new JFileChooser();
+	private AtomicReference<Boolean> exitReference;
+	private StringBuilder tableName = new StringBuilder();
+	private StringBuilder pkName = new StringBuilder();
+	private Map<Integer, Map<String, String>> content = new LinkedHashMap<>();
+	private List<Column> columns = new ArrayList<>();
+	private FileType fileType;
+	private TableCell tableCell;
 
-		JFileChooser fileUpload = new JFileChooser();
+	{
+		ActionClass.getCells().values().forEach(cell -> tablesName.add(cell.getName()));
+		this.tableCell = null;
+	}
 
-		fileUpload.setCurrentDirectory(lastDirectoryRef.get());
+	public ImportFile(FileType fileType, AtomicReference<Boolean> exitReference) {
 
+		this.exitReference = exitReference;
+		this.fileType = fileType;
+		
+		fileUpload.setCurrentDirectory(ActionClass.getLastDirectory());
+
+		importFile();
+
+	}
+	
+	private void importFile() {
+		
 		FileNameExtensionFilter filter = null;
 
-		if (fileType == FileType.CSV) {
-
-			filter = new FileNameExtensionFilter("CSV files", "csv");
-
-		} else if (fileType == FileType.EXCEL) {
-
-			filter = new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
-
-		} else if (fileType == FileType.DAT) {
-
-			filter = new FileNameExtensionFilter("Headers files", "head");
+		switch (fileType) {
+	
+		case CSV -> filter = new FileNameExtensionFilter("CSV files", "csv");
+		case EXCEL -> filter = new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
+		case DAT -> filter = new FileNameExtensionFilter("Headers files", "head");
+		case SQL -> throw new UnsupportedOperationException("Unimplemented case: " + fileType);
+		default -> throw new IllegalArgumentException("Unexpected value: " + fileType);
 
 		}
 
 		fileUpload.setFileFilter(filter);
 
-		int res = fileUpload.showOpenDialog(null);
+		if (fileUpload.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
-		if (res == JFileChooser.APPROVE_OPTION) {
-
-			lastDirectoryRef.set(new File(fileUpload.getCurrentDirectory().getAbsolutePath()));
-			StringBuilder pkName = new StringBuilder();
-			StringBuilder tableName = new StringBuilder();
-			Map<Integer, Map<String, String>> content = new LinkedHashMap<>();
-			List<Column> columns = new ArrayList<>();
-
-			if (fileType == FileType.CSV) {
-
-				csv(fileUpload, tableName, content, columns, tablesName, pkName, exitReference);
-
-			} else if (fileType == FileType.EXCEL) {
-
-				excel(fileUpload, tableName, content, columns, tablesName, pkName, exitReference);
-
-			} else if (fileType == FileType.DAT) {
+			ActionClass.setLastDirectory(new File(fileUpload.getCurrentDirectory().getAbsolutePath()));
+			
+			switch(fileType) {
+			
+			case CSV -> csv();
+			case EXCEL -> excel();
+			case DAT -> {
 
 				AtomicReference<Table> table = new AtomicReference<>();
-				header(fileUpload, table, exitReference);
+				header(table);
 
 				if (!exitReference.get())
-					TableCreator.importTable(tableCell, table);
+					tableCell = TableCreator.importTable(table);
 
+			}
+			case SQL -> throw new UnsupportedOperationException("Unimplemented case: " + fileType);
+			default -> throw new IllegalArgumentException("Unexpected value: " + fileType);
+			
 			}
 
 			if (!exitReference.get() && FileType.DAT != fileType)
-				TableCreator.createTable(tableCell, tableName.toString(), pkName.toString(), columns, content, false);
+				tableCell = TableCreator.createTable(tableName.toString(), pkName.toString(), columns, content, false);
 
 		} else {
 
 			exitReference.set(true);
-			;
 
 		}
-
+		
 	}
 
-	private void header(JFileChooser fileUpload, AtomicReference<Table> table, AtomicReference<Boolean> exitReference) {
+	private void header(AtomicReference<Table> table) {
 
 		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(".head")) {
 
@@ -108,9 +119,7 @@ public class ImportFile {
 
 	}
 
-	private void excel(JFileChooser fileUpload, StringBuilder tableName, Map<Integer, Map<String, String>> lines,
-			List<Column> columns, List<String> tablesName, StringBuilder pkName,
-			AtomicReference<Boolean> exitReference) {
+	private void excel() {
 		/*
 		 * try {
 		 * 
@@ -191,9 +200,7 @@ public class ImportFile {
 
 	}
 
-	private void csv(JFileChooser fileUpload, StringBuilder tableName, Map<Integer, Map<String, String>> content,
-			List<Column> columns, List<String> tablesName, StringBuilder pkName,
-			AtomicReference<Boolean> exitReference) {
+	private void csv() {
 
 		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(".csv")) {
 
@@ -256,6 +263,10 @@ public class ImportFile {
 
 		}
 
+	}
+	
+	public TableCell getResult() {
+		return tableCell;
 	}
 
 }

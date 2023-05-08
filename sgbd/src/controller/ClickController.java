@@ -111,60 +111,60 @@ public class ClickController {
 
 					parentCell.setChild((OperationCell) cell);
 
-					cell.setAllNewTree();
+					cell.setAllNewTrees();
 					TreeUtils.recalculateContent(cell);
 
-					if (cell instanceof OperationCell) {
+					if (cell instanceof OperationCell operationCell) {
 
-						if (((OperationCell) cell).getType() == OperationType.PROJECTION) {
+						if (operationCell.getType() == OperationType.PROJECTION) {
 
 							new FormFrameProjection(jCell);
-							((OperationCell) cell).setForm(FormFrameProjection.class);
+							operationCell.setForm(FormFrameProjection.class);
 
-						} else if (((OperationCell) cell).getType() == OperationType.SELECTION) {
+						} else if (operationCell.getType() == OperationType.SELECTION) {
 
 							new FormFrameSelection(jCell);
-							((OperationCell) cell).setForm(FormFrameSelection.class);
+							operationCell.setForm(FormFrameSelection.class);
 
-						} else if (((OperationCell) cell).getType() == OperationType.AGGREGATION) {
+						} else if (operationCell.getType() == OperationType.AGGREGATION) {
 
 							new FormFrameAggregation(jCell);
-							((OperationCell) cell).setForm(FormFrameAggregation.class);
+							operationCell.setForm(FormFrameAggregation.class);
 
-						} else if (((OperationCell) cell).getType() == OperationType.RENAME) {
+						} else if (operationCell.getType() == OperationType.RENAME) {
 
 							new FormFrameRename(jCell);
-							((OperationCell) cell).setForm(FormFrameRename.class);
+							operationCell.setForm(FormFrameRename.class);
 
-						} else if (((OperationCell) cell).getType() == OperationType.JOIN
-								&& ((OperationCell) cell).getParents().size() == 2) {
+						} else if (operationCell.getType() == OperationType.JOIN
+								&& operationCell.getParents().size() == 2) {
 
 							new FormFrameJoin(jCell);
-							((OperationCell) cell).setForm(FormFrameJoin.class);
+							operationCell.setForm(FormFrameJoin.class);
 
-						} else if (((OperationCell) cell).getType() == OperationType.CARTESIAN_PRODUCT
-								&& ((OperationCell) cell).getParents().size() == 2) {
+						} else if (operationCell.getType() == OperationType.CARTESIAN_PRODUCT
+								&& operationCell.getParents().size() == 2) {
 
 							new CartesianProduct(jCell);
-							((OperationCell) cell).setForm(CartesianProduct.class);
+							operationCell.setForm(CartesianProduct.class);
 
-						} else if (((OperationCell) cell).getType() == OperationType.UNION
-								&& ((OperationCell) cell).getParents().size() == 2) {
+						} else if (operationCell.getType() == OperationType.UNION
+								&& operationCell.getParents().size() == 2) {
 
 							new FormFrameUnion(jCell);
-							((OperationCell) cell).setForm(FormFrameUnion.class);
+							operationCell.setForm(FormFrameUnion.class);
 
-						} else if (((OperationCell) cell).getType() == OperationType.LEFT_JOIN
-								&& ((OperationCell) cell).getParents().size() == 2) {
+						} else if (operationCell.getType() == OperationType.LEFT_JOIN
+								&& operationCell.getParents().size() == 2) {
 
 							new FormFrameLeftJoin(jCell);
-							((OperationCell) cell).setForm(FormFrameLeftJoin.class);
+							operationCell.setForm(FormFrameLeftJoin.class);
 
-						} else if (((OperationCell) cell).getType() == OperationType.RIGHT_JOIN
-								&& ((OperationCell) cell).getParents().size() == 2) {
+						} else if (operationCell.getType() == OperationType.RIGHT_JOIN
+								&& operationCell.getParents().size() == 2) {
 
 							new FormFrameRightJoin(jCell);
-							((OperationCell) cell).setForm(FormFrameRightJoin.class);
+							operationCell.setForm(FormFrameRightJoin.class);
 
 						}
 

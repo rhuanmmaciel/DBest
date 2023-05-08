@@ -82,9 +82,9 @@ public class TreeUtils {
 	
 				for (Cell cell : level) {
 	
-					if (cell instanceof OperationCell) {
+					if (cell instanceof OperationCell operationCell) {
 	
-						((OperationCell) cell).updateOperation();
+						operationCell.updateOperation();
 	
 					}
 	
@@ -111,8 +111,8 @@ public class TreeUtils {
 			
 			Cell currentCell = cell;
 			
-			if (currentCell instanceof OperationCell) 
-				((OperationCell) currentCell).updateOperation();
+			if (currentCell instanceof OperationCell operationCell) 
+				operationCell.updateOperation();
 			
 			while(currentCell.hasChild()){
 	

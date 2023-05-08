@@ -1,7 +1,6 @@
 package gui.frames.forms.create;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,26 +48,16 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 	private AtomicReference<Boolean> exitReference;
 	private List<Column> columns;
 	
-	public static void main(TableCell tableCell, AtomicReference<Boolean> exitReference) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FormFrameCreateTable frame = new FormFrameCreateTable(tableCell, exitReference);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	{
+		columns = new ArrayList<>();
+		tableCell = null;
 	}
 	
-	public FormFrameCreateTable(TableCell tableCell, AtomicReference<Boolean> exitReference) {
+	public FormFrameCreateTable(AtomicReference<Boolean> exitReference) {
 		
 		super((Window)null);
 		setModal(true);
 		
-		columns = new ArrayList<>();
-		this.tableCell = tableCell;
 		this.exitReference = exitReference;
 				
 		initializeGUI();
@@ -308,7 +297,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 		
 		if(!exitReference.get()) {
 			
-			TableCreator.createTable(tableCell, textFieldTableName.getText(), pkName.toString(), columns, content, false);
+			tableCell = TableCreator.createTable(textFieldTableName.getText(), pkName.toString(), columns, content, false);
 		
 		}else {
 			
@@ -318,6 +307,10 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 				
 		dispose();		
 		
+	}
+	
+	public TableCell getResult() {
+		return tableCell;
 	}
 
 }

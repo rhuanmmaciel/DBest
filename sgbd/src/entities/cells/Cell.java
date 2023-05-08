@@ -13,7 +13,7 @@ import entities.utils.TableFormat;
 import entities.utils.TreeUtils;
 import sgbd.query.Operator;
 
-public abstract class Cell {
+public abstract sealed class Cell permits TableCell, OperationCell{
 	
 	private Operator operator;
 	protected List<Column> columns;
@@ -44,7 +44,7 @@ public abstract class Cell {
 		return tree;
 	}
 	
-	public void setAllNewTree() {
+	public void setAllNewTrees() {
 		
 		TreeUtils.updateTree(this);
 		
