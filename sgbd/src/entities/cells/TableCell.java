@@ -22,22 +22,22 @@ public final class TableCell extends Cell{
 		setColumns(columns);
 		setTable(table);
 		setPrototype(prototype);
-		
+
 	}
 	
-	public TableCell(int length, int width, String name, String style, Table table, Prototype prototype) {
+	public TableCell(int length, int width, String name, String style, Table table) {
 		
 		super(name, style, null, length, width);
 		setTable(table);
-		setPrototype(prototype);
+		setPrototype(table.getHeader().getPrototype());
 		setColumns();
 		
 	}
 	
 	private void setTable(Table table) {
 		
+		table.open();
 		this.table = table;
-		
 		Operator operator = new TableScan(table);
 		operator.open();
 		
@@ -47,7 +47,6 @@ public final class TableCell extends Cell{
 	
 	public Table getTable() {
 		
-		table.open();
 		return table;
 	}
 	

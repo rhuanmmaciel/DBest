@@ -38,7 +38,6 @@ public class FormFrameImportAs extends FormFrameImportExportAs{
 		 });
 		this.setVisible(true);
 
-		
 	}
 
 	public TableCell getResult() {

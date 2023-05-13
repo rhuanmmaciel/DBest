@@ -29,8 +29,8 @@ public final class OperationCell extends Cell {
 	private List<String> data;
 	private Boolean error;
 
-	public OperationCell(String name, String style, mxCell jCell, OperationType type, List<Cell> parents, int x, int y,
-			int length, int width) {
+	public OperationCell(String name, String style, mxCell jCell, OperationType type, List<Cell> parents, int length,
+			int width) {
 
 		super(name, style, jCell, length, width);
 		this.type = type;
@@ -38,7 +38,7 @@ public final class OperationCell extends Cell {
 		this.data = null;
 		this.error = false;
 		this.form = null;
-		
+
 		switch (type) {
 
 		case SELECTION:
@@ -61,49 +61,49 @@ public final class OperationCell extends Cell {
 	}
 
 	public IOperator editOperation(mxCell jCell) {
-		
-		if(hasForm()) {
-			
+
+		if (hasForm()) {
+
 			try {
-				
+
 				Constructor<? extends IOperator> constructor = form.getDeclaredConstructor(mxCell.class);
 				return constructor.newInstance(jCell);
-				
+
 			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
 					| InvocationTargetException e) {
-				
+
 				e.printStackTrace();
-				
+
 			}
-			
-		}	
-		
+
+		}
+
 		return null;
 	}
 
 	public void setForm(Class<? extends IOperator> form) {
 		this.form = form;
 	}
-	
+
 	public boolean hasForm() {
 		return form != null;
 	}
 
 	public void updateOperation() {
-		
-		if(hasForm()) {
-		
+
+		if (hasForm()) {
+
 			try {
-	
+
 				Constructor<? extends IOperator> constructor = form.getDeclaredConstructor();
 				IOperator operation = constructor.newInstance();
 				operation.executeOperation(getJGraphCell(), getData());
-				
+
 			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
 					| InvocationTargetException e) {
 				e.printStackTrace();
 			}
-		
+
 		}
 	}
 
@@ -152,33 +152,34 @@ public final class OperationCell extends Cell {
 	public Boolean hasTree() {
 		return getOperator() != null;
 	}
-	
+
 	public void setError() {
-		
+
 		ImageIcon icon = new ImageIcon("red_exclamation.png");
 		Image image = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		ImageIcon scaledIcon = new ImageIcon(image);
-		
+
 		mxCellOverlay overlay = new mxCellOverlay(scaledIcon, "Error");
 		ActionClass.getGraphComponent().addCellOverlay(getJGraphCell(), overlay);
 		String style = getJGraphCell().getStyle();
-		style = mxStyleUtils.setStyle(style , mxConstants.STYLE_STROKECOLOR, "red");
-		style = mxStyleUtils.setStyle(style , mxConstants.STYLE_FONTCOLOR, "red");
+		style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKECOLOR, "red");
+		style = mxStyleUtils.setStyle(style, mxConstants.STYLE_FONTCOLOR, "red");
 		ActionClass.getGraph().getModel().setStyle(getJGraphCell(), style);
-		
+
 		error = true;
-		
+
 	}
-	
+
 	public void removeError() {
-		
+
 		ActionClass.getGraph().getModel().setStyle(getJGraphCell(), getStyle());
-		ActionClass.getGraphComponent().clearCellOverlays();;
-		
+		ActionClass.getGraphComponent().clearCellOverlays();
+		;
+
 		error = false;
-		
+
 	}
-	
+
 	public boolean hasError() {
 		return error;
 	}
@@ -211,15 +212,16 @@ public final class OperationCell extends Cell {
 
 	@Override
 	public boolean hasParentErrors() {
-		
+
 		boolean error = false;
-		
-		for(Cell cell : getParents()) {
-			
-			if(cell.hasError()) error = true;
-			
+
+		for (Cell cell : getParents()) {
+
+			if (cell.hasError())
+				error = true;
+
 		}
-		
+
 		return error;
 	}
 

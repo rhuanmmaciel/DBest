@@ -31,7 +31,7 @@ public class TableFormat {
         }
 
 	    int i = 0;
-
+	    
 	    while (aux.hasNext()) {
 
 	    	Tuple t = aux.next();

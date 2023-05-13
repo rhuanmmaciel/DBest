@@ -3,7 +3,6 @@ package util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 import entities.cells.TableCell;
 import enums.ColumnDataType;
@@ -136,17 +135,11 @@ public class TableCreator {
 			
 		}
 		
+		table.saveHeader(tableName+".head");
 		columns.add(primaryKeyColumn);
 		
+		
 		return new TableCell(80, 50, tableName, "tabela", columns, table, prototype);
-		
-	}
-
-	public static TableCell importTable(AtomicReference<Table> table) {
-
-		table.get().open();
-		
-		return new TableCell(80, 50, table.get().getTableName(), "tabela", table.get(), table.get().getHeader().getPrototype());
 		
 	}
 

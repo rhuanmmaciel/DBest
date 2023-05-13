@@ -12,7 +12,7 @@ selection: SELECTION PREDICATE '(' relation ')';
 
 projection:	PROJECTION PREDICATE '(' relation ')';
 
-join: JOIN '(' relation ',' relation ')';
+join: JOIN PREDICATE '(' relation ',' relation ')';
 
 cartesian:CARTESIAN '(' relation ( ',' relation	)* ')';
 

@@ -16,6 +16,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -52,6 +53,10 @@ import enums.OperationType;
 import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.FormFrameExportTable;
 import gui.frames.forms.importexport.FormFrameImportAs;
+import gui.frames.forms.operations.binary.CartesianProduct;
+import gui.frames.forms.operations.binary.FormFrameJoin;
+import gui.frames.forms.operations.unary.FormFrameProjection;
+import gui.frames.forms.operations.unary.FormFrameSelection;
 
 @SuppressWarnings("serial")
 public class ActionClass extends JFrame implements ActionListener, MouseListener, KeyListener, MouseMotionListener {
@@ -90,22 +95,26 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	private JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getName());
 
 	private CreateOperationAction projectionOperation = new CreateOperationAction(
-			CurrentAction.ActionType.OPERATOR_CELL, OperationType.PROJECTION.getSymbol(),
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.PROJECTION.getSymbol(),
 			OperationType.PROJECTION.getName(), OperationType.PROJECTION);
-
-	private CreateOperationAction selectionOperation = new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL,
-			OperationType.SELECTION.getSymbol(), OperationType.SELECTION.getName(), OperationType.SELECTION);
-	private CreateOperationAction joinOperation = new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL,
-			OperationType.JOIN.getSymbol(), OperationType.JOIN.getName(), OperationType.JOIN);
-	private CreateOperationAction leftJoinOperation = new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL,
-			OperationType.LEFT_JOIN.getSymbol(), OperationType.LEFT_JOIN.getName(), OperationType.LEFT_JOIN);
-	private CreateOperationAction rightJoinOperation = new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL,
-			OperationType.RIGHT_JOIN.getSymbol(), OperationType.RIGHT_JOIN.getName(), OperationType.RIGHT_JOIN);
+	private CreateOperationAction selectionOperation = new CreateOperationAction(
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.SELECTION.getSymbol(),
+			OperationType.SELECTION.getName(), OperationType.SELECTION);
+	private CreateOperationAction joinOperation = new CreateOperationAction(
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.JOIN.getSymbol(), OperationType.JOIN.getName(),
+			OperationType.JOIN);
+	private CreateOperationAction leftJoinOperation = new CreateOperationAction(
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.LEFT_JOIN.getSymbol(),
+			OperationType.LEFT_JOIN.getName(), OperationType.LEFT_JOIN);
+	private CreateOperationAction rightJoinOperation = new CreateOperationAction(
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.RIGHT_JOIN.getSymbol(),
+			OperationType.RIGHT_JOIN.getName(), OperationType.RIGHT_JOIN);
 	private CreateOperationAction cartesianProductOperation = new CreateOperationAction(
-			CurrentAction.ActionType.OPERATOR_CELL, OperationType.CARTESIAN_PRODUCT.getSymbol(),
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.CARTESIAN_PRODUCT.getSymbol(),
 			OperationType.CARTESIAN_PRODUCT.getName(), OperationType.CARTESIAN_PRODUCT);
-	private CreateOperationAction unionOperation = new CreateOperationAction(CurrentAction.ActionType.OPERATOR_CELL,
-			OperationType.UNION.getSymbol(), OperationType.UNION.getName(), OperationType.UNION);
+	private CreateOperationAction unionOperation = new CreateOperationAction(
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.UNION.getSymbol(),
+			OperationType.UNION.getName(), OperationType.UNION);
 
 	public ActionClass() {
 		super("DBest: Database Basics for Engaging Students and Teachers");
@@ -120,7 +129,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		graphComponent.setConnectable(false);
 
 		graphComponent.setPreferredSize(new Dimension(400, 400));
-		getContentPane().add(graphComponent);
+		getContentPane().add(graphComponent, BorderLayout.CENTER);
 		graphComponent.getGraphControl().addMouseMotionListener(this);
 
 		mxStylesheet stylesheet = graph.getStylesheet();
@@ -164,6 +173,8 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 				new CurrentAction(CurrentAction.ActionType.SAVE_CELL)));
 		buttons.add(new ToolBarButton(" Mostrar(s) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.SHOW_CELL)));
+		buttons.add(new ToolBarButton(" Console ", this, toolBar,
+				new CurrentAction(CurrentAction.ActionType.OPEN_CONSOLE)));
 
 		this.add(containerPanel, BorderLayout.EAST);
 
@@ -216,7 +227,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 				File directory = new File(".");
 				File[] filesList = directory.listFiles();
 				for (File file : filesList) {
-					if (file.isFile() && file.getName().endsWith(".dat")) {
+					if (file.isFile() && (file.getName().endsWith(".dat") || file.getName().endsWith(".head"))) {
 						file.delete();
 					}
 				}
@@ -252,8 +263,9 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 			case DELETE_ALL -> CellUtils.deleteAllGraph();
 			case SAVE_CELL -> exportTable();
 			case SHOW_CELL -> CellUtils.showTable(jCell);
-			case IMPORT_FILE -> importFile();
-			case CREATE_TABLE -> createTable();
+			case IMPORT_FILE -> newTable(CurrentAction.ActionType.IMPORT_FILE);
+			case CREATE_TABLE -> newTable(CurrentAction.ActionType.CREATE_TABLE);
+			case OPEN_CONSOLE -> new Console();
 
 			}
 
@@ -326,7 +338,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		}
 
 		if (currentActionRef.get() != null && (opAction != null
-				|| (btnClicked != null && currentActionRef.get().getType() == ActionType.OPERATOR_CELL))) {
+				|| (btnClicked != null && currentActionRef.get().getType() == ActionType.CREATE_OPERATOR_CELL))) {
 
 			ghostJCell = (mxCell) ActionClass.getGraph().insertVertex(
 					(mxCell) ActionClass.getGraph().getDefaultParent(), "ghost", style,
@@ -391,10 +403,6 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 	}
 
-	private void importFile() {	newTable(CurrentAction.ActionType.IMPORT_FILE);	}
-
-	private void createTable() { newTable(CurrentAction.ActionType.CREATE_TABLE); }
-
 	private void newTable(CurrentAction.ActionType action) {
 
 		AtomicReference<Boolean> cancelServiceReference = new AtomicReference<>(false);
@@ -426,31 +434,6 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
-
-	@Override
 	public void keyPressed(KeyEvent e) {
 
 		if (e.getKeyCode() == KeyEvent.VK_S) {
@@ -473,7 +456,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		} else if (e.getKeyCode() == KeyEvent.VK_I) {
 
-			importFile();
+			newTable(CurrentAction.ActionType.IMPORT_FILE);
 
 		} else if (e.getKeyCode() == KeyEvent.VK_X) {
 
@@ -482,7 +465,7 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		} else if (e.getKeyCode() == KeyEvent.VK_C) {
 
-			createTable();
+			newTable(CurrentAction.ActionType.CREATE_TABLE);
 
 		} else if (e.getKeyCode() == KeyEvent.VK_L) {
 
@@ -498,13 +481,29 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 
 		} else if (e.getKeyCode() == KeyEvent.VK_A) {
 
-			System.out.println(edgeRef);
 
+			if(jCell != null && cells.get(jCell) != null) {
+				
+				System.out.println(((OperationCell)cells.get(jCell)).getParents());
+				
+			}
+			
 		}
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void mouseMoved(MouseEvent e) {
+
+		if (currentActionRef.get() != null
+				&& currentActionRef.get().getType() == CurrentAction.ActionType.CREATE_OPERATOR_CELL
+				&& ghostJCell != null) {
+
+			mxGeometry geo = ghostJCell.getGeometry();
+			double dx = e.getX() - geo.getCenterX();
+			double dy = e.getY() - geo.getCenterY();
+			graph.moveCells(new Object[] { ghostJCell }, dx, dy);
+
+		}
 
 	}
 
@@ -532,23 +531,114 @@ public class ActionClass extends JFrame implements ActionListener, MouseListener
 		lastDirectory = newLastDirectory;
 	}
 
+	public static void putTableCell(Integer x, Integer y, TableCell cell) {
+
+		if (graphComponent.getCellAt(x, y) != null) {
+			putTableCell(x + 100, y, cell);
+			return;
+		}
+
+		mxCell jCell = (mxCell) graph.insertVertex((mxCell) ActionClass.getGraph().getDefaultParent(), null,
+				cell.getName(), x, y, 80, 30, cell.getStyle());
+
+		cell.setJGraphCell(jCell);
+
+		cells.put(jCell, cell);
+
+	}
+
+	public static mxCell putOperationCell(Integer x, Integer y, OperationCell cell, List<Cell> parents, String command,
+			OperationType type) {
+
+		x = (int) (Math.random() * 600);
+		y = (int) (Math.random() * 600);
+
+		mxCell jCell = (mxCell) graph.insertVertex((mxCell) ActionClass.getGraph().getDefaultParent(), null,
+				cell.getName(), x, y, 80, 30, cell.getStyle());
+
+		cell.setJGraphCell(jCell);
+
+		cells.put(jCell, cell);
+
+		for(Cell parent : parents) {
+		
+			cell.addParent(parent);
+			parent.setChild(cell);
+			
+			graph.insertEdge(parent.getJGraphCell(), null, "", parent.getJGraphCell(), jCell);
+		
+		}
+
+		cell.setAllNewTrees();
+		
+		switch (type) {
+
+		case SELECTION ->{ 
+			
+			new FormFrameSelection().executeOperation(jCell, List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]"))));
+		
+		}
+		case AGGREGATION -> throw new UnsupportedOperationException("Unimplemented case: " + type);
+		case CARTESIAN_PRODUCT -> {
+			
+			new CartesianProduct().executeOperation(jCell, null);
+			
+		}
+		case DIFFERENCE -> throw new UnsupportedOperationException("Unimplemented case: " + type);
+		case JOIN -> {
+			
+			new FormFrameJoin().executeOperation(jCell, List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+			
+		}
+		case LEFT_JOIN -> throw new UnsupportedOperationException("Unimplemented case: " + type);
+		case PROJECTION -> {
+			
+			new FormFrameProjection().executeOperation(jCell, List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+			
+		}
+		case RENAME -> throw new UnsupportedOperationException("Unimplemented case: " + type);
+		case RIGHT_JOIN -> throw new UnsupportedOperationException("Unimplemented case: " + type);
+		case UNION -> throw new UnsupportedOperationException("Unimplemented case: " + type);
+		default -> throw new IllegalArgumentException("Unexpected value: " + type);
+
+		}
+		
+		return jCell;
+		
+	}
+
 	@Override
 	public void mouseDragged(MouseEvent e) {
 
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
+	public void keyReleased(KeyEvent e) {
 
-		if (currentActionRef.get() != null && currentActionRef.get().getType() == CurrentAction.ActionType.OPERATOR_CELL
-				&& ghostJCell != null) {
+	}
 
-			mxGeometry geo = ghostJCell.getGeometry();
-			double dx = e.getX() - geo.getCenterX();
-			double dy = e.getY() - geo.getCenterY();
-			graph.moveCells(new Object[] { ghostJCell }, dx, dy);
+	@Override
+	public void mousePressed(MouseEvent e) {
 
-		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
 
 	}
 

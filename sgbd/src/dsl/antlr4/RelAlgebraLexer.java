@@ -1,5 +1,5 @@
 package dsl.antlr4;
-// Generated from RelAlgebra.g4 by ANTLR 4.7.2
+
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

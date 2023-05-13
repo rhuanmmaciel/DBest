@@ -54,6 +54,12 @@ public class ImportFile {
 
 	}
 	
+	public ImportFile(String fileName) {
+		
+		header(fileName);
+		
+	}
+	
 	private void importFile() {
 		
 		FileNameExtensionFilter filter = null;
@@ -84,7 +90,7 @@ public class ImportFile {
 				header(table);
 
 				if (!exitReference.get())
-					tableCell = TableCreator.importTable(table);
+					tableCell = new TableCell(80, 50, fileUpload.getSelectedFile().getName(), "tabela", table.get());;
 
 			}
 			case SQL -> throw new UnsupportedOperationException("Unimplemented case: " + fileType);
@@ -117,6 +123,15 @@ public class ImportFile {
 
 		table.set(Table.loadFromHeader(file));
 
+	}
+	
+	private void header(String fileName) {
+		
+		AtomicReference<Table> table = new AtomicReference<>();
+		table.set(Table.loadFromHeader(fileName));
+
+		tableCell = new TableCell(80, 50, fileName.substring(0, fileName.indexOf(".")), "tabela", table.get());;
+		
 	}
 
 	private void excel() {

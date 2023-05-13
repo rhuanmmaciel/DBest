@@ -3,7 +3,6 @@ package gui.frames.forms.create;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Label;
 import java.awt.Window;
@@ -92,19 +91,6 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 	private Faker faker;
 	private MyCustomFaker myFaker;
 
-	public static void main(List<Column> columns, DefaultTableModel model, JTable table) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FormFrameCreateData frame = new FormFrameCreateData(columns, model, table);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
 	public FormFrameCreateData(List<Column> columns, DefaultTableModel model, JTable table) {
 		
 		super((Window)null);
@@ -354,6 +340,9 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		
 		boolBox.add(boolItem);
 		boolBox.add(Box.createVerticalStrut(15));
+		
+		
+		
 		
 		JPanel bottomPane = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) bottomPane.getLayout();

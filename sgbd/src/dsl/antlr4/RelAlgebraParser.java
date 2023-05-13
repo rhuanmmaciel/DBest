@@ -268,6 +268,7 @@ public class RelAlgebraParser extends Parser {
 
 	public static class JoinContext extends ParserRuleContext {
 		public TerminalNode JOIN() { return getToken(RelAlgebraParser.JOIN, 0); }
+		public TerminalNode PREDICATE() { return getToken(RelAlgebraParser.PREDICATE, 0); }
 		public List<RelationContext> relation() {
 			return getRuleContexts(RelationContext.class);
 		}
@@ -297,14 +298,16 @@ public class RelAlgebraParser extends Parser {
 			setState(30);
 			match(JOIN);
 			setState(31);
-			match(T__0);
+			match(PREDICATE);
 			setState(32);
-			relation();
+			match(T__0);
 			setState(33);
-			match(T__2);
-			setState(34);
 			relation();
+			setState(34);
+			match(T__2);
 			setState(35);
+			relation();
+			setState(36);
 			match(T__1);
 			}
 		}
@@ -348,29 +351,29 @@ public class RelAlgebraParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(37);
-			match(CARTESIAN);
 			setState(38);
-			match(T__0);
+			match(CARTESIAN);
 			setState(39);
+			match(T__0);
+			setState(40);
 			relation();
-			setState(44);
+			setState(45);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__2) {
 				{
 				{
-				setState(40);
-				match(T__2);
 				setState(41);
+				match(T__2);
+				setState(42);
 				relation();
 				}
 				}
-				setState(46);
+				setState(47);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(47);
+			setState(48);
 			match(T__1);
 			}
 		}
@@ -427,14 +430,14 @@ public class RelAlgebraParser extends Parser {
 		RelationContext _localctx = new RelationContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_relation);
 		try {
-			setState(51);
+			setState(52);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case RELATION:
 				_localctx = new SimpleContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(49);
+				setState(50);
 				match(RELATION);
 				}
 				break;
@@ -445,7 +448,7 @@ public class RelAlgebraParser extends Parser {
 				_localctx = new NestedContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(50);
+				setState(51);
 				expression();
 				}
 				break;
@@ -465,20 +468,21 @@ public class RelAlgebraParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\r8\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\r9\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\3\2\3\2\3\2\5\2\23\n\2\3\3\3\3"+
 		"\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
-		"\6\3\6\3\6\3\6\3\6\7\6-\n\6\f\6\16\6\60\13\6\3\6\3\6\3\7\3\7\5\7\66\n"+
-		"\7\3\7\2\2\b\2\4\6\b\n\f\2\2\2\66\2\22\3\2\2\2\4\24\3\2\2\2\6\32\3\2\2"+
-		"\2\b \3\2\2\2\n\'\3\2\2\2\f\65\3\2\2\2\16\23\5\4\3\2\17\23\5\6\4\2\20"+
+		"\5\3\6\3\6\3\6\3\6\3\6\7\6.\n\6\f\6\16\6\61\13\6\3\6\3\6\3\7\3\7\5\7\67"+
+		"\n\7\3\7\2\2\b\2\4\6\b\n\f\2\2\2\67\2\22\3\2\2\2\4\24\3\2\2\2\6\32\3\2"+
+		"\2\2\b \3\2\2\2\n(\3\2\2\2\f\66\3\2\2\2\16\23\5\4\3\2\17\23\5\6\4\2\20"+
 		"\23\5\b\5\2\21\23\5\n\6\2\22\16\3\2\2\2\22\17\3\2\2\2\22\20\3\2\2\2\22"+
 		"\21\3\2\2\2\23\3\3\2\2\2\24\25\7\6\2\2\25\26\7\13\2\2\26\27\7\3\2\2\27"+
 		"\30\5\f\7\2\30\31\7\4\2\2\31\5\3\2\2\2\32\33\7\7\2\2\33\34\7\13\2\2\34"+
-		"\35\7\3\2\2\35\36\5\f\7\2\36\37\7\4\2\2\37\7\3\2\2\2 !\7\b\2\2!\"\7\3"+
-		"\2\2\"#\5\f\7\2#$\7\5\2\2$%\5\f\7\2%&\7\4\2\2&\t\3\2\2\2\'(\7\t\2\2()"+
-		"\7\3\2\2).\5\f\7\2*+\7\5\2\2+-\5\f\7\2,*\3\2\2\2-\60\3\2\2\2.,\3\2\2\2"+
-		"./\3\2\2\2/\61\3\2\2\2\60.\3\2\2\2\61\62\7\4\2\2\62\13\3\2\2\2\63\66\7"+
-		"\f\2\2\64\66\5\2\2\2\65\63\3\2\2\2\65\64\3\2\2\2\66\r\3\2\2\2\5\22.\65";
+		"\35\7\3\2\2\35\36\5\f\7\2\36\37\7\4\2\2\37\7\3\2\2\2 !\7\b\2\2!\"\7\13"+
+		"\2\2\"#\7\3\2\2#$\5\f\7\2$%\7\5\2\2%&\5\f\7\2&\'\7\4\2\2\'\t\3\2\2\2("+
+		")\7\t\2\2)*\7\3\2\2*/\5\f\7\2+,\7\5\2\2,.\5\f\7\2-+\3\2\2\2.\61\3\2\2"+
+		"\2/-\3\2\2\2/\60\3\2\2\2\60\62\3\2\2\2\61/\3\2\2\2\62\63\7\4\2\2\63\13"+
+		"\3\2\2\2\64\67\7\f\2\2\65\67\5\2\2\2\66\64\3\2\2\2\66\65\3\2\2\2\67\r"+
+		"\3\2\2\2\5\22/\66";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

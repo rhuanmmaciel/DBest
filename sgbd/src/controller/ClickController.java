@@ -42,7 +42,7 @@ public class ClickController {
 		boolean createTable = actionType == CurrentAction.ActionType.IMPORT_FILE
 				|| actionType == CurrentAction.ActionType.CREATE_TABLE;
 
-		if (actionType == CurrentAction.ActionType.OPERATOR_CELL || createTable) {
+		if (actionType == CurrentAction.ActionType.CREATE_OPERATOR_CELL || createTable) {
 
 			String name = ((CreateCellAction) currentAction).getName();
 			String style = ((CreateCellAction) currentAction).getStyle();
@@ -62,7 +62,7 @@ public class ClickController {
 				OperationType operationType = ((CreateOperationAction) currentAction).getOperationType();
 
 				ActionClass.getCells().put(newCell,
-						new OperationCell(name, style, newCell, operationType, null, e.getX(), e.getY(), 80, 30));
+						new OperationCell(name, style, newCell, operationType, null, 80, 30));
 
 				if (((CreateOperationAction) currentAction).hasParent()) {
 					
