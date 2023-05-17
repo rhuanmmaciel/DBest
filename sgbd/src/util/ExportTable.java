@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 
 import com.mxgraph.swing.mxGraphComponent;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.TableCell;
 import enums.FileType;
@@ -40,7 +40,7 @@ public class ExportTable extends JPanel {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Salvar arquivo");
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.setCurrentDirectory(ActionClass.getLastDirectory());
+		fileChooser.setCurrentDirectory(MainController.getLastDirectory());
 		
 		if (type == FileType.CSV)
 			exportToCsv(cell.get().getMapContent(), cell.get(), fileChooser);
@@ -89,7 +89,7 @@ public class ExportTable extends JPanel {
 
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 			
-			ActionClass.setLastDirectory(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
+			MainController.setLastDirectory(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
 			File fileToSave = fileChooser.getSelectedFile();
 			String filePath = fileToSave.getAbsolutePath();
 
@@ -153,7 +153,7 @@ public class ExportTable extends JPanel {
 
 			if (userSelection == JFileChooser.APPROVE_OPTION) {
 
-				ActionClass.setLastDirectory(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
+				MainController.setLastDirectory(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
 				
 				File fileToSave = fileChooser.getSelectedFile();
 				String filePath = fileToSave.getAbsolutePath();
@@ -206,7 +206,7 @@ public class ExportTable extends JPanel {
 
 	private void exportToImage() {
 		try {
-			mxGraphComponent component = ActionClass.getGraphComponent();
+			mxGraphComponent component = MainController.getGraphComponent();
 			JFileChooser fileChooser = new JFileChooser();
 			fileChooser.setDialogTitle("Salvar imagem");
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);

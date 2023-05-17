@@ -31,7 +31,7 @@ import javax.swing.text.NumberFormatter;
 
 import com.mxgraph.model.mxCell;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import enums.ColumnDataType;
@@ -83,7 +83,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		setModal(true);
 		setTitle("Seleção");
 
-		this.cell = (OperationCell) ActionClass.getCells().get(jCell);
+		this.cell = (OperationCell) MainController.getCells().get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 
@@ -354,7 +354,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 	public void executeOperation(mxCell jCell, List<String> data) {
 		
-		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
+		OperationCell cell = (OperationCell) MainController.getCells().get(jCell);
 		
 		try {
 			
@@ -425,7 +425,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 			cell.setName("σ  " + expression);
 			cell.setData(data);
 			
-			ActionClass.getGraph().getModel().setValue(jCell, "σ  " + expression);
+			MainController.getGraph().getModel().setValue(jCell, "σ  " + expression);
 
 			cell.removeError();
 			

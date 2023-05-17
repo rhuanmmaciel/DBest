@@ -20,7 +20,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.mxgraph.model.mxCell;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.TreeException;
@@ -54,7 +54,7 @@ public class FormFrameJoin extends JDialog implements ActionListener, IOperator 
 		setModal(true);
 		setTitle("Junção");
 
-		this.cell = (OperationCell) ActionClass.getCells().get(jCell);
+		this.cell = (OperationCell) MainController.getCells().get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
@@ -165,7 +165,7 @@ public class FormFrameJoin extends JDialog implements ActionListener, IOperator 
 
 	public void executeOperation(mxCell jCell, List<String> data) {
 
-		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
+		OperationCell cell = (OperationCell) MainController.getCells().get(jCell);
 
 		try {
 
@@ -196,7 +196,7 @@ public class FormFrameJoin extends JDialog implements ActionListener, IOperator 
 			cell.setName("|X|   " + item1 + " = " + item2);
 			cell.setData(data);
 
-			ActionClass.getGraph().getModel().setValue(jCell, "|X|   " + item1 + " = " + item2);
+			MainController.getGraph().getModel().setValue(jCell, "|X|   " + item1 + " = " + item2);
 
 			cell.removeError();
 

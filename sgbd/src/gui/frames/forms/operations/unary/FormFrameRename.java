@@ -19,7 +19,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.mxgraph.model.mxCell;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import gui.frames.forms.operations.IOperator;
@@ -42,7 +42,7 @@ public class FormFrameRename extends JDialog implements ActionListener, IOperato
 		setModal(true);
 		setTitle("Renomeação");
 
-		this.cell = (OperationCell) ActionClass.getCells().get(jCell);
+		this.cell = (OperationCell) MainController.getCells().get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		initializeGUI();

@@ -18,7 +18,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.Column;
 import entities.cells.TableCell;
 import enums.FileType;
@@ -39,7 +39,7 @@ public class ImportFile {
 	private TableCell tableCell;
 
 	{
-		ActionClass.getCells().values().forEach(cell -> tablesName.add(cell.getName()));
+		MainController.getCells().values().forEach(cell -> tablesName.add(cell.getName()));
 		this.tableCell = null;
 	}
 
@@ -48,7 +48,7 @@ public class ImportFile {
 		this.exitReference = exitReference;
 		this.fileType = fileType;
 		
-		fileUpload.setCurrentDirectory(ActionClass.getLastDirectory());
+		fileUpload.setCurrentDirectory(MainController.getLastDirectory());
 
 		importFile();
 
@@ -78,7 +78,7 @@ public class ImportFile {
 
 		if (fileUpload.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
-			ActionClass.setLastDirectory(new File(fileUpload.getCurrentDirectory().getAbsolutePath()));
+			MainController.setLastDirectory(new File(fileUpload.getCurrentDirectory().getAbsolutePath()));
 			
 			switch(fileType) {
 			

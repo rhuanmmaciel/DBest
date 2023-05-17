@@ -21,7 +21,7 @@ import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 
 @SuppressWarnings("serial")
@@ -34,7 +34,7 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 	private AtomicReference<Boolean> cancelService;
 
 	{
-		this.graph = ActionClass.getGraphComponent();
+		this.graph = MainController.getGraphComponent();
 	}
 	
 	public FormFrameSelectCell(mxCell jCell, 
@@ -117,9 +117,9 @@ public class FormFrameSelectCell extends JDialog implements ActionListener, Mous
 
 		jCell = (mxCell) graph.getCellAt(e.getX(), e.getY());
 
-		if (jCell != null && ActionClass.getCells().get(jCell) != null) {
+		if (jCell != null && MainController.getCells().get(jCell) != null) {
 
-			cell.set(ActionClass.getCells().get(jCell));
+			cell.set(MainController.getCells().get(jCell));
 
 			dispose();
 

@@ -18,7 +18,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.mxgraph.model.mxCell;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import gui.frames.forms.operations.IOperator;
@@ -41,7 +41,7 @@ public class FormFrameAggregation extends JDialog implements ActionListener, IOp
 		setModal(true);
 		setTitle("Agregação");
 
-		this.cell = (OperationCell) ActionClass.getCells().get(cell);
+		this.cell = (OperationCell) MainController.getCells().get(cell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		initializeGUI();

@@ -4,7 +4,7 @@ import javax.swing.JOptionPane;
 
 import com.mxgraph.model.mxCell;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
@@ -22,7 +22,7 @@ public class Edge {
 
 	public void addParent(mxCell parent) {
 
-		Cell cell = ActionClass.getCells().get(parent);
+		Cell cell = MainController.getCells().get(parent);
 
 		boolean cellHasTree; 
 		boolean cellHasError = cell.hasError();
@@ -54,7 +54,7 @@ public class Edge {
 
 	public void addChild(mxCell child) {
 
-		Cell cell = ActionClass.getCells().get(child);
+		Cell cell = MainController.getCells().get(child);
 
 		boolean isOperatorCell = !(cell instanceof TableCell);
 		boolean hasEnoughParents;

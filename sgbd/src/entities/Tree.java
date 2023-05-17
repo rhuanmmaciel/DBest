@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 
 public class Tree {
@@ -16,11 +16,11 @@ public class Tree {
 		
 		index = 0;
 		
-		while(ActionClass.getTrees().containsKey(index)) {
+		while(MainController.getTrees().containsKey(index)) {
 			index++;
 		}
 			
-		ActionClass.getTrees().put(index, this);
+		MainController.getTrees().put(index, this);
 		
 	}
 	
@@ -41,7 +41,7 @@ public class Tree {
 		
 		Set<Cell> cells = new HashSet<>();
 		
-		for(Cell cell : ActionClass.getCells().values()) {
+		for(Cell cell : MainController.getCells().values()) {
 			
 			if(cell.getTree() == this) cells.add(cell);
 			

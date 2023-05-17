@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.mxgraph.model.mxCell;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
@@ -72,12 +72,12 @@ public class DslController {
 
 		for (String tableName : tables) {
 
-			if (!ActionClass.getCells().values().stream()
+			if (!MainController.getCells().values().stream()
 					.anyMatch(cell -> cell.getName().equals(tableName) && !cell.hasChild())) {
 
 				TableCell table = new ImportFile(tableName + ".head").getResult();
 
-				ActionClass.putTableCell(50, 100, table);
+				MainController.putTableCell(50, 100, table);
 
 			}
 
@@ -155,7 +155,7 @@ public class DslController {
 			if (arity == OperationArity.UNARY && !replace) {
 
 				String parentName = elements.get("source");
-				parents.add(ActionClass.getCells().values().stream()
+				parents.add(MainController.getCells().values().stream()
 						.filter(cell -> cell.getName().equals(parentName) && !cell.hasChild()).findAny().orElse(null));
 
 			} else if (arity == OperationArity.BINARY && !replace) {
@@ -163,14 +163,14 @@ public class DslController {
 				String parentName1 = elements.get("source").split(",")[0];
 				String parentName2 = elements.get("source").split(",")[1];
 
-				parents.add(ActionClass.getCells().values().stream()
+				parents.add(MainController.getCells().values().stream()
 						.filter(cell -> cell.getName().equals(parentName1) && !cell.hasChild()).findAny().orElse(null));
-				parents.add(ActionClass.getCells().values().stream()
+				parents.add(MainController.getCells().values().stream()
 						.filter(cell -> cell.getName().equals(parentName2) && !cell.hasChild()).findAny().orElse(null));
 
 			} else if (arity == OperationArity.UNARY) {
 				
-				parents.add(ActionClass.getCells().get(ActionClass.getCells().keySet().stream()
+				parents.add(MainController.getCells().get(MainController.getCells().keySet().stream()
 						.filter(jCell -> jCell.getId().equals(elements.get("source"))).findAny().orElse(null)));
 				
 			}else {
@@ -180,7 +180,7 @@ public class DslController {
 				
 			}
 
-			mxCell jCell = ActionClass.putOperationCell(50, 100, operationCell, parents, command, type);
+			mxCell jCell = MainController.putOperationCell(50, 100, operationCell, parents, command, type);
 
 			operationsReady.put(command, jCell);
 

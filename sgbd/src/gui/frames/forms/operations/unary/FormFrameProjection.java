@@ -25,7 +25,7 @@ import javax.swing.event.DocumentListener;
 
 import com.mxgraph.model.mxCell;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.TreeException;
@@ -65,7 +65,7 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 		setModal(true);
 		setTitle("Projeção");
 
-		this.cell = (OperationCell) ActionClass.getCells().get(jCell);
+		this.cell = (OperationCell) MainController.getCells().get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 
@@ -264,7 +264,7 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 
 	public void executeOperation(mxCell jCell, List<String> data) {
 
-		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
+		OperationCell cell = (OperationCell) MainController.getCells().get(jCell);
 
 		try {	
 			
@@ -298,7 +298,7 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 			
 			cell.removeError();
 
-			ActionClass.getGraph().getModel().setValue(jCell, "π  " + data.toString());
+			MainController.getGraph().getModel().setValue(jCell, "π  " + data.toString());
 
 		} catch (TreeException e) {
 

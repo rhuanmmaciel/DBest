@@ -14,7 +14,7 @@ import com.mxgraph.swing.util.mxCellOverlay;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxStyleUtils;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.Column;
 import enums.OperationArity;
 import enums.OperationType;
@@ -160,11 +160,11 @@ public final class OperationCell extends Cell {
 		ImageIcon scaledIcon = new ImageIcon(image);
 
 		mxCellOverlay overlay = new mxCellOverlay(scaledIcon, "Error");
-		ActionClass.getGraphComponent().addCellOverlay(getJGraphCell(), overlay);
+		MainController.getGraphComponent().addCellOverlay(getJGraphCell(), overlay);
 		String style = getJGraphCell().getStyle();
 		style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKECOLOR, "red");
 		style = mxStyleUtils.setStyle(style, mxConstants.STYLE_FONTCOLOR, "red");
-		ActionClass.getGraph().getModel().setStyle(getJGraphCell(), style);
+		MainController.getGraph().getModel().setStyle(getJGraphCell(), style);
 
 		error = true;
 
@@ -172,8 +172,8 @@ public final class OperationCell extends Cell {
 
 	public void removeError() {
 
-		ActionClass.getGraph().getModel().setStyle(getJGraphCell(), getStyle());
-		ActionClass.getGraphComponent().clearCellOverlays();
+		MainController.getGraph().getModel().setStyle(getJGraphCell(), getStyle());
+		MainController.getGraphComponent().clearCellOverlays();
 		;
 
 		error = false;

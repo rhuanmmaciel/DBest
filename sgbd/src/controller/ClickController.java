@@ -33,7 +33,7 @@ public class ClickController {
 		if (currentActionRef.get() == null)
 			return;
 
-		Cell cell = ActionClass.getCells().get(jCell);
+		Cell cell = MainController.getCells().get(jCell);
 		
 		CurrentAction currentAction = currentActionRef.get();
 		
@@ -47,21 +47,21 @@ public class ClickController {
 			String name = ((CreateCellAction) currentAction).getName();
 			String style = ((CreateCellAction) currentAction).getStyle();
 
-			mxCell newCell = (mxCell) ActionClass.getGraph().insertVertex(
-					(mxCell) ActionClass.getGraph().getDefaultParent(), null, name, e.getX(), e.getY(), 80, 30, style);
+			mxCell newCell = (mxCell) MainController.getGraph().insertVertex(
+					(mxCell) MainController.getGraph().getDefaultParent(), null, name, e.getX(), e.getY(), 80, 30, style);
 
 			if (createTable) {
 
 				TableCell tableCell = ((CreateTableAction) currentAction).getTableCell();
 
 				tableCell.setJGraphCell(newCell);
-				ActionClass.getCells().put(newCell, tableCell);
+				MainController.getCells().put(newCell, tableCell);
 
 			} else {
 
 				OperationType operationType = ((CreateOperationAction) currentAction).getOperationType();
 
-				ActionClass.getCells().put(newCell,
+				MainController.getCells().put(newCell,
 						new OperationCell(name, style, newCell, operationType, null, 80, 30));
 
 				if (((CreateOperationAction) currentAction).hasParent()) {
@@ -72,10 +72,10 @@ public class ClickController {
 					currentActionRef.set(new CurrentAction(CurrentAction.ActionType.EDGE));
 					actionType = CurrentAction.ActionType.EDGE;
 
-					cell = ActionClass.getCells().get(newCell);
+					cell = MainController.getCells().get(newCell);
 					jCell = newCell;
 
-					ActionClass.getGraph().removeCells(new Object[] { ghostJCell }, true);
+					MainController.getGraph().removeCells(new Object[] { ghostJCell }, true);
 					ghostJCell = null;
 
 				}
@@ -89,14 +89,14 @@ public class ClickController {
 
 		if (jCell != null) {
 
-			ActionClass.getGraph().getModel().getValue(jCell);
+			MainController.getGraph().getModel().getValue(jCell);
 			if (currentAction != null && actionType == CurrentAction.ActionType.EDGE && !edgeRef.get().hasParent()) {
 				
 				edgeRef.get().addParent(jCell);
 
 			}
 
-			Cell parentCell = edgeRef.get().hasParent() != null ? ActionClass.getCells().get(edgeRef.get().getParent()) : null;
+			Cell parentCell = edgeRef.get().hasParent() != null ? MainController.getCells().get(edgeRef.get().getParent()) : null;
 
 			if (currentAction != null && actionType == CurrentAction.ActionType.EDGE && edgeRef.get().isDifferent(jCell)) {
 
@@ -105,7 +105,7 @@ public class ClickController {
 
 				if (edgeRef.get().isReady()) {
 
-					ActionClass.getGraph().insertEdge(edgeRef.get().getParent(), null, "", edgeRef.get().getParent(), jCell);
+					MainController.getGraph().insertEdge(edgeRef.get().getParent(), null, "", edgeRef.get().getParent(), jCell);
 
 					((OperationCell) cell).addParent(parentCell);
 
@@ -178,7 +178,7 @@ public class ClickController {
 
 		}
 
-		ActionClass.getGraph().removeCells(new Object[] { ghostJCell }, true);
+		MainController.getGraph().removeCells(new Object[] { ghostJCell }, true);
 
 		ghostJCell = null;
 

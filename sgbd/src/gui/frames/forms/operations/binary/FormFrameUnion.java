@@ -27,7 +27,7 @@ import javax.swing.event.DocumentListener;
 
 import com.mxgraph.model.mxCell;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.TreeException;
@@ -71,7 +71,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 		setModal(true);
 		setTitle("União");
 		
-		this.cell = (OperationCell) ActionClass.getCells().get(jCell);
+		this.cell = (OperationCell) MainController.getCells().get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
@@ -316,7 +316,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 	
 	public void executeOperation(mxCell jCell, List<String> data) {
 		
-		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
+		OperationCell cell = (OperationCell) MainController.getCells().get(jCell);
 
 		try {
 		
@@ -351,7 +351,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 			
 			cell.setData(data);
 			
-	        ActionClass.getGraph().getModel().setValue(jCell,"U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());
+	        MainController.getGraph().getModel().setValue(jCell,"U   " + selectedColumns1.toString() + " U " + selectedColumns2.toString());
 		
 			cell.removeError();
 	        

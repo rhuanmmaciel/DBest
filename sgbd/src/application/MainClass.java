@@ -3,11 +3,11 @@ package application;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import controller.ActionClass;
+import controller.MainController;
 
 public class MainClass {
 	public MainClass() {
-		ActionClass a = new ActionClass();
+		MainController a = new MainController();
 		a.setVisible(true);
 	}
 	public static void main(String[] args) {

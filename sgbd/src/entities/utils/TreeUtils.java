@@ -7,15 +7,15 @@ import java.util.Set;
 
 import com.mxgraph.model.mxCell;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.Tree;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 
 public class TreeUtils {
 	
-	public static Map<mxCell, Cell> cells = ActionClass.getCells();
-	public static Map<Integer, Tree> trees = ActionClass.getTrees();
+	public static Map<mxCell, Cell> cells = MainController.getCells();
+	public static Map<Integer, Tree> trees = MainController.getTrees();
 	
 	public static void updateTree(Cell cell) {
 		

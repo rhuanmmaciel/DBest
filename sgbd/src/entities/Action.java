@@ -11,7 +11,7 @@ public class Action {
 
 		public enum ActionType {
 			EDGE, CREATE_OPERATOR_CELL, DELETE_CELL, DELETE_ALL, SAVE_CELL, SHOW_CELL, IMPORT_FILE, CREATE_TABLE,
-			OPEN_CONSOLE
+			OPEN_CONSOLE, OPEN_TEXT_EDITOR
 		}
 
 		private ActionType action;

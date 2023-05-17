@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.mxgraph.model.mxCell;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.TreeException;
@@ -26,7 +26,7 @@ public class CartesianProduct implements IOperator {
 
 	public void executeOperation(mxCell jCell, List<String> data) {
 		
-		OperationCell cell = (OperationCell) ActionClass.getCells().get(jCell);
+		OperationCell cell = (OperationCell) MainController.getCells().get(jCell);
 		
 		try {
 		
@@ -51,7 +51,7 @@ public class CartesianProduct implements IOperator {
 			cell.setOperator(operator);
 			cell.setName(parentCell1.getName() + " X " + parentCell2.getName());
 			
-			ActionClass.getGraph().getModel().setValue(jCell, "X");
+			MainController.getGraph().getModel().setValue(jCell, "X");
 			
 			cell.removeError();
 		

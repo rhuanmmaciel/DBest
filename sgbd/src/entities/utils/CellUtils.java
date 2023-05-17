@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
-import controller.ActionClass;
+import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
@@ -17,8 +17,8 @@ public class CellUtils {
 
 	public static void deleteCell(mxCell jCell) {
 
-		Map<mxCell, Cell> cells = ActionClass.getCells();
-		mxGraph graph = ActionClass.getGraph();
+		Map<mxCell, Cell> cells = MainController.getCells();
+		mxGraph graph = MainController.getGraph();
 		
 		if (jCell != null) {
 
@@ -82,8 +82,8 @@ public class CellUtils {
 
 	public static void deleteAllGraph() {
 
-		Map<mxCell, Cell> cells = ActionClass.getCells();
-		mxGraph graph = ActionClass.getGraph();
+		Map<mxCell, Cell> cells = MainController.getCells();
+		mxGraph graph = MainController.getGraph();
 		
 		graph.getModel().beginUpdate();
 		try {
@@ -100,7 +100,7 @@ public class CellUtils {
 	
 	public static void showTable(mxCell jCell) {
 		
-		Cell cell = jCell != null ? ActionClass.getCells().get(jCell) : null;
+		Cell cell = jCell != null ? MainController.getCells().get(jCell) : null;
 		if (cell != null && (cell instanceof TableCell || ((OperationCell) cell).hasForm())) {
 			
 			if(!cell.hasError()) {
