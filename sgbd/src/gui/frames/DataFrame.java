@@ -28,6 +28,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import org.kordamp.ikonli.dashicons.Dashicons;
+import org.kordamp.ikonli.swing.FontIcon;
+
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 
@@ -83,6 +86,28 @@ public class DataFrame extends JDialog implements ActionListener {
 		
 		initializeGUI();
 
+	}
+	
+	private void setIcons() {
+		
+		int buttonsSize = 15;
+		
+		FontIcon iconLeft = FontIcon.of(Dashicons.CONTROLS_BACK);
+		iconLeft.setIconSize(buttonsSize);
+		btnLeft.setIcon(iconLeft);
+		
+		FontIcon iconRight = FontIcon.of(Dashicons.CONTROLS_FORWARD);
+		iconRight.setIconSize(buttonsSize);
+		btnRight.setIcon(iconRight);
+		
+		FontIcon iconAllLeft = FontIcon.of(Dashicons.CONTROLS_SKIPBACK);
+		iconAllLeft.setIconSize(buttonsSize);
+		btnAllLeft.setIcon(iconAllLeft);
+		
+		FontIcon iconAllRight = FontIcon.of(Dashicons.CONTROLS_SKIPFORWARD);
+		iconAllRight.setIconSize(buttonsSize);
+		btnAllRight.setIcon(iconAllRight);
+		
 	}
 
 	private void updateTable(int page) {
@@ -213,18 +238,18 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		JScrollPane scrollPane = new JScrollPane(table);
 
-		btnLeft = new JButton("<");
+		btnLeft = new JButton();
 		btnLeft.addActionListener(this);
 
-		btnRight = new JButton(">");
+		btnRight = new JButton();
 		btnRight.addActionListener(this);
 
 		lblPages = new JLabel();
 
-		btnAllLeft = new JButton("<<");
+		btnAllLeft = new JButton();
 		btnAllLeft.addActionListener(this);
 
-		btnAllRight = new JButton(">>");
+		btnAllRight = new JButton();
 		btnAllRight.addActionListener(this);
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -258,6 +283,7 @@ public class DataFrame extends JDialog implements ActionListener {
 		contentPane.setLayout(gl_contentPane);
 
 		verifyButtons();
+		setIcons();
 		
 		if(table.getRowCount() == 0) lblPages.setText("0/0");
 

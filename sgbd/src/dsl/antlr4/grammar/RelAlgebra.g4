@@ -1,12 +1,8 @@
 grammar RelAlgebra;
 
-expression
-:
-	selection
-	| projection
-	| join
-	| cartesian
-;
+expressions: expression ( ';' expression )* ';';
+
+expression:	selection | projection | join | cartesian ;
 
 selection: SELECTION PREDICATE '(' relation ')';
 

@@ -1,8 +1,10 @@
 package gui.frames.main;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -36,6 +38,12 @@ import enums.OperationType;
 @SuppressWarnings("serial")
 public abstract class MainFrame extends JFrame implements ActionListener, MouseListener, KeyListener, MouseMotionListener{
 
+	private static Container mainContainer;
+	
+	public static final int WIDTH = (int)(Toolkit.getDefaultToolkit().getScreenSize().width * 0.65);
+	public static final int HEIGHT = (int)(Toolkit.getDefaultToolkit().getScreenSize().height * 0.7);
+
+	
 	protected static mxGraph graph = new mxGraph();;
 	protected static mxGraphComponent graphComponent = new mxGraphComponent(graph);
 	protected JPanel containerPanel = new JPanel(new GridLayout(7, 1));
@@ -67,7 +75,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 	
 	private void initGUI() {
 
-		setSize(1000, 800);
+		setSize(WIDTH, HEIGHT);
 		setLocationRelativeTo(null);
 
 		graphComponent.setConnectable(false);
@@ -175,7 +183,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
 		});
 		
-		getContentPane();
+		mainContainer = getContentPane();
 		
 		setVisible(true);
 
@@ -187,6 +195,11 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
 	public static mxGraphComponent getGraphComponent() {
 		return graphComponent;
+	}
+	
+	public void getBackToMain() {
+		setContentPane(mainContainer);
+		revalidate();
 	}
 	
 	@Override

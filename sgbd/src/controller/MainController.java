@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.Container;
 import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -29,7 +30,8 @@ import entities.cells.TableCell;
 import entities.utils.CellUtils;
 import entities.utils.TreeUtils;
 import enums.OperationType;
-import gui.frames.TextEditor;
+import gui.frames.dsl.Console;
+import gui.frames.dsl.TextEditor;
 import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.FormFrameExportTable;
 import gui.frames.forms.importexport.FormFrameImportAs;
@@ -40,11 +42,13 @@ import gui.frames.forms.operations.unary.FormFrameSelection;
 import gui.frames.main.MainFrame;
 
 @SuppressWarnings("serial")
-public class MainController extends MainFrame{
+public class MainController extends MainFrame {
 
 	private static Map<mxCell, Cell> cells = new HashMap<>();
 	private static Map<Integer, Tree> trees = new HashMap<>();
 	private static File lastDirectory = new File("");
+
+	private Container textEditor = new TextEditor(this).getContentPane();
 
 	private mxCell jCell;
 	private mxCell ghostJCell = null;
@@ -77,11 +81,10 @@ public class MainController extends MainFrame{
 			OperationType.UNION.getName(), OperationType.UNION);
 
 	public MainController() {
-		
+
 		super(buttons);
-		
+
 	}
-	
 
 	@SuppressWarnings("incomplete-switch")
 	@Override
@@ -108,7 +111,7 @@ public class MainController extends MainFrame{
 			case CREATE_TABLE -> newTable(CurrentAction.ActionType.CREATE_TABLE);
 			case OPEN_CONSOLE -> new Console();
 			case OPEN_TEXT_EDITOR -> changeScreen();
-			
+
 			}
 
 			if (btnClicked instanceof OperationButton btnOpClicked) {
@@ -182,10 +185,10 @@ public class MainController extends MainFrame{
 		if (currentActionRef.get() != null && (opAction != null
 				|| (btnClicked != null && currentActionRef.get().getType() == ActionType.CREATE_OPERATOR_CELL))) {
 
-			ghostJCell = (mxCell) graph.insertVertex(
-					(mxCell) graph.getDefaultParent(), "ghost", style,
+			ghostJCell = (mxCell) graph.insertVertex((mxCell) graph.getDefaultParent(), "ghost", style,
 					MouseInfo.getPointerInfo().getLocation().getX() - MainFrame.getGraphComponent().getWidth(),
-					MouseInfo.getPointerInfo().getLocation().getY() - MainFrame.getGraphComponent().getHeight(), 80, 30, style);
+					MouseInfo.getPointerInfo().getLocation().getY() - MainFrame.getGraphComponent().getHeight(), 80, 30,
+					style);
 		}
 		edgeRef.get().reset();
 
@@ -244,12 +247,12 @@ public class MainController extends MainFrame{
 		}
 
 	}
-	
+
 	private void changeScreen() {
-		
-		setContentPane(new TextEditor().getContentPane());
+
+		setContentPane(textEditor);
 		revalidate();
-		
+
 	}
 
 	private void newTable(CurrentAction.ActionType action) {
@@ -342,7 +345,7 @@ public class MainController extends MainFrame{
 	@Override
 	public void mouseMoved(MouseEvent e) {
 
-		if (currentActionRef.get() != null
+		if (currentActionRef != null && currentActionRef.get() != null
 				&& currentActionRef.get().getType() == CurrentAction.ActionType.CREATE_OPERATOR_CELL
 				&& ghostJCell != null) {
 
@@ -413,32 +416,26 @@ public class MainController extends MainFrame{
 
 		switch (type) {
 
-		case SELECTION -> {
+		case SELECTION ->
 
 			new FormFrameSelection().executeOperation(jCell,
 					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]"))));
 
-		}
 		case AGGREGATION -> throw new UnsupportedOperationException("Unimplemented case: " + type);
-		case CARTESIAN_PRODUCT -> {
+		case CARTESIAN_PRODUCT ->
 
 			new CartesianProduct().executeOperation(jCell, null);
 
-		}
 		case DIFFERENCE -> throw new UnsupportedOperationException("Unimplemented case: " + type);
-		case JOIN -> {
+		case JOIN ->
 
 			new FormFrameJoin().executeOperation(jCell,
 					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
 
-		}
 		case LEFT_JOIN -> throw new UnsupportedOperationException("Unimplemented case: " + type);
-		case PROJECTION -> {
+		case PROJECTION -> new FormFrameProjection().executeOperation(jCell,
+				List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
 
-			new FormFrameProjection().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
-
-		}
 		case RENAME -> throw new UnsupportedOperationException("Unimplemented case: " + type);
 		case RIGHT_JOIN -> throw new UnsupportedOperationException("Unimplemented case: " + type);
 		case UNION -> throw new UnsupportedOperationException("Unimplemented case: " + type);

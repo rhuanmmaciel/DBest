@@ -1,4 +1,5 @@
 package dsl.antlr4;
+
 // Generated from RelAlgebra.g4 by ANTLR 4.7.2
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -7,6 +8,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * {@link RelAlgebraParser}.
  */
 public interface RelAlgebraListener extends ParseTreeListener {
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#expressions}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpressions(RelAlgebraParser.ExpressionsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#expressions}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpressions(RelAlgebraParser.ExpressionsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RelAlgebraParser#expression}.
 	 * @param ctx the parse tree
