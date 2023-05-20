@@ -1,7 +1,6 @@
 package gui.frames.dsl;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -18,7 +17,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import org.antlr.v4.runtime.CharStreams;
@@ -27,7 +25,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import dsl.AntlrController;
 import dsl.DslController;
-import dsl.InputErrorListener;
+import dsl.DslErrorListener;
 import dsl.antlr4.RelAlgebraLexer;
 import dsl.antlr4.RelAlgebraParser;
 
@@ -125,32 +123,22 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 
 				parser.removeErrorListeners();
 				
-				InputErrorListener errorListener = new InputErrorListener();
+				DslErrorListener errorListener = new DslErrorListener();
 				parser.addErrorListener(errorListener);
 
 				ParseTreeWalker walker = new ParseTreeWalker();
 				
 				AntlrController listener = new AntlrController();
 
-				walker.walk(listener, parser.expression());
-				
+				walker.walk(listener, parser.expressions());
 
-				if (!errorListener.getErrors().isEmpty()) {
-					
-					StyleConstants.setForeground(style, Color.RED);
-					try {
-						
-						doc.insertString(doc.getLength(), errorListener.getErrors() + "\n", style);
-					
-					} catch (BadLocationException e) {
-						
-						e.printStackTrace();
-						
-					}
-					
-				}
+				if (!DslErrorListener.getErrors().isEmpty())					
+					DslErrorListener.throwError(textArea);
 
 				DslController.parser();
+				
+				if (!DslErrorListener.getErrors().isEmpty())					
+					DslErrorListener.throwError(textArea);
 				
 			}
 

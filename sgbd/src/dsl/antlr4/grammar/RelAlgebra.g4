@@ -2,7 +2,7 @@ grammar RelAlgebra;
 
 expressions: expression ( ';' expression )* ';';
 
-expression:	selection | projection | join | cartesian ;
+expression: selection | projection | join | leftJoin | rightJoin | cartesianProduct | union ;
 
 selection: SELECTION PREDICATE '(' relation ')';
 
@@ -10,7 +10,13 @@ projection:	PROJECTION PREDICATE '(' relation ')';
 
 join: JOIN PREDICATE '(' relation ',' relation ')';
 
-cartesian:CARTESIAN '(' relation ( ',' relation	)* ')';
+leftJoin: LEFTJOIN PREDICATE '(' relation ',' relation ')';
+
+rightJoin: RIGHTJOIN PREDICATE '(' relation ',' relation ')';
+
+cartesianProduct: CARTESIANPRODUCT '(' relation  ',' relation ')';
+
+union: UNION PREDICATE '(' relation ',' relation ')';
 
 relation: RELATION #simple | expression #nested;
 
@@ -20,7 +26,13 @@ PROJECTION:	P R O J E C T I O N;
 
 JOIN: J O I N;
 
-CARTESIAN: C A R T E S I A N;
+LEFTJOIN: L E F T J O I N;
+
+RIGHTJOIN: R I G H T J O I N;
+
+UNION: U N I O N;
+
+CARTESIANPRODUCT: C A R T E S I A N P R O D U C T;
 
 ATTRIBUTE: '\''.*?'\'';
 

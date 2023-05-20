@@ -1,7 +1,6 @@
 package gui.frames.dsl;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,14 +10,12 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -29,12 +26,11 @@ import org.kordamp.ikonli.swing.FontIcon;
 import controller.MainController;
 import dsl.AntlrController;
 import dsl.DslController;
-import dsl.InputErrorListener;
+import dsl.DslErrorListener;
 import dsl.antlr4.RelAlgebraLexer;
 import dsl.antlr4.RelAlgebraParser;
 import enums.OperationType;
 import gui.frames.utils.JTextLineNumber;
-import javax.swing.JMenuBar;
 
 @SuppressWarnings("serial")
 public class TextEditor extends JFrame implements ActionListener {
@@ -49,13 +45,13 @@ public class TextEditor extends JFrame implements ActionListener {
 	private final JButton btnBack = new JButton();
 	private final JButton btnImport = new JButton();
 	private final JMenu mnOperations = new JMenu("Operações");
-	private final JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.getName());
-	private final JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.getName());
-	private final JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.getName());
-	private final JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.getName());
-	private final JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.getName());
-	private final JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getName());
-	private final JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getName());
+	private final JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.getDisplayName());
+	private final JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.getDisplayName());
+	private final JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.getDisplayName());
+	private final JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.getDisplayName());
+	private final JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.getDisplayName());
+	private final JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getDisplayName());
+	private final JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getDisplayName());
 	
 	private JButton btnRun = new JButton("Run");
 	private JButton btnRunSelection = new JButton("Run selection");
@@ -99,12 +95,19 @@ public class TextEditor extends JFrame implements ActionListener {
 		menuBar.add(mnOperations);
 		
 		mnOperations.add(menuItemSelection);
+		menuItemSelection.addActionListener(this);
 		mnOperations.add(menuItemProjection);
+		menuItemProjection.addActionListener(this);
 		mnOperations.add(menuItemJoin);
+		menuItemJoin.addActionListener(this);
 		mnOperations.add(menuItemLeftJoin);
+		menuItemLeftJoin.addActionListener(this);
 		mnOperations.add(menuItemRightJoin);
+		menuItemRightJoin.addActionListener(this);
 		mnOperations.add(menuItemCartesianProduct);
+		menuItemCartesianProduct.addActionListener(this);
 		mnOperations.add(menuItemUnion);
+		menuItemUnion.addActionListener(this);
 		
 		btnBack.addActionListener(this);
 		btnImport.addActionListener(this);
@@ -126,13 +129,13 @@ public class TextEditor extends JFrame implements ActionListener {
 		FontIcon iconImport = FontIcon.of(Dashicons.OPEN_FOLDER);
 		iconImport.setIconSize(iconsSize);
 		btnImport.setIcon(iconImport);
-		//EDITOR_CUSTOMCHAR
+
 	}
 
 	private void run() {
 
 		run(textPane.getText());
-
+		
 	}
 
 	private void run(String text) {
@@ -141,16 +144,13 @@ public class TextEditor extends JFrame implements ActionListener {
 			return;
 
 		console.setText("");
-
-		StyledDocument doc = console.getStyledDocument();
-		Style style = doc.addStyle("errorStyle", null);
-
+		
 		RelAlgebraParser parser = new RelAlgebraParser(
 				new CommonTokenStream(new RelAlgebraLexer(CharStreams.fromString(text))));
 
 		parser.removeErrorListeners();
 
-		InputErrorListener errorListener = new InputErrorListener();
+		DslErrorListener errorListener = new DslErrorListener();
 		parser.addErrorListener(errorListener);
 
 		ParseTreeWalker walker = new ParseTreeWalker();
@@ -159,36 +159,28 @@ public class TextEditor extends JFrame implements ActionListener {
 
 		walker.walk(listener, parser.expressions());
 		
-		if (!errorListener.getErrors().isEmpty()) {
-
-			StyleConstants.setForeground(style, Color.RED);
-			try {
-
-				doc.insertString(doc.getLength(), errorListener.getErrors() + "\n", style);
-
-			} catch (BadLocationException e) {
-
-				e.printStackTrace();
-
-			}
+		if (!DslErrorListener.getErrors().isEmpty()) 
+			DslErrorListener.throwError(console);
 			
-			DslController.reset();
-			
-		}else {
+		else {
 			
 			DslController.parser();
 			
+			if (!DslErrorListener.getErrors().isEmpty()) 
+				DslErrorListener.throwError(console);
+			
 		}
+		
+		DslErrorListener.clearErrors();
 
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnBack) {
 
 			main.getBackToMain();
-			;
 
 		}
 
@@ -201,6 +193,24 @@ public class TextEditor extends JFrame implements ActionListener {
 			run(textPane.getSelectedText());
 
 		}
-
+		
+		if(e.getSource() == menuItemSelection) insertOperation("selection[predicado](tabela);");
+		else if(e.getSource() == menuItemProjection) insertOperation("projection[colunas](tabela);");	
+		else if(e.getSource() == menuItemJoin) insertOperation("join[coluna1,coluna2](tabela1,tabela2);");	
+		else if(e.getSource() == menuItemLeftJoin) insertOperation("leftJoin[coluna1,coluna2](tabela1,tabela2);");	
+		else if(e.getSource() == menuItemRightJoin) insertOperation("rightJoin[coluna1,coluna2](tabela1,tabela2);");	
+		else if(e.getSource() == menuItemCartesianProduct) insertOperation("cartesianProduct(tabela1,tabela2);");	
+		else if(e.getSource() == menuItemUnion) insertOperation("union[colunas1,colunas2](tabela1,tabela2);");	
+		
+	}
+	
+	private void insertOperation(String text) {
+		
+		try {
+		    textPane.getDocument().insertString(textPane.getCaretPosition(), text, null);
+		} catch (BadLocationException error) {
+		    error.printStackTrace();
+		}
+		
 	}
 }

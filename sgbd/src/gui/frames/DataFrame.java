@@ -33,10 +33,14 @@ import org.kordamp.ikonli.swing.FontIcon;
 
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import gui.frames.main.MainFrame;
 
 @SuppressWarnings("serial")
 public class DataFrame extends JDialog implements ActionListener {
 
+	private final int WIDTH = (int)(MainFrame.WIDTH * 1.1);
+	private final int HEIGHT = (int)(MainFrame.HEIGHT * 0.6);
+	
 	private JPanel contentPane;
 	private JTable table = new JTable();
 	private JButton btnLeft;
@@ -60,7 +64,7 @@ public class DataFrame extends JDialog implements ActionListener {
 		super((Window) null, "DataFrame");
 		setModal(true);
 		
-		if(cell instanceof OperationCell operationCell) lblText.setText(operationCell.getType().getName()+":");
+		if(cell instanceof OperationCell operationCell) lblText.setText(operationCell.getType().getDisplayName()+":");
 		else lblText.setText(cell.getName()+":");
 		
 		data = cell.getMapContent();
@@ -228,7 +232,7 @@ public class DataFrame extends JDialog implements ActionListener {
 
 	private void initializeGUI() {
 
-		setBounds(100, 100, 1400, 450);
+		setBounds(0, 0, WIDTH, HEIGHT);
 		setLocationRelativeTo(null);
 
 		contentPane = new JPanel();
@@ -253,32 +257,49 @@ public class DataFrame extends JDialog implements ActionListener {
 		btnAllRight.addActionListener(this);
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(
-				Alignment.TRAILING,
-				gl_contentPane.createSequentialGroup().addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap().addComponent(scrollPane,
-								GroupLayout.PREFERRED_SIZE, 1300, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_contentPane.createSequentialGroup().addGap(27).addComponent(lblText)
-										.addPreferredGap(ComponentPlacement.RELATED, 1187, Short.MAX_VALUE)
-										.addComponent(lblPages))
-								.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-										.addComponent(btnAllLeft).addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnLeft).addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(btnRight).addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnAllRight, GroupLayout.PREFERRED_SIZE, 54,
-												GroupLayout.PREFERRED_SIZE))))
-						.addGap(63)));
+		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+		        .addGroup(Alignment.TRAILING,
+		                gl_contentPane.createSequentialGroup()
+		                        .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+		                                .addGroup(gl_contentPane.createSequentialGroup()
+		                                        .addContainerGap()
+		                                        .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, (int)(WIDTH * 92 / 100), GroupLayout.PREFERRED_SIZE))
+		                                .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+		                                        .addGroup(gl_contentPane.createSequentialGroup()
+		                                                .addGap((int)(WIDTH * 1 / 100))
+		                                                .addComponent(lblText)
+		                                                .addPreferredGap(ComponentPlacement.RELATED, (int)(WIDTH * 85 / 100), Short.MAX_VALUE)
+		                                                .addComponent(lblPages))
+		                                        .addGroup(gl_contentPane.createSequentialGroup()
+		                                                .addContainerGap()
+		                                                .addComponent(btnAllLeft)
+		                                                .addPreferredGap(ComponentPlacement.RELATED)
+		                                                .addComponent(btnLeft)
+		                                                .addPreferredGap(ComponentPlacement.UNRELATED)
+		                                                .addComponent(btnRight)
+		                                                .addPreferredGap(ComponentPlacement.RELATED)
+		                                                .addComponent(btnAllRight, GroupLayout.PREFERRED_SIZE, (int)(WIDTH * 4 / 100),
+		                                                        GroupLayout.PREFERRED_SIZE))))
+		                                .addGap((int)(WIDTH * 5 / 100))));
+
+
+
 		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE).addComponent(lblText)
-								.addComponent(lblPages))
-						.addGap(19)
-						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE)
-						.addGap(39)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE).addComponent(btnAllRight)
-								.addComponent(btnRight).addComponent(btnLeft).addComponent(btnAllLeft))
-						.addContainerGap(21, Short.MAX_VALUE)));
+		        .addGroup(gl_contentPane.createSequentialGroup()
+		                .addContainerGap()
+		                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+		                        .addComponent(lblText)
+		                        .addComponent(lblPages))
+		                .addGap((int)(HEIGHT * 5 / 100))
+		                .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, (int)(HEIGHT * 60 / 100), GroupLayout.PREFERRED_SIZE)
+		                .addGap((int)(HEIGHT * 5 / 100))
+		                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+		                        .addComponent(btnAllRight)
+		                        .addComponent(btnRight)
+		                        .addComponent(btnLeft)
+		                        .addComponent(btnAllLeft))
+		                .addContainerGap((int)(HEIGHT * 5 / 100), Short.MAX_VALUE)));
+
 
 		contentPane.setLayout(gl_contentPane);
 

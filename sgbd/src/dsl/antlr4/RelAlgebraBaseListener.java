@@ -1,4 +1,5 @@
 package dsl.antlr4;
+
 // Generated from RelAlgebra.g4 by ANTLR 4.7.2
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -76,13 +77,49 @@ public class RelAlgebraBaseListener implements RelAlgebraListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCartesian(RelAlgebraParser.CartesianContext ctx) { }
+	@Override public void enterLeftJoin(RelAlgebraParser.LeftJoinContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCartesian(RelAlgebraParser.CartesianContext ctx) { }
+	@Override public void exitLeftJoin(RelAlgebraParser.LeftJoinContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRightJoin(RelAlgebraParser.RightJoinContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRightJoin(RelAlgebraParser.RightJoinContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCartesianProduct(RelAlgebraParser.CartesianProductContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCartesianProduct(RelAlgebraParser.CartesianProductContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterUnion(RelAlgebraParser.UnionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUnion(RelAlgebraParser.UnionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

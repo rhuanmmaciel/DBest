@@ -68,6 +68,12 @@ public final class TableCell extends Cell{
 		return false;
 	}
 	
+	public List<Cell> getParents() {
+
+		return List.of();
+
+	}
+	
 	public boolean hasError() {
 		return false;
 	}

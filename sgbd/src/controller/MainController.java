@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +32,9 @@ import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import entities.utils.CellUtils;
 import entities.utils.TreeUtils;
+import enums.OperationArity;
 import enums.OperationType;
+import gui.frames.CellInformationFrame;
 import gui.frames.dsl.Console;
 import gui.frames.dsl.TextEditor;
 import gui.frames.forms.create.FormFrameCreateTable;
@@ -37,6 +42,9 @@ import gui.frames.forms.importexport.FormFrameExportTable;
 import gui.frames.forms.importexport.FormFrameImportAs;
 import gui.frames.forms.operations.binary.CartesianProduct;
 import gui.frames.forms.operations.binary.FormFrameJoin;
+import gui.frames.forms.operations.binary.FormFrameLeftJoin;
+import gui.frames.forms.operations.binary.FormFrameRightJoin;
+import gui.frames.forms.operations.binary.FormFrameUnion;
 import gui.frames.forms.operations.unary.FormFrameProjection;
 import gui.frames.forms.operations.unary.FormFrameSelection;
 import gui.frames.main.MainFrame;
@@ -44,9 +52,16 @@ import gui.frames.main.MainFrame;
 @SuppressWarnings("serial")
 public class MainController extends MainFrame {
 
-	private static Map<mxCell, Cell> cells = new HashMap<>();
+	protected static Map<mxCell, Cell> cells = new HashMap<>();
 	private static Map<Integer, Tree> trees = new HashMap<>();
 	private static File lastDirectory = new File("");
+
+	private static final List<String> unaryOp = new ArrayList<>(new ArrayList<>(Arrays.asList(OperationType.values()))
+			.stream().filter(operation -> operation.getArity() == OperationArity.UNARY)
+			.map(OperationType::getOperationName).toList());
+	private static final List<String> binaryOp = new ArrayList<>(new ArrayList<>(Arrays.asList(OperationType.values()))
+			.stream().filter(operation -> operation.getArity() == OperationArity.BINARY)
+			.map(OperationType::getOperationName).toList());
 
 	private Container textEditor = new TextEditor(this).getContentPane();
 
@@ -59,30 +74,48 @@ public class MainController extends MainFrame {
 	private static Set<Button> buttons = new HashSet<>();
 
 	public static final CreateOperationAction projectionOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.PROJECTION.getSymbol(),
-			OperationType.PROJECTION.getName(), OperationType.PROJECTION);
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.PROJECTION.getDisplayNameAndSymbol(),
+			OperationType.PROJECTION.getDisplayName(), OperationType.PROJECTION);
 	public static final CreateOperationAction selectionOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.SELECTION.getSymbol(),
-			OperationType.SELECTION.getName(), OperationType.SELECTION);
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.SELECTION.getDisplayNameAndSymbol(),
+			OperationType.SELECTION.getDisplayName(), OperationType.SELECTION);
 	public static final CreateOperationAction joinOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.JOIN.getSymbol(), OperationType.JOIN.getName(),
-			OperationType.JOIN);
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.JOIN.getDisplayNameAndSymbol(),
+			OperationType.JOIN.getDisplayName(), OperationType.JOIN);
 	public static final CreateOperationAction leftJoinOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.LEFT_JOIN.getSymbol(),
-			OperationType.LEFT_JOIN.getName(), OperationType.LEFT_JOIN);
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.LEFT_JOIN.getDisplayNameAndSymbol(),
+			OperationType.LEFT_JOIN.getDisplayName(), OperationType.LEFT_JOIN);
 	public static final CreateOperationAction rightJoinOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.RIGHT_JOIN.getSymbol(),
-			OperationType.RIGHT_JOIN.getName(), OperationType.RIGHT_JOIN);
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.RIGHT_JOIN.getDisplayNameAndSymbol(),
+			OperationType.RIGHT_JOIN.getDisplayName(), OperationType.RIGHT_JOIN);
 	public static final CreateOperationAction cartesianProductOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.CARTESIAN_PRODUCT.getSymbol(),
-			OperationType.CARTESIAN_PRODUCT.getName(), OperationType.CARTESIAN_PRODUCT);
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.CARTESIAN_PRODUCT.getDisplayNameAndSymbol(),
+			OperationType.CARTESIAN_PRODUCT.getDisplayName(), OperationType.CARTESIAN_PRODUCT);
 	public static final CreateOperationAction unionOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.UNION.getSymbol(),
-			OperationType.UNION.getName(), OperationType.UNION);
+			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.UNION.getDisplayNameAndSymbol(),
+			OperationType.UNION.getDisplayName(), OperationType.UNION);
 
 	public MainController() {
 
 		super(buttons);
+
+//		addWindowListener(new WindowAdapter() {
+//
+//			public void windowClosing(WindowEvent e) {
+//
+//				File directory = new File(".");
+//				File[] filesList = directory.listFiles();
+//				for (File file : filesList) {
+//					if (file.isFile() && (file.getName().endsWith(".dat") || file.getName().endsWith(".head"))) {
+//						file.delete();
+//					}
+//				}
+//
+//				System.exit(0);
+//
+//			}
+//
+//		});
 
 	}
 
@@ -129,6 +162,10 @@ public class MainController extends MainFrame {
 
 			CellUtils.showTable(jCell);
 
+		}else if(e.getSource() == menuItemInformations) {
+			
+			new CellInformationFrame(jCell);
+			
 		} else if (e.getSource() == menuItemEdit) {
 
 			((OperationCell) cells.get(jCell)).editOperation(jCell);
@@ -141,37 +178,37 @@ public class MainController extends MainFrame {
 		} else if (e.getSource() == menuItemSelection) {
 
 			opAction = selectionOperation;
-			style = OperationType.SELECTION.getName();
+			style = OperationType.SELECTION.getDisplayName();
 
 		} else if (e.getSource() == menuItemProjection) {
 
 			opAction = projectionOperation;
-			style = OperationType.PROJECTION.getName();
+			style = OperationType.PROJECTION.getDisplayName();
 
 		} else if (e.getSource() == menuItemJoin) {
 
 			opAction = joinOperation;
-			style = OperationType.JOIN.getName();
+			style = OperationType.JOIN.getDisplayName();
 
 		} else if (e.getSource() == menuItemLeftJoin) {
 
 			opAction = leftJoinOperation;
-			style = OperationType.LEFT_JOIN.getName();
+			style = OperationType.LEFT_JOIN.getDisplayName();
 
 		} else if (e.getSource() == menuItemRightJoin) {
 
 			opAction = rightJoinOperation;
-			style = OperationType.RIGHT_JOIN.getName();
+			style = OperationType.RIGHT_JOIN.getDisplayName();
 
 		} else if (e.getSource() == menuItemCartesianProduct) {
 
 			opAction = cartesianProductOperation;
-			style = OperationType.CARTESIAN_PRODUCT.getName();
+			style = OperationType.CARTESIAN_PRODUCT.getDisplayName();
 
 		} else if (e.getSource() == menuItemUnion) {
 
 			opAction = unionOperation;
-			style = OperationType.UNION.getName();
+			style = OperationType.UNION.getDisplayName();
 
 		}
 
@@ -204,6 +241,7 @@ public class MainController extends MainFrame {
 			Cell cell = cells.get(jCell);
 
 			popupMenuJCell.add(menuItemShow);
+			popupMenuJCell.add(menuItemInformations);
 			popupMenuJCell.add(menuItemEdit);
 			popupMenuJCell.add(menuItemOperations);
 			popupMenuJCell.add(menuItemRemove);
@@ -359,11 +397,19 @@ public class MainController extends MainFrame {
 	}
 
 	public static Map<mxCell, Cell> getCells() {
-		return cells;
+		return Collections.unmodifiableMap(cells);
 	}
 
 	public static Map<Integer, Tree> getTrees() {
 		return trees;
+	}
+
+	public static List<String> unaryOperationsName() {
+		return Collections.unmodifiableList(unaryOp);
+	}
+
+	public static List<String> binaryOperationsName() {
+		return Collections.unmodifiableList(binaryOp);
 	}
 
 	public static File getLastDirectory() {
@@ -422,23 +468,42 @@ public class MainController extends MainFrame {
 					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]"))));
 
 		case AGGREGATION -> throw new UnsupportedOperationException("Unimplemented case: " + type);
+
 		case CARTESIAN_PRODUCT ->
 
 			new CartesianProduct().executeOperation(jCell, null);
 
 		case DIFFERENCE -> throw new UnsupportedOperationException("Unimplemented case: " + type);
+
 		case JOIN ->
 
 			new FormFrameJoin().executeOperation(jCell,
 					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
 
-		case LEFT_JOIN -> throw new UnsupportedOperationException("Unimplemented case: " + type);
-		case PROJECTION -> new FormFrameProjection().executeOperation(jCell,
-				List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+		case LEFT_JOIN ->
 
-		case RENAME -> throw new UnsupportedOperationException("Unimplemented case: " + type);
-		case RIGHT_JOIN -> throw new UnsupportedOperationException("Unimplemented case: " + type);
-		case UNION -> throw new UnsupportedOperationException("Unimplemented case: " + type);
+			new FormFrameLeftJoin().executeOperation(jCell,
+					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+
+		case PROJECTION ->
+
+			new FormFrameProjection().executeOperation(jCell,
+					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+
+		case RENAME ->
+
+			throw new UnsupportedOperationException("Unimplemented case: " + type);
+
+		case RIGHT_JOIN ->
+
+			new FormFrameRightJoin().executeOperation(jCell,
+					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+
+		case UNION ->
+
+			new FormFrameUnion().executeOperation(jCell,
+					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+
 		default -> throw new IllegalArgumentException("Unexpected value: " + type);
 
 		}

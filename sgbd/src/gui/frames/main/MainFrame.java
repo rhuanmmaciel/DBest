@@ -11,9 +11,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
 import java.util.Set;
 
 import javax.swing.JFrame;
@@ -53,17 +50,18 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 	
 	protected JPopupMenu popupMenuJCell = new JPopupMenu();
 	protected JMenuItem menuItemShow = new JMenuItem("Mostrar");
+	protected JMenuItem menuItemInformations = new JMenuItem("Informações");
 	protected JMenuItem menuItemEdit = new JMenuItem("Editar");
 	protected JMenuItem menuItemRemove = new JMenuItem("Remover");
 
 	protected JMenu menuItemOperations = new JMenu("Operações");
-	protected JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.getName());
-	protected JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.getName());
-	protected JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.getName());
-	protected JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.getName());
-	protected JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.getName());
-	protected JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getName());
-	protected JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getName());
+	protected JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.getDisplayName());
+	protected JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.getDisplayName());
+	protected JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.getDisplayName());
+	protected JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.getDisplayName());
+	protected JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.getDisplayName());
+	protected JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getDisplayName());
+	protected JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getDisplayName());
 	
 	public MainFrame(Set<Button> buttons) {
 		
@@ -86,20 +84,20 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
 		mxStylesheet stylesheet = graph.getStylesheet();
 
-		buttons.add(new OperationButton(stylesheet, OperationType.PROJECTION.getSymbol(),
-				OperationType.PROJECTION.getName(), this, containerPanel, MainController.projectionOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.SELECTION.getSymbol(),
-				OperationType.SELECTION.getName(), this, containerPanel, MainController.selectionOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.JOIN.getSymbol(), OperationType.JOIN.getName(), this,
+		buttons.add(new OperationButton(stylesheet, OperationType.PROJECTION.getDisplayNameAndSymbol(),
+				OperationType.PROJECTION.getDisplayName(), this, containerPanel, MainController.projectionOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.SELECTION.getDisplayNameAndSymbol(),
+				OperationType.SELECTION.getDisplayName(), this, containerPanel, MainController.selectionOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.JOIN.getDisplayNameAndSymbol(), OperationType.JOIN.getDisplayName(), this,
 				containerPanel, MainController.joinOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.CARTESIAN_PRODUCT.getSymbol(),
-				OperationType.CARTESIAN_PRODUCT.getName(), this, containerPanel, MainController.cartesianProductOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.UNION.getSymbol(), OperationType.UNION.getName(),
+		buttons.add(new OperationButton(stylesheet, OperationType.CARTESIAN_PRODUCT.getDisplayNameAndSymbol(),
+				OperationType.CARTESIAN_PRODUCT.getDisplayName(), this, containerPanel, MainController.cartesianProductOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.UNION.getDisplayNameAndSymbol(), OperationType.UNION.getDisplayName(),
 				this, containerPanel, MainController.unionOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.LEFT_JOIN.getSymbol(),
-				OperationType.LEFT_JOIN.getName(), this, containerPanel, MainController.leftJoinOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.RIGHT_JOIN.getSymbol(),
-				OperationType.RIGHT_JOIN.getName(), this, containerPanel, MainController.rightJoinOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.LEFT_JOIN.getDisplayNameAndSymbol(),
+				OperationType.LEFT_JOIN.getDisplayName(), this, containerPanel, MainController.leftJoinOperation));
+		buttons.add(new OperationButton(stylesheet, OperationType.RIGHT_JOIN.getDisplayNameAndSymbol(),
+				OperationType.RIGHT_JOIN.getDisplayName(), this, containerPanel, MainController.rightJoinOperation));
 		
 		buttons.add(new ToolBarButton(" Importar tabela(i) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.IMPORT_FILE)));
@@ -143,6 +141,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
 		graph.getModel().endUpdate();
 
+		menuItemInformations.addActionListener(this);
 		menuItemShow.addActionListener(this);
 		menuItemEdit.addActionListener(this);
 		menuItemRemove.addActionListener(this);
@@ -165,24 +164,6 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
 		graphComponent.setComponentPopupMenu(popupMenuJCell);
 
-		addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-
-				File directory = new File(".");
-				File[] filesList = directory.listFiles();
-				for (File file : filesList) {
-					if (file.isFile() && (file.getName().endsWith(".dat") || file.getName().endsWith(".head"))) {
-						file.delete();
-					}
-				}
-
-				System.exit(0);
-
-			}
-
-		});
-		
 		mainContainer = getContentPane();
 		
 		setVisible(true);

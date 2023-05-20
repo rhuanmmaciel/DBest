@@ -2,7 +2,10 @@ package enums;
 
 public interface IOperationType {
 	
-	String getName();
+	String getDisplayName();
 	String getSymbol();
+	String getDisplayNameAndSymbol();
+	String getOperationName();
+	OperationArity getArity();
     
 }

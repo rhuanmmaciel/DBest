@@ -1,7 +1,5 @@
 package entities.utils;
 
-import java.util.Map;
-
 import javax.swing.JOptionPane;
 
 import com.mxgraph.model.mxCell;
@@ -13,11 +11,11 @@ import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import gui.frames.DataFrame;
 
-public class CellUtils {
+@SuppressWarnings("serial")
+public class CellUtils extends MainController{
 
 	public static void deleteCell(mxCell jCell) {
 
-		Map<mxCell, Cell> cells = MainController.getCells();
 		mxGraph graph = MainController.getGraph();
 		
 		if (jCell != null) {
@@ -82,7 +80,6 @@ public class CellUtils {
 
 	public static void deleteAllGraph() {
 
-		Map<mxCell, Cell> cells = MainController.getCells();
 		mxGraph graph = MainController.getGraph();
 		
 		graph.getModel().beginUpdate();

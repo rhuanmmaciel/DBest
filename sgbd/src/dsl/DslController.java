@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.mxgraph.model.mxCell;
 
@@ -18,9 +20,13 @@ import enums.OperationType;
 import exceptions.ParentNullException;
 import gui.frames.forms.operations.binary.CartesianProduct;
 import gui.frames.forms.operations.binary.FormFrameJoin;
+import gui.frames.forms.operations.binary.FormFrameLeftJoin;
+import gui.frames.forms.operations.binary.FormFrameRightJoin;
+import gui.frames.forms.operations.binary.FormFrameUnion;
 import gui.frames.forms.operations.unary.FormFrameProjection;
 import gui.frames.forms.operations.unary.FormFrameSelection;
 import util.ImportFile;
+import util.Utils;
 
 public class DslController {
 
@@ -47,7 +53,7 @@ public class DslController {
 	}
 
 	public static void parser() {
-
+		
 		execute();
 
 		reset();
@@ -64,12 +70,14 @@ public class DslController {
 		List<String> tableFileNames = getTableFileNames();
 
 		for (String tableName : tables)
-			if (!tableFileNames.contains(tableName))
+			if (!tableFileNames.contains(tableName)) {
+			
 				everyTableExist = false;
-
-		if (!everyTableExist) {
+				DslErrorListener.addErrors("Table '" + tableName + "' doesn't exist");
+			
+			}
+		if (!everyTableExist)
 			return;
-		}
 
 		createTree();
 
@@ -91,23 +99,45 @@ public class DslController {
 
 	private static void solveExpression(Map<String, String> elements, Map<String, mxCell> operationsReady) {
 
-		if (elements.get("source").contains("(")) 
-			
-			solveExpression(recognizer(elements.get("source")), operationsReady);
+		if (MainController.unaryOperationsName().contains(elements.get("operation"))) {
 
-		else {
-			
-			String tables[] = elements.get("source").split(",");
+			if (elements.get("source").contains("("))
+				solveExpression(recognizer(elements.get("source")), operationsReady);
 
-			for (String table : tables) {
+			else {
 
-				createTable(table);
+				String tables[] = elements.get("source").split(",");
+
+				for (String table : tables) {
+
+					createTable(table);
+
+				}
 
 			}
-			
+
+		} else {
+
+			List<String> tables = new ArrayList<>();
+
+			if (elements.get("source1").contains("("))
+				solveExpression(recognizer(elements.get("source1")), operationsReady);
+			else
+				tables.addAll(List.of(elements.get("source1").split(",")));
+
+			if (elements.get("source2").contains("("))
+				solveExpression(recognizer(elements.get("source2")), operationsReady);
+
+			else
+				tables.addAll(List.of(elements.get("source2").split(",")));
+
+			for (String table : tables)
+				createTable(table);
+
 		}
 
 		boolean replace = false;
+		int replaced = 0;
 
 		OperationCell operationCell = null;
 
@@ -117,22 +147,36 @@ public class DslController {
 
 		List<Cell> parents = new ArrayList<>();
 
-		if ((elements.get("operation").equals("selection") || elements.get("operation").equals("projection"))
+		if (Utils.containsIgnoreCase(MainController.unaryOperationsName(), elements.get("operation"))
 				&& operationsReady.containsKey(elements.get("source"))) {
 
 			elements.put("source", operationsReady.get(elements.get("source")).getId());
 			replace = true;
 
-		} else {
+		} else if (Utils.containsIgnoreCase(MainController.binaryOperationsName(), elements.get("operation"))
+				&& (operationsReady.containsKey(elements.get("source1"))
+						|| operationsReady.containsKey(elements.get("source2")))) {
+
+			if (operationsReady.containsKey(elements.get("source1"))) {
+				elements.put("source1", operationsReady.get(elements.get("source1")).getId());
+				replaced--;
+			}
+
+			if (operationsReady.containsKey(elements.get("source2"))) {
+				elements.put("source2", operationsReady.get(elements.get("source2")).getId());
+				replaced++;
+			}
+
+			replace = true;
 
 		}
 
-		switch (elements.get("operation")) {
+		switch (elements.get("operation").toLowerCase()) {
 
 		case "selection" -> {
 
-			operationCell = new OperationCell(OperationType.SELECTION.getSymbol(), OperationType.SELECTION.getName(),
-					null, OperationType.SELECTION, null, 80, 30);
+			operationCell = new OperationCell(OperationType.SELECTION.getDisplayNameAndSymbol(),
+					OperationType.SELECTION.getDisplayName(), null, OperationType.SELECTION, null, 80, 30);
 
 			operationCell.setForm(FormFrameSelection.class);
 
@@ -142,8 +186,8 @@ public class DslController {
 		}
 		case "projection" -> {
 
-			operationCell = new OperationCell(OperationType.PROJECTION.getSymbol(), OperationType.PROJECTION.getName(),
-					null, OperationType.PROJECTION, null, 80, 30);
+			operationCell = new OperationCell(OperationType.PROJECTION.getDisplayNameAndSymbol(),
+					OperationType.PROJECTION.getDisplayName(), null, OperationType.PROJECTION, null, 80, 30);
 
 			operationCell.setForm(FormFrameProjection.class);
 
@@ -151,10 +195,11 @@ public class DslController {
 			arity = OperationArity.UNARY;
 
 		}
-		case "cartesian" -> {
+		case "cartesianproduct" -> {
 
-			operationCell = new OperationCell(OperationType.CARTESIAN_PRODUCT.getSymbol(),
-					OperationType.CARTESIAN_PRODUCT.getName(), null, OperationType.CARTESIAN_PRODUCT, null, 80, 30);
+			operationCell = new OperationCell(OperationType.CARTESIAN_PRODUCT.getDisplayNameAndSymbol(),
+					OperationType.CARTESIAN_PRODUCT.getDisplayName(), null, OperationType.CARTESIAN_PRODUCT, null, 80,
+					30);
 
 			operationCell.setForm(CartesianProduct.class);
 
@@ -164,12 +209,45 @@ public class DslController {
 		}
 		case "join" -> {
 
-			operationCell = new OperationCell(OperationType.JOIN.getSymbol(), OperationType.JOIN.getName(), null,
-					OperationType.JOIN, null, 80, 30);
+			operationCell = new OperationCell(OperationType.JOIN.getDisplayNameAndSymbol(),
+					OperationType.JOIN.getDisplayName(), null, OperationType.JOIN, null, 80, 30);
 
 			operationCell.setForm(FormFrameJoin.class);
 
 			type = OperationType.JOIN;
+			arity = OperationArity.BINARY;
+
+		}
+		case "leftjoin" -> {
+
+			operationCell = new OperationCell(OperationType.LEFT_JOIN.getDisplayNameAndSymbol(),
+					OperationType.LEFT_JOIN.getDisplayName(), null, OperationType.LEFT_JOIN, null, 80, 30);
+
+			operationCell.setForm(FormFrameLeftJoin.class);
+
+			type = OperationType.LEFT_JOIN;
+			arity = OperationArity.BINARY;
+
+		}
+		case "rightjoin" -> {
+
+			operationCell = new OperationCell(OperationType.RIGHT_JOIN.getDisplayNameAndSymbol(),
+					OperationType.RIGHT_JOIN.getDisplayName(), null, OperationType.RIGHT_JOIN, null, 80, 30);
+
+			operationCell.setForm(FormFrameRightJoin.class);
+
+			type = OperationType.RIGHT_JOIN;
+			arity = OperationArity.BINARY;
+
+		}
+		case "union" -> {
+
+			operationCell = new OperationCell(OperationType.UNION.getDisplayNameAndSymbol(),
+					OperationType.UNION.getDisplayName(), null, OperationType.UNION, null, 80, 30);
+
+			operationCell.setForm(FormFrameUnion.class);
+
+			type = OperationType.UNION;
 			arity = OperationArity.BINARY;
 
 		}
@@ -183,8 +261,8 @@ public class DslController {
 
 		} else if (arity == OperationArity.BINARY && !replace) {
 
-			String parentName1 = elements.get("source").split(",")[0];
-			String parentName2 = elements.get("source").split(",")[1];
+			String parentName1 = elements.get("source1");
+			String parentName2 = elements.get("source2");
 
 			parents.add(MainController.getCells().values().stream()
 					.filter(cell -> cell.getName().equals(parentName1) && !cell.hasChild()).findAny().orElse(null));
@@ -198,8 +276,35 @@ public class DslController {
 
 		} else {
 
-			// String parentName1 = elements.get("source").split(",")[0];
-			// String parentName2 = elements.get("source").split(",")[1];
+			String parentName1 = elements.get("source1");
+			String parentName2 = elements.get("source2");
+
+			switch (replaced) {
+
+			case -1 -> {
+				parents.add(MainController.getCells().get(MainController.getCells().keySet().stream()
+						.filter(jCell -> jCell.getId().equals(elements.get("source1"))).findAny().orElse(null)));
+				parents.add(MainController.getCells().values().stream()
+						.filter(cell -> cell.getName().equals(parentName2) && !cell.hasChild()).findAny().orElse(null));
+
+			}
+
+			case 1 -> {
+				parents.add(MainController.getCells().values().stream()
+						.filter(cell -> cell.getName().equals(parentName1) && !cell.hasChild()).findAny().orElse(null));
+				parents.add(MainController.getCells().get(MainController.getCells().keySet().stream()
+						.filter(jCell -> jCell.getId().equals(elements.get("source2"))).findAny().orElse(null)));
+
+			}
+			case 0 -> {
+				parents.add(MainController.getCells().get(MainController.getCells().keySet().stream()
+						.filter(jCell -> jCell.getId().equals(elements.get("source1"))).findAny().orElse(null)));
+				parents.add(MainController.getCells().get(MainController.getCells().keySet().stream()
+						.filter(jCell -> jCell.getId().equals(elements.get("source2"))).findAny().orElse(null)));
+
+			}
+
+			}
 
 		}
 
@@ -222,6 +327,23 @@ public class DslController {
 
 	private static Map<String, String> recognizer(String input) {
 
+		int endIndex = input.indexOf('(');
+
+		if (input.contains("[")) {
+
+			endIndex = Math.min(input.indexOf('['), endIndex);
+
+		}
+
+		if (MainController.unaryOperationsName().contains(input.substring(0, endIndex).toLowerCase()))
+			return unaryRecognizer(input);
+
+		return binaryRecognizer(input);
+
+	}
+
+	private static Map<String, String> unaryRecognizer(String input) {
+
 		Map<String, String> elements = new HashMap<>();
 
 		int endIndex = input.indexOf('(');
@@ -240,6 +362,68 @@ public class DslController {
 		elements.put("command", input);
 
 		return elements;
+
+	}
+
+	private static Map<String, String> binaryRecognizer(String input) {
+
+		Map<String, String> elements = new HashMap<>();
+
+		int endIndex = input.indexOf('(');
+
+		String regex = "\\[[^\\[]*\\(";
+
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(input);
+
+		if (matcher.find()) {
+
+			endIndex = Math.min(input.indexOf('['), endIndex);
+			elements.put("predicate", input.substring(input.indexOf("[") + 1, input.indexOf("]")));
+
+		}
+
+		elements.put("operation", input.substring(0, endIndex).toLowerCase());
+
+		int sourcePosition = input.indexOf("(") + 1;
+		int commaPosition = findCommaPosition(input.substring(sourcePosition))
+				+ input.substring(0, sourcePosition).length();
+
+		elements.put("source1", input.substring(sourcePosition, commaPosition));
+		elements.put("source2", input.substring(commaPosition + 1, input.lastIndexOf(")")));
+
+		elements.put("command", input);
+
+		return elements;
+
+	}
+
+	private static int findCommaPosition(String input) {
+
+		int openingParenthesisAmount = 0;
+		int openingBracetsAmount = 0;
+
+		for (int i = 0; i < input.length(); i++) {
+
+			if (input.charAt(i) == '(')
+
+				openingParenthesisAmount++;
+
+			else if (input.charAt(i) == ')')
+				openingParenthesisAmount--;
+
+			else if (input.charAt(i) == '[')
+				openingBracetsAmount++;
+
+			else if (input.charAt(i) == ']')
+				openingBracetsAmount--;
+
+			else if (input.charAt(i) == ',' && openingParenthesisAmount == 0 && openingBracetsAmount == 0)
+				return i;
+
+		}
+
+		return -1;
 
 	}
 

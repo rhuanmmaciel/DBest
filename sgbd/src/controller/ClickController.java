@@ -33,7 +33,7 @@ public class ClickController {
 		if (currentActionRef.get() == null)
 			return;
 
-		Cell cell = MainController.getCells().get(jCell);
+		Cell cell = MainController.cells.get(jCell);
 		
 		CurrentAction currentAction = currentActionRef.get();
 		
@@ -55,13 +55,13 @@ public class ClickController {
 				TableCell tableCell = ((CreateTableAction) currentAction).getTableCell();
 
 				tableCell.setJGraphCell(newCell);
-				MainController.getCells().put(newCell, tableCell);
+				MainController.cells.put(newCell, tableCell);
 
 			} else {
 
 				OperationType operationType = ((CreateOperationAction) currentAction).getOperationType();
 
-				MainController.getCells().put(newCell,
+				MainController.cells.put(newCell,
 						new OperationCell(name, style, newCell, operationType, null, 80, 30));
 
 				if (((CreateOperationAction) currentAction).hasParent()) {
@@ -72,7 +72,7 @@ public class ClickController {
 					currentActionRef.set(new CurrentAction(CurrentAction.ActionType.EDGE));
 					actionType = CurrentAction.ActionType.EDGE;
 
-					cell = MainController.getCells().get(newCell);
+					cell = MainController.cells.get(newCell);
 					jCell = newCell;
 
 					MainController.getGraph().removeCells(new Object[] { ghostJCell }, true);
@@ -96,7 +96,7 @@ public class ClickController {
 
 			}
 
-			Cell parentCell = edgeRef.get().hasParent() != null ? MainController.getCells().get(edgeRef.get().getParent()) : null;
+			Cell parentCell = edgeRef.get().hasParent() != null ? MainController.cells.get(edgeRef.get().getParent()) : null;
 
 			if (currentAction != null && actionType == CurrentAction.ActionType.EDGE && edgeRef.get().isDifferent(jCell)) {
 

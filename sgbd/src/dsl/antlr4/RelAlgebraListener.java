@@ -59,15 +59,45 @@ public interface RelAlgebraListener extends ParseTreeListener {
 	 */
 	void exitJoin(RelAlgebraParser.JoinContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RelAlgebraParser#cartesian}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#leftJoin}.
 	 * @param ctx the parse tree
 	 */
-	void enterCartesian(RelAlgebraParser.CartesianContext ctx);
+	void enterLeftJoin(RelAlgebraParser.LeftJoinContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RelAlgebraParser#cartesian}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#leftJoin}.
 	 * @param ctx the parse tree
 	 */
-	void exitCartesian(RelAlgebraParser.CartesianContext ctx);
+	void exitLeftJoin(RelAlgebraParser.LeftJoinContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#rightJoin}.
+	 * @param ctx the parse tree
+	 */
+	void enterRightJoin(RelAlgebraParser.RightJoinContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#rightJoin}.
+	 * @param ctx the parse tree
+	 */
+	void exitRightJoin(RelAlgebraParser.RightJoinContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#cartesianProduct}.
+	 * @param ctx the parse tree
+	 */
+	void enterCartesianProduct(RelAlgebraParser.CartesianProductContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#cartesianProduct}.
+	 * @param ctx the parse tree
+	 */
+	void exitCartesianProduct(RelAlgebraParser.CartesianProductContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#union}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnion(RelAlgebraParser.UnionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#union}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnion(RelAlgebraParser.UnionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code simple}
 	 * labeled alternative in {@link RelAlgebraParser#relation}.

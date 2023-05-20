@@ -195,6 +195,7 @@ public abstract sealed class Cell permits TableCell, OperationCell{
 	}
 
 	public abstract boolean hasParents();
+	public abstract List<Cell> getParents();
 	public abstract boolean hasError();
 	public abstract boolean hasParentErrors();
 	
