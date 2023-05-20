@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -23,6 +24,7 @@ import entities.Action.CreateOperationAction;
 import entities.Action.CreateTableAction;
 import entities.Action.CurrentAction;
 import entities.Action.CurrentAction.ActionType;
+import entities.Coordinates;
 import entities.Edge;
 import entities.Tree;
 import entities.buttons.Button;
@@ -162,10 +164,10 @@ public class MainController extends MainFrame {
 
 			CellUtils.showTable(jCell);
 
-		}else if(e.getSource() == menuItemInformations) {
-			
+		} else if (e.getSource() == menuItemInformations) {
+
 			new CellInformationFrame(jCell);
-			
+
 		} else if (e.getSource() == menuItemEdit) {
 
 			((OperationCell) cells.get(jCell)).editOperation(jCell);
@@ -420,10 +422,13 @@ public class MainController extends MainFrame {
 		lastDirectory = newLastDirectory;
 	}
 
-	public static void putTableCell(Integer x, Integer y, TableCell cell) {
+	public static void putTableCell(TableCell cell, Optional<Coordinates> position) {
+
+		int x = position.isPresent() ? position.get().x() : 50;
+		int y = position.isPresent() ? position.get().y() : 100;
 
 		if (MainFrame.getGraphComponent().getCellAt(x, y) != null) {
-			putTableCell(x + 100, y, cell);
+			putTableCell(cell, Optional.of(new Coordinates(x + 50, y + 50)));
 			return;
 		}
 
@@ -436,11 +441,11 @@ public class MainController extends MainFrame {
 
 	}
 
-	public static mxCell putOperationCell(Integer x, Integer y, OperationCell cell, List<Cell> parents, String command,
-			OperationType type) {
+	public static mxCell putOperationCell(OperationCell cell, List<Cell> parents, String command,
+			Optional<Coordinates> position) {
 
-		x = (int) (Math.random() * 600);
-		y = (int) (Math.random() * 600);
+		int x = position.isPresent() ? position.get().x() : (int) (Math.random() * 600);
+		int y = position.isPresent() ? position.get().y() : (int) (Math.random() * 600);
 
 		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) graph.getDefaultParent(), null,
 				cell.getName(), x, y, 80, 30, cell.getStyle());
@@ -460,20 +465,20 @@ public class MainController extends MainFrame {
 
 		cell.setAllNewTrees();
 
-		switch (type) {
+		switch (cell.getType()) {
 
 		case SELECTION ->
 
 			new FormFrameSelection().executeOperation(jCell,
 					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]"))));
 
-		case AGGREGATION -> throw new UnsupportedOperationException("Unimplemented case: " + type);
+		case AGGREGATION -> throw new UnsupportedOperationException("Unimplemented case: " + cell.getType());
 
 		case CARTESIAN_PRODUCT ->
 
 			new CartesianProduct().executeOperation(jCell, null);
 
-		case DIFFERENCE -> throw new UnsupportedOperationException("Unimplemented case: " + type);
+		case DIFFERENCE -> throw new UnsupportedOperationException("Unimplemented case: " + cell.getType());
 
 		case JOIN ->
 
@@ -492,7 +497,7 @@ public class MainController extends MainFrame {
 
 		case RENAME ->
 
-			throw new UnsupportedOperationException("Unimplemented case: " + type);
+			throw new UnsupportedOperationException("Unimplemented case: " + cell.getType());
 
 		case RIGHT_JOIN ->
 
@@ -504,7 +509,7 @@ public class MainController extends MainFrame {
 			new FormFrameUnion().executeOperation(jCell,
 					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
 
-		default -> throw new IllegalArgumentException("Unexpected value: " + type);
+		default -> throw new IllegalArgumentException("Unexpected value: " + cell.getType());
 
 		}
 

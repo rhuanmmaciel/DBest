@@ -52,7 +52,7 @@ public class TextEditor extends JFrame implements ActionListener {
 	private final JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.getDisplayName());
 	private final JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getDisplayName());
 	private final JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getDisplayName());
-	
+
 	private JButton btnRun = new JButton("Run");
 	private JButton btnRunSelection = new JButton("Run selection");
 
@@ -90,10 +90,10 @@ public class TextEditor extends JFrame implements ActionListener {
 
 		toolBar.add(btnBack);
 		toolBar.add(btnImport);
-		
+
 		toolBar.add(menuBar);
 		menuBar.add(mnOperations);
-		
+
 		mnOperations.add(menuItemSelection);
 		menuItemSelection.addActionListener(this);
 		mnOperations.add(menuItemProjection);
@@ -108,7 +108,7 @@ public class TextEditor extends JFrame implements ActionListener {
 		menuItemCartesianProduct.addActionListener(this);
 		mnOperations.add(menuItemUnion);
 		menuItemUnion.addActionListener(this);
-		
+
 		btnBack.addActionListener(this);
 		btnImport.addActionListener(this);
 		btnRun.addActionListener(this);
@@ -135,7 +135,7 @@ public class TextEditor extends JFrame implements ActionListener {
 	private void run() {
 
 		run(textPane.getText());
-		
+
 	}
 
 	private void run(String text) {
@@ -144,7 +144,7 @@ public class TextEditor extends JFrame implements ActionListener {
 			return;
 
 		console.setText("");
-		
+
 		RelAlgebraParser parser = new RelAlgebraParser(
 				new CommonTokenStream(new RelAlgebraLexer(CharStreams.fromString(text))));
 
@@ -158,59 +158,58 @@ public class TextEditor extends JFrame implements ActionListener {
 		AntlrController listener = new AntlrController();
 
 		walker.walk(listener, parser.expressions());
-		
-		if (!DslErrorListener.getErrors().isEmpty()) 
+
+		if (!DslErrorListener.getErrors().isEmpty())
 			DslErrorListener.throwError(console);
-			
+
 		else {
-			
+
 			DslController.parser();
-			
-			if (!DslErrorListener.getErrors().isEmpty()) 
+
+			if (!DslErrorListener.getErrors().isEmpty())
 				DslErrorListener.throwError(console);
-			
+
 		}
-		
+
 		DslErrorListener.clearErrors();
 
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if (e.getSource() == btnBack) {
-
+		if (e.getSource() == btnBack)
 			main.getBackToMain();
 
-		}
-
-		if (e.getSource() == btnRun) {
-
+		if (e.getSource() == btnRun)
 			run();
-
-		} else if (e.getSource() == btnRunSelection) {
-
+		else if (e.getSource() == btnRunSelection)
 			run(textPane.getSelectedText());
 
-		}
-		
-		if(e.getSource() == menuItemSelection) insertOperation("selection[predicado](tabela);");
-		else if(e.getSource() == menuItemProjection) insertOperation("projection[colunas](tabela);");	
-		else if(e.getSource() == menuItemJoin) insertOperation("join[coluna1,coluna2](tabela1,tabela2);");	
-		else if(e.getSource() == menuItemLeftJoin) insertOperation("leftJoin[coluna1,coluna2](tabela1,tabela2);");	
-		else if(e.getSource() == menuItemRightJoin) insertOperation("rightJoin[coluna1,coluna2](tabela1,tabela2);");	
-		else if(e.getSource() == menuItemCartesianProduct) insertOperation("cartesianProduct(tabela1,tabela2);");	
-		else if(e.getSource() == menuItemUnion) insertOperation("union[colunas1,colunas2](tabela1,tabela2);");	
-		
+		if (e.getSource() == menuItemSelection)
+			insertOperation("selection[predicado](tabela);");
+		else if (e.getSource() == menuItemProjection)
+			insertOperation("projection[colunas](tabela);");
+		else if (e.getSource() == menuItemJoin)
+			insertOperation("join[coluna1,coluna2](tabela1,tabela2);");
+		else if (e.getSource() == menuItemLeftJoin)
+			insertOperation("leftJoin[coluna1,coluna2](tabela1,tabela2);");
+		else if (e.getSource() == menuItemRightJoin)
+			insertOperation("rightJoin[coluna1,coluna2](tabela1,tabela2);");
+		else if (e.getSource() == menuItemCartesianProduct)
+			insertOperation("cartesianProduct(tabela1,tabela2);");
+		else if (e.getSource() == menuItemUnion)
+			insertOperation("union[colunas1,colunas2](tabela1,tabela2);");
+
 	}
-	
+
 	private void insertOperation(String text) {
-		
+
 		try {
-		    textPane.getDocument().insertString(textPane.getCaretPosition(), text, null);
+			textPane.getDocument().insertString(textPane.getCaretPosition(), text, null);
 		} catch (BadLocationException error) {
-		    error.printStackTrace();
+			error.printStackTrace();
 		}
-		
+
 	}
 }

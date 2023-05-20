@@ -29,6 +29,26 @@ public interface RelAlgebraListener extends ParseTreeListener {
 	 */
 	void exitExpression(RelAlgebraParser.ExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#position}.
+	 * @param ctx the parse tree
+	 */
+	void enterPosition(RelAlgebraParser.PositionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#position}.
+	 * @param ctx the parse tree
+	 */
+	void exitPosition(RelAlgebraParser.PositionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#number}.
+	 * @param ctx the parse tree
+	 */
+	void enterNumber(RelAlgebraParser.NumberContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#number}.
+	 * @param ctx the parse tree
+	 */
+	void exitNumber(RelAlgebraParser.NumberContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RelAlgebraParser#selection}.
 	 * @param ctx the parse tree
 	 */

@@ -1,17 +1,15 @@
 package dsl;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.mxgraph.model.mxCell;
 
 import controller.MainController;
+import dsl.utils.DslUtils;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
@@ -25,6 +23,7 @@ import gui.frames.forms.operations.binary.FormFrameRightJoin;
 import gui.frames.forms.operations.binary.FormFrameUnion;
 import gui.frames.forms.operations.unary.FormFrameProjection;
 import gui.frames.forms.operations.unary.FormFrameSelection;
+import util.FileUtils;
 import util.ImportFile;
 import util.Utils;
 
@@ -53,7 +52,7 @@ public class DslController {
 	}
 
 	public static void parser() {
-		
+
 		execute();
 
 		reset();
@@ -67,15 +66,16 @@ public class DslController {
 
 		boolean everyTableExist = true;
 
-		List<String> tableFileNames = getTableFileNames();
+		List<String> tableFileNames = FileUtils.getDatFileNames();
 
 		for (String tableName : tables)
-			if (!tableFileNames.contains(tableName)) {
-			
+			if (!tableFileNames.contains(DslUtils.removePosition(tableName))) {
+
 				everyTableExist = false;
 				DslErrorListener.addErrors("Table '" + tableName + "' doesn't exist");
-			
+
 			}
+
 		if (!everyTableExist)
 			return;
 
@@ -89,7 +89,7 @@ public class DslController {
 
 		for (String command : commands) {
 
-			Map<String, String> elements = recognizer(command);
+			Map<String, String> elements = DslUtils.recognizer(command);
 
 			solveExpression(elements, operationsReady);
 
@@ -102,37 +102,28 @@ public class DslController {
 		if (MainController.unaryOperationsName().contains(elements.get("operation"))) {
 
 			if (elements.get("source").contains("("))
-				solveExpression(recognizer(elements.get("source")), operationsReady);
+				solveExpression(DslUtils.recognizer(elements.get("source")), operationsReady);
 
-			else {
-
-				String tables[] = elements.get("source").split(",");
-
-				for (String table : tables) {
-
-					createTable(table);
-
-				}
-
-			}
+			else
+				createTable(elements.get("source"), elements.get("sourcePosition"));
 
 		} else {
 
-			List<String> tables = new ArrayList<>();
+			Map<String, String> tables = new HashMap<>();
 
 			if (elements.get("source1").contains("("))
-				solveExpression(recognizer(elements.get("source1")), operationsReady);
+				solveExpression(DslUtils.recognizer(elements.get("source1")), operationsReady);
 			else
-				tables.addAll(List.of(elements.get("source1").split(",")));
+				tables.put(elements.get("source1"), elements.get("source1Position"));
 
 			if (elements.get("source2").contains("("))
-				solveExpression(recognizer(elements.get("source2")), operationsReady);
+				solveExpression(DslUtils.recognizer(elements.get("source2")), operationsReady);
 
 			else
-				tables.addAll(List.of(elements.get("source2").split(",")));
+				tables.put(elements.get("source2"), elements.get("source2Position"));
 
-			for (String table : tables)
-				createTable(table);
+			for (Map.Entry<String, String> table : tables.entrySet())
+				createTable(table.getKey(), table.getValue());
 
 		}
 
@@ -140,8 +131,6 @@ public class DslController {
 		int replaced = 0;
 
 		OperationCell operationCell = null;
-
-		OperationType type = null;
 
 		OperationArity arity = null;
 
@@ -180,7 +169,6 @@ public class DslController {
 
 			operationCell.setForm(FormFrameSelection.class);
 
-			type = OperationType.SELECTION;
 			arity = OperationArity.UNARY;
 
 		}
@@ -191,7 +179,6 @@ public class DslController {
 
 			operationCell.setForm(FormFrameProjection.class);
 
-			type = OperationType.PROJECTION;
 			arity = OperationArity.UNARY;
 
 		}
@@ -203,7 +190,6 @@ public class DslController {
 
 			operationCell.setForm(CartesianProduct.class);
 
-			type = OperationType.CARTESIAN_PRODUCT;
 			arity = OperationArity.BINARY;
 
 		}
@@ -214,7 +200,6 @@ public class DslController {
 
 			operationCell.setForm(FormFrameJoin.class);
 
-			type = OperationType.JOIN;
 			arity = OperationArity.BINARY;
 
 		}
@@ -225,7 +210,6 @@ public class DslController {
 
 			operationCell.setForm(FormFrameLeftJoin.class);
 
-			type = OperationType.LEFT_JOIN;
 			arity = OperationArity.BINARY;
 
 		}
@@ -236,7 +220,6 @@ public class DslController {
 
 			operationCell.setForm(FormFrameRightJoin.class);
 
-			type = OperationType.RIGHT_JOIN;
 			arity = OperationArity.BINARY;
 
 		}
@@ -247,7 +230,6 @@ public class DslController {
 
 			operationCell.setForm(FormFrameUnion.class);
 
-			type = OperationType.UNION;
 			arity = OperationArity.BINARY;
 
 		}
@@ -309,138 +291,20 @@ public class DslController {
 		}
 
 		if (parents.contains(null))
-			throw new ParentNullException("parent is null");
+			throw new ParentNullException("Parent is null");
 
-		mxCell jCell = MainController.putOperationCell(50, 100, operationCell, parents, elements.get("command"), type);
+		mxCell jCell = MainController.putOperationCell(operationCell, parents, elements.get("command"),
+				DslUtils.getPosition(elements.get("position")));
 
 		operationsReady.put(elements.get("command"), jCell);
 
 	}
 
-	private static void createTable(String tableName) {
+	private static void createTable(String tableName, String position) {
 
-		TableCell table = new ImportFile(tableName + ".head").getResult();
+		TableCell table = new ImportFile(DslUtils.removePosition(tableName) + ".head").getResult();
 
-		MainController.putTableCell(50, 100, table);
-
-	}
-
-	private static Map<String, String> recognizer(String input) {
-
-		int endIndex = input.indexOf('(');
-
-		if (input.contains("[")) {
-
-			endIndex = Math.min(input.indexOf('['), endIndex);
-
-		}
-
-		if (MainController.unaryOperationsName().contains(input.substring(0, endIndex).toLowerCase()))
-			return unaryRecognizer(input);
-
-		return binaryRecognizer(input);
-
-	}
-
-	private static Map<String, String> unaryRecognizer(String input) {
-
-		Map<String, String> elements = new HashMap<>();
-
-		int endIndex = input.indexOf('(');
-
-		if (input.contains("[")) {
-
-			endIndex = Math.min(input.indexOf('['), endIndex);
-			elements.put("predicate", input.substring(input.indexOf("[") + 1, input.indexOf("]")));
-
-		}
-
-		elements.put("operation", input.substring(0, endIndex).toLowerCase());
-
-		elements.put("source", input.substring(input.indexOf("(") + 1, input.lastIndexOf(")")));
-
-		elements.put("command", input);
-
-		return elements;
-
-	}
-
-	private static Map<String, String> binaryRecognizer(String input) {
-
-		Map<String, String> elements = new HashMap<>();
-
-		int endIndex = input.indexOf('(');
-
-		String regex = "\\[[^\\[]*\\(";
-
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(input);
-
-		if (matcher.find()) {
-
-			endIndex = Math.min(input.indexOf('['), endIndex);
-			elements.put("predicate", input.substring(input.indexOf("[") + 1, input.indexOf("]")));
-
-		}
-
-		elements.put("operation", input.substring(0, endIndex).toLowerCase());
-
-		int sourcePosition = input.indexOf("(") + 1;
-		int commaPosition = findCommaPosition(input.substring(sourcePosition))
-				+ input.substring(0, sourcePosition).length();
-
-		elements.put("source1", input.substring(sourcePosition, commaPosition));
-		elements.put("source2", input.substring(commaPosition + 1, input.lastIndexOf(")")));
-
-		elements.put("command", input);
-
-		return elements;
-
-	}
-
-	private static int findCommaPosition(String input) {
-
-		int openingParenthesisAmount = 0;
-		int openingBracetsAmount = 0;
-
-		for (int i = 0; i < input.length(); i++) {
-
-			if (input.charAt(i) == '(')
-
-				openingParenthesisAmount++;
-
-			else if (input.charAt(i) == ')')
-				openingParenthesisAmount--;
-
-			else if (input.charAt(i) == '[')
-				openingBracetsAmount++;
-
-			else if (input.charAt(i) == ']')
-				openingBracetsAmount--;
-
-			else if (input.charAt(i) == ',' && openingParenthesisAmount == 0 && openingBracetsAmount == 0)
-				return i;
-
-		}
-
-		return -1;
-
-	}
-
-	private static List<String> getTableFileNames() {
-
-		List<String> tableFileNames = new ArrayList<>();
-		File directory = new File(".");
-		File[] filesList = directory.listFiles();
-
-		for (File file : filesList) {
-
-			if (file.isFile() && file.getName().endsWith(".dat"))
-				tableFileNames.add(file.getName().substring(0, file.getName().length() - 4));
-
-		}
-
-		return tableFileNames;
+		MainController.putTableCell(table, DslUtils.getPosition(position));
 
 	}
 
