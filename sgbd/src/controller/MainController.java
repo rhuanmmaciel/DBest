@@ -5,6 +5,8 @@ import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,23 +103,23 @@ public class MainController extends MainFrame {
 
 		super(buttons);
 
-//		addWindowListener(new WindowAdapter() {
-//
-//			public void windowClosing(WindowEvent e) {
-//
-//				File directory = new File(".");
-//				File[] filesList = directory.listFiles();
-//				for (File file : filesList) {
-//					if (file.isFile() && (file.getName().endsWith(".dat") || file.getName().endsWith(".head"))) {
-//						file.delete();
-//					}
-//				}
-//
-//				System.exit(0);
-//
-//			}
-//
-//		});
+		addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+
+				File directory = new File(".");
+				File[] filesList = directory.listFiles();
+				for (File file : filesList) {
+					if (file.isFile() && (file.getName().endsWith(".dat") || file.getName().endsWith(".head"))) {
+						file.delete();
+					}
+				}
+
+				System.exit(0);
+
+			}
+
+		});
 
 	}
 

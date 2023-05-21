@@ -44,11 +44,11 @@ public class DslController {
 		tables.add(tableName);
 
 	}
-	
+
 	public static void addImport(String importStatement) {
-		
+
 		imports.add(importStatement);
-		
+
 	}
 
 	public static void reset() {
@@ -56,40 +56,44 @@ public class DslController {
 		expressions.clear();
 		tables.clear();
 		imports.clear();
-		
+
 	}
 
 	public static void parser() {
 
 		importTables();
-		
-		execute();
+
+		if(DslErrorListener.getErrors().isEmpty())
+			execute();
 
 		reset();
 
 	}
-	
-	private static void importTables(){
-		
-		for(String importStatement : imports) {
-			
+
+	private static void importTables() {
+
+		for (String importStatement : imports) {
+
 			String path = importStatement.substring(6, importStatement.indexOf(".head") + 5);
-			
+
 			String unnamedImport = importStatement.substring(0, importStatement.indexOf(".head") + 5);
-			
-			String tableName = path.substring(path.lastIndexOf("/") + 1, path.indexOf(".head") + 5);
-			
-			if(!unnamedImport.equals(importStatement)) {
-				
+
+			String tableName = path.substring(path.lastIndexOf("/") + 1, path.indexOf(".head"));
+
+			if (!unnamedImport.equals(importStatement)) {
+
 				tableName = importStatement.substring(importStatement.indexOf(".head") + 7);
-				
+
 			}
+
+			tables.add(tableName);
+			if (!FileUtils.importDatFiles(path)) 
+				DslErrorListener.addErrors("Files '" + tableName + ".head" + "' or '" + tableName + ".dat' not found");
+
 			
-			System.out.println(path);
-			System.out.println(tableName);
-			
+
 		}
-		
+
 	}
 
 	private static void execute() {

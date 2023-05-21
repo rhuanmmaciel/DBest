@@ -28,7 +28,7 @@ leftJoin: LEFTJOIN PREDICATE '(' relation ',' relation ')';
 rightJoin: RIGHTJOIN PREDICATE '(' relation ',' relation ')';
 cartesianProduct: CARTESIANPRODUCT '(' relation  ',' relation ')';
 union: UNION PREDICATE '(' relation ',' relation ')';
-relation: RELATION #simple | expression #nested;
+relation: RELATION position? #simple | expression #nested;
 
 
 

@@ -26,21 +26,22 @@ public class FileUtils {
 
 	}
 
-	public static void importDatFiles(String path) {
-		
-		try {
-		
-			Path sourceFile = Path.of(path);
-			Path destinationDirectory = Path.of("");
-			Files.move(sourceFile, destinationDirectory.resolve(sourceFile.getFileName()),
-					StandardCopyOption.REPLACE_EXISTING);
-	
-		} catch (Exception e) {
-			
-			System.out.println("Ocorreu um erro ao mover o arquivo: " + e.getMessage());
-		
-		}
-		
+	public static boolean importDatFiles(String path) {
+	    try {
+	        Path headFile = Path.of(path);
+	        Path destinationDirectory = Path.of("");
+	        Files.copy(headFile, destinationDirectory.resolve(headFile.getFileName()),
+	                    StandardCopyOption.REPLACE_EXISTING);
+
+	        Path datFile = Path.of(path.replace(".head", ".dat"));
+	        Files.copy(datFile, destinationDirectory.resolve(datFile.getFileName()),
+	                    StandardCopyOption.REPLACE_EXISTING);
+	        
+	        return true;
+	        
+	    } catch (Exception e) {
+	        return false;
+	    }
 	}
 
 }
