@@ -1,4 +1,4 @@
-package gui.frames.utils;
+package gui.utils;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;

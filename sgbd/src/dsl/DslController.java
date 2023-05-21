@@ -29,12 +29,13 @@ import util.Utils;
 
 public class DslController {
 
-	private static List<String> commands = new LinkedList<>();
+	private static List<String> expressions = new LinkedList<>();
+	private static List<String> imports = new ArrayList<>();
 	private static List<String> tables = new ArrayList<>();
 
-	public static void addCommand(String command) {
+	public static void addExpression(String command) {
 
-		commands.add(command);
+		expressions.add(command);
 
 	}
 
@@ -43,30 +44,62 @@ public class DslController {
 		tables.add(tableName);
 
 	}
+	
+	public static void addImport(String importStatement) {
+		
+		imports.add(importStatement);
+		
+	}
 
 	public static void reset() {
 
-		commands.clear();
+		expressions.clear();
 		tables.clear();
-
+		imports.clear();
+		
 	}
 
 	public static void parser() {
 
+		importTables();
+		
 		execute();
 
 		reset();
 
 	}
+	
+	private static void importTables(){
+		
+		for(String importStatement : imports) {
+			
+			String path = importStatement.substring(6, importStatement.indexOf(".head") + 5);
+			
+			String unnamedImport = importStatement.substring(0, importStatement.indexOf(".head") + 5);
+			
+			String tableName = path.substring(path.lastIndexOf("/") + 1, path.indexOf(".head") + 5);
+			
+			if(!unnamedImport.equals(importStatement)) {
+				
+				tableName = importStatement.substring(importStatement.indexOf(".head") + 7);
+				
+			}
+			
+			System.out.println(path);
+			System.out.println(tableName);
+			
+		}
+		
+	}
 
 	private static void execute() {
 
-		if (tables.isEmpty() || commands.isEmpty())
+		if (tables.isEmpty() || expressions.isEmpty())
 			return;
 
 		boolean everyTableExist = true;
 
-		List<String> tableFileNames = FileUtils.getDatFileNames();
+		List<String> tableFileNames = FileUtils.getDatFilesNames();
 
 		for (String tableName : tables)
 			if (!tableFileNames.contains(DslUtils.removePosition(tableName))) {
@@ -87,7 +120,7 @@ public class DslController {
 
 		Map<String, mxCell> operationsReady = new HashMap<>();
 
-		for (String command : commands) {
+		for (String command : expressions) {
 
 			Map<String, String> elements = DslUtils.recognizer(command);
 

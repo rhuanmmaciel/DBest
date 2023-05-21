@@ -1,6 +1,5 @@
 package dsl.antlr4;
-
-// Generated from RelAlgebra.g4 by ANTLR 4.7.2
+// Generated from grammar/RelAlgebra.g4 by ANTLR 4.7.2
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -8,6 +7,46 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * {@link RelAlgebraParser}.
  */
 public interface RelAlgebraListener extends ParseTreeListener {
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterCommand(RelAlgebraParser.CommandContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitCommand(RelAlgebraParser.CommandContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#importStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterImportStatement(RelAlgebraParser.ImportStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#importStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitImportStatement(RelAlgebraParser.ImportStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#nameDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterNameDeclaration(RelAlgebraParser.NameDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#nameDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitNameDeclaration(RelAlgebraParser.NameDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#pathStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterPathStatement(RelAlgebraParser.PathStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#pathStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitPathStatement(RelAlgebraParser.PathStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RelAlgebraParser#expressions}.
 	 * @param ctx the parse tree

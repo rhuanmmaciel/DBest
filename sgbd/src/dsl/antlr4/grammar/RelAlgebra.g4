@@ -1,5 +1,16 @@
 grammar RelAlgebra;
 
+
+command: (importStatement | expressions)  (importStatement | expressions)*;
+
+
+importStatement: IMPORT pathStatement (nameDeclaration)? ';';
+
+nameDeclaration: AS RELATION;
+
+pathStatement: PATH_TOKEN '.head';
+
+
 expressions: expression ( ';' expression )* ';';
 
 expression: (selection | projection | join | leftJoin | rightJoin | cartesianProduct | union) position? ;
@@ -8,21 +19,18 @@ position: '<' number ',' number '>';
 
 number: DIGIT+;
 
+
+
 selection: SELECTION PREDICATE '(' relation ')';
-
 projection: PROJECTION PREDICATE '(' relation ')';
-
 join: JOIN PREDICATE '(' relation ',' relation ')';
-
 leftJoin: LEFTJOIN PREDICATE '(' relation ',' relation ')';
-
 rightJoin: RIGHTJOIN PREDICATE '(' relation ',' relation ')';
-
 cartesianProduct: CARTESIANPRODUCT '(' relation  ',' relation ')';
-
 union: UNION PREDICATE '(' relation ',' relation ')';
-
 relation: RELATION #simple | expression #nested;
+
+
 
 SELECTION: S E L E C T I O N;
 
@@ -38,15 +46,16 @@ UNION: U N I O N;
 
 CARTESIANPRODUCT: C A R T E S I A N P R O D U C T;
 
-ATTRIBUTE: '\''.*?'\'';
+IMPORT: I M P O R T;
 
-PREDICATE: '[' .*? ']';
+AS: A S;
 
 RELATION: [a-zA-Z] [a-zA-Z0-9_]*;
-
+PREDICATE: '[' .*? ']';
 DIGIT: [0-9];
-
+PATH_TOKEN: '/' [a-zA-Z0-9_/]* [a-zA-Z0-9_];
 WS: [ \t\r\n]+ -> skip;
+
 
 fragment A: ('a' | 'A');
 fragment B: ('b' | 'B');
@@ -74,3 +83,4 @@ fragment W: ('w' | 'W');
 fragment X: ('x' | 'X');
 fragment Y: ('y' | 'Y');
 fragment Z: ('z' | 'Z');
+

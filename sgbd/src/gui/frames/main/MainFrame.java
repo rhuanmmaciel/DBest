@@ -114,7 +114,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 				new CurrentAction(CurrentAction.ActionType.SHOW_CELL)));
 		buttons.add(new ToolBarButton(" Console ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.OPEN_CONSOLE)));
-		buttons.add(new ToolBarButton(" Query tool ", this, toolBar,
+		buttons.add(new ToolBarButton(" Editor de texto ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.OPEN_TEXT_EDITOR)));
 
 		getContentPane().add(toolBar, BorderLayout.SOUTH);

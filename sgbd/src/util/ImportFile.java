@@ -101,11 +101,12 @@ public class ImportFile {
 			if (!exitReference.get() && FileType.DAT != fileType)
 				tableCell = TableCreator.createTable(tableName.toString(), pkName.toString(), columns, content, false);
 
-		} else {
-
-			exitReference.set(true);
-
+			return;
+			
 		}
+
+		exitReference.set(true);
+
 		
 	}
 

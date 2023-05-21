@@ -30,7 +30,7 @@ import dsl.DslErrorListener;
 import dsl.antlr4.RelAlgebraLexer;
 import dsl.antlr4.RelAlgebraParser;
 import enums.OperationType;
-import gui.frames.utils.JTextLineNumber;
+import gui.utils.JTextLineNumber;
 
 @SuppressWarnings("serial")
 public class TextEditor extends JFrame implements ActionListener {
@@ -157,7 +157,7 @@ public class TextEditor extends JFrame implements ActionListener {
 
 		AntlrController listener = new AntlrController();
 
-		walker.walk(listener, parser.expressions());
+		walker.walk(listener, parser.command());
 
 		if (!DslErrorListener.getErrors().isEmpty())
 			DslErrorListener.throwError(console);

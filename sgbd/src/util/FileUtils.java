@@ -1,12 +1,15 @@
 package util;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
 
-	public static List<String> getDatFileNames() {
+	public static List<String> getDatFilesNames() {
 
 		List<String> tableFileNames = new ArrayList<>();
 		File directory = new File(".");
@@ -22,5 +25,22 @@ public class FileUtils {
 		return tableFileNames;
 
 	}
+
+	public static void importDatFiles(String path) {
+		
+		try {
+		
+			Path sourceFile = Path.of(path);
+			Path destinationDirectory = Path.of("");
+			Files.move(sourceFile, destinationDirectory.resolve(sourceFile.getFileName()),
+					StandardCopyOption.REPLACE_EXISTING);
 	
+		} catch (Exception e) {
+			
+			System.out.println("Ocorreu um erro ao mover o arquivo: " + e.getMessage());
+		
+		}
+		
+	}
+
 }
