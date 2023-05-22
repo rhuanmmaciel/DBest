@@ -1,2 +1,9 @@
-/META-INF/
+/application/
+/controller/
+/dsl/
+/entities/
+/enums/
+/exceptions/
 /gui/
+/util/
+/META-INF/
