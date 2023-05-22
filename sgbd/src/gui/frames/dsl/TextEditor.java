@@ -21,6 +21,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 
 import org.antlr.v4.runtime.CharStreams;
@@ -36,6 +37,7 @@ import dsl.DslErrorListener;
 import dsl.antlr4.RelAlgebraLexer;
 import dsl.antlr4.RelAlgebraParser;
 import enums.OperationType;
+import gui.utils.CustomDocumentFilter;
 import gui.utils.JTextLineNumber;
 
 @SuppressWarnings("serial")
@@ -68,7 +70,9 @@ public class TextEditor extends JFrame implements ActionListener {
 	private final JMenuBar menuBar = new JMenuBar();
 
 	public TextEditor(MainController main) {
-
+		
+		((AbstractDocument) textPane.getDocument()).setDocumentFilter(new CustomDocumentFilter(textPane));
+		
 		this.main = main;
 
 		toolBar.setFloatable(false);

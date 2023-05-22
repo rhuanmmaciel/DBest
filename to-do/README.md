@@ -1,5 +1,10 @@
 # Implementar:
 
+- tables carregadas na memória
+- abas para o editor de texto
+- dsl com atribuições de variáveis
+- mudar o componente da tela
+- mudar a nomeação de colunas
 - dar algum tipo de dica visual quando se está criando um edge ou um nó (ver brModelo)
 - adicionar ghostCell na criação de tables
 - adicionar a edge na ghostCell
@@ -10,7 +15,5 @@
 - consertar a operação de Renomeação
 - adicionar a operação de Diferença
 - adicionar a quebra de linha quando a condição da seleção ficar muito grande
-- salvar a árvore
-- mudar a forma de interação na aplicação das operações 
 - plu-gin para operações personalizadas
 
