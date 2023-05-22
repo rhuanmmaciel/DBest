@@ -43,7 +43,6 @@ public class CellInformationFrame extends JDialog {
 	    gbc.anchor = GridBagConstraints.WEST;
 	    gbc.insets = new Insets(5, 5, 5, 5);
 
-	    // Painel para o grupo Célula
 	    JPanel cellGroupPanel = new JPanel();
 	    cellGroupPanel.setLayout(new GridBagLayout());
 	    cellGroupPanel.setBackground(Color.WHITE);
@@ -81,8 +80,8 @@ public class CellInformationFrame extends JDialog {
 	    mainPane.add(cellGroupPanel, gbc);
 
 	    if (MainController.getCells().get(jCell).hasParents()) {
-	        // Painel para o grupo Pai
-	        JPanel parentGroupPanel = new JPanel();
+
+	    	JPanel parentGroupPanel = new JPanel();
 	        parentGroupPanel.setLayout(new GridBagLayout());
 	        parentGroupPanel.setBackground(Color.WHITE);
 	        parentGroupPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -149,8 +148,8 @@ public class CellInformationFrame extends JDialog {
 	    }
 	    
 	    if (MainController.getCells().get(jCell).hasChild()) {
-	        // Painel para o grupo Filho
-	        JPanel childGroupPanel = new JPanel();
+
+	    	JPanel childGroupPanel = new JPanel();
 	        childGroupPanel.setLayout(new GridBagLayout());
 	        childGroupPanel.setBackground(Color.WHITE);
 	        childGroupPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));

@@ -74,7 +74,7 @@ public class TreeUtils {
 		
 		if(tree != null) {
 			
-			List<Cell> level = tree.getRoots();
+			List<Cell> level = tree.getLeaves();
 	
 			while (!level.isEmpty()) {
 	

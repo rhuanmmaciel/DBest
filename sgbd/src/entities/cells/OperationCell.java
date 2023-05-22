@@ -29,34 +29,21 @@ public final class OperationCell extends Cell {
 	private List<String> data;
 	private Boolean error;
 
+	{
+
+		this.parents = new ArrayList<>();
+		this.data = null;
+		this.error = false;
+		this.form = null;
+		
+	}
+	
 	public OperationCell(String name, String style, mxCell jCell, OperationType type, List<Cell> parents, int length,
 			int width) {
 
 		super(name, style, jCell, length, width);
 		this.type = type;
-		this.parents = new ArrayList<>();
-		this.data = null;
-		this.error = false;
-		this.form = null;
-
-		switch (type) {
-
-		case SELECTION:
-		case PROJECTION:
-		case AGGREGATION:
-		case RENAME:
-			arity = OperationArity.UNARY;
-			break;
-
-		case UNION:
-		case JOIN:
-		case LEFT_JOIN:
-		case RIGHT_JOIN:
-		case CARTESIAN_PRODUCT:
-		case DIFFERENCE:
-			arity = OperationArity.BINARY;
-
-		}
+		arity = type.getArity();
 
 	}
 

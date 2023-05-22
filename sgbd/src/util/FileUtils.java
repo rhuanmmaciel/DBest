@@ -26,22 +26,50 @@ public class FileUtils {
 
 	}
 
-	public static boolean importDatFiles(String path) {
-	    try {
-	        Path headFile = Path.of(path);
-	        Path destinationDirectory = Path.of("");
-	        Files.copy(headFile, destinationDirectory.resolve(headFile.getFileName()),
-	                    StandardCopyOption.REPLACE_EXISTING);
+	public static boolean copyDatFilesWithHead(String path, String tableName, Path destinationDirectory) {
+		
+		boolean replaceFileName = !path.endsWith(tableName + ".head");
 
-	        Path datFile = Path.of(path.replace(".head", ".dat"));
-	        Files.copy(datFile, destinationDirectory.resolve(datFile.getFileName()),
-	                    StandardCopyOption.REPLACE_EXISTING);
-	        
-	        return true;
-	        
-	    } catch (Exception e) {
-	        return false;
-	    }
+		try {
+
+			Path headFile = Path.of(path);
+
+			if (replaceFileName) {
+				
+				String newHeadFileName = tableName + ".head";
+				Path newHeadFile = destinationDirectory.resolve(newHeadFileName);
+				Files.copy(headFile, newHeadFile, StandardCopyOption.REPLACE_EXISTING);
+				
+			} else {
+				
+				Path destinationHeadFile = destinationDirectory.resolve(headFile.getFileName());
+				Files.copy(headFile, destinationHeadFile, StandardCopyOption.REPLACE_EXISTING);
+				
+			}
+
+			String newDatFileName = tableName + ".dat";
+			Path datFile = Path.of(path.replace(".head", ".dat"));
+
+			if (replaceFileName) {
+				
+				Path newDatFile = destinationDirectory.resolve(newDatFileName);
+				Files.copy(datFile, newDatFile, StandardCopyOption.REPLACE_EXISTING);
+				
+			} else {
+				
+				Path destinationDatFile = destinationDirectory.resolve(datFile.getFileName());
+				Files.copy(datFile, destinationDatFile, StandardCopyOption.REPLACE_EXISTING);
+				
+			}
+
+			return true;
+
+		} catch (Exception e) {
+
+			return false;
+
+		}
+
 	}
 
 }

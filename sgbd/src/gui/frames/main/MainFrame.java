@@ -51,6 +51,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 	protected JPopupMenu popupMenuJCell = new JPopupMenu();
 	protected JMenuItem menuItemShow = new JMenuItem("Mostrar");
 	protected JMenuItem menuItemInformations = new JMenuItem("Informações");
+	protected JMenuItem menuItemExport = new JMenuItem("Exportar");
 	protected JMenuItem menuItemEdit = new JMenuItem("Editar");
 	protected JMenuItem menuItemRemove = new JMenuItem("Remover");
 
@@ -142,6 +143,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 		graph.getModel().endUpdate();
 
 		menuItemInformations.addActionListener(this);
+		menuItemExport.addActionListener(this);
 		menuItemShow.addActionListener(this);
 		menuItemEdit.addActionListener(this);
 		menuItemRemove.addActionListener(this);

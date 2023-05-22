@@ -3,6 +3,7 @@ package enums;
 public enum OperationType implements IOperationType {
 
 	SELECTION {
+		
 		@Override
 		public String getDisplayName() {
 			return"Seleção";
@@ -26,6 +27,11 @@ public enum OperationType implements IOperationType {
 		@Override
 		public String getOperationName() {
 			return "selection";
+		}
+
+		@Override
+		public String getDslOperation() {
+			return "selection[predicate](source)";
 		}
 	},
 
@@ -54,6 +60,11 @@ public enum OperationType implements IOperationType {
 		public String getOperationName() {
 			return "projection";
 		}
+
+		@Override
+		public String getDslOperation() {
+			return "projection[predicate](source)";
+		}
 	},
 
 	JOIN {
@@ -80,6 +91,11 @@ public enum OperationType implements IOperationType {
 		@Override
 		public String getOperationName() {
 			return "join";
+		}
+
+		@Override
+		public String getDslOperation() {
+			return "join[predicate](source1,source2)";
 		}
 	},
 
@@ -108,6 +124,11 @@ public enum OperationType implements IOperationType {
 		public String getOperationName() {
 			return "leftJoin";
 		}
+
+		@Override
+		public String getDslOperation() {
+			return "leftJoin[predicate](source1,source2)";
+		}
 	},
 
 	RIGHT_JOIN {
@@ -134,6 +155,11 @@ public enum OperationType implements IOperationType {
 		@Override
 		public String getOperationName() {
 			return "rightJoin";
+		}
+
+		@Override
+		public String getDslOperation() {
+			return "rightJoin[predicate](source1,source2)";
 		}
 	},
 
@@ -162,6 +188,11 @@ public enum OperationType implements IOperationType {
 		public String getOperationName() {
 			return "cartesianProduct";
 		}
+
+		@Override
+		public String getDslOperation() {
+			return "cartesianProduct(source1,source2)";
+		}
 	},
 
 	UNION {
@@ -188,6 +219,11 @@ public enum OperationType implements IOperationType {
 		@Override
 		public String getOperationName() {
 			return "union";
+		}
+
+		@Override
+		public String getDslOperation() {
+			return "union[predicate](source1,source2)";
 		}
 	},
 
@@ -216,6 +252,12 @@ public enum OperationType implements IOperationType {
 		public String getOperationName() {
 			return "difference";
 		}
+
+		@Override
+		public String getDslOperation() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	},
 
 	RENAME {
@@ -243,6 +285,12 @@ public enum OperationType implements IOperationType {
 		public String getOperationName() {
 			return "rename";
 		}
+
+		@Override
+		public String getDslOperation() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	},
 
 	AGGREGATION {
@@ -269,6 +317,12 @@ public enum OperationType implements IOperationType {
 		@Override
 		public String getOperationName() {
 			return "aggregation";
+		}
+
+		@Override
+		public String getDslOperation() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 }

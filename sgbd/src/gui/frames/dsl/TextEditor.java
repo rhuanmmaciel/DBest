@@ -4,9 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -181,28 +187,72 @@ public class TextEditor extends JFrame implements ActionListener {
 		if (e.getSource() == btnBack)
 			main.getBackToMain();
 
-		if (e.getSource() == btnRun)
+		else if (e.getSource() == btnRun)
 			run();
 		else if (e.getSource() == btnRunSelection)
 			run(textPane.getSelectedText());
 
-		if (e.getSource() == menuItemSelection)
+		else if (e.getSource() == menuItemSelection)
 			insertOperation("selection[predicado](tabela);");
+		
 		else if (e.getSource() == menuItemProjection)
 			insertOperation("projection[colunas](tabela);");
+		
 		else if (e.getSource() == menuItemJoin)
 			insertOperation("join[coluna1,coluna2](tabela1,tabela2);");
+		
 		else if (e.getSource() == menuItemLeftJoin)
 			insertOperation("leftJoin[coluna1,coluna2](tabela1,tabela2);");
+		
 		else if (e.getSource() == menuItemRightJoin)
 			insertOperation("rightJoin[coluna1,coluna2](tabela1,tabela2);");
+		
 		else if (e.getSource() == menuItemCartesianProduct)
 			insertOperation("cartesianProduct(tabela1,tabela2);");
+		
 		else if (e.getSource() == menuItemUnion)
 			insertOperation("union[colunas1,colunas2](tabela1,tabela2);");
 
+		else if(e.getSource() == btnImport)
+			importText();
+		
 	}
 
+	private void importText() {
+		
+		JFileChooser fileUpload = new JFileChooser();
+
+		fileUpload.setCurrentDirectory(MainController.getLastDirectory());
+		
+		if (fileUpload.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			
+			MainController.setLastDirectory(new File(fileUpload.getCurrentDirectory().getAbsolutePath()));
+			
+	        StringBuilder stringBuilder = new StringBuilder();
+	        
+	        try (BufferedReader reader = new BufferedReader(new FileReader(fileUpload.getSelectedFile()))) {
+	        	
+	            String line;
+	            while ((line = reader.readLine()) != null) 
+	                stringBuilder.append(line).append("\n");
+	            
+	            
+	        } catch (FileNotFoundException e) {
+			
+	        	e.printStackTrace();
+			
+	        } catch (IOException e) {
+
+				e.printStackTrace();
+
+			}
+			
+	        textPane.setText(stringBuilder.toString());
+	        
+		}
+		
+	}
+	
 	private void insertOperation(String text) {
 
 		try {
@@ -212,4 +262,5 @@ public class TextEditor extends JFrame implements ActionListener {
 		}
 
 	}
+	
 }

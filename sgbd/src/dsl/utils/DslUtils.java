@@ -8,6 +8,11 @@ import java.util.regex.Pattern;
 
 import controller.MainController;
 import entities.Coordinates;
+import entities.Tree;
+import entities.cells.Cell;
+import entities.cells.OperationCell;
+import entities.cells.TableCell;
+import enums.OperationArity;
 
 public class DslUtils {
 
@@ -114,8 +119,6 @@ public class DslUtils {
 			elements.put("position",
 					afterExpression.substring(afterExpression.indexOf("<"), afterExpression.indexOf(">") + 1));
 
-
-
 		elements.put("command", input);
 
 		return elements;
@@ -145,6 +148,12 @@ public class DslUtils {
 		}
 
 		return Optional.empty();
+
+	}
+
+	public static String getPosition(Coordinates coordinates) {
+
+		return String.format("<%d,%d>", coordinates.x(), coordinates.y());
 
 	}
 
@@ -178,6 +187,49 @@ public class DslUtils {
 		}
 
 		throw new RuntimeException("Didn't find comma");
+
+	}
+
+	public static String generateDslTree(Tree tree) {
+
+		return putCommand(tree.getRoot()) + ";";
+
+	}
+
+	private static String putCommand(Cell cell) {
+
+		String raw = null;
+
+		if (cell instanceof OperationCell operationCell) {
+
+			raw = operationCell.getType().getDslOperation();
+
+			if (operationCell.getData() != null) {
+
+				raw = raw.replace("[predicate]", operationCell.getData().toString());
+
+			}
+
+			if (operationCell.getArity() == OperationArity.UNARY)
+				raw = raw.replace("source",
+						putCommand(cell.getParents().get(0)));
+
+			else {
+
+				raw = raw.replace("source1",
+						putCommand(cell.getParents().get(0)));
+				raw = raw.replace("source2",
+						putCommand(cell.getParents().get(1)));
+
+			}
+
+		} else if (cell instanceof TableCell tableCell) {
+
+			raw = tableCell.getName();
+
+		}
+
+		return raw + getPosition(cell.getPosition());
 
 	}
 

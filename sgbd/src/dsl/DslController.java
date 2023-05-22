@@ -1,5 +1,6 @@
 package dsl;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -63,7 +64,7 @@ public class DslController {
 
 		importTables();
 
-		if(DslErrorListener.getErrors().isEmpty())
+		if (DslErrorListener.getErrors().isEmpty())
 			execute();
 
 		reset();
@@ -87,10 +88,9 @@ public class DslController {
 			}
 
 			tables.add(tableName);
-			if (!FileUtils.importDatFiles(path)) 
-				DslErrorListener.addErrors("Files '" + tableName + ".head" + "' or '" + tableName + ".dat' not found");
-
-			
+			if (!FileUtils.copyDatFilesWithHead(path, tableName, Path.of("")))
+				DslErrorListener.addErrors("Files '" + DslUtils.removePosition(tableName) + ".head" + "' or '"
+						+ DslUtils.removePosition(tableName) + ".dat' not found");
 
 		}
 
@@ -109,7 +109,7 @@ public class DslController {
 			if (!tableFileNames.contains(DslUtils.removePosition(tableName))) {
 
 				everyTableExist = false;
-				DslErrorListener.addErrors("Table '" + tableName + "' doesn't exist");
+				DslErrorListener.addErrors("Table '" + DslUtils.removePosition(tableName) + "' doesn't exist");
 
 			}
 

@@ -18,7 +18,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.mxgraph.model.mxCell;
 
-import util.ExportTable;
+import util.Export;
 
 @SuppressWarnings("serial")
 public class FormFrameExportTable extends JDialog implements ActionListener{
@@ -124,13 +124,13 @@ public class FormFrameExportTable extends JDialog implements ActionListener{
 			
 		}else if(e.getSource() == btnGraph) {
 			
-			new ExportTable("", 1);
 			dispose();
+			//new Export("", 1);
 			
 		}else if(e.getSource() == btnPNG) {
 			
 			dispose();
-			new ExportTable();
+			new Export();
 			
 		}else if(e.getSource() == btnTable) {
 			

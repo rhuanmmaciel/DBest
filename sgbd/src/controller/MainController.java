@@ -52,6 +52,7 @@ import gui.frames.forms.operations.binary.FormFrameUnion;
 import gui.frames.forms.operations.unary.FormFrameProjection;
 import gui.frames.forms.operations.unary.FormFrameSelection;
 import gui.frames.main.MainFrame;
+import util.Export;
 
 @SuppressWarnings("serial")
 public class MainController extends MainFrame {
@@ -170,6 +171,10 @@ public class MainController extends MainFrame {
 
 			new CellInformationFrame(jCell);
 
+		}else if(e.getSource() == menuItemExport) {
+			
+			new Export(cells.get(jCell).getTree());
+			
 		} else if (e.getSource() == menuItemEdit) {
 
 			((OperationCell) cells.get(jCell)).editOperation(jCell);
@@ -246,6 +251,7 @@ public class MainController extends MainFrame {
 
 			popupMenuJCell.add(menuItemShow);
 			popupMenuJCell.add(menuItemInformations);
+			popupMenuJCell.add(menuItemExport);
 			popupMenuJCell.add(menuItemEdit);
 			popupMenuJCell.add(menuItemOperations);
 			popupMenuJCell.add(menuItemRemove);
@@ -377,7 +383,7 @@ public class MainController extends MainFrame {
 
 			if (jCell != null && cells.get(jCell) != null) {
 
-				System.out.println(((OperationCell) cells.get(jCell)).getParents());
+				System.out.println(((OperationCell) cells.get(jCell)).getData());
 
 			}
 
@@ -485,17 +491,16 @@ public class MainController extends MainFrame {
 		case JOIN ->
 
 			new FormFrameJoin().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).replaceAll(" ", "").split(",")));
 
 		case LEFT_JOIN ->
 
 			new FormFrameLeftJoin().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).replaceAll(" ", "").split(",")));
 
 		case PROJECTION ->
-
 			new FormFrameProjection().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).replaceAll(" ", "").split(",")));
 
 		case RENAME ->
 
@@ -504,12 +509,12 @@ public class MainController extends MainFrame {
 		case RIGHT_JOIN ->
 
 			new FormFrameRightJoin().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).replaceAll(" ", "").split(",")));
 
 		case UNION ->
 
 			new FormFrameUnion().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).replaceAll(" ", "").split(",")));
 
 		default -> throw new IllegalArgumentException("Unexpected value: " + cell.getType());
 

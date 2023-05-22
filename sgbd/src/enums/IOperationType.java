@@ -6,6 +6,7 @@ public interface IOperationType {
 	String getSymbol();
 	String getDisplayNameAndSymbol();
 	String getOperationName();
+	String getDslOperation();
 	OperationArity getArity();
     
 }

@@ -21,41 +21,40 @@ public class DslErrorListener extends BaseErrorListener {
 	@Override
 	public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
 			String msg, RecognitionException e) {
-		
+
 		String error = String.format("line %d:%d %s", line, charPositionInLine, msg);
 		errors.add(error);
-	
+
 	}
 
 	public static void addErrors(String error) {
 		errors.add(error);
 	}
-	
+
 	public static List<String> getErrors() {
 		return errors;
 	}
-	
+
 	public static void clearErrors() {
 		errors.clear();
 	}
 
 	public static void throwError(JTextPane component) {
-		
+
 		StyledDocument doc = component.getStyledDocument();
 		Style style = doc.addStyle("errorStyle", null);
 		StyleConstants.setForeground(style, Color.RED);
-		try {
 
-			doc.insertString(doc.getLength(), DslErrorListener.getErrors() + "\n", style);
+		DslErrorListener.getErrors().forEach(error -> {
+			try {
+				doc.insertString(doc.getLength(), error + "\n", style);
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+		});
 
-		} catch (BadLocationException e) {
-
-			e.printStackTrace();
-
-		}
-		
 		DslController.reset();
-		
+
 	}
-	
+
 }

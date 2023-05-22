@@ -9,7 +9,7 @@ import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
 import enums.FileType;
-import util.ExportTable;
+import util.Export;
 
 @SuppressWarnings("serial")
 public class FormFrameExportAs extends FormFrameImportExportAs implements ActionListener{
@@ -46,7 +46,7 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 			new FormFrameSelectCell(jCell, cell, cancelService);
 			
 			if(!cancelService.get())
-				new ExportTable(cell, FileType.CSV, cancelService);
+				new Export(cell, FileType.CSV, cancelService);
 			
 		}else if(e.getSource() == btnXlsXlsxOdt) {
 			
@@ -65,7 +65,7 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 			new FormFrameSelectCell(jCell, cell, cancelService);
 			
 			if(!cancelService.get())
-				new ExportTable(cell, FileType.DAT, cancelService);
+				new Export(cell, FileType.DAT, cancelService);
 			
 		}
 		

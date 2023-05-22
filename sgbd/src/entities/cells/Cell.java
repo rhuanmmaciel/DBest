@@ -7,6 +7,7 @@ import java.util.Map;
 import com.mxgraph.model.mxCell;
 
 import entities.Column;
+import entities.Coordinates;
 import entities.Tree;
 import entities.utils.FindRoots;
 import entities.utils.TableFormat;
@@ -37,6 +38,12 @@ public abstract sealed class Cell permits TableCell, OperationCell{
 		this.width = width;
 		this.operator = null;
 		this.tree = new Tree();
+		
+	}
+	
+	public Coordinates getPosition() {
+		
+		return new Coordinates((int)jCell.getGeometry().getX(), (int)jCell.getGeometry().getY());
 		
 	}
 	
