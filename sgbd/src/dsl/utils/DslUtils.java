@@ -1,8 +1,10 @@
 package dsl.utils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -125,12 +127,26 @@ public class DslUtils {
 
 	}
 
+	public static String clearTableName(String tableName) {
+		
+		return removeThis(removePosition(tableName));
+		
+	}
+	
 	public static String removePosition(String tableName) {
 
 		if (tableName.contains("<"))
 			return tableName.substring(0, tableName.indexOf("<"));
 		return tableName;
 
+	}
+	
+	public static String removeThis(String tableName) {
+		
+		if (tableName.startsWith("this."))
+			return tableName.replace("this.", "");
+		return tableName;
+		
 	}
 
 	public static Optional<Coordinates> getPosition(String input) {
@@ -191,11 +207,21 @@ public class DslUtils {
 	}
 
 	public static String generateDslTree(Tree tree) {
-
-		return putCommand(tree.getRoot()) + ";";
+		
+		return putImports(tree)+"\n"+putCommand(tree.getRoot()) + ";";
 
 	}
 
+	private static String putImports(Tree tree) {
+	    Set<String> uniqueLines = new HashSet<>();
+
+	    tree.getLeaves().forEach(leaf -> uniqueLines.add("import this." + leaf.getName() + ".head;"));
+	    StringBuilder importStatement = new StringBuilder();
+	    uniqueLines.forEach(line -> importStatement.append(line).append("\n"));
+
+	    return importStatement.toString();
+	}
+	
 	private static String putCommand(Cell cell) {
 
 		String raw = null;

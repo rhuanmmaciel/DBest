@@ -8,7 +8,7 @@ importStatement: IMPORT pathStatement (nameDeclaration)? ';';
 
 nameDeclaration: AS RELATION;
 
-pathStatement: PATH_TOKEN '.head';
+pathStatement: (PATH_TOKEN | (THIS RELATION)) '.head';
 
 
 expressions: expression ( ';' expression )* ';';
@@ -54,6 +54,7 @@ RELATION: [a-zA-Z] [a-zA-Z0-9_]*;
 PREDICATE: '[' .*? ']';
 DIGIT: [0-9];
 PATH_TOKEN: '/' [a-zA-Z0-9_/]* [a-zA-Z0-9_];
+THIS: 'this.';
 WS: [ \t\r\n]+ -> skip;
 
 

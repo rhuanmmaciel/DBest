@@ -17,6 +17,7 @@ import entities.cells.TableCell;
 import enums.OperationArity;
 import enums.OperationType;
 import exceptions.ParentNullException;
+import gui.frames.dsl.TextEditor;
 import gui.frames.forms.operations.binary.CartesianProduct;
 import gui.frames.forms.operations.binary.FormFrameJoin;
 import gui.frames.forms.operations.binary.FormFrameLeftJoin;
@@ -74,23 +75,34 @@ public class DslController {
 	private static void importTables() {
 
 		for (String importStatement : imports) {
-
+			
 			String path = importStatement.substring(6, importStatement.indexOf(".head") + 5);
 
+			String tableName = null; 
+			
+			if(path.startsWith("this.")) {
+				
+				tableName = path.substring(path.indexOf("this.") + 5, path.indexOf(".head"));
+				path = TextEditor.getLastPath()+"/"+path.substring(path.indexOf("this.") + 5);
+				
+			}else {
+
+				tableName = path.substring(path.lastIndexOf("/") + 1, path.indexOf(".head"));
+
+			}
+			
 			String unnamedImport = importStatement.substring(0, importStatement.indexOf(".head") + 5);
-
-			String tableName = path.substring(path.lastIndexOf("/") + 1, path.indexOf(".head"));
-
+			
 			if (!unnamedImport.equals(importStatement)) {
 
 				tableName = importStatement.substring(importStatement.indexOf(".head") + 7);
 
 			}
-
+			
 			tables.add(tableName);
-			if (!FileUtils.copyDatFilesWithHead(path, tableName, Path.of("")))
-				DslErrorListener.addErrors("Files '" + DslUtils.removePosition(tableName) + ".head" + "' or '"
-						+ DslUtils.removePosition(tableName) + ".dat' not found");
+			if (path == null || !FileUtils.copyDatFilesWithHead(path, tableName, Path.of("")))
+				DslErrorListener.addErrors("Files '" + DslUtils.clearTableName(tableName) + ".head" + "' or '"
+						+ DslUtils.clearTableName(tableName) + ".dat' not found");
 
 		}
 
@@ -106,10 +118,10 @@ public class DslController {
 		List<String> tableFileNames = FileUtils.getDatFilesNames();
 
 		for (String tableName : tables)
-			if (!tableFileNames.contains(DslUtils.removePosition(tableName))) {
+			if (!tableFileNames.contains(DslUtils.clearTableName(tableName))) {
 
 				everyTableExist = false;
-				DslErrorListener.addErrors("Table '" + DslUtils.removePosition(tableName) + "' doesn't exist");
+				DslErrorListener.addErrors("Table '" + DslUtils.clearTableName(tableName) + "' doesn't exist");
 
 			}
 

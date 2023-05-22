@@ -43,6 +43,8 @@ public class TextEditor extends JFrame implements ActionListener {
 
 	private JTextPane textPane = new JTextPane();
 	private JScrollPane scrollPane = new JScrollPane(textPane);
+	
+	private static String lastPath = null;
 
 	private Box bottomPane = Box.createVerticalBox();
 	private JTextPane console = new JTextPane();
@@ -59,8 +61,8 @@ public class TextEditor extends JFrame implements ActionListener {
 	private final JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getDisplayName());
 	private final JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getDisplayName());
 
-	private JButton btnRun = new JButton("Run");
-	private JButton btnRunSelection = new JButton("Run selection");
+	private JButton btnRun = new JButton("Executar");
+	private JButton btnRunSelection = new JButton("Executar texto selecionado");
 
 	private MainController main;
 	private final JMenuBar menuBar = new JMenuBar();
@@ -88,10 +90,14 @@ public class TextEditor extends JFrame implements ActionListener {
 		Box consoleAndButtons = Box.createHorizontalBox();
 		consoleAndButtons.add(console);
 		consoleAndButtons.add(Box.createHorizontalStrut(3));
-		consoleAndButtons.add(btnRun);
-		consoleAndButtons.add(Box.createHorizontalStrut(3));
-		consoleAndButtons.add(btnRunSelection);
+		
+		Box buttons = Box.createVerticalBox();
+		buttons.add(btnRun);
+		buttons.add(Box.createVerticalStrut(3));
+		buttons.add(btnRunSelection);
 
+		consoleAndButtons.add(buttons);
+		
 		bottomPane.add(consoleAndButtons);
 
 		toolBar.add(btnBack);
@@ -226,6 +232,8 @@ public class TextEditor extends JFrame implements ActionListener {
 		
 		if (fileUpload.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			
+			lastPath = fileUpload.getCurrentDirectory().getAbsolutePath();
+			
 			MainController.setLastDirectory(new File(fileUpload.getCurrentDirectory().getAbsolutePath()));
 			
 	        StringBuilder stringBuilder = new StringBuilder();
@@ -261,6 +269,10 @@ public class TextEditor extends JFrame implements ActionListener {
 			error.printStackTrace();
 		}
 
+	}
+
+	public static String getLastPath() {
+		return lastPath;
 	}
 	
 }
