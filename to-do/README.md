@@ -2,7 +2,6 @@
 
 - tables carregadas na memória
 - abas para o editor de texto
-- dsl com atribuições de variáveis
 - mudar o componente da tela
 - mudar a nomeação de colunas
 - dar algum tipo de dica visual quando se está criando um edge ou um nó (ver brModelo)
@@ -17,3 +16,12 @@
 - adicionar a quebra de linha quando a condição da seleção ficar muito grande
 - plu-gin para operações personalizadas
 
+
+# Fazendo
+
+- dsl com atribuições de variáveis 
+
+
+# Prontos:
+
+- criar tabelas sozinhas

@@ -48,6 +48,26 @@ public interface RelAlgebraListener extends ParseTreeListener {
 	 */
 	void exitPathStatement(RelAlgebraParser.PathStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#variableDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableDeclaration(RelAlgebraParser.VariableDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#variableDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableDeclaration(RelAlgebraParser.VariableDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#createTable}.
+	 * @param ctx the parse tree
+	 */
+	void enterCreateTable(RelAlgebraParser.CreateTableContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#createTable}.
+	 * @param ctx the parse tree
+	 */
+	void exitCreateTable(RelAlgebraParser.CreateTableContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RelAlgebraParser#expressions}.
 	 * @param ctx the parse tree
 	 */

@@ -137,9 +137,6 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 
 				DslController.parser();
 				
-				if (!DslErrorListener.getErrors().isEmpty())					
-					DslErrorListener.throwError(textArea);
-				
 			}
 
 			textField.setText("");

@@ -128,25 +128,27 @@ public class DslUtils {
 	}
 
 	public static String clearTableName(String tableName) {
-		
-		return removeThis(removePosition(tableName));
-		
+
+		return removeSemicolon(removeThis(removePosition(tableName))).strip();
+
 	}
-	
+
 	public static String removePosition(String tableName) {
 
-		if (tableName.contains("<"))
-			return tableName.substring(0, tableName.indexOf("<"));
-		return tableName;
+		return tableName.contains("<") ? tableName.substring(0, tableName.indexOf("<")) : tableName;
 
 	}
-	
+
 	public static String removeThis(String tableName) {
-		
-		if (tableName.startsWith("this."))
-			return tableName.replace("this.", "");
-		return tableName;
-		
+
+		return tableName.startsWith("this.") ? tableName.replace("this.", "") : tableName;
+
+	}
+
+	public static String removeSemicolon(String tableName) {
+
+		return tableName.endsWith(";") ? tableName.substring(0, tableName.lastIndexOf(";")) : tableName;
+
 	}
 
 	public static Optional<Coordinates> getPosition(String input) {
@@ -207,21 +209,21 @@ public class DslUtils {
 	}
 
 	public static String generateDslTree(Tree tree) {
-		
-		return putImports(tree)+"\n"+putCommand(tree.getRoot()) + ";";
+
+		return putImports(tree) + "\n" + putCommand(tree.getRoot()) + ";";
 
 	}
 
 	private static String putImports(Tree tree) {
-	    Set<String> uniqueLines = new HashSet<>();
+		Set<String> uniqueLines = new HashSet<>();
 
-	    tree.getLeaves().forEach(leaf -> uniqueLines.add("import this." + leaf.getName() + ".head;"));
-	    StringBuilder importStatement = new StringBuilder();
-	    uniqueLines.forEach(line -> importStatement.append(line).append("\n"));
+		tree.getLeaves().forEach(leaf -> uniqueLines.add("import this." + leaf.getName() + ".head;"));
+		StringBuilder importStatement = new StringBuilder();
+		uniqueLines.forEach(line -> importStatement.append(line).append("\n"));
 
-	    return importStatement.toString();
+		return importStatement.toString();
 	}
-	
+
 	private static String putCommand(Cell cell) {
 
 		String raw = null;
@@ -237,15 +239,12 @@ public class DslUtils {
 			}
 
 			if (operationCell.getArity() == OperationArity.UNARY)
-				raw = raw.replace("source",
-						putCommand(cell.getParents().get(0)));
+				raw = raw.replace("source", putCommand(cell.getParents().get(0)));
 
 			else {
 
-				raw = raw.replace("source1",
-						putCommand(cell.getParents().get(0)));
-				raw = raw.replace("source2",
-						putCommand(cell.getParents().get(1)));
+				raw = raw.replace("source1", putCommand(cell.getParents().get(0)));
+				raw = raw.replace("source2", putCommand(cell.getParents().get(1)));
 
 			}
 

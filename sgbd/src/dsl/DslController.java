@@ -6,11 +6,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.mxgraph.model.mxCell;
 
 import controller.MainController;
 import dsl.utils.DslUtils;
+import entities.Coordinates;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
@@ -34,7 +36,9 @@ public class DslController {
 	private static List<String> expressions = new LinkedList<>();
 	private static List<String> imports = new ArrayList<>();
 	private static List<String> tables = new ArrayList<>();
-
+	private static List<String> aloneTables = new ArrayList<>();
+	private static List<String> variableDeclarations = new ArrayList<>();
+	
 	public static void addExpression(String command) {
 
 		expressions.add(command);
@@ -52,12 +56,26 @@ public class DslController {
 		imports.add(importStatement);
 
 	}
+	
+	public static void addAloneTable(String table) {
+		
+		tables.add(table);
+		aloneTables.add(table);
+		
+	}
+	
+	public static void addVariableDeclarations(String declaration) {
+		
+		variableDeclarations.add(declaration);
+		
+	}
 
 	public static void reset() {
 
 		expressions.clear();
 		tables.clear();
 		imports.clear();
+		aloneTables.clear();
 
 	}
 
@@ -110,7 +128,7 @@ public class DslController {
 
 	private static void execute() {
 
-		if (tables.isEmpty() || expressions.isEmpty())
+		if (expressions.isEmpty() && aloneTables.isEmpty() && imports.isEmpty())
 			return;
 
 		boolean everyTableExist = true;
@@ -127,9 +145,16 @@ public class DslController {
 
 		if (!everyTableExist)
 			return;
-
+		
+		createAloneTables();
 		createTree();
 
+	}
+	
+	private static void createAloneTables() {
+		
+		aloneTables.forEach(table -> createTable(DslUtils.clearTableName(table), DslUtils.getPosition(table)));
+		
 	}
 
 	private static void createTree() {
@@ -355,6 +380,14 @@ public class DslController {
 
 		MainController.putTableCell(table, DslUtils.getPosition(position));
 
+	}
+	
+	private static void createTable(String tableName, Optional<Coordinates> coordinates) {
+		
+		TableCell table = new ImportFile(tableName+".head").getResult();
+		
+		MainController.putTableCell(table, coordinates);
+		
 	}
 
 }

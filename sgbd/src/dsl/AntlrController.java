@@ -1,6 +1,7 @@
 package dsl;
 
 import dsl.antlr4.RelAlgebraBaseListener;
+import dsl.antlr4.RelAlgebraParser.CreateTableContext;
 import dsl.antlr4.RelAlgebraParser.ExpressionsContext;
 import dsl.antlr4.RelAlgebraParser.ImportStatementContext;
 import dsl.antlr4.RelAlgebraParser.SimpleContext;
@@ -33,6 +34,13 @@ public class AntlrController extends RelAlgebraBaseListener{
 	public void exitSimple(SimpleContext ctx) {
 		
 		DslController.addTable(ctx.getText());
+		
+	}
+	
+	@Override
+	public void exitCreateTable(CreateTableContext ctx) {
+		
+		DslController.addAloneTable(ctx.getText());
 		
 	}
 
