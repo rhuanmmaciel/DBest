@@ -88,18 +88,6 @@ public class RelAlgebraBaseListener implements RelAlgebraListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpressions(RelAlgebraParser.ExpressionsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExpressions(RelAlgebraParser.ExpressionsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterExpression(RelAlgebraParser.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}

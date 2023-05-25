@@ -1,8 +1,8 @@
 grammar RelAlgebra;
 
-command: (importStatement | expressions | createTable | variableDeclaration) (importStatement | expressions | createTable | variableDeclaration)*;
+command: (importStatement | expression | createTable | variableDeclaration) ';' ((importStatement | expression | createTable | variableDeclaration) ';')*;
 
-importStatement: IMPORT pathStatement (nameDeclaration)? ';';
+importStatement: IMPORT pathStatement (nameDeclaration)?;
 
 nameDeclaration: AS RELATION;
 
@@ -10,9 +10,7 @@ pathStatement: (PATH | (THIS RELATION)) '.head';
 
 variableDeclaration: RELATION '=' expression;
 
-createTable: RELATION position? ';';
-
-expressions: expression ( ';' expression )* ';';
+createTable: RELATION position?;
 
 expression: (selection | projection | join | leftJoin | rightJoin | cartesianProduct | union) position?;
 

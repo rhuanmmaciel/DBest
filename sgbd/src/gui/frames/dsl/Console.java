@@ -130,7 +130,7 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 				
 				AntlrController listener = new AntlrController();
 
-				walker.walk(listener, parser.expressions());
+				walker.walk(listener, parser.command());
 
 				if (!DslErrorListener.getErrors().isEmpty())					
 					DslErrorListener.throwError(textArea);

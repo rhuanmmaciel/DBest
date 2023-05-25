@@ -4,10 +4,13 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import dsl.DslController;
+import dsl.DslErrorListener;
 import dsl.entities.BinaryExpression;
 import dsl.entities.Expression;
 import dsl.entities.Relation;
 import dsl.entities.UnaryExpression;
+import dsl.enums.CommandType;
 import entities.Coordinates;
 import entities.Tree;
 import entities.cells.Cell;
@@ -15,28 +18,50 @@ import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import enums.OperationArity;
 import enums.OperationType;
+import util.FileUtils;
 
 public class DslUtils {
 
-	public static Expression<?> expressionRecognizer(String input) {
+	public static CommandType commandRecognizer(String command) {
 		
-		if (input.contains("(")) {
+		command = command.strip();
 		
-			int endIndex = input.indexOf('(');
-
-			if (input.contains("[")) 
-				endIndex = Math.min(input.indexOf('['), endIndex);
-			
-			if(OperationType.fromString(input.substring(0, endIndex).toLowerCase()).getArity() == OperationArity.UNARY)
-				return new UnaryExpression(input);
-				
-			return new BinaryExpression(input);
-		}
+		if(command.startsWith("import")) return CommandType.IMPORT_STATEMENT;
 		
-		return new Relation(input);
+		if (command.contains("=")) 
+			if (!command.contains("[") || command.indexOf("=") < command.indexOf("[")) 
+					return CommandType.VARIABLE_DECLARATION;
+		
+		return CommandType.EXPRESSION;
 		
 	}
 	
+	public static Expression<?> expressionRecognizer(String input) {
+
+		if (input.contains("(")) {
+
+			int endIndex = input.indexOf('(');
+
+			if (input.contains("["))
+				endIndex = Math.min(input.indexOf('['), endIndex);
+
+			if (OperationType.fromString(input.substring(0, endIndex).toLowerCase()).getArity() == OperationArity.UNARY)
+				return new UnaryExpression(input);
+
+			return new BinaryExpression(input);
+		}
+
+		if(DslController.containsVariable(clearTableName(input)))
+			return DslController.getVariableContent(input);
+		
+		if(FileUtils.getDatFilesNames().contains(clearTableName(input)))
+			return new Relation(input);
+		
+		DslErrorListener.addErrors("A fonte de dados: '" + input + "' não encontrado");
+		return null;
+		
+	}
+
 	public static String clearTableName(String tableName) {
 
 		return removeSemicolon(removeThis(removePosition(tableName))).strip();
@@ -167,5 +192,5 @@ public class DslUtils {
 		return raw + getPosition(cell.getPosition());
 
 	}
-	
+
 }
