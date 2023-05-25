@@ -19,32 +19,51 @@ import entities.Column;
 import enums.OperationArity;
 import enums.OperationType;
 import gui.frames.forms.operations.IOperator;
+import gui.frames.main.MainFrame;
 
 public final class OperationCell extends Cell {
 
 	private OperationType type;
-	private List<Cell> parents;
+	private List<Cell> parents = new ArrayList<>();
 	private OperationArity arity;
-	private Class<? extends IOperator> form;
-	private List<String> data;
-	private Boolean error;
+	private Class<? extends IOperator> form = null;
+	private List<String> arguments = null;
+	private Boolean error = false;
 
-	{
+	public OperationCell(mxCell jCell, OperationType type) {
 
-		this.parents = new ArrayList<>();
-		this.data = null;
-		this.error = false;
-		this.form = null;
+		super(type.getDisplayNameAndSymbol(), type.getDisplayName(), jCell, 80, 30);
+		initializeCell(jCell, type);
+
+	}
+
+	public OperationCell(mxCell jCell, OperationType type, List<Cell> parents, List<String> arguments) {
+
+		super(type.getDisplayNameAndSymbol(), type.getDisplayName(), jCell, 80, 30);
+		initializeCell(jCell, type);
+
+		this.arguments = arguments;
 		
+		if (parents != null && !parents.isEmpty()) {
+			
+			this.parents = parents;
+			parents.forEach(parent -> {
+
+				parent.setChild(this);
+				MainFrame.getGraph().insertEdge(parent.getJGraphCell(), null, "", parent.getJGraphCell(), jCell);
+
+			});
+			this.form = type.getForm();
+			updateOperation();
+			
+		}
 	}
 	
-	public OperationCell(String name, String style, mxCell jCell, OperationType type, List<Cell> parents, int length,
-			int width) {
-
-		super(name, style, jCell, length, width);
+	private void initializeCell(mxCell jCell, OperationType type) {
+		
 		this.type = type;
 		arity = type.getArity();
-
+		
 	}
 
 	public IOperator editOperation(mxCell jCell) {
@@ -95,11 +114,11 @@ public final class OperationCell extends Cell {
 	}
 
 	public void setData(List<String> data) {
-		this.data = new ArrayList<>(data);
+		this.arguments = new ArrayList<>(data);
 	}
 
 	public List<String> getData() {
-		return data;
+		return arguments;
 	}
 
 	public OperationType getType() {

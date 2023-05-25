@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -78,8 +80,15 @@ public class TextEditor extends JFrame implements ActionListener {
 		toolBar.setFloatable(false);
 		console.setEditable(false);
 
-		JTextLineNumber lineNumber = new JTextLineNumber(textPane);
-		scrollPane.setRowHeaderView(lineNumber);
+        JTextLineNumber lineNumber = new JTextLineNumber(textPane);
+        scrollPane.setRowHeaderView(lineNumber);
+
+        scrollPane.getVerticalScrollBar().addAdjustmentListener((AdjustmentListener) new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                lineNumber.repaint();
+            }
+        });
 
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		getContentPane().add(toolBar, BorderLayout.NORTH);

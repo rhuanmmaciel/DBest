@@ -14,7 +14,7 @@ import entities.cells.OperationCell;
 
 public class TreeUtils {
 	
-	public static Map<mxCell, Cell> cells = MainController.getCells();
+	public static Map<mxCell, Cell> cells = Cell.getCells();
 	public static Map<Integer, Tree> trees = MainController.getTrees();
 	
 	public static void updateTree(Cell cell) {

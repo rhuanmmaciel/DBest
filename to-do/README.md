@@ -5,7 +5,6 @@
 - mudar o componente da tela
 - mudar a nomeação de colunas
 - dar algum tipo de dica visual quando se está criando um edge ou um nó (ver brModelo)
-- adicionar ghostCell na criação de tables
 - adicionar a edge na ghostCell
 - mover todos os componentes selecionados 
 - exportar tabela sem PK
@@ -25,3 +24,4 @@
 # Prontos:
 
 - criar tabelas sozinhas
+- adicionar ghostCell na criação de tables

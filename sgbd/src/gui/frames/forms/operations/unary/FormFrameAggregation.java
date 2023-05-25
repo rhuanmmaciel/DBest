@@ -41,7 +41,7 @@ public class FormFrameAggregation extends JDialog implements ActionListener, IOp
 		setModal(true);
 		setTitle("Agregação");
 
-		this.cell = (OperationCell) MainController.getCells().get(cell);
+		this.cell = (OperationCell) Cell.getCells().get(cell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		initializeGUI();

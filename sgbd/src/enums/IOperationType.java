@@ -1,5 +1,7 @@
 package enums;
 
+import gui.frames.forms.operations.IOperator;
+
 public interface IOperationType {
 	
 	String getDisplayName();
@@ -8,5 +10,6 @@ public interface IOperationType {
 	String getOperationName();
 	String getDslOperation();
 	OperationArity getArity();
+	Class<? extends IOperator> getForm();
     
 }

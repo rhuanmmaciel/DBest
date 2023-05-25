@@ -1,132 +1,42 @@
 package dsl.utils;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import controller.MainController;
+import dsl.entities.BinaryExpression;
+import dsl.entities.Expression;
+import dsl.entities.Relation;
+import dsl.entities.UnaryExpression;
 import entities.Coordinates;
 import entities.Tree;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import enums.OperationArity;
+import enums.OperationType;
 
 public class DslUtils {
 
-	public static Map<String, String> recognizer(String input) {
+	public static Expression<?> expressionRecognizer(String input) {
+		
+		if (input.contains("(")) {
+		
+			int endIndex = input.indexOf('(');
 
-		int endIndex = input.indexOf('(');
-
-		if (input.contains("[")) {
-
-			endIndex = Math.min(input.indexOf('['), endIndex);
-
+			if (input.contains("[")) 
+				endIndex = Math.min(input.indexOf('['), endIndex);
+			
+			if(OperationType.fromString(input.substring(0, endIndex).toLowerCase()).getArity() == OperationArity.UNARY)
+				return new UnaryExpression(input);
+				
+			return new BinaryExpression(input);
 		}
-
-		if (MainController.unaryOperationsName().contains(input.substring(0, endIndex).toLowerCase()))
-			return unaryRecognizer(input);
-
-		return binaryRecognizer(input);
-
+		
+		return new Relation(input);
+		
 	}
-
-	private static Map<String, String> unaryRecognizer(String input) {
-
-		Map<String, String> elements = new HashMap<>();
-
-		int endIndex = input.indexOf('(');
-
-		if (input.contains("[")) {
-
-			endIndex = Math.min(input.indexOf('['), endIndex);
-			elements.put("predicate", input.substring(input.indexOf("[") + 1, input.indexOf("]")));
-
-		}
-
-		elements.put("operation", input.substring(0, endIndex).toLowerCase());
-
-		String source = input.substring(input.indexOf("(") + 1, input.lastIndexOf(")"));
-
-		if (!source.contains("(") && source.contains("<")) {
-
-			elements.put("source", source.substring(0, source.indexOf("<")));
-			elements.put("sourcePosition", source.substring(source.indexOf("<"), source.length()));
-
-		} else
-			elements.put("source", source);
-
-		String afterExpression = input.substring(input.lastIndexOf(")") + 1);
-
-		if (afterExpression.contains("<"))
-			elements.put("position",
-					afterExpression.substring(afterExpression.indexOf("<"), afterExpression.indexOf(">") + 1));
-
-		elements.put("command", input);
-
-		return elements;
-
-	}
-
-	private static Map<String, String> binaryRecognizer(String input) {
-
-		Map<String, String> elements = new HashMap<>();
-
-		int endIndex = input.indexOf('(');
-
-		String regex = "\\[[^\\[]*\\(";
-
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(input);
-
-		if (matcher.find()) {
-
-			endIndex = Math.min(input.indexOf('['), endIndex);
-			elements.put("predicate", input.substring(input.indexOf("[") + 1, input.indexOf("]")));
-
-		}
-
-		elements.put("operation", input.substring(0, endIndex).toLowerCase());
-
-		int sourcePosition = input.indexOf("(") + 1;
-		int commaPosition = DslUtils.findCommaPosition(input.substring(sourcePosition))
-				+ input.substring(0, sourcePosition).length();
-
-		String source1 = input.substring(sourcePosition, commaPosition);
-		String source2 = input.substring(commaPosition + 1, input.lastIndexOf(")"));
-
-		if (!source1.contains("(") && source1.contains("<")) {
-
-			elements.put("source1", source1.substring(0, source1.indexOf("<")));
-			elements.put("source1Position", source1.substring(source1.indexOf("<"), source1.length()));
-
-		} else
-			elements.put("source1", source1);
-
-		if (!source2.contains("(") && source2.contains("<")) {
-
-			elements.put("source2", source2.substring(0, source2.indexOf("<")));
-			elements.put("source2Position", source2.substring(source2.indexOf("<"), source2.length()));
-
-		} else
-			elements.put("source2", source2);
-
-		String afterExpression = input.substring(input.lastIndexOf(")") + 1);
-
-		if (afterExpression.contains("<"))
-			elements.put("position",
-					afterExpression.substring(afterExpression.indexOf("<"), afterExpression.indexOf(">") + 1));
-
-		elements.put("command", input);
-
-		return elements;
-
-	}
-
+	
 	public static String clearTableName(String tableName) {
 
 		return removeSemicolon(removeThis(removePosition(tableName))).strip();
@@ -210,11 +120,11 @@ public class DslUtils {
 
 	public static String generateDslTree(Tree tree) {
 
-		return putImports(tree) + "\n" + putCommand(tree.getRoot()) + ";";
+		return generateImports(tree) + "\n" + generateExpression(tree.getRoot()) + ";";
 
 	}
 
-	private static String putImports(Tree tree) {
+	private static String generateImports(Tree tree) {
 		Set<String> uniqueLines = new HashSet<>();
 
 		tree.getLeaves().forEach(leaf -> uniqueLines.add("import this." + leaf.getName() + ".head;"));
@@ -224,7 +134,7 @@ public class DslUtils {
 		return importStatement.toString();
 	}
 
-	private static String putCommand(Cell cell) {
+	private static String generateExpression(Cell cell) {
 
 		String raw = null;
 
@@ -239,12 +149,12 @@ public class DslUtils {
 			}
 
 			if (operationCell.getArity() == OperationArity.UNARY)
-				raw = raw.replace("source", putCommand(cell.getParents().get(0)));
+				raw = raw.replace("source", generateExpression(cell.getParents().get(0)));
 
 			else {
 
-				raw = raw.replace("source1", putCommand(cell.getParents().get(0)));
-				raw = raw.replace("source2", putCommand(cell.getParents().get(1)));
+				raw = raw.replace("source1", generateExpression(cell.getParents().get(0)));
+				raw = raw.replace("source2", generateExpression(cell.getParents().get(1)));
 
 			}
 
@@ -257,5 +167,5 @@ public class DslUtils {
 		return raw + getPosition(cell.getPosition());
 
 	}
-
+	
 }

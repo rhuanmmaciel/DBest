@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.mxgraph.model.mxCell;
+
 import entities.cells.TableCell;
 import enums.ColumnDataType;
+import gui.frames.main.MainFrame;
 import sgbd.prototype.Column;
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
@@ -138,8 +141,10 @@ public class TableCreator {
 		table.saveHeader(tableName+".head");
 		columns.add(primaryKeyColumn);
 		
+		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) MainFrame.getGraph().getDefaultParent(), null,
+				tableName, 0, 0, 80, 30, "tabela");
 		
-		return new TableCell(80, 50, tableName, "tabela", columns, table, prototype);
+		return new TableCell(jCell, tableName, "tabela", columns, table, prototype);
 		
 	}
 

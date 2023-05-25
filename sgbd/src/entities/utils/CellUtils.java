@@ -20,7 +20,7 @@ public class CellUtils extends MainController{
 		
 		if (jCell != null) {
 
-			Cell cell = cells.get(jCell);
+			Cell cell = Cell.getCells().get(jCell);
 			
 			if (cell != null) {
 				
@@ -49,8 +49,8 @@ public class CellUtils extends MainController{
 			}else {
 				
 				
-				OperationCell child = (OperationCell) cells.get(jCell.getTarget());
-				Cell parent = cells.get(jCell.getSource());
+				OperationCell child = (OperationCell) Cell.getCells().get(jCell.getTarget());
+				Cell parent = Cell.getCells().get(jCell.getSource());
 				
 				if(parent!=null) {
 					
@@ -66,7 +66,7 @@ public class CellUtils extends MainController{
 			try {
 
 				graph.removeCells(new Object[] { jCell }, true);
-				cells.remove(jCell);
+				Cell.removeFromCells(jCell);
 
 			} finally {
 				graph.getModel().endUpdate();
@@ -85,7 +85,7 @@ public class CellUtils extends MainController{
 		graph.getModel().beginUpdate();
 		try {
 			graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
-			cells.clear();
+			Cell.clearCells();
 
 		} finally {
 			graph.getModel().endUpdate();
@@ -97,7 +97,7 @@ public class CellUtils extends MainController{
 	
 	public static void showTable(mxCell jCell) {
 		
-		Cell cell = jCell != null ? MainController.getCells().get(jCell) : null;
+		Cell cell = jCell != null ? Cell.getCells().get(jCell) : null;
 		if (cell != null && (cell instanceof TableCell || ((OperationCell) cell).hasForm())) {
 			
 			if(!cell.hasError()) {

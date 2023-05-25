@@ -83,7 +83,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		setModal(true);
 		setTitle("Seleção");
 
-		this.cell = (OperationCell) MainController.getCells().get(jCell);
+		this.cell = (OperationCell) Cell.getCells().get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 
@@ -354,7 +354,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 	public void executeOperation(mxCell jCell, List<String> data) {
 		
-		OperationCell cell = (OperationCell) MainController.getCells().get(jCell);
+		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 		
 		try {
 			

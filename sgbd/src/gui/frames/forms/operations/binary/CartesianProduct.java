@@ -26,7 +26,7 @@ public class CartesianProduct implements IOperator {
 
 	public void executeOperation(mxCell jCell, List<String> data) {
 		
-		OperationCell cell = (OperationCell) MainController.getCells().get(jCell);
+		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 		
 		try {
 		

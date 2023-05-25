@@ -65,7 +65,7 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 		setModal(true);
 		setTitle("Projeção");
 
-		this.cell = (OperationCell) MainController.getCells().get(jCell);
+		this.cell = (OperationCell) Cell.getCells().get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 
@@ -264,7 +264,7 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 
 	public void executeOperation(mxCell jCell, List<String> data) {
 
-		OperationCell cell = (OperationCell) MainController.getCells().get(jCell);
+		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 
 		try {	
 			

@@ -46,7 +46,7 @@ public class Tree {
 
 		Set<Cell> cells = new HashSet<>();
 
-		MainController.getCells().values().stream().filter(cell -> cell.getTree() == this)
+		Cell.getCells().values().stream().filter(cell -> cell.getTree() == this)
 				.forEach(cell -> cells.add(cell));
 
 		return cells;

@@ -55,7 +55,7 @@ public class FormFrameRightJoin extends JDialog implements ActionListener, IOper
 		setModal(true);
 		setTitle("Junção à direita");
 
-		this.cell = (OperationCell) MainController.getCells().get(jCell);
+		this.cell = (OperationCell) Cell.getCells().get(jCell);
 		this.parentCell1 = this.cell.getParents().get(0);
 		this.parentCell2 = this.cell.getParents().get(1);
 		this.jCell = jCell;
@@ -167,7 +167,7 @@ public class FormFrameRightJoin extends JDialog implements ActionListener, IOper
 
 	public void executeOperation(mxCell jCell, List<String> data) {
 
-		OperationCell cell = (OperationCell) MainController.getCells().get(jCell);
+		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 
 		try {
 

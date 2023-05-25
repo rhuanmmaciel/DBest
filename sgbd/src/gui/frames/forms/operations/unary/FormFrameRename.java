@@ -42,7 +42,7 @@ public class FormFrameRename extends JDialog implements ActionListener, IOperato
 		setModal(true);
 		setTitle("Renomeação");
 
-		this.cell = (OperationCell) MainController.getCells().get(jCell);
+		this.cell = (OperationCell) Cell.getCells().get(jCell);
 		parentCell = this.cell.getParents().get(0);
 		this.jCell = jCell;
 		initializeGUI();

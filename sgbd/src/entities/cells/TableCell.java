@@ -3,6 +3,8 @@ package entities.cells;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mxgraph.model.mxCell;
+
 import entities.Column;
 import enums.ColumnDataType;
 import sgbd.prototype.Prototype;
@@ -16,18 +18,18 @@ public final class TableCell extends Cell{
 	private Table table;
 	private Prototype prototype;
 	
-	public TableCell(int length, int width, String name, String style, List<Column> columns, Table table, Prototype prototype) {
+	public TableCell(mxCell jCell, String name, String style, List<Column> columns, Table table, Prototype prototype) {
 		
-		super(name, style, null, length, width);
+		super(name, style, jCell, 80, 50);
 		setColumns(columns);
 		setTable(table);
 		setPrototype(prototype);
 
 	}
 	
-	public TableCell(int length, int width, String name, String style, Table table) {
+	public TableCell(mxCell jCell, String name, String style, Table table) {
 		
-		super(name, style, null, length, width);
+		super(name, style, jCell, 80, 50);
 		setTable(table);
 		setPrototype(table.getHeader().getPrototype());
 		setColumns();

@@ -1,6 +1,8 @@
 package entities.cells;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +28,7 @@ public abstract sealed class Cell permits TableCell, OperationCell{
 	private int width;
 	private Tree tree;
 	protected Map<Integer, Map<String, String>> content;
+	protected static Map<mxCell, Cell> cells = new HashMap<>();
 	
 	public Cell(String name, String style, mxCell jCell, int length, int width) {
 		
@@ -38,6 +41,7 @@ public abstract sealed class Cell permits TableCell, OperationCell{
 		this.width = width;
 		this.operator = null;
 		this.tree = new Tree();
+		cells.put(jCell, this);
 		
 	}
 	
@@ -65,10 +69,6 @@ public abstract sealed class Cell permits TableCell, OperationCell{
 	
 	public mxCell getJGraphCell() {
 		return jCell;
-	}
-	
-	public void setJGraphCell(mxCell jCell) {
-		this.jCell = jCell;
 	}
 	
 	public void setOperator(Operator operator) {
@@ -173,7 +173,24 @@ public abstract sealed class Cell permits TableCell, OperationCell{
 		
 	}
 	
+	public static Map<mxCell, Cell> getCells(){
+		
+		return Collections.unmodifiableMap(cells);
+		
+	}
 	
+	public static void removeFromCells(mxCell cell){
+		
+		cells.remove(cell);
+		
+	}
+	
+	public static void clearCells() {
+		
+		cells.clear();
+		
+	}
+
 	
 	//jgraph métodos
 	

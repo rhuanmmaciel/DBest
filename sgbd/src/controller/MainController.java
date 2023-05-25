@@ -15,18 +15,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 
+import dsl.entities.BinaryExpression;
+import dsl.entities.OperationExpression;
+import dsl.entities.Relation;
 import entities.Action.CreateOperationAction;
 import entities.Action.CreateTableAction;
 import entities.Action.CurrentAction;
 import entities.Action.CurrentAction.ActionType;
-import entities.Coordinates;
 import entities.Edge;
 import entities.Tree;
 import entities.buttons.Button;
@@ -44,20 +45,13 @@ import gui.frames.dsl.TextEditor;
 import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.FormFrameExportTable;
 import gui.frames.forms.importexport.FormFrameImportAs;
-import gui.frames.forms.operations.binary.CartesianProduct;
-import gui.frames.forms.operations.binary.FormFrameJoin;
-import gui.frames.forms.operations.binary.FormFrameLeftJoin;
-import gui.frames.forms.operations.binary.FormFrameRightJoin;
-import gui.frames.forms.operations.binary.FormFrameUnion;
-import gui.frames.forms.operations.unary.FormFrameProjection;
-import gui.frames.forms.operations.unary.FormFrameSelection;
 import gui.frames.main.MainFrame;
 import util.Export;
+import util.ImportFile;
 
 @SuppressWarnings("serial")
 public class MainController extends MainFrame {
 
-	protected static Map<mxCell, Cell> cells = new HashMap<>();
 	private static Map<Integer, Tree> trees = new HashMap<>();
 	private static File lastDirectory = new File("");
 
@@ -171,14 +165,14 @@ public class MainController extends MainFrame {
 
 			new CellInformationFrame(jCell);
 
-		}else if(e.getSource() == menuItemExport) {
-			
-			new Export(cells.get(jCell).getTree());
-			
+		} else if (e.getSource() == menuItemExport) {
+
+			new Export(Cell.getCells().get(jCell).getTree());
+
 		} else if (e.getSource() == menuItemEdit) {
 
-			((OperationCell) cells.get(jCell)).editOperation(jCell);
-			TreeUtils.recalculateContent(cells.get(jCell));
+			((OperationCell) Cell.getCells().get(jCell)).editOperation(jCell);
+			TreeUtils.recalculateContent(Cell.getCells().get(jCell));
 
 		} else if (e.getSource() == menuItemRemove) {
 
@@ -245,9 +239,9 @@ public class MainController extends MainFrame {
 
 		jCell = (mxCell) MainFrame.getGraphComponent().getCellAt(e.getX(), e.getY());
 
-		if (e.getButton() == MouseEvent.BUTTON3 && cells.get(jCell) != null) {
+		if (e.getButton() == MouseEvent.BUTTON3 && Cell.getCells().get(jCell) != null) {
 
-			Cell cell = cells.get(jCell);
+			Cell cell = Cell.getCells().get(jCell);
 
 			popupMenuJCell.add(menuItemShow);
 			popupMenuJCell.add(menuItemInformations);
@@ -288,7 +282,7 @@ public class MainController extends MainFrame {
 
 		ClickController.clicked(currentActionRef, jCell, edgeRef, e, ghostJCell);
 
-		if (cells.get(jCell) != null && e.getClickCount() == 2) {
+		if (Cell.getCells().get(jCell) != null && e.getClickCount() == 2) {
 
 			CellUtils.showTable(jCell);
 
@@ -329,7 +323,7 @@ public class MainController extends MainFrame {
 
 		AtomicReference<Boolean> exitRef = new AtomicReference<>(false);
 
-		if (!cells.isEmpty())
+		if (!Cell.getCells().isEmpty())
 			new FormFrameExportTable(exitRef);
 	}
 
@@ -360,7 +354,7 @@ public class MainController extends MainFrame {
 
 		} else if (e.getKeyCode() == KeyEvent.VK_X) {
 
-			if (cells.size() > 0)
+			if (Cell.getCells().size() > 0)
 				exportTable();
 
 		} else if (e.getKeyCode() == KeyEvent.VK_C) {
@@ -381,9 +375,9 @@ public class MainController extends MainFrame {
 
 		} else if (e.getKeyCode() == KeyEvent.VK_A) {
 
-			if (jCell != null && cells.get(jCell) != null) {
+			if (jCell != null && Cell.getCells().get(jCell) != null) {
 
-				System.out.println(((OperationCell) cells.get(jCell)).getData());
+				System.out.println(((OperationCell) Cell.getCells().get(jCell)).getData());
 
 			}
 
@@ -393,21 +387,24 @@ public class MainController extends MainFrame {
 	@Override
 	public void mouseMoved(MouseEvent e) {
 
-		if (currentActionRef != null && currentActionRef.get() != null
-				&& currentActionRef.get().getType() == CurrentAction.ActionType.CREATE_OPERATOR_CELL
-				&& ghostJCell != null) {
+		if(currentActionRef != null && currentActionRef.get() != null)
+			if (currentActionRef.get().getType() == CurrentAction.ActionType.CREATE_OPERATOR_CELL
+					&& ghostJCell != null) {
+	
+				mxGeometry geo = ghostJCell.getGeometry();
+				double dx = e.getX() - geo.getCenterX();
+				double dy = e.getY() - geo.getCenterY();
+				MainFrame.getGraph().moveCells(new Object[] { ghostJCell }, dx, dy);
+	
+			}else if(currentActionRef.get() instanceof CreateTableAction createTable) {
+				
+				mxGeometry geo = createTable.getTableCell().getJGraphCell().getGeometry();
+				double dx = e.getX() - geo.getCenterX();
+				double dy = e.getY() - geo.getCenterY();
+				MainFrame.getGraph().moveCells(new Object[] { createTable.getTableCell().getJGraphCell() }, dx, dy);
+				
+			}
 
-			mxGeometry geo = ghostJCell.getGeometry();
-			double dx = e.getX() - geo.getCenterX();
-			double dy = e.getY() - geo.getCenterY();
-			MainFrame.getGraph().moveCells(new Object[] { ghostJCell }, dx, dy);
-
-		}
-
-	}
-
-	public static Map<mxCell, Cell> getCells() {
-		return Collections.unmodifiableMap(cells);
 	}
 
 	public static Map<Integer, Tree> getTrees() {
@@ -430,97 +427,58 @@ public class MainController extends MainFrame {
 		lastDirectory = newLastDirectory;
 	}
 
-	public static void putTableCell(TableCell cell, Optional<Coordinates> position) {
+	public static void putTableCell(Relation relation) {
 
-		int x = position.isPresent() ? position.get().x() : 50;
-		int y = position.isPresent() ? position.get().y() : 100;
+		int x, y;
+		if (relation.getCoordinates().isPresent()) {
 
-		if (MainFrame.getGraphComponent().getCellAt(x, y) != null) {
-			putTableCell(cell, Optional.of(new Coordinates(x + 50, y + 50)));
-			return;
+			x = relation.getCoordinates().get().x();
+			y = relation.getCoordinates().get().y();
+
+		} else {
+
+			x = (int) (Math.random() * 600);
+			y = (int) (Math.random() * 600);
+
 		}
-
-		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) graph.getDefaultParent(), null,
-				cell.getName(), x, y, 80, 30, cell.getStyle());
-
-		cell.setJGraphCell(jCell);
-
-		cells.put(jCell, cell);
-
+		
+		mxCell jTableCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) graph.getDefaultParent(), null,
+				relation.getName(), x, y, 80, 30, "tabela");
+		
+		relation.setCell(new ImportFile(relation.getName() + ".head", jTableCell).getResult());
+		
 	}
 
-	public static mxCell putOperationCell(OperationCell cell, List<Cell> parents, String command,
-			Optional<Coordinates> position) {
+	public static void putOperationCell(OperationExpression operationExpression) {
 
-		int x = position.isPresent() ? position.get().x() : (int) (Math.random() * 600);
-		int y = position.isPresent() ? position.get().y() : (int) (Math.random() * 600);
+		int x, y;
+		if (operationExpression.getCoordinates().isPresent()) {
 
+			x = operationExpression.getCoordinates().get().x();
+			y = operationExpression.getCoordinates().get().y();
+
+		}else {
+			
+			x = (int) (Math.random() * 600);
+			y = (int) (Math.random() * 600);
+			
+		}
+		
+		OperationType type = operationExpression.getType();
+		
 		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) graph.getDefaultParent(), null,
-				cell.getName(), x, y, 80, 30, cell.getStyle());
+					type.getDisplayNameAndSymbol(), x, y, 80, 30, type.getDisplayName());
 
-		cell.setJGraphCell(jCell);
-
-		cells.put(jCell, cell);
-
-		for (Cell parent : parents) {
-
-			cell.addParent(parent);
-			parent.setChild(cell);
-
-			MainFrame.getGraph().insertEdge(parent.getJGraphCell(), null, "", parent.getJGraphCell(), jCell);
-
-		}
-
+		List<Cell> parents = new ArrayList<>();
+		parents.add(operationExpression.getSource().getCell());
+		
+		if(operationExpression instanceof BinaryExpression binaryExpression) parents.add(binaryExpression.getSource2().getCell());
+		
+		operationExpression.setCell(new OperationCell(jCell, type, parents, operationExpression.getArguments()));
+		
+		OperationCell cell = operationExpression.getCell();
+		
 		cell.setAllNewTrees();
-
-		switch (cell.getType()) {
-
-		case SELECTION ->
-
-			new FormFrameSelection().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]"))));
-
-		case AGGREGATION -> throw new UnsupportedOperationException("Unimplemented case: " + cell.getType());
-
-		case CARTESIAN_PRODUCT ->
-
-			new CartesianProduct().executeOperation(jCell, null);
-
-		case DIFFERENCE -> throw new UnsupportedOperationException("Unimplemented case: " + cell.getType());
-
-		case JOIN ->
-
-			new FormFrameJoin().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).replaceAll(" ", "").split(",")));
-
-		case LEFT_JOIN ->
-
-			new FormFrameLeftJoin().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).replaceAll(" ", "").split(",")));
-
-		case PROJECTION ->
-			new FormFrameProjection().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).replaceAll(" ", "").split(",")));
-
-		case RENAME ->
-
-			throw new UnsupportedOperationException("Unimplemented case: " + cell.getType());
-
-		case RIGHT_JOIN ->
-
-			new FormFrameRightJoin().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).replaceAll(" ", "").split(",")));
-
-		case UNION ->
-
-			new FormFrameUnion().executeOperation(jCell,
-					List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).replaceAll(" ", "").split(",")));
-
-		default -> throw new IllegalArgumentException("Unexpected value: " + cell.getType());
-
-		}
-
-		return jCell;
 
 	}
 

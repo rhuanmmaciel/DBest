@@ -14,7 +14,6 @@ import util.Export;
 @SuppressWarnings("serial")
 public class FormFrameExportAs extends FormFrameImportExportAs implements ActionListener{
 
-	private mxCell jCell;
 	private AtomicReference<Boolean> cancelService;
 	
 	public FormFrameExportAs(mxCell cell, AtomicReference<Boolean> cancelService) {
@@ -22,7 +21,6 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 		super((Window)null);
 		setModal(true);
 		
-		this.jCell = cell;
 		this.cancelService = cancelService;
 		
 		this.setVisible(true);
@@ -43,7 +41,7 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 			
 			AtomicReference<Cell> cell = new AtomicReference<>();
 			
-			new FormFrameSelectCell(jCell, cell, cancelService);
+			//new FormFrameSelectCell(jCell, cell, cancelService);
 			
 			if(!cancelService.get())
 				new Export(cell, FileType.CSV, cancelService);
@@ -62,7 +60,7 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 			
 			AtomicReference<Cell> cell = new AtomicReference<>();
 			
-			new FormFrameSelectCell(jCell, cell, cancelService);
+			//new FormFrameSelectCell(jCell, cell, cancelService);
 			
 			if(!cancelService.get())
 				new Export(cell, FileType.DAT, cancelService);

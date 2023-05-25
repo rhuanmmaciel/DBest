@@ -18,12 +18,16 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.mxgraph.model.mxCell;
+
 import controller.MainController;
 import entities.Column;
+import entities.cells.Cell;
 import entities.cells.TableCell;
 import enums.FileType;
 import gui.frames.forms.create.FormFrameColumnType;
 import gui.frames.forms.create.PrimaryKey;
+import gui.frames.main.MainFrame;
 import sgbd.table.Table;
 
 public class ImportFile {
@@ -39,7 +43,7 @@ public class ImportFile {
 	private TableCell tableCell;
 
 	{
-		MainController.getCells().values().forEach(cell -> tablesName.add(cell.getName()));
+		Cell.getCells().values().forEach(cell -> tablesName.add(cell.getName()));
 		this.tableCell = null;
 	}
 
@@ -54,9 +58,9 @@ public class ImportFile {
 
 	}
 	
-	public ImportFile(String fileName) {
+	public ImportFile(String fileName, mxCell jCell) {
 		
-		header(fileName);
+		header(fileName, jCell);
 		
 	}
 	
@@ -89,9 +93,13 @@ public class ImportFile {
 				AtomicReference<Table> table = new AtomicReference<>();
 				header(table);
 
-				if (!exitReference.get())
-					tableCell = new TableCell(80, 50, fileUpload.getSelectedFile().getName(), "tabela", table.get());;
-
+				if (!exitReference.get()) {
+				
+					mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) MainFrame.getGraph().getDefaultParent(), null,
+							tableName, 0, 0, 80, 30, "tabela");
+					tableCell = new TableCell(jCell, fileUpload.getSelectedFile().getName(), "tabela", table.get());;
+					
+				}
 			}
 			case SQL -> throw new UnsupportedOperationException("Unimplemented case: " + fileType);
 			default -> throw new IllegalArgumentException("Unexpected value: " + fileType);
@@ -126,12 +134,12 @@ public class ImportFile {
 
 	}
 	
-	private void header(String fileName) {
+	private void header(String fileName, mxCell jTableCell) {
 		
 		AtomicReference<Table> table = new AtomicReference<>();
 		table.set(Table.loadFromHeader(fileName));
 
-		tableCell = new TableCell(80, 50, fileName.substring(0, fileName.indexOf(".")), "tabela", table.get());;
+		tableCell = new TableCell(jTableCell, fileName.substring(0, fileName.indexOf(".")), "tabela", table.get());;
 		
 	}
 
