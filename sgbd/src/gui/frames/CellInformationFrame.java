@@ -119,7 +119,8 @@ public class CellInformationFrame extends JDialog {
 	            otherParentGroupPanel.setBackground(Color.WHITE);
 	            otherParentGroupPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-	            JLabel lblOtherParentGroupTitle = new JLabel("Pai:");
+	            JLabel lblOtherParentGroupTitle = new JLabel("2º Pai:");
+	            lblParentGroupTitle.setText("1º Pai"); 
 	            gbc.gridx = 0;
 	            gbc.gridy = 0;
 	            otherParentGroupPanel.add(lblOtherParentGroupTitle, gbc);

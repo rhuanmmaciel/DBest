@@ -1,11 +1,9 @@
 package dsl.entities;
 
-import dsl.utils.DslUtils;
-
 public final class VariableDeclaration extends Command{
 
 	private String variable;
-	private Expression<?> expression;
+	private String expression;
 	
 	public VariableDeclaration(String command) {
 	
@@ -20,7 +18,7 @@ public final class VariableDeclaration extends Command{
 		
 		String stringExpression = command.substring(command.indexOf("=") + 1);
 		
-		expression = DslUtils.expressionRecognizer(stringExpression);
+		expression =stringExpression;
 		
 		
 	}
@@ -31,7 +29,7 @@ public final class VariableDeclaration extends Command{
 		
 	}
 	
-	public Expression<?> getContent(){
+	public String getExpression(){
 		
 		return expression;
 		

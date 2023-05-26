@@ -41,16 +41,6 @@
 		    <version>0.3v</version>
 		</dependency>
 		-->
-		<dependency>
-			<groupId>org.kordamp.ikonli</groupId>
-			<artifactId>ikonli-swing</artifactId>
-			<version>12.3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.kordamp.ikonli</groupId>
-			<artifactId>ikonli-dashicons-pack</artifactId>
-			<version>12.3.1</version>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.antlr/antlr4-runtime -->
 		<dependency>
 			<groupId>org.antlr</groupId>

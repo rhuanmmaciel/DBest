@@ -1,5 +1,8 @@
 package entities.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JOptionPane;
 
 import com.mxgraph.model.mxCell;
@@ -12,55 +15,57 @@ import entities.cells.TableCell;
 import gui.frames.DataFrame;
 
 @SuppressWarnings("serial")
-public class CellUtils extends MainController{
+public class CellUtils extends MainController {
 
 	public static void deleteCell(mxCell jCell) {
 
 		mxGraph graph = MainController.getGraph();
-		
+
 		if (jCell != null) {
 
 			Cell cell = Cell.getCells().get(jCell);
-			
-			if (cell != null) {
-				
-				if(cell.hasChild()) {
-					
-					cell.getChild().removeParent(cell);
+			OperationCell child = null;
+			List<Cell> parents = new ArrayList<>();
 
-					TreeUtils.recalculateContent(cell.getChild());
-					
+			if (cell != null) {
+
+				if (cell.hasChild()) {
+
+					child = cell.getChild();
+
+					child.removeParent(cell);
+
 					cell.setChild(null);
-					
+
 				}
-				
+
 				if (cell instanceof OperationCell operationCell) {
 
-					for (Cell cellParent : operationCell.getParents()) {
+					parents.addAll(operationCell.getParents());
 
+					for (Cell cellParent : operationCell.getParents())
 						cellParent.setChild(null);
-
-					}
 
 					operationCell.clearParents();
 
 				}
-				
-			}else {
-				
-				
-				OperationCell child = (OperationCell) Cell.getCells().get(jCell.getTarget());
+
+			} else {
+
+				child = (OperationCell) Cell.getCells().get(jCell.getTarget());
 				Cell parent = Cell.getCells().get(jCell.getSource());
-				
-				if(parent!=null) {
-					
+
+				if (parent != null) {
+
+					parents.add(parent);
 					child.removeParent(parent);
 					parent.setChild(null);
-					TreeUtils.recalculateContent(child);
-				
+
 				}
-				
+
 			}
+
+			TreeUtils.updateTreesAboveAndBelow(parents, child);
 
 			graph.getModel().beginUpdate();
 			try {
@@ -81,7 +86,7 @@ public class CellUtils extends MainController{
 	public static void deleteAllGraph() {
 
 		mxGraph graph = MainController.getGraph();
-		
+
 		graph.getModel().beginUpdate();
 		try {
 			graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
@@ -92,27 +97,26 @@ public class CellUtils extends MainController{
 		}
 
 		graph.refresh();
-		
+
 	}
-	
+
 	public static void showTable(mxCell jCell) {
-		
+
 		Cell cell = jCell != null ? Cell.getCells().get(jCell) : null;
 		if (cell != null && (cell instanceof TableCell || ((OperationCell) cell).hasForm())) {
-			
-			if(!cell.hasError()) {
-			
+
+			if (!cell.hasError()) {
+
 				new DataFrame(cell);
-			
-			}else {
-				
-				JOptionPane.showMessageDialog(null, "A operação possui erros", "Erro",
-						JOptionPane.ERROR_MESSAGE);
-				
+
+			} else {
+
+				JOptionPane.showMessageDialog(null, "A operação possui erros", "Erro", JOptionPane.ERROR_MESSAGE);
+
 			}
-				
+
 		}
-			
+
 	}
-	
+
 }

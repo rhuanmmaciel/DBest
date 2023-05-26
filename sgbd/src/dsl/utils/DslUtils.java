@@ -52,7 +52,7 @@ public class DslUtils {
 		}
 
 		if(DslController.containsVariable(clearTableName(input)))
-			return DslController.getVariableContent(input);
+			return expressionRecognizer(DslController.getVariableContent(input));
 		
 		if(FileUtils.getDatFilesNames().contains(clearTableName(input)))
 			return new Relation(input);
@@ -189,7 +189,7 @@ public class DslUtils {
 
 		}
 
-		return raw + getPosition(cell.getPosition());
+		return raw + getPosition(cell.getUpperLeftPosition());
 
 	}
 

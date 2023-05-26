@@ -29,8 +29,6 @@ import javax.swing.text.BadLocationException;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.kordamp.ikonli.dashicons.Dashicons;
-import org.kordamp.ikonli.swing.FontIcon;
 
 import controller.MainController;
 import dsl.AntlrController;
@@ -54,8 +52,8 @@ public class TextEditor extends JFrame implements ActionListener {
 	private JTextPane console = new JTextPane();
 
 	private final JToolBar toolBar = new JToolBar();
-	private final JButton btnBack = new JButton();
-	private final JButton btnImport = new JButton();
+	private final JButton btnBack = new JButton("<");
+	private final JButton btnImport = new JButton("Importar");
 	private final JMenu mnOperations = new JMenu("Operações");
 	private final JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.getDisplayName());
 	private final JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.getDisplayName());
@@ -138,22 +136,6 @@ public class TextEditor extends JFrame implements ActionListener {
 		btnImport.addActionListener(this);
 		btnRun.addActionListener(this);
 		btnRunSelection.addActionListener(this);
-
-		setIcons();
-
-	}
-
-	private void setIcons() {
-
-		int iconsSize = 20;
-
-		FontIcon iconBack = FontIcon.of(Dashicons.ARROW_LEFT_ALT);
-		iconBack.setIconSize(iconsSize);
-		btnBack.setIcon(iconBack);
-
-		FontIcon iconImport = FontIcon.of(Dashicons.OPEN_FOLDER);
-		iconImport.setIconSize(iconsSize);
-		btnImport.setIcon(iconImport);
 
 	}
 

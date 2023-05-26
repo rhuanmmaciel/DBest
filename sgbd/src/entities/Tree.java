@@ -12,6 +12,8 @@ public class Tree {
 
 	private int index;
 
+	private int size = 0;
+	
 	{
 
 		index = 0;
@@ -25,6 +27,10 @@ public class Tree {
 
 	public Tree() {
 
+	}
+	
+	public int getSize() {
+		return size;
 	}
 
 	public List<Cell> getLeaves() {

@@ -30,9 +30,9 @@ public class DslController {
 
 	}
 	
-	public static Expression<?> getVariableContent(String input){
+	public static String getVariableContent(String input){
 		
-		return declarations.get(input).getContent();
+		return declarations.get(input).getExpression();
 		
 	}
 	
@@ -102,8 +102,8 @@ public class DslController {
 
 		sources.add(tableName);
 		if (path == null || !FileUtils.copyDatFilesWithHead(path, tableName, Path.of("")))
-			DslErrorListener.addErrors("Files '" + DslUtils.clearTableName(tableName) + ".head" + "' or '"
-					+ DslUtils.clearTableName(tableName) + ".dat' not found");
+			DslErrorListener.addErrors("Arquivo '" + DslUtils.clearTableName(tableName) + ".head" + "' ou '"
+					+ DslUtils.clearTableName(tableName) + ".dat' não encontrado");
 
 
 	}

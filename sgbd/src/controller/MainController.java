@@ -36,6 +36,7 @@ import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import entities.utils.CellUtils;
+import entities.utils.CoordinatesUtils;
 import entities.utils.TreeUtils;
 import enums.OperationArity;
 import enums.OperationType;
@@ -377,7 +378,7 @@ public class MainController extends MainFrame {
 
 			if (jCell != null && Cell.getCells().get(jCell) != null) {
 
-				System.out.println(((OperationCell) Cell.getCells().get(jCell)).getData());
+				System.out.println(CoordinatesUtils.getTreeArea(Cell.getCells().get(jCell).getTree()));
 
 			}
 

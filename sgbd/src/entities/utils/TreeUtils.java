@@ -17,6 +17,65 @@ public class TreeUtils {
 	public static Map<mxCell, Cell> cells = Cell.getCells();
 	public static Map<Integer, Tree> trees = MainController.getTrees();
 	
+	public static void updateTreesAboveAndBelow(List<Cell> parents, OperationCell child) {
+		
+		if(child == null && (parents == null || parents.isEmpty())) return;
+		
+		Tree previousTree = null;
+		
+		if(child != null) {
+			
+			previousTree = child.getTree();
+			
+			Tree childTree = new Tree();
+			
+			fromLeavesToRoot(child.getAllSourceTables(), childTree);
+		
+			recalculateContent(child);
+			
+		}
+		
+		if(parents != null && !parents.isEmpty()) {
+			
+			for(Cell parent : parents) {
+				
+				previousTree = parent.getTree();
+				Tree parentTree = new Tree();
+				fromLeavesToRoot(parent.getAllSourceTables(), parentTree);
+			
+			}
+			
+		}
+		
+		deleteTree(previousTree);
+		
+	}
+	
+	private static void fromLeavesToRoot(List<Cell> level, Tree tree) {
+		
+		while(!level.isEmpty()) {
+			
+			Set<Cell> children = new HashSet<>();
+
+			for (Cell cellAux : level) {
+
+				cellAux.setNewTree(tree);
+				
+				if (cellAux.hasChild()) {
+
+					children.add(cellAux.getChild());
+
+				}
+
+			}
+
+			level.clear();
+			level.addAll(children);
+			
+		}
+		
+	}
+	
 	public static void updateTree(Cell cell) {
 		
 		Set<Tree> trees = new HashSet<>();
@@ -47,7 +106,7 @@ public class TreeUtils {
 			level.addAll(children);
 
 		}
-		
+
 		for(Tree treeAux : trees) updateTree(treeAux);
 		
 	}
@@ -67,7 +126,11 @@ public class TreeUtils {
 	}
 	
 	public static void deleteTree(Tree tree) {
+		
+		if(tree == null) return;
+	
 		trees.remove(tree.getIndex());
+	
 	}
 
 	public static void recalculateContent(Tree tree) {
