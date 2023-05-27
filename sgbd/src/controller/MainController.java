@@ -50,6 +50,7 @@ import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.FormFrameExportTable;
 import gui.frames.forms.importexport.FormFrameImportAs;
 import gui.frames.main.MainFrame;
+import sgbd.table.Table;
 import util.Export;
 import util.ImportFile;
 
@@ -75,7 +76,7 @@ public class MainController extends MainFrame {
 	private AtomicReference<Edge> edgeRef = new AtomicReference<>(new Edge());
 
 	private static int yTables = 0;
-	private static Map<String, TableCell> tables = new HashMap<>();
+	private static Map<String, Table> tables = new HashMap<>();
 	public boolean clicked = false;
 
 	private static Set<Button<?>> buttons = new HashSet<>();
@@ -337,7 +338,7 @@ public class MainController extends MainFrame {
 		if (!cancelServiceReference.get()) {
 
 			currentActionRef.set(new CreateTableAction(action, tableCell.getName(), tableCell.getStyle(), tableCell));
-			saveTable(tableCell);
+			saveTable(tableCell.getName(), tableCell.getTable());
 
 		} else {
 
@@ -349,15 +350,15 @@ public class MainController extends MainFrame {
 
 	}
 
-	private static void saveTable(TableCell table) {
+	public static void saveTable(String tableName, Table table) {
 
-		boolean create = !tables.values().stream().anyMatch(x -> x.getName().equals(table.getName()));
+		boolean create = !tables.keySet().stream().anyMatch(x -> x.equals(tableName));
 
 		if (create) {
-			tablesGraph.insertVertex((mxCell) tablesGraph.getDefaultParent(), null, table.getName(), 0, yTables, 80, 30,
+			tablesGraph.insertVertex((mxCell) tablesGraph.getDefaultParent(), null, tableName, 0, yTables, 80, 30,
 					"tabela");
 
-			tables.put(table.getName(), table);
+			tables.put(tableName, table);
 
 			tablesPane.revalidate();
 
@@ -459,7 +460,7 @@ public class MainController extends MainFrame {
 		return trees;
 	}
 
-	public static Map<String, TableCell> getTables() {
+	public static Map<String, Table> getTables() {
 		return tables;
 	}
 
@@ -499,7 +500,7 @@ public class MainController extends MainFrame {
 
 		relation.setCell(new ImportFile(relation.getName() + ".head", jTableCell).getResult());
 
-		saveTable(relation.getCell());
+		saveTable(relation.getName(), relation.getCell().getTable());
 
 	}
 

@@ -16,6 +16,7 @@ import dsl.entities.Relation;
 import dsl.entities.VariableDeclaration;
 import dsl.utils.DslUtils;
 import gui.frames.dsl.TextEditor;
+import sgbd.table.Table;
 import util.FileUtils;
 
 public class DslController {
@@ -29,17 +30,17 @@ public class DslController {
 		commands.add(command);
 
 	}
-	
-	public static String getVariableContent(String input){
-		
+
+	public static String getVariableContent(String input) {
+
 		return declarations.get(input).getExpression();
-		
+
 	}
-	
+
 	public static boolean containsVariable(String input) {
-		
+
 		return declarations.containsKey(input);
-		
+
 	}
 
 	public static void reset() {
@@ -55,28 +56,29 @@ public class DslController {
 		reset();
 
 	}
-	
+
 	private static void execute() {
 
-		for(String command : commands) {
-			
-			switch(DslUtils.commandRecognizer(command)) {
-			
+		for (String command : commands) {
+
+			switch (DslUtils.commandRecognizer(command)) {
+
 			case IMPORT_STATEMENT -> importTable(command);
-			case EXPRESSION -> solveExpression(DslUtils.expressionRecognizer(command), new HashMap<Expression<?>, mxCell>());
+			case EXPRESSION ->
+				solveExpression(DslUtils.expressionRecognizer(command), new HashMap<Expression<?>, mxCell>());
 			case VARIABLE_DECLARATION -> solveDeclaration(new VariableDeclaration(command));
-			
+
 			}
-			
-			if(!DslErrorListener.getErrors().isEmpty())
+
+			if (!DslErrorListener.getErrors().isEmpty())
 				return;
-			
+
 		}
 
 	}
 
 	private static void importTable(String importStatement) {
-		
+
 		String path = importStatement.substring(6, importStatement.indexOf(".head") + 5);
 
 		String tableName = null;
@@ -101,13 +103,21 @@ public class DslController {
 		}
 
 		sources.add(tableName);
-		if (path == null || !FileUtils.copyDatFilesWithHead(path, tableName, Path.of("")))
+
+		if (MainController.getTables().containsKey(DslUtils.clearTableName(tableName)))
+			DslErrorListener
+					.addErrors("Já existe uma tabela com o mesmo nome: '" + DslUtils.clearTableName(tableName) + "'");
+
+		else if (path == null || !FileUtils.copyDatFilesWithHead(path, tableName, Path.of("")))
 			DslErrorListener.addErrors("Arquivo '" + DslUtils.clearTableName(tableName) + ".head" + "' ou '"
 					+ DslUtils.clearTableName(tableName) + ".dat' não encontrado");
 
+		else
+			MainController.saveTable(DslUtils.clearTableName(tableName),
+					Table.loadFromHeader(DslUtils.clearTableName(tableName) + ".head"));
 
 	}
-	
+
 	private static void solveDeclaration(VariableDeclaration declaration) {
 
 		declarations.put(declaration.getVariable(), declaration);
@@ -116,9 +126,9 @@ public class DslController {
 
 	private static void solveExpression(Expression<?> expression, Map<Expression<?>, mxCell> operationsReady) {
 
-		if(!DslErrorListener.getErrors().isEmpty())
+		if (!DslErrorListener.getErrors().isEmpty())
 			return;
-		
+
 		if (expression instanceof OperationExpression operationExpression) {
 
 			if (operationExpression.getSource() instanceof Relation relation)

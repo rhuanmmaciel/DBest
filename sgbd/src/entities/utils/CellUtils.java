@@ -14,6 +14,7 @@ import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import gui.frames.DataFrame;
+import sgbd.table.Table;
 
 @SuppressWarnings("serial")
 public class CellUtils extends MainController {
@@ -124,7 +125,7 @@ public class CellUtils extends MainController {
 		
 		if(!Cell.getCells().containsKey(cell) && cell != ghostCell && cell != null) {
 			
-			TableCell tableCell = MainController.getTables().get(cell.getValue()); 
+			Table table = MainController.getTables().get(cell.getValue()); 
 			
 			Object parent = graph.getDefaultParent();
 			Object[] vertices = mxGraphModel.getChildVertices(graph.getModel(), parent);
@@ -135,7 +136,7 @@ public class CellUtils extends MainController {
 				
 			}
 			
-			new TableCell(cell, tableCell.getName(), "tabela", tableCell.getTable());
+			new TableCell(cell, (String) cell.getValue(), "tabela", table);
 			
 		}
 		
