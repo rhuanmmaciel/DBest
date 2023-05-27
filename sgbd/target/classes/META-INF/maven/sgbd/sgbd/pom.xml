@@ -34,14 +34,12 @@
 		</plugins>
 	</build>
 	<dependencies>
-		<!-- 
-		<dependency>
-		    <groupId>com.github.crazynds</groupId>
-		    <artifactId>FyDatabase-Java</artifactId>
-		    <version>0.3v</version>
-		</dependency>
-		-->
 		<!-- https://mvnrepository.com/artifact/org.antlr/antlr4-runtime -->
+		<dependency>
+			<groupId>org.swinglabs.swingx</groupId>
+			<artifactId>swingx-all</artifactId>
+			<version>1.6.5</version>
+		</dependency>
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4-runtime</artifactId>

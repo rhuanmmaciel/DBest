@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.view.mxGraph;
 
 import controller.MainController;
@@ -117,6 +118,27 @@ public class CellUtils extends MainController {
 
 		}
 
+	}
+	
+	public static void verifyCell(mxCell cell, mxCell ghostCell) {
+		
+		if(!Cell.getCells().containsKey(cell) && cell != ghostCell && cell != null) {
+			
+			TableCell tableCell = MainController.getTables().get(cell.getValue()); 
+			
+			Object parent = graph.getDefaultParent();
+			Object[] vertices = mxGraphModel.getChildVertices(graph.getModel(), parent);
+			
+			for(Object jCell : vertices) {
+				
+				if(!Cell.getCells().containsKey(jCell)) cell = (mxCell) jCell;
+				
+			}
+			
+			new TableCell(cell, tableCell.getName(), "tabela", tableCell.getTable());
+			
+		}
+		
 	}
 
 }

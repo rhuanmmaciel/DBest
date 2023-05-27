@@ -2,6 +2,7 @@
 
 - mudar tamanho das células de acordo com o nome
 - abas para o editor de texto
+- abas para árvores
 - mudar o componente da tela
 - mudar a nomeação de colunas
 - dar algum tipo de dica visual quando se está criando um edge ou um nó (ver brModelo)
@@ -18,7 +19,6 @@
 
 # Fazendo
 
-- tables carregadas na memória
 - cálculo de posição para dsl
 
 # Prontos:
@@ -26,3 +26,4 @@
 - criar tabelas sozinhas
 - adicionar ghostCell na criação de tables
 - dsl com atribuições de variáveis 
+- tables carregadas na memória

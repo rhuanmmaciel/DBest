@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import com.mxgraph.util.mxConstants;
@@ -20,7 +21,7 @@ public class OperationButton extends Button{
 	public OperationButton(mxStylesheet stylesheet, String name, String style, ActionListener listener, JPanel panel,
 			 CurrentAction action) {
 
-		super(name, listener, action);
+		super(JButton.class, name, listener, action);
 		this.style = style;
 		getButton().setBounds(600, 300, 100, 50);
 		typePanel = new JPanel();

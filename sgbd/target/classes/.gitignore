@@ -1,2 +1,6 @@
+/application/
 /gui/
+/controller/
 /entities/
+/dsl/
+/util/

@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -20,6 +21,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxEventSource;
 
 import dsl.entities.BinaryExpression;
 import dsl.entities.OperationExpression;
@@ -36,7 +40,6 @@ import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import entities.utils.CellUtils;
-import entities.utils.CoordinatesUtils;
 import entities.utils.TreeUtils;
 import enums.OperationArity;
 import enums.OperationType;
@@ -71,7 +74,11 @@ public class MainController extends MainFrame {
 	private AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>();
 	private AtomicReference<Edge> edgeRef = new AtomicReference<>(new Edge());
 
-	private static Set<Button> buttons = new HashSet<>();
+	private static int yTables = 0;
+	private static Map<String, TableCell> tables = new HashMap<>();
+	public boolean clicked = false;
+
+	private static Set<Button<?>> buttons = new HashSet<>();
 
 	public static final CreateOperationAction projectionOperation = new CreateOperationAction(
 			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.PROJECTION.getDisplayNameAndSymbol(),
@@ -98,6 +105,27 @@ public class MainController extends MainFrame {
 	public MainController() {
 
 		super(buttons);
+
+		tablesComponent.getGraphControl().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if ((mxCell) tablesComponent.getCellAt(e.getX(), e.getY()) != null) {
+					clicked = true;
+					graph.setSelectionCell(
+							new mxCell(((mxCell) tablesComponent.getCellAt(e.getX(), e.getY())).getValue()));
+				}
+			}
+		});
+
+		graph.addListener(mxEvent.CELLS_ADDED, new mxEventSource.mxIEventListener() {
+			@Override
+			public void invoke(Object sender, mxEventObject evt) {
+				if (clicked) {
+					CellUtils.verifyCell((mxCell) graph.getSelectionCell(), ghostJCell);
+					clicked = false;
+				}
+			}
+		});
 
 		addWindowListener(new WindowAdapter() {
 
@@ -126,7 +154,7 @@ public class MainController extends MainFrame {
 		graph.removeCells(new Object[] { ghostJCell }, true);
 		ghostJCell = null;
 
-		Button btnClicked = buttons.stream().filter(x -> x.getButton() == e.getSource()).findAny().orElse(null);
+		Button<?> btnClicked = buttons.stream().filter(x -> x.getButton() == e.getSource()).findAny().orElse(null);
 		String style = null;
 
 		if (btnClicked != null) {
@@ -309,12 +337,31 @@ public class MainController extends MainFrame {
 		if (!cancelServiceReference.get()) {
 
 			currentActionRef.set(new CreateTableAction(action, tableCell.getName(), tableCell.getStyle(), tableCell));
+			saveTable(tableCell);
 
 		} else {
 
 			if (tableCell != null)
 				TreeUtils.deleteTree(tableCell.getTree());
 			currentActionRef.set(null);
+
+		}
+
+	}
+
+	private static void saveTable(TableCell table) {
+
+		boolean create = !tables.values().stream().anyMatch(x -> x.getName().equals(table.getName()));
+
+		if (create) {
+			tablesGraph.insertVertex((mxCell) tablesGraph.getDefaultParent(), null, table.getName(), 0, yTables, 80, 30,
+					"tabela");
+
+			tables.put(table.getName(), table);
+
+			tablesPane.revalidate();
+
+			yTables += 40;
 
 		}
 
@@ -378,7 +425,7 @@ public class MainController extends MainFrame {
 
 			if (jCell != null && Cell.getCells().get(jCell) != null) {
 
-				System.out.println(CoordinatesUtils.getTreeArea(Cell.getCells().get(jCell).getTree()));
+				System.out.println(jCell);
 
 			}
 
@@ -388,28 +435,32 @@ public class MainController extends MainFrame {
 	@Override
 	public void mouseMoved(MouseEvent e) {
 
-		if(currentActionRef != null && currentActionRef.get() != null)
+		if (currentActionRef != null && currentActionRef.get() != null)
 			if (currentActionRef.get().getType() == CurrentAction.ActionType.CREATE_OPERATOR_CELL
 					&& ghostJCell != null) {
-	
+
 				mxGeometry geo = ghostJCell.getGeometry();
 				double dx = e.getX() - geo.getCenterX();
 				double dy = e.getY() - geo.getCenterY();
 				MainFrame.getGraph().moveCells(new Object[] { ghostJCell }, dx, dy);
-	
-			}else if(currentActionRef.get() instanceof CreateTableAction createTable) {
-				
+
+			} else if (currentActionRef.get() instanceof CreateTableAction createTable) {
+
 				mxGeometry geo = createTable.getTableCell().getJGraphCell().getGeometry();
 				double dx = e.getX() - geo.getCenterX();
 				double dy = e.getY() - geo.getCenterY();
 				MainFrame.getGraph().moveCells(new Object[] { createTable.getTableCell().getJGraphCell() }, dx, dy);
-				
+
 			}
 
 	}
 
 	public static Map<Integer, Tree> getTrees() {
 		return trees;
+	}
+
+	public static Map<String, TableCell> getTables() {
+		return tables;
 	}
 
 	public static List<String> unaryOperationsName() {
@@ -442,12 +493,14 @@ public class MainController extends MainFrame {
 			y = (int) (Math.random() * 600);
 
 		}
-		
+
 		mxCell jTableCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) graph.getDefaultParent(), null,
 				relation.getName(), x, y, 80, 30, "tabela");
-		
+
 		relation.setCell(new ImportFile(relation.getName() + ".head", jTableCell).getResult());
-		
+
+		saveTable(relation.getCell());
+
 	}
 
 	public static void putOperationCell(OperationExpression operationExpression) {
@@ -458,27 +511,28 @@ public class MainController extends MainFrame {
 			x = operationExpression.getCoordinates().get().x();
 			y = operationExpression.getCoordinates().get().y();
 
-		}else {
-			
+		} else {
+
 			x = (int) (Math.random() * 600);
 			y = (int) (Math.random() * 600);
-			
+
 		}
-		
+
 		OperationType type = operationExpression.getType();
-		
+
 		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) graph.getDefaultParent(), null,
-					type.getDisplayNameAndSymbol(), x, y, 80, 30, type.getDisplayName());
+				type.getDisplayNameAndSymbol(), x, y, 80, 30, type.getDisplayName());
 
 		List<Cell> parents = new ArrayList<>();
 		parents.add(operationExpression.getSource().getCell());
-		
-		if(operationExpression instanceof BinaryExpression binaryExpression) parents.add(binaryExpression.getSource2().getCell());
-		
+
+		if (operationExpression instanceof BinaryExpression binaryExpression)
+			parents.add(binaryExpression.getSource2().getCell());
+
 		operationExpression.setCell(new OperationCell(jCell, type, parents, operationExpression.getArguments()));
-		
+
 		OperationCell cell = operationExpression.getCell();
-		
+
 		cell.setAllNewTrees();
 
 	}
