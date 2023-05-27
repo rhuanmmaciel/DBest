@@ -21,9 +21,4 @@
 
 - cálculo de posição para dsl
 
-# Prontos:
 
-- criar tabelas sozinhas
-- adicionar ghostCell na criação de tables
-- dsl com atribuições de variáveis 
-- tables carregadas na memória

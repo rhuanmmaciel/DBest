@@ -25,11 +25,11 @@ import javax.swing.event.DocumentListener;
 
 import com.mxgraph.model.mxCell;
 
-import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.TreeException;
 import gui.frames.forms.operations.IOperator;
+import gui.frames.forms.operations.Operation;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.table.Table;
@@ -266,8 +266,8 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 
 		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 
-		try {	
-			
+		try {
+
 			if (data == null || !cell.hasParents() || cell.getParents().size() != 1 || cell.hasParentErrors()
 					|| !cell.getParents().get(0).getColumnsName().containsAll(data)) {
 
@@ -288,24 +288,14 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 
 			}
 
-			cell.setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
-
-			cell.setOperator(operator);
-
-			cell.setName("π  " + data.toString());
-
-			cell.setData(data);
-			
-			cell.removeError();
-
-			MainController.getGraph().getModel().setValue(jCell, "π  " + data.toString());
+			Operation.operationSetter(cell, "π  " + data.toString(), data, operator);
 
 		} catch (TreeException e) {
 
 			cell.setError();
 
 		}
-		
+
 		dispose();
 
 	}

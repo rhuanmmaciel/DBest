@@ -31,12 +31,12 @@ import javax.swing.text.NumberFormatter;
 
 import com.mxgraph.model.mxCell;
 
-import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import enums.ColumnDataType;
 import exceptions.TreeException;
 import gui.frames.forms.operations.IOperator;
+import gui.frames.forms.operations.Operation;
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
 import sgbd.query.Operator;
@@ -419,15 +419,8 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 				}
 				
 			});
-	
-			cell.setColumns(List.of(parentCell.getColumns()), operator.getContentInfo().values());
-			cell.setOperator(operator);
-			cell.setName("σ  " + expression);
-			cell.setData(data);
 			
-			MainController.getGraph().getModel().setValue(jCell, "σ  " + expression);
-
-			cell.removeError();
+			Operation.operationSetter(cell, "σ  " + expression, data, operator);
 			
 		}catch(TreeException e ) {
 			

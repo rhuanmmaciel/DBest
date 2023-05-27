@@ -20,11 +20,11 @@ import javax.swing.border.EmptyBorder;
 
 import com.mxgraph.model.mxCell;
 
-import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.TreeException;
 import gui.frames.forms.operations.IOperator;
+import gui.frames.forms.operations.Operation;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.LeftNestedLoopJoin;
 
@@ -194,16 +194,8 @@ public class FormFrameLeftJoin extends JDialog implements ActionListener, IOpera
 
 			});
 
-			cell.setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()),
-					operator.getContentInfo().values());
-			cell.setOperator(operator);
-			cell.setName("⟕   " + item1 + " = " + item2);
-			cell.setData(data);
-
-			MainController.getGraph().getModel().setValue(jCell, "⟕   " + item1 + " = " + item2);
-
-			cell.removeError();
-
+			Operation.operationSetter(cell, "⟕   " + item1 + " = " + item2, data, operator);
+			
 		} catch (TreeException e) {
 
 			cell.setError();

@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.mxgraph.model.mxCell;
 
-import controller.MainController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.TreeException;
 import gui.frames.forms.operations.IOperator;
+import gui.frames.forms.operations.Operation;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
 
@@ -45,16 +45,9 @@ public class CartesianProduct implements IOperator {
 			Operator operator = new BlockNestedLoopJoin(table1, table2, (t1, t2) -> {
 				return true;
 			});
-	
-			cell.setColumns(List.of(parentCell1.getColumns(), parentCell2.getColumns()),
-					operator.getContentInfo().values());
-			cell.setOperator(operator);
-			cell.setName(parentCell1.getName() + " X " + parentCell2.getName());
 			
-			MainController.getGraph().getModel().setValue(jCell, "X");
+			Operation.operationSetter(cell, "  X  ", data, operator);
 			
-			cell.removeError();
-		
 		}catch(TreeException e) {
 			
 			cell.setError();

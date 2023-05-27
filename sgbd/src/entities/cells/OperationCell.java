@@ -113,8 +113,11 @@ public final class OperationCell extends Cell {
 		}
 	}
 
-	public void setData(List<String> data) {
-		this.arguments = new ArrayList<>(data);
+	public void setArguments(List<String> arguments) {
+	
+		if(arguments != null && this.arguments != null)
+			this.arguments = new ArrayList<>(arguments);
+	
 	}
 
 	public List<String> getData() {
