@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
+import entities.cells.OperationCell;
 
 @SuppressWarnings("serial")
 public class CellInformationFrame extends JDialog {
@@ -35,6 +36,7 @@ public class CellInformationFrame extends JDialog {
 	private void initGUI() {
 
 	    setLocationRelativeTo(null);
+		setModal(true);
 
 	    JPanel mainPane = new JPanel();
 	    mainPane.setLayout(new GridBagLayout());
@@ -63,9 +65,11 @@ public class CellInformationFrame extends JDialog {
 	    gbc.gridx = 1;
 	    gbc.gridy = 1;
 	    cellGroupPanel.add(lblCellIdInf, gbc);
-
+	    
+	    Cell cell = Cell.getCells().get(jCell);
+	    
 	    JLabel lblCellName = new JLabel("Nome: ");
-	    JLabel lblCellNameInf = new JLabel(Cell.getCells().get(jCell).getName());
+	    JLabel lblCellNameInf = new JLabel(cell.getName());
 
 	    gbc.gridx = 0;
 	    gbc.gridy = 2;
@@ -79,7 +83,7 @@ public class CellInformationFrame extends JDialog {
 	    gbc.gridy = 0;
 	    mainPane.add(cellGroupPanel, gbc);
 
-	    if (Cell.getCells().get(jCell).hasParents()) {
+	    if (cell.hasParents()) {
 
 	    	JPanel parentGroupPanel = new JPanel();
 	        parentGroupPanel.setLayout(new GridBagLayout());
@@ -92,7 +96,7 @@ public class CellInformationFrame extends JDialog {
 	        parentGroupPanel.add(lblParentGroupTitle, gbc);
 
 	        JLabel lblParent = new JLabel("Nome: ");
-	        JLabel lblParentInf = new JLabel(Cell.getCells().get(jCell).getParents().get(0).getName());
+	        JLabel lblParentInf = new JLabel(cell.getParents().get(0).getName());
 
 	        gbc.gridx = 0;
 	        gbc.gridy = 1;
@@ -102,7 +106,7 @@ public class CellInformationFrame extends JDialog {
 	        gbc.gridy = 1;
 	        parentGroupPanel.add(lblParentInf, gbc);
 
-	        JLabel lblParentId = new JLabel("ID: " + Cell.getCells().get(jCell).getParents().get(0).getJGraphCell().getId());
+	        JLabel lblParentId = new JLabel("ID: " + cell.getParents().get(0).getJGraphCell().getId());
 
 	        gbc.gridx = 0;
 	        gbc.gridy = 2;
@@ -112,7 +116,7 @@ public class CellInformationFrame extends JDialog {
 	        gbc.gridy = 1;
 	        mainPane.add(parentGroupPanel, gbc);
 
-	        if (Cell.getCells().get(jCell).getParents().size() == 2) {
+	        if (cell.getParents().size() == 2) {
 
 	            JPanel otherParentGroupPanel = new JPanel();
 	            otherParentGroupPanel.setLayout(new GridBagLayout());
@@ -126,7 +130,7 @@ public class CellInformationFrame extends JDialog {
 	            otherParentGroupPanel.add(lblOtherParentGroupTitle, gbc);
 
 	            JLabel lblOtherParent = new JLabel("Nome: ");
-	            JLabel lblOtherParentInf = new JLabel(Cell.getCells().get(jCell).getParents().get(1).getName());
+	            JLabel lblOtherParentInf = new JLabel(cell.getParents().get(1).getName());
 
 	            gbc.gridx = 0;
 	            gbc.gridy = 1;
@@ -136,7 +140,7 @@ public class CellInformationFrame extends JDialog {
 	            gbc.gridy = 1;
 	            otherParentGroupPanel.add(lblOtherParentInf, gbc);
 
-	            JLabel lblOtherParentId = new JLabel("ID: " + Cell.getCells().get(jCell).getParents().get(1).getJGraphCell().getId());
+	            JLabel lblOtherParentId = new JLabel("ID: " + cell.getParents().get(1).getJGraphCell().getId());
 
 	            gbc.gridx = 0;
 	            gbc.gridy = 2;
@@ -148,7 +152,7 @@ public class CellInformationFrame extends JDialog {
 	        }
 	    }
 	    
-	    if (Cell.getCells().get(jCell).hasChild()) {
+	    if (cell.hasChild()) {
 
 	    	JPanel childGroupPanel = new JPanel();
 	        childGroupPanel.setLayout(new GridBagLayout());
@@ -161,7 +165,7 @@ public class CellInformationFrame extends JDialog {
 	        childGroupPanel.add(lblChildGroupTitle, gbc);
 
 	        JLabel lblChild = new JLabel("Nome: ");
-	        JLabel lblChildInf = new JLabel(Cell.getCells().get(jCell).getChild().getName());
+	        JLabel lblChildInf = new JLabel(cell.getChild().getName());
 
 	        gbc.gridx = 0;
 	        gbc.gridy = 1;
@@ -171,7 +175,7 @@ public class CellInformationFrame extends JDialog {
 	        gbc.gridy = 1;
 	        childGroupPanel.add(lblChildInf, gbc);
 
-	        JLabel lblChildId = new JLabel("ID: " + Cell.getCells().get(jCell).getChild().getJGraphCell().getId());
+	        JLabel lblChildId = new JLabel("ID: " + cell.getChild().getJGraphCell().getId());
 
 	        gbc.gridx = 0;
 	        gbc.gridy = 2;
@@ -181,14 +185,31 @@ public class CellInformationFrame extends JDialog {
 	        gbc.gridy = 3;
 	        mainPane.add(childGroupPanel, gbc);
 	    }
+	    
+	    if(cell.hasError()) {
+	    	
+	    	JPanel errorPanel = new JPanel();
+            errorPanel.setLayout(new GridBagLayout());
+            errorPanel.setBackground(Color.WHITE);
+            errorPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+
+            JLabel lblErrorMessage = new JLabel(((OperationCell) cell).getErrorMessage());
+            lblErrorMessage.setForeground(Color.RED);
+
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            errorPanel.add(lblErrorMessage, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = 4;
+            mainPane.add(errorPanel, gbc);
+	    	
+	    }
 
 	    getContentPane().add(mainPane, BorderLayout.CENTER);
 	    pack(); 
 
 	    setVisible(true);
 	}
-
-
-
 
 }

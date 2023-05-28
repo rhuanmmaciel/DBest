@@ -14,16 +14,14 @@ import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.TreeUtils;
 import enums.OperationType;
-import gui.frames.forms.operations.binary.CartesianProduct;
 import gui.frames.forms.operations.binary.FormFrameJoin;
 import gui.frames.forms.operations.binary.FormFrameLeftJoin;
 import gui.frames.forms.operations.binary.FormFrameRightJoin;
 import gui.frames.forms.operations.binary.FormFrameUnion;
-import gui.frames.forms.operations.unary.FormFrameAggregation;
 import gui.frames.forms.operations.unary.FormFrameProjection;
-import gui.frames.forms.operations.unary.FormFrameRename;
 import gui.frames.forms.operations.unary.FormFrameSelection;
 import gui.frames.main.MainFrame;
+import operations.binary.CartesianProduct;
 
 public class ClickController {
 
@@ -124,52 +122,52 @@ public class ClickController {
 						if (operationCell.getType() == OperationType.PROJECTION) {
 
 							new FormFrameProjection(jCell);
-							operationCell.setForm(FormFrameProjection.class);
+							operationCell.setForm();
 
 						} else if (operationCell.getType() == OperationType.SELECTION) {
 
 							new FormFrameSelection(jCell);
-							operationCell.setForm(FormFrameSelection.class);
+							operationCell.setForm();
 
 						} else if (operationCell.getType() == OperationType.AGGREGATION) {
 
-							new FormFrameAggregation(jCell);
-							operationCell.setForm(FormFrameAggregation.class);
+							//new FormFrameAggregation(jCell);
+							//operationCell.setForm(FormFrameAggregation.class);
 
 						} else if (operationCell.getType() == OperationType.RENAME) {
 
-							new FormFrameRename(jCell);
-							operationCell.setForm(FormFrameRename.class);
+							//new FormFrameRename(jCell);
+							//operationCell.setForm(FormFrameRename.class);
 
 						} else if (operationCell.getType() == OperationType.JOIN
 								&& operationCell.getParents().size() == 2) {
 
 							new FormFrameJoin(jCell);
-							operationCell.setForm(FormFrameJoin.class);
+							operationCell.setForm();
 
 						} else if (operationCell.getType() == OperationType.CARTESIAN_PRODUCT
 								&& operationCell.getParents().size() == 2) {
 
 							new CartesianProduct(jCell);
-							operationCell.setForm(CartesianProduct.class);
+							operationCell.setForm();
 
 						} else if (operationCell.getType() == OperationType.UNION
 								&& operationCell.getParents().size() == 2) {
 
 							new FormFrameUnion(jCell);
-							operationCell.setForm(FormFrameUnion.class);
+							operationCell.setForm();
 
 						} else if (operationCell.getType() == OperationType.LEFT_JOIN
 								&& operationCell.getParents().size() == 2) {
 
 							new FormFrameLeftJoin(jCell);
-							operationCell.setForm(FormFrameLeftJoin.class);
+							operationCell.setForm();
 
 						} else if (operationCell.getType() == OperationType.RIGHT_JOIN
 								&& operationCell.getParents().size() == 2) {
 
 							new FormFrameRightJoin(jCell);
-							operationCell.setForm(FormFrameRightJoin.class);
+							operationCell.setForm();
 
 						}
 

@@ -11,7 +11,6 @@ import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,17 +33,13 @@ import com.mxgraph.model.mxCell;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import enums.ColumnDataType;
-import exceptions.TreeException;
-import gui.frames.forms.operations.IOperator;
-import gui.frames.forms.operations.Operation;
+import gui.frames.forms.operations.FormFrameOperation;
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
-import sgbd.query.Operator;
-import sgbd.query.Tuple;
-import sgbd.query.unaryop.FilterOperator;
+import operations.unary.Selection;
 
 @SuppressWarnings("serial")
-public class FormFrameSelection extends JDialog implements ActionListener, DocumentListener, IOperator {
+public class FormFrameSelection extends JDialog implements ActionListener, DocumentListener, FormFrameOperation {
 
 	private List<String> columnsList;
 
@@ -72,10 +67,8 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 	private mxCell jCell;
 	private JPanel panel;
-
-	public FormFrameSelection() {
-		
-	}
+	
+	private Selection selection = new Selection();
 	
 	public FormFrameSelection(mxCell jCell) {
 
@@ -339,9 +332,10 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		}
 
 		if (e.getSource() == btnReady) {
-
-			executeOperation(jCell, List.of(textArea.getText()));
-
+			
+			dispose();
+			selection.executeOperation(jCell, List.of(textArea.getText()));
+			
 		}
 
 		if (e.getSource() == btnCancel) {
@@ -352,93 +346,9 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 	}
 
-	public void executeOperation(mxCell jCell, List<String> data) {
-		
-		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
-		
-		try {
-			
-			if (data == null || data.size() != 1 || !cell.hasParents() || cell.getParents().size() != 1 || cell.hasParentErrors()) {
-				
-				throw new TreeException();
-			
-			}
-	
-			Evaluator evaluator = new Evaluator();
-			
-			Cell parentCell = cell.getParents().get(0);
-	
-			String expression = data.get(0);
-			String[] formattedInput = formatString(expression).split(" ");
-	
-			Operator operator = new FilterOperator(parentCell.getOperator(), (Tuple t) -> {
-	
-				for (String element : formattedInput) {
-	
-					if (isColumn(element)) {
-	
-						String columnName = element.substring(2, element.length() - 1);
-	
-						ColumnDataType type = parentCell.getColumns().stream()
-								.filter(col -> col.getName().equals(columnName)).findFirst().get().getType();
-	
-						String inf;
-	
-						if (type == ColumnDataType.INTEGER) {
-	
-							inf = String
-									.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName));
-	 
-						} else if (type == ColumnDataType.FLOAT) {
-	
-							inf = String
-									.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getFloat(columnName));
-	
-						} else {
-	
-							inf = "'" + t.getContent(parentCell.getSourceTableName(columnName)).getString(columnName) + "'";
-	
-						}
-	
-						if (data == null)
-							return false;
-	
-						evaluator.putVariable(columnName, inf);
-	
-					}
-				}
-	
-				try {
-	
-					return evaluator.evaluate(formatString(expression)).equals("1.0");
-	
-				} catch (EvaluationException e) {
-	
-					return false;
-	
-				}
-				
-			});
-			
-			Operation.operationSetter(cell, "σ  " + expression, data, operator);
-			
-		}catch(TreeException e ) {
-			
-			cell.setError();
-			
-		}catch(NoSuchElementException e){
-			
-			cell.setError();
-			
-		}
-
-		dispose();
-
-	}
-
 	private boolean isExpressionValid() {
 
-		String[] formattedInput = formatString(textArea.getText()).split(" ");
+		String[] formattedInput = selection.formatString(textArea.getText()).split(" ");
 
 		Evaluator evaluator = new Evaluator();
 		
@@ -455,7 +365,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 		for (String element : formattedInput) {
 
-			if (isColumn(element)) {
+			if (selection.isColumn(element)) {
 
 				String columnName = element.substring(2, element.length() - 1);
 
@@ -485,7 +395,7 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 
 		try {
 
-			evaluator.evaluate(formatString(textArea.getText()));
+			evaluator.evaluate(selection.formatString(textArea.getText()));
 			return true;
 
 		} catch (EvaluationException e) {
@@ -495,33 +405,6 @@ public class FormFrameSelection extends JDialog implements ActionListener, Docum
 		}
 	}
 
-	private boolean isColumn(String input) {
-
-		Pattern pattern = Pattern.compile("#\\{.*?\\}");
-		Matcher matcher = pattern.matcher(input);
-
-		return matcher.matches();
-
-	}
-
-	private String formatString(String input) {
-
-		input = input.replaceAll("(?<=\\s*|^)([\\w.()-<>]+\\_[\\w.()-<>]+)(?=\\s*|$)", "#{$1}");
-
-		input = input.replaceAll("\\bAND\\b", "&&");
-
-		input = input.replaceAll("\\bOR\\b", "||");
-
-		input = input.replaceAll("=", "==");
-
-		input = input.replaceAll("≠", "!=");
-
-		input = input.replaceAll("≥", ">=");
-
-		input = input.replaceAll("≤", "<=");
-
-		return input;
-	}
 
 	@Override
 	public void insertUpdate(DocumentEvent e) {

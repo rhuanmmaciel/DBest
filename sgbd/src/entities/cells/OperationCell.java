@@ -1,16 +1,12 @@
 package entities.cells;
 
-import java.awt.Image;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.swing.ImageIcon;
-
 import com.mxgraph.model.mxCell;
-import com.mxgraph.swing.util.mxCellOverlay;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxStyleUtils;
 
@@ -18,17 +14,21 @@ import controller.MainController;
 import entities.Column;
 import enums.OperationArity;
 import enums.OperationType;
+import gui.frames.forms.operations.FormFrameOperation;
 import gui.frames.forms.operations.IOperator;
 import gui.frames.main.MainFrame;
+import operations.OperationErrorVerifier.ErrorMessage;
 
 public final class OperationCell extends Cell {
 
 	private OperationType type;
 	private List<Cell> parents = new ArrayList<>();
 	private OperationArity arity;
-	private Class<? extends IOperator> form = null;
+	private Class<? extends FormFrameOperation> form = null;
 	private List<String> arguments = null;
 	private Boolean error = false;
+	private String errorMessage = null;
+	private Class<? extends IOperator> operator = null;
 
 	public OperationCell(mxCell jCell, OperationType type) {
 
@@ -43,9 +43,9 @@ public final class OperationCell extends Cell {
 		initializeCell(jCell, type);
 
 		this.arguments = arguments;
-		
+
 		if (parents != null && !parents.isEmpty()) {
-			
+
 			this.parents = parents;
 			parents.forEach(parent -> {
 
@@ -54,25 +54,26 @@ public final class OperationCell extends Cell {
 
 			});
 			this.form = type.getForm();
+			this.operator = type.getOperator();
 			updateOperation();
-			
+
 		}
 	}
-	
+
 	private void initializeCell(mxCell jCell, OperationType type) {
-		
+
 		this.type = type;
 		arity = type.getArity();
-		
+
 	}
 
-	public IOperator editOperation(mxCell jCell) {
+	public FormFrameOperation editOperation(mxCell jCell) {
 
 		if (hasForm()) {
 
 			try {
 
-				Constructor<? extends IOperator> constructor = form.getDeclaredConstructor(mxCell.class);
+				Constructor<? extends FormFrameOperation> constructor = form.getDeclaredConstructor(mxCell.class);
 				return constructor.newInstance(jCell);
 
 			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
@@ -87,21 +88,26 @@ public final class OperationCell extends Cell {
 		return null;
 	}
 
-	public void setForm(Class<? extends IOperator> form) {
-		this.form = form;
+	public void setForm() {
+		this.form = type.getForm();
+		this.operator = type.getOperator();
 	}
 
 	public boolean hasForm() {
 		return form != null;
 	}
 
+	public boolean hasOperator() {
+		return operator != null;
+	}
+
 	public void updateOperation() {
 
-		if (hasForm()) {
+		if (hasOperator()) {
 
 			try {
 
-				Constructor<? extends IOperator> constructor = form.getDeclaredConstructor();
+				Constructor<? extends IOperator> constructor = operator.getDeclaredConstructor();
 				IOperator operation = constructor.newInstance();
 				operation.executeOperation(getJGraphCell(), getData());
 
@@ -114,10 +120,10 @@ public final class OperationCell extends Cell {
 	}
 
 	public void setArguments(List<String> arguments) {
-	
-		if(arguments != null && this.arguments != null)
+
+		if (arguments != null && this.arguments != null)
 			this.arguments = new ArrayList<>(arguments);
-	
+
 	}
 
 	public List<String> getData() {
@@ -162,14 +168,8 @@ public final class OperationCell extends Cell {
 		return getOperator() != null;
 	}
 
-	public void setError() {
+	public void setError(ErrorMessage message) {
 
-		ImageIcon icon = new ImageIcon("red_exclamation.png");
-		Image image = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-		ImageIcon scaledIcon = new ImageIcon(image);
-
-		mxCellOverlay overlay = new mxCellOverlay(scaledIcon, "Error");
-		MainController.getGraphComponent().addCellOverlay(getJGraphCell(), overlay);
 		String style = getJGraphCell().getStyle();
 		style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKECOLOR, "red");
 		style = mxStyleUtils.setStyle(style, mxConstants.STYLE_FONTCOLOR, "red");
@@ -177,20 +177,38 @@ public final class OperationCell extends Cell {
 
 		error = true;
 
+		errorMessage = switch (message) {
+
+		case NO_ONE_ARGUMENT -> "O parâmetro passado possui erros";
+		case NO_ONE_PARENT -> "A operação não possui apenas 1 pai";
+		case NO_PARENT -> "A operação não possui pai";
+		case NULL_ARGUMENT -> "Parâmetro passado é nulo";
+		case PARENT_ERROR -> "Erro(s) em células anteriores";
+		case PARENT_WITHOUT_COLUMN -> "Alguma coluna fornecida não existe no pai";
+		case NO_TWO_PARENTS -> "A operação não possui 2 pais";
+		case NO_TWO_ARGUMENTS -> "Alguma coluna fornecida não existe no respectivo pai";
+
+		};
+
 	}
 
 	public void removeError() {
-
+		
 		MainController.getGraph().getModel().setStyle(getJGraphCell(), getStyle());
 		MainController.getGraphComponent().clearCellOverlays();
-		;
-
+		errorMessage = null;
 		error = false;
 
 	}
 
 	public boolean hasError() {
 		return error;
+	}
+
+	public String getErrorMessage() {
+		if (hasError())
+			return errorMessage;
+		return "Sem erros";
 	}
 
 	public void setColumns(List<List<Column>> parentColumns, Collection<List<String>> cellColumnsName) {

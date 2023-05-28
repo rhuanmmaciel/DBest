@@ -29,14 +29,11 @@ import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import exceptions.TreeException;
-import gui.frames.forms.operations.IOperator;
-import gui.frames.forms.operations.Operation;
-import sgbd.query.Operator;
-import sgbd.query.binaryop.UnionOperator;
+import gui.frames.forms.operations.FormFrameOperation;
+import operations.binary.Union;
 
 @SuppressWarnings("serial")
-public class FormFrameUnion extends JDialog implements ActionListener, DocumentListener, IOperator {
+public class FormFrameUnion extends JDialog implements ActionListener, DocumentListener, FormFrameOperation {
 
 	private JPanel contentPane;
 	private JComboBox<String> columnsComboBox1;
@@ -61,10 +58,8 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 	private Cell parentCell2;
 	private mxCell jCell;
 
-	public FormFrameUnion() {
-
-	}
-
+	private Union union = new Union();
+	
 	public FormFrameUnion(mxCell jCell) {
 
 		super((Window) null);
@@ -250,7 +245,8 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 				columnsComboBox2.addItem(item);
 
 		} else if (e.getSource() == btnReady) {
-
+			
+			dispose();
 			List<String> selectedColumns1 = new ArrayList<>(Arrays.asList(textArea1.getText().split("\n")));
 			List<String> selectedColumns2 = new ArrayList<>(Arrays.asList(textArea2.getText().split("\n")));
 
@@ -260,7 +256,7 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 			List<String> selectedColumns = new ArrayList<>(selectedColumns1);
 			selectedColumns.addAll(selectedColumns2);
 
-			executeOperation(jCell, selectedColumns);
+			union.executeOperation(jCell, selectedColumns);
 			dispose();
 
 		} else if (e.getSource() == btnCancel) {
@@ -304,44 +300,6 @@ public class FormFrameUnion extends JDialog implements ActionListener, DocumentL
 
 		btnReady.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
 
-	}
-
-	public void executeOperation(mxCell jCell, List<String> data) {
-		
-		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
-
-		try {
-		
-			if (data == null || !cell.hasParents() || cell.getParents().size() != 2 || data.size() % 2 != 0 || cell.hasParentErrors()) {
-	
-				throw new TreeException();
-				
-			}
-	
-			Cell parentCell1 = cell.getParents().get(0);
-			Cell parentCell2 = cell.getParents().get(1);
-			
-			Operator table1 = parentCell1.getOperator();
-			Operator table2 = parentCell2.getOperator();
-			
-			List<String> selectedColumns1 = new ArrayList<>(data.subList(0, data.size()/2));
-			List<String> selectedColumns2 = new ArrayList<>(data.subList(data.size()/2, data.size()));
-	
-			selectedColumns1.replaceAll(s -> parentCell1.getSourceTableName(s) + "." + s);
-			selectedColumns2.replaceAll(s -> parentCell2.getSourceTableName(s) + "." + s);
-			
-			Operator operator = new UnionOperator(table1, table2, selectedColumns1, selectedColumns2);
-	
-			Operation.operationSetter(cell, selectedColumns1.toString() + " U " + selectedColumns2.toString(), data, operator);
-	        
-		}catch(TreeException e) {
-			
-			cell.setError();
-			
-		}
-        
-        dispose();
-		
 	}
 
 	@Override

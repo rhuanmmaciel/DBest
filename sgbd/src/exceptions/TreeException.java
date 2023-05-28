@@ -1,15 +1,17 @@
 package exceptions;
 
-public class TreeException extends Exception{
+public abstract class TreeException extends Exception{
 
 	private static final long serialVersionUID = 3453003137947098627L;
 	
-	public TreeException() {
-        super();
+	public enum ExceptionType{
+		ARGUMENTS, PARENTS_ERROR, PARENTS_AMOUNT
+	}
+	
+    public TreeException(String txt) {
+        super(txt);
     }
 
-    public TreeException(String mensagem) {
-        super(mensagem);
-    }
-
+    public abstract ExceptionType type();
+    
 }

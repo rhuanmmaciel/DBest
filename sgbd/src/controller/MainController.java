@@ -280,11 +280,13 @@ public class MainController extends MainFrame {
 			popupMenuJCell.add(menuItemOperations);
 			popupMenuJCell.add(menuItemRemove);
 
-			if (cell instanceof OperationCell opCell && !opCell.hasForm()) {
+			if (cell instanceof OperationCell opCell && !opCell.hasForm()&& !opCell.hasOperator()) {
 
 				popupMenuJCell.remove(menuItemShow);
 				popupMenuJCell.remove(menuItemOperations);
 				popupMenuJCell.remove(menuItemEdit);
+				popupMenuJCell.remove(menuItemExport);
+
 
 			}
 			if (cell instanceof TableCell || ((OperationCell) cell).getType() == OperationType.CARTESIAN_PRODUCT) {

@@ -27,15 +27,11 @@ import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import exceptions.TreeException;
-import gui.frames.forms.operations.IOperator;
-import gui.frames.forms.operations.Operation;
-import sgbd.query.Operator;
-import sgbd.query.unaryop.FilterColumnsOperator;
-import sgbd.table.Table;
+import gui.frames.forms.operations.FormFrameOperation;
+import operations.unary.Projection;
 
 @SuppressWarnings("serial")
-public class FormFrameProjection extends JDialog implements ActionListener, IOperator {
+public class FormFrameProjection extends JDialog implements ActionListener, FormFrameOperation {
 
 	private JPanel contentPane;
 	private JComboBox<String> columnsComboBox;
@@ -55,10 +51,8 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 	private JButton btnCancel;
 	private JButton btnAddAll;
 
-	public FormFrameProjection() {
-
-	}
-
+	private Projection projection = new Projection();
+	
 	public FormFrameProjection(mxCell jCell) {
 
 		super((Window) null);
@@ -240,10 +234,11 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 				columnsComboBox.addItem(item);
 
 		} else if (e.getSource() == btnReady) {
-
+			
+			dispose();
 			columnsResult = new ArrayList<>(List.of(textArea.getText().split("\n")));
 			columnsResult.remove(0);
-			executeOperation(jCell, columnsResult);
+			projection.executeOperation(jCell, columnsResult);
 
 		} else if (e.getSource() == btnCancel) {
 
@@ -260,44 +255,6 @@ public class FormFrameProjection extends JDialog implements ActionListener, IOpe
 			}
 
 		}
-	}
-
-	public void executeOperation(mxCell jCell, List<String> data) {
-
-		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
-
-		try {
-
-			if (data == null || !cell.hasParents() || cell.getParents().size() != 1 || cell.hasParentErrors()
-					|| !cell.getParents().get(0).getColumnsName().containsAll(data)) {
-
-				throw new TreeException();
-
-			}
-
-			Cell parentCell = cell.getParents().get(0);
-
-			List<String> aux = parentCell.getColumnsName();
-			aux.removeAll(data);
-
-			Operator operator = parentCell.getOperator();
-
-			for (Table table : parentCell.getOperator().getSources()) {
-
-				operator = new FilterColumnsOperator(operator, table.getTableName(), aux);
-
-			}
-
-			Operation.operationSetter(cell, "π  " + data.toString(), data, operator);
-
-		} catch (TreeException e) {
-
-			cell.setError();
-
-		}
-
-		dispose();
-
 	}
 
 }

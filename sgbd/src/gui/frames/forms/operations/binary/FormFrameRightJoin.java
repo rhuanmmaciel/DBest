@@ -22,14 +22,11 @@ import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import exceptions.TreeException;
-import gui.frames.forms.operations.IOperator;
-import gui.frames.forms.operations.Operation;
-import sgbd.query.Operator;
-import sgbd.query.binaryop.joins.RightNestedLoopJoin;
+import gui.frames.forms.operations.FormFrameOperation;
+import operations.binary.RightJoin;
 
 @SuppressWarnings("serial")
-public class FormFrameRightJoin extends JDialog implements ActionListener, IOperator {
+public class FormFrameRightJoin extends JDialog implements ActionListener, FormFrameOperation {
 
 	private JPanel contentPane;
 	private JComboBox<?> comboBoxColumns1;
@@ -45,10 +42,8 @@ public class FormFrameRightJoin extends JDialog implements ActionListener, IOper
 
 	private JButton btnCancel;
 
-	public FormFrameRightJoin() {
-
-	}
-
+	private RightJoin rightJoin = new RightJoin();
+	
 	public FormFrameRightJoin(mxCell jCell) {
 
 		super((Window) null);
@@ -154,7 +149,8 @@ public class FormFrameRightJoin extends JDialog implements ActionListener, IOper
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnPronto) {
-			executeOperation(jCell, List.of(comboBoxColumns1.getSelectedItem().toString(),
+			dispose();
+			rightJoin.executeOperation(jCell, List.of(comboBoxColumns1.getSelectedItem().toString(),
 					comboBoxColumns2.getSelectedItem().toString()));
 
 		} else if (e.getSource() == btnCancel) {
@@ -162,47 +158,6 @@ public class FormFrameRightJoin extends JDialog implements ActionListener, IOper
 			dispose();
 
 		}
-
-	}
-
-	public void executeOperation(mxCell jCell, List<String> data) {
-
-		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
-
-		try {
-
-			if (data == null || data.size() != 2 || !cell.hasParents() || cell.getParents().size() != 2
-					|| cell.hasParentErrors() || (!cell.getParents().get(0).getColumnsName().contains(data.get(0))
-							&& !cell.getParents().get(1).getColumnsName().contains(data.get(1)))) {
-
-				throw new TreeException();
-
-			}
-
-			Cell parentCell1 = cell.getParents().get(0);
-			Cell parentCell2 = cell.getParents().get(1);
-
-			Operator table_1 = parentCell1.getOperator();
-			Operator table_2 = parentCell2.getOperator();
-			String item1 = data.get(0);
-			String item2 = data.get(1);
-
-			Operator operator = new RightNestedLoopJoin(table_1, table_2, (t1, t2) -> {
-
-				return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2
-						.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
-
-			});
-			
-			Operation.operationSetter(cell, "⟕   " + item1 + " = " + item2, data, operator);
-
-		} catch (TreeException e) {
-
-			cell.setError();
-
-		}
-
-		dispose();
 
 	}
 

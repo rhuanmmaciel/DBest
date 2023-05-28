@@ -78,6 +78,8 @@ public class TreeUtils {
 	
 	public static void updateTree(Cell cell) {
 		
+//		System.out.println("update tree cell" + cell);
+		
 		Set<Tree> trees = new HashSet<>();
 		
 		Tree tree = cell.getTree();
@@ -112,7 +114,9 @@ public class TreeUtils {
 	}
 
 	private static void updateTree(Tree tree) {
-
+		
+//		System.out.println("update tree" + tree);
+		
 		int counter = 0;
 		
 		for (Cell cellAux : cells.values()) {
@@ -134,7 +138,8 @@ public class TreeUtils {
 	}
 
 	public static void recalculateContent(Tree tree) {
-		
+//		System.out.println("recalculate COntent t" + tree);
+
 		if(tree != null) {
 			
 			List<Cell> level = tree.getLeaves();
@@ -169,7 +174,7 @@ public class TreeUtils {
 	}
 	
 	public static void recalculateContent(Cell cell) {
-		
+
 		if(cell != null) {
 			
 			Cell currentCell = cell;

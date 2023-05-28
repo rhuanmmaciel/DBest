@@ -105,7 +105,8 @@ public class CellUtils extends MainController {
 	public static void showTable(mxCell jCell) {
 
 		Cell cell = jCell != null ? Cell.getCells().get(jCell) : null;
-		if (cell != null && (cell instanceof TableCell || ((OperationCell) cell).hasForm())) {
+		if (cell != null && (cell instanceof TableCell
+				|| ((OperationCell) cell).hasOperator() || ((OperationCell) cell).hasForm())) {
 
 			if (!cell.hasError()) {
 
@@ -120,26 +121,27 @@ public class CellUtils extends MainController {
 		}
 
 	}
-	
+
 	public static void verifyCell(mxCell cell, mxCell ghostCell) {
-		
-		if(!Cell.getCells().containsKey(cell) && cell != ghostCell && cell != null) {
-			
-			Table table = MainController.getTables().get(cell.getValue()); 
-			
+
+		if (!Cell.getCells().containsKey(cell) && cell != ghostCell && cell != null) {
+
+			Table table = MainController.getTables().get(cell.getValue());
+
 			Object parent = graph.getDefaultParent();
 			Object[] vertices = mxGraphModel.getChildVertices(graph.getModel(), parent);
-			
-			for(Object jCell : vertices) {
-				
-				if(!Cell.getCells().containsKey(jCell)) cell = (mxCell) jCell;
-				
+
+			for (Object jCell : vertices) {
+
+				if (!Cell.getCells().containsKey(jCell))
+					cell = (mxCell) jCell;
+
 			}
-			
+
 			new TableCell(cell, (String) cell.getValue(), "tabela", table);
-			
+
 		}
-		
+
 	}
 
 }

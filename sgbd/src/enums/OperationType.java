@@ -1,13 +1,21 @@
 package enums;
 
+import enums.interfaces.IOperationType;
+import gui.frames.forms.operations.FormFrameOperation;
 import gui.frames.forms.operations.IOperator;
-import gui.frames.forms.operations.binary.CartesianProduct;
 import gui.frames.forms.operations.binary.FormFrameJoin;
 import gui.frames.forms.operations.binary.FormFrameLeftJoin;
 import gui.frames.forms.operations.binary.FormFrameRightJoin;
 import gui.frames.forms.operations.binary.FormFrameUnion;
 import gui.frames.forms.operations.unary.FormFrameProjection;
 import gui.frames.forms.operations.unary.FormFrameSelection;
+import operations.binary.CartesianProduct;
+import operations.binary.Join;
+import operations.binary.LeftJoin;
+import operations.binary.RightJoin;
+import operations.binary.Union;
+import operations.unary.Projection;
+import operations.unary.Selection;
 
 public enum OperationType implements IOperationType {
 
@@ -44,8 +52,13 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends IOperator> getForm() {
+		public Class<? extends FormFrameOperation> getForm() {
 			return FormFrameSelection.class;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			return Selection.class;
 		}
 	},
 
@@ -81,8 +94,13 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends IOperator> getForm() {
+		public Class<? extends FormFrameOperation> getForm() {
 			return FormFrameProjection.class;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			return Projection.class;
 		}
 	},
 
@@ -118,8 +136,13 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends IOperator> getForm() {
+		public Class<? extends FormFrameOperation> getForm() {
 			return FormFrameJoin.class;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			return Join.class;
 		}
 	},
 
@@ -155,8 +178,13 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends IOperator> getForm() {
+		public Class<? extends FormFrameOperation> getForm() {
 			return FormFrameLeftJoin.class;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			return LeftJoin.class;
 		}
 	},
 
@@ -192,8 +220,13 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends IOperator> getForm() {
+		public Class<? extends FormFrameOperation> getForm() {
 			return FormFrameRightJoin.class;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			return RightJoin.class;
 		}
 	},
 
@@ -229,7 +262,12 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends IOperator> getForm() {
+		public Class<? extends FormFrameOperation> getForm() {
+			return null;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
 			return CartesianProduct.class;
 		}
 	},
@@ -266,8 +304,13 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends IOperator> getForm() {
+		public Class<? extends FormFrameOperation> getForm() {
 			return FormFrameUnion.class;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			return Union.class;
 		}
 	},
 
@@ -303,7 +346,13 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends IOperator> getForm() {
+		public Class<? extends FormFrameOperation> getForm() {
+			return null;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			// TODO Auto-generated method stub
 			return null;
 		}
 	},
@@ -340,7 +389,13 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends IOperator> getForm() {
+		public Class<? extends FormFrameOperation> getForm() {
+			return null;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			// TODO Auto-generated method stub
 			return null;
 		}
 	},
@@ -377,7 +432,13 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends IOperator> getForm() {
+		public Class<? extends FormFrameOperation> getForm() {
+			return null;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			// TODO Auto-generated method stub
 			return null;
 		}
 	};

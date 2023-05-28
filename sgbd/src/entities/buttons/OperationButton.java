@@ -13,7 +13,7 @@ import com.mxgraph.view.mxStylesheet;
 
 import entities.Action.CurrentAction;
 
-public class OperationButton extends Button{
+public class OperationButton extends Button<JButton>{
 
 	private JPanel typePanel;
 	private String style;
