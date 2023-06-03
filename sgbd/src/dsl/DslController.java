@@ -15,9 +15,9 @@ import dsl.entities.OperationExpression;
 import dsl.entities.Relation;
 import dsl.entities.VariableDeclaration;
 import dsl.utils.DslUtils;
+import files.FileUtils;
 import gui.frames.dsl.TextEditor;
 import sgbd.table.Table;
-import util.FileUtils;
 
 public class DslController {
 

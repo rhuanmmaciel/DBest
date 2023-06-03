@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Utils {
 
-    public static boolean containsIgnoreCase(List<String> list, String searchElement) {
+    public static boolean containsIgnoreCase(List<String> list, String searchedElement) {
         for (String element : list) {
-            if (element.equalsIgnoreCase(searchElement)) {
+            if (element.equalsIgnoreCase(searchedElement)) {
                 return true;
             }
         }

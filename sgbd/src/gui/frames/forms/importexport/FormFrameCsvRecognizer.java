@@ -39,12 +39,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import controller.MainController;
+import database.TableUtils;
 import entities.Column;
 import enums.ColumnDataType;
 import exceptions.InvalidCsvException;
 import files.csv.Recognizer;
 import files.csv.Recognizer.CsvData;
-import util.TableUtils;
 
 @SuppressWarnings("serial")
 public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
@@ -57,10 +57,11 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 	private GridBagConstraints gbc = new GridBagConstraints();
 	private final JScrollPane scrollPane = new JScrollPane();
 	private JTable jTable;
-	private JButton cancelButton = new JButton("Cancelar");
-	private JButton doneButton = new JButton("Pronto");
+	private JButton btnCancel = new JButton("Cancelar");
+	private JButton btnDone = new JButton("Pronto");
 	private JTextField txtFieldStringDelimiter = new JTextField();
-	private JTextField otherSeparator = new JTextField();
+	private JTextField txtFieldOtherSeparator = new JTextField();
+	private JTextField txtFieldTableName = new JTextField();
 	private JSpinner spinnerFromRow = new JSpinner();
 	private ButtonGroup separatorGroup = new ButtonGroup();
 	private JRadioButton radioComma = new JRadioButton("Vírgula");
@@ -77,7 +78,6 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 
 	private final String path;
 	private AtomicReference<Boolean> exitReference;
-	private StringBuilder pkName;
 	private StringBuilder tableName;
 	private List<Column> columns;
 	private Map<Integer, Map<String, String>> content;
@@ -90,7 +90,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 	private char separator = defaultSeparator;
 	private char stringDelimiter = defaultStringDelimiter;
 
-	public FormFrameCsvRecognizer(String path, StringBuilder tableName, StringBuilder pkName, List<Column> columns,
+	public FormFrameCsvRecognizer(String path, StringBuilder tableName, List<Column> columns,
 			Map<Integer, Map<String, String>> content, AtomicReference<Boolean> exitReference) {
 
 		super((Window) null, "Tabela csv");
@@ -98,7 +98,6 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 
 		this.exitReference = exitReference;
 		this.path = path;
-		this.pkName = pkName;
 		this.columns = columns;
 		this.content = content;
 		this.tableName = tableName;
@@ -135,6 +134,8 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		initializeMain();
 		initializeBottom();
 
+		verifyReadyButton();
+
 		this.setVisible(true);
 
 	}
@@ -152,6 +153,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		Box mainHeaderBox = Box.createHorizontalBox();
 		Box items = Box.createVerticalBox();
 		Box itemsPadding = Box.createHorizontalBox();
+		Box itemTableName = Box.createHorizontalBox();
 		Box itemFromRow = Box.createHorizontalBox();
 		Box itemSeparator = Box.createHorizontalBox();
 		Box itemStringDelimiter = Box.createHorizontalBox();
@@ -160,6 +162,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		mainHeaderBox.add(itemsPadding);
 		mainHeaderBox.add(items);
 		items.add(Box.createVerticalStrut(5));
+		items.add(itemTableName);
 		items.add(itemFromRow);
 		items.add(itemSeparator);
 		items.add(itemStringDelimiter);
@@ -167,6 +170,28 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		items.add(Box.createVerticalStrut(5));
 
 		itemsPadding.add(Box.createHorizontalStrut(10));
+
+		itemTableName.add(new JLabel("Nome: "));
+		itemTableName.add(txtFieldTableName);
+		txtFieldTableName.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				verifyReadyButton();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				verifyReadyButton();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				verifyReadyButton();
+			}
+		});
+		txtFieldTableName.setMaximumSize(new Dimension(3000, 50));
+		txtFieldTableName.setText(path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf(".")));
+		itemTableName.add(Box.createHorizontalGlue());
 
 		itemFromRow.add(new JLabel("Começa na linha: "));
 		SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, jTable.getRowCount(), 1);
@@ -189,7 +214,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		separatorGroup.add(radioSpace);
 		separatorGroup.add(radioOther);
 		separatorGroup.getElements().asIterator().forEachRemaining(x -> x.addActionListener(this));
-		otherSeparator.getDocument().addDocumentListener(new DocumentListener() {
+		txtFieldOtherSeparator.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				if (radioOther.isSelected())
@@ -208,7 +233,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 					updateTable();
 			}
 		});
-		otherSeparator.setMaximumSize(dim);
+		txtFieldOtherSeparator.setMaximumSize(dim);
 		itemSeparator.add(Box.createHorizontalStrut(3));
 		itemSeparator.add(radioComma);
 		itemSeparator.add(Box.createHorizontalStrut(3));
@@ -217,7 +242,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		itemSeparator.add(radioSpace);
 		itemSeparator.add(Box.createHorizontalStrut(3));
 		itemSeparator.add(radioOther);
-		itemSeparator.add(otherSeparator);
+		itemSeparator.add(txtFieldOtherSeparator);
 		itemSeparator.add(Box.createHorizontalGlue());
 
 		itemStringDelimiter.add(new JLabel("Delimitador de String: "));
@@ -279,73 +304,69 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		contentPane.add(bottomPanel, BorderLayout.SOUTH);
 		bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-		bottomPanel.add(cancelButton);
-		bottomPanel.add(doneButton);
+		bottomPanel.add(btnCancel);
+		bottomPanel.add(btnDone);
 
-		cancelButton.addActionListener(this);
-		doneButton.addActionListener(this);
+		btnCancel.addActionListener(this);
+		btnDone.addActionListener(this);
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
+		verifyReadyButton();
+
 		separatorGroup.getElements().asIterator().forEachRemaining(x -> {
 			if (e.getSource() == x)
 				updateTable();
 		});
 
-		if (e.getSource() == cancelButton) {
+		if (e.getSource() == btnCancel) {
 
 			dispose();
 			exitReference.set(true);
 
 		}
 
-		if (e.getSource() == doneButton) {
+		if (e.getSource() == btnDone) {
 
 			dispose();
 
-			tableName.append(path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf(".")));
+			setItems();
 
-			for (String columnName : columnsName)
-				if (pkCheckBoxes.get(columnName).isSelected()) {
-					pkName.append(columnName);
-					break;
-				}
+		}
 
-			for (String columnName : columnsName) {
+	}
 
-				ColumnDataType type = List.of(ColumnDataType.values()).stream()
-						.filter(x -> x.toString().equals(typeComboBoxes.get(columnName).getSelectedItem().toString()))
-						.findFirst().orElseThrow();
+	private void verifyReadyButton() {
 
-				switch (type) {
-				case NONE -> columns.add(new Column(columnName, ColumnDataType.NONE));
+		btnDone.setEnabled(!MainController.getTables().containsKey(txtFieldTableName.getText().strip()));
 
-				case INTEGER -> columns.add(new Column(columnName, ColumnDataType.INTEGER));
+	}
 
-				case FLOAT -> columns.add(new Column(columnName, ColumnDataType.FLOAT));
+	private void setItems() {
 
-				case STRING -> columns.add(new Column(columnName, ColumnDataType.STRING));
+		tableName.append(txtFieldTableName.getText().strip());
 
-				case CHARACTER -> columns.add(new Column(columnName, ColumnDataType.CHARACTER));
+		for (String columnName : columnsName) {
 
-				default -> columns.add(new Column(columnName, ColumnDataType.BOOLEAN));
+			ColumnDataType type = List.of(ColumnDataType.values()).stream()
+					.filter(x -> x.toString().equals(typeComboBoxes.get(columnName).getSelectedItem().toString()))
+					.findFirst().orElseThrow();
 
-				}
+			columns.add(new Column(columnName, txtFieldTableName.getText().strip(), type,
+					pkCheckBoxes.get(columnName).isSelected()));
 
-			}
+		}
 
-			for (int i = 0; i < jTable.getRowCount(); i++) {
+		for (int i = 0; i < jTable.getRowCount(); i++) {
 
-				Map<String, String> column = new HashMap<>();
-				for (int j = 0; j < jTable.getColumnCount(); j++)
-					column.put(jTable.getColumnName(j), jTable.getValueAt(i, j).toString());
+			Map<String, String> column = new HashMap<>();
+			for (int j = 0; j < jTable.getColumnCount(); j++)
+				column.put(jTable.getColumnName(j), jTable.getValueAt(i, j).toString());
 
-				content.put(i, column);
-
-			}
+			content.put(i, column);
 
 		}
 
@@ -355,12 +376,12 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 
 		if (radioComma.isSelected())
 			separator = ',';
-		if (radioSemiColon.isSelected())
+		else if (radioSemiColon.isSelected())
 			separator = ';';
-		if (radioSpace.isSelected())
+		else if (radioSpace.isSelected())
 			separator = ' ';
-		if (radioOther.isSelected())
-			separator = otherSeparator.getText().isEmpty() ? ' ' : otherSeparator.getText().charAt(0);
+		else if (radioOther.isSelected())
+			separator = txtFieldOtherSeparator.getText().isEmpty() ? ' ' : txtFieldOtherSeparator.getText().charAt(0);
 
 		beginIndex = (int) spinnerFromRow.getValue();
 

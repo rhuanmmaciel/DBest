@@ -159,7 +159,7 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 			}
 			
 			table.addColumn(txtColumnName.getText().replaceAll("[^\\p{Alnum}]", ""));
-			columns.add(new Column(txtColumnName.getText().replaceAll("[^\\p{Alnum}]", ""), type));
+			//columns.add(new Column(txtColumnName.getText().replaceAll("[^\\p{Alnum}]", ""), type));
 			dispose();
 			
 		}

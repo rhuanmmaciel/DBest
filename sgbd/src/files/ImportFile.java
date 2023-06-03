@@ -14,6 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.mxgraph.model.mxCell;
 
 import controller.MainController;
+import database.TableCreator;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.TableCell;
@@ -21,7 +22,6 @@ import enums.FileType;
 import gui.frames.forms.importexport.FormFrameCsvRecognizer;
 import gui.frames.main.MainFrame;
 import sgbd.table.Table;
-import util.TableCreator;
 
 public class ImportFile {
 
@@ -29,7 +29,6 @@ public class ImportFile {
 	private JFileChooser fileUpload = new JFileChooser();
 	private AtomicReference<Boolean> exitReference;
 	private StringBuilder tableName = new StringBuilder();
-	private StringBuilder pkName = new StringBuilder();
 	private Map<Integer, Map<String, String>> content = new LinkedHashMap<>();
 	private List<Column> columns = new ArrayList<>();
 	private FileType fileType;
@@ -100,7 +99,7 @@ public class ImportFile {
 			}
 
 			if (!exitReference.get() && FileType.DAT != fileType)
-				tableCell = TableCreator.createTable(tableName.toString(), pkName.toString(), columns, content, false);
+				tableCell = TableCreator.createTable(tableName.toString(), columns, content);
 
 			return;
 			
@@ -227,7 +226,7 @@ public class ImportFile {
 
 		}
 		
-		new FormFrameCsvRecognizer(fileUpload.getSelectedFile().getAbsolutePath(), tableName, pkName, columns, content, exitReference);
+		new FormFrameCsvRecognizer(fileUpload.getSelectedFile().getAbsolutePath(), tableName, columns, content, exitReference);
 		
 	}
 	

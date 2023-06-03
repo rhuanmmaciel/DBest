@@ -28,9 +28,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
+import database.TableCreator;
 import entities.Column;
 import entities.cells.TableCell;
-import util.TableCreator;
 
 @SuppressWarnings("serial")
 public class FormFrameCreateTable extends JDialog implements ActionListener, DocumentListener{
@@ -297,7 +297,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 		
 		if(!exitReference.get()) {
 			
-			tableCell = TableCreator.createTable(textFieldTableName.getText(), pkName.toString(), columns, content, false);
+			//tableCell = TableCreator.createTable(textFieldTableName.getText(), pkName.toString(), columns, content, false);
 		
 		}else {
 			

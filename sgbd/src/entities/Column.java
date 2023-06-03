@@ -5,32 +5,21 @@ import enums.ColumnDataType;
 public class Column{
 
 	private String name;
-	private String table;
+	private String source;
 	private ColumnDataType type;
 	private Boolean pk;
 	
-	public Column(String name, ColumnDataType type) {
+	public Column(String name, String tableName, ColumnDataType type, boolean pk) {
 		
-		this.name = name.replaceAll("[^a-zA-Z0-9]", "");
-		this.type = type;
-		this.pk = false;
-		this.table = null;
-		
-	}
-	
-	public Column(String name, String tableName, ColumnDataType type, boolean pk, boolean isTableNameAlreadyAdded) {
-		
-		name.replaceAll("[^a-zA-Z0-9]", "");
-		tableName.replaceAll("[^a-zA-Z0-9]", "");
-		this.name = isTableNameAlreadyAdded ? name : tableName + "_" + name;
-		this.table = tableName;
+		this.name = name;
+		this.source = tableName;
 		this.type = type;
 		this.pk = pk;
 		
 	}
 	
-	public String getTable() {
-		return table;
+	public String getSource() {
+		return source;
 	}
 	
 	public String getName() {

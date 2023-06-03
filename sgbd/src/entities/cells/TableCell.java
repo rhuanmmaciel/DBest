@@ -112,7 +112,7 @@ public final class TableCell extends Cell{
 			
 			}
 			
-			columns.add(new Column(pColumn.getName(), getName(), type, pColumn.isPrimaryKey(), true));
+			columns.add(new Column(pColumn.getName(), getName(), type, pColumn.isPrimaryKey()));
 		}
 		
 		setColumns(columns);

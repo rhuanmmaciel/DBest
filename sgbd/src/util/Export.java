@@ -22,11 +22,13 @@ import javax.swing.JPanel;
 import com.mxgraph.swing.mxGraphComponent;
 
 import controller.MainController;
+import database.TableCreator;
 import dsl.utils.DslUtils;
 import entities.Tree;
 import entities.cells.Cell;
 import entities.cells.TableCell;
 import enums.FileType;
+import files.FileUtils;
 import net.coobird.thumbnailator.Thumbnails;
 
 @SuppressWarnings("serial")
@@ -115,9 +117,7 @@ public class Export extends JPanel {
 				}
 			}
 
-			String pkName = cell.getColumns().stream().filter(x -> x.isPK()).findFirst().orElse(null).getName();
-			
-			TableCell createdCell = TableCreator.createTable(fileName, pkName, cell.getColumns(), cell.getMapContent(), true);
+			TableCell createdCell = TableCreator.createTable(fileName, cell.getColumns(), cell.getMapContent());
 
 			createdCell.getTable().saveHeader(headFileName);
 			
