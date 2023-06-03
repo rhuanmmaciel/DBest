@@ -9,7 +9,7 @@ import com.mxgraph.model.mxCell;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import enums.ColumnDataType;
-import exceptions.TreeException;
+import exceptions.tree.TreeException;
 import gui.frames.forms.operations.IOperator;
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;

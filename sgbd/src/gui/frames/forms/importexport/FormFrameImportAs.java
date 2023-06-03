@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import entities.cells.TableCell;
 import enums.FileType;
-import util.ImportFile;
+import files.ImportFile;
 
 @SuppressWarnings("serial")
 public class FormFrameImportAs extends FormFrameImportExportAs{

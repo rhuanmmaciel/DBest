@@ -59,9 +59,9 @@ public class Action {
 		private OperationType type;
 		private mxCell parent;
 
-		public CreateOperationAction(ActionType action, String name, String style, OperationType type) {
+		public CreateOperationAction(OperationType type) {
 
-			super(action, name, style);
+			super(ActionType.CREATE_OPERATOR_CELL, type.getDisplayNameAndSymbol(), type.getDisplayName());
 			this.type = type;
 			parent = null;
 

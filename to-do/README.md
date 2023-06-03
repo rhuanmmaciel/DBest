@@ -1,6 +1,5 @@
 # Implementar:
 
-- mudar tamanho das células de acordo com o nome
 - abas para o editor de texto
 - abas para árvores
 - mudar o componente da tela
@@ -19,6 +18,10 @@
 
 # Fazendo
 
+- tela de importar csv
 - cálculo de posição para dsl
 
+# Prontos
 
+- mudar tamanho das células de acordo com o nome
+- mostrando qual o erro para o usuário na tela inf

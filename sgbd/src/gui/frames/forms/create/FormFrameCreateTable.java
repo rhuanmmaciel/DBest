@@ -293,7 +293,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 		AtomicReference<Boolean> exitReference = new AtomicReference<>(exit);
 		StringBuilder pkName = new StringBuilder();
 		
-		new PrimaryKey(content, pkName, exitReference);
+		//new PrimaryKey(content, pkName, exitReference);
 		
 		if(!exitReference.get()) {
 			

@@ -189,7 +189,7 @@ public final class OperationCell extends Cell {
 		case NO_TWO_ARGUMENTS -> "Alguma coluna fornecida não existe no respectivo pai";
 
 		};
-
+		
 	}
 
 	public void removeError() {

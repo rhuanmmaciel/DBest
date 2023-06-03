@@ -7,7 +7,7 @@ import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import exceptions.TreeException;
+import exceptions.tree.TreeException;
 import gui.frames.forms.operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;

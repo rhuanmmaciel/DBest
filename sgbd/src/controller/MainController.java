@@ -10,8 +10,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -41,8 +39,8 @@ import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import entities.utils.CellUtils;
 import entities.utils.TreeUtils;
-import enums.OperationArity;
 import enums.OperationType;
+import files.ImportFile;
 import gui.frames.CellInformationFrame;
 import gui.frames.dsl.Console;
 import gui.frames.dsl.TextEditor;
@@ -52,20 +50,12 @@ import gui.frames.forms.importexport.FormFrameImportAs;
 import gui.frames.main.MainFrame;
 import sgbd.table.Table;
 import util.Export;
-import util.ImportFile;
 
 @SuppressWarnings("serial")
 public class MainController extends MainFrame {
 
 	private static Map<Integer, Tree> trees = new HashMap<>();
 	private static File lastDirectory = new File("");
-
-	private static final List<String> unaryOp = new ArrayList<>(new ArrayList<>(Arrays.asList(OperationType.values()))
-			.stream().filter(operation -> operation.getArity() == OperationArity.UNARY)
-			.map(OperationType::getOperationName).toList());
-	private static final List<String> binaryOp = new ArrayList<>(new ArrayList<>(Arrays.asList(OperationType.values()))
-			.stream().filter(operation -> operation.getArity() == OperationArity.BINARY)
-			.map(OperationType::getOperationName).toList());
 
 	private Container textEditor = new TextEditor(this).getContentPane();
 
@@ -81,27 +71,14 @@ public class MainController extends MainFrame {
 
 	private static Set<Button<?>> buttons = new HashSet<>();
 
-	public static final CreateOperationAction projectionOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.PROJECTION.getDisplayNameAndSymbol(),
-			OperationType.PROJECTION.getDisplayName(), OperationType.PROJECTION);
-	public static final CreateOperationAction selectionOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.SELECTION.getDisplayNameAndSymbol(),
-			OperationType.SELECTION.getDisplayName(), OperationType.SELECTION);
-	public static final CreateOperationAction joinOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.JOIN.getDisplayNameAndSymbol(),
-			OperationType.JOIN.getDisplayName(), OperationType.JOIN);
-	public static final CreateOperationAction leftJoinOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.LEFT_JOIN.getDisplayNameAndSymbol(),
-			OperationType.LEFT_JOIN.getDisplayName(), OperationType.LEFT_JOIN);
-	public static final CreateOperationAction rightJoinOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.RIGHT_JOIN.getDisplayNameAndSymbol(),
-			OperationType.RIGHT_JOIN.getDisplayName(), OperationType.RIGHT_JOIN);
+	public static final CreateOperationAction projectionOperation = new CreateOperationAction(OperationType.PROJECTION);
+	public static final CreateOperationAction selectionOperation = new CreateOperationAction(OperationType.SELECTION);
+	public static final CreateOperationAction joinOperation = new CreateOperationAction(OperationType.JOIN);
+	public static final CreateOperationAction leftJoinOperation = new CreateOperationAction(OperationType.LEFT_JOIN);
+	public static final CreateOperationAction rightJoinOperation = new CreateOperationAction(OperationType.RIGHT_JOIN);
 	public static final CreateOperationAction cartesianProductOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.CARTESIAN_PRODUCT.getDisplayNameAndSymbol(),
-			OperationType.CARTESIAN_PRODUCT.getDisplayName(), OperationType.CARTESIAN_PRODUCT);
-	public static final CreateOperationAction unionOperation = new CreateOperationAction(
-			CurrentAction.ActionType.CREATE_OPERATOR_CELL, OperationType.UNION.getDisplayNameAndSymbol(),
-			OperationType.UNION.getDisplayName(), OperationType.UNION);
+			OperationType.CARTESIAN_PRODUCT);
+	public static final CreateOperationAction unionOperation = new CreateOperationAction(OperationType.UNION);
 
 	public MainController() {
 
@@ -280,13 +257,12 @@ public class MainController extends MainFrame {
 			popupMenuJCell.add(menuItemOperations);
 			popupMenuJCell.add(menuItemRemove);
 
-			if (cell instanceof OperationCell opCell && !opCell.hasForm()&& !opCell.hasOperator()) {
+			if (cell instanceof OperationCell opCell && !opCell.hasForm() && !opCell.hasOperator()) {
 
 				popupMenuJCell.remove(menuItemShow);
 				popupMenuJCell.remove(menuItemOperations);
 				popupMenuJCell.remove(menuItemEdit);
 				popupMenuJCell.remove(menuItemExport);
-
 
 			}
 			if (cell instanceof TableCell || ((OperationCell) cell).getType() == OperationType.CARTESIAN_PRODUCT) {
@@ -464,14 +440,6 @@ public class MainController extends MainFrame {
 
 	public static Map<String, Table> getTables() {
 		return tables;
-	}
-
-	public static List<String> unaryOperationsName() {
-		return Collections.unmodifiableList(unaryOp);
-	}
-
-	public static List<String> binaryOperationsName() {
-		return Collections.unmodifiableList(binaryOp);
 	}
 
 	public static File getLastDirectory() {

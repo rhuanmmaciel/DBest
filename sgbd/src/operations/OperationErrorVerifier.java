@@ -3,9 +3,9 @@ package operations;
 import java.util.List;
 
 import entities.cells.OperationCell;
-import exceptions.ArgumentsException;
-import exceptions.ParentsAmountException;
-import exceptions.ParentsErrorException;
+import exceptions.tree.ArgumentsException;
+import exceptions.tree.ParentsAmountException;
+import exceptions.tree.ParentsErrorException;
 
 public class OperationErrorVerifier {
 
