@@ -1,18 +1,17 @@
 package operations.binary;
 
-import java.util.List;
-
 import com.mxgraph.model.mxCell;
-
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.tree.TreeException;
-import gui.frames.forms.operations.IOperator;
+import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
 import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
+
+import java.util.List;
 
 public class CartesianProduct implements IOperator {
 

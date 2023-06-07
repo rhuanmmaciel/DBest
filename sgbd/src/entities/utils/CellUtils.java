@@ -16,7 +16,6 @@ import entities.cells.TableCell;
 import gui.frames.DataFrame;
 import sgbd.table.Table;
 
-@SuppressWarnings("serial")
 public class CellUtils extends MainController {
 
 	public static void deleteCell(mxCell jCell) {
@@ -105,8 +104,7 @@ public class CellUtils extends MainController {
 	public static void showTable(mxCell jCell) {
 
 		Cell cell = jCell != null ? Cell.getCells().get(jCell) : null;
-		if (cell != null && (cell instanceof TableCell
-				|| ((OperationCell) cell).hasOperator() || ((OperationCell) cell).hasForm())) {
+		if (cell != null && (cell instanceof TableCell || ((OperationCell) cell).hasBeenInitialized())) {
 
 			if (!cell.hasError()) {
 
@@ -131,14 +129,13 @@ public class CellUtils extends MainController {
 			Object parent = graph.getDefaultParent();
 			Object[] vertices = mxGraphModel.getChildVertices(graph.getModel(), parent);
 
-			for (Object jCell : vertices) {
-
+			for (Object jCell : vertices)
 				if (!Cell.getCells().containsKey(jCell))
 					cell = (mxCell) jCell;
 
-			}
 
-			new TableCell(cell, (String) cell.getValue(), "tabela", table);
+
+			new TableCell(cell, (String) cell.getValue(), "table", table);
 
 		}
 

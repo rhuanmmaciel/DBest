@@ -51,34 +51,24 @@ import gui.frames.main.MainFrame;
 import sgbd.table.Table;
 import util.Export;
 
-@SuppressWarnings("serial")
 public class MainController extends MainFrame {
 
-	private static Map<Integer, Tree> trees = new HashMap<>();
+	private static final Map<Integer, Tree> trees = new HashMap<>();
 	private static File lastDirectory = new File("");
 
-	private Container textEditor = new TextEditor(this).getContentPane();
+	private final Container textEditor = new TextEditor(this).getContentPane();
 
 	private mxCell jCell;
 	private mxCell ghostJCell = null;
 
-	private AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>();
-	private AtomicReference<Edge> edgeRef = new AtomicReference<>(new Edge());
+	private final AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>();
+	private final AtomicReference<Edge> edgeRef = new AtomicReference<>(new Edge());
 
 	private static int yTables = 0;
-	private static Map<String, Table> tables = new HashMap<>();
+	private static final Map<String, Table> tables = new HashMap<>();
 	public boolean clicked = false;
 
-	private static Set<Button<?>> buttons = new HashSet<>();
-
-	public static final CreateOperationAction projectionOperation = new CreateOperationAction(OperationType.PROJECTION);
-	public static final CreateOperationAction selectionOperation = new CreateOperationAction(OperationType.SELECTION);
-	public static final CreateOperationAction joinOperation = new CreateOperationAction(OperationType.JOIN);
-	public static final CreateOperationAction leftJoinOperation = new CreateOperationAction(OperationType.LEFT_JOIN);
-	public static final CreateOperationAction rightJoinOperation = new CreateOperationAction(OperationType.RIGHT_JOIN);
-	public static final CreateOperationAction cartesianProductOperation = new CreateOperationAction(
-			OperationType.CARTESIAN_PRODUCT);
-	public static final CreateOperationAction unionOperation = new CreateOperationAction(OperationType.UNION);
+	private static final Set<Button<?>> buttons = new HashSet<>();
 
 	public MainController() {
 
@@ -111,11 +101,10 @@ public class MainController extends MainFrame {
 
 				File directory = new File(".");
 				File[] filesList = directory.listFiles();
-				for (File file : filesList) {
-					if (file.isFile() && (file.getName().endsWith(".dat") || file.getName().endsWith(".head"))) {
+				assert filesList != null;
+				for (File file : filesList) 
+					if (file.isFile() && (file.getName().endsWith(".dat") || file.getName().endsWith(".head")))
 						file.delete();
-					}
-				}
 
 				System.exit(0);
 
@@ -187,38 +176,48 @@ public class MainController extends MainFrame {
 
 		} else if (e.getSource() == menuItemSelection) {
 
-			opAction = selectionOperation;
+			opAction = OperationType.SELECTION.getAction();
 			style = OperationType.SELECTION.getDisplayName();
 
 		} else if (e.getSource() == menuItemProjection) {
 
-			opAction = projectionOperation;
+			opAction =  OperationType.PROJECTION.getAction();
 			style = OperationType.PROJECTION.getDisplayName();
 
 		} else if (e.getSource() == menuItemJoin) {
 
-			opAction = joinOperation;
+			opAction =  OperationType.JOIN.getAction();
 			style = OperationType.JOIN.getDisplayName();
 
 		} else if (e.getSource() == menuItemLeftJoin) {
 
-			opAction = leftJoinOperation;
+			opAction = OperationType.LEFT_JOIN.getAction();
 			style = OperationType.LEFT_JOIN.getDisplayName();
 
 		} else if (e.getSource() == menuItemRightJoin) {
 
-			opAction = rightJoinOperation;
+			opAction = OperationType.RIGHT_JOIN.getAction();
 			style = OperationType.RIGHT_JOIN.getDisplayName();
 
 		} else if (e.getSource() == menuItemCartesianProduct) {
 
-			opAction = cartesianProductOperation;
+			opAction = OperationType.CARTESIAN_PRODUCT.getAction();
 			style = OperationType.CARTESIAN_PRODUCT.getDisplayName();
 
 		} else if (e.getSource() == menuItemUnion) {
 
-			opAction = unionOperation;
+			opAction = OperationType.UNION.getAction();
 			style = OperationType.UNION.getDisplayName();
+
+		}else if (e.getSource() == menuItemIntersection) {
+
+			opAction = OperationType.INTERSECTION.getAction();
+			style = OperationType.INTERSECTION.getDisplayName();
+
+		}else if (e.getSource() == menuItemSort) {
+
+			opAction = OperationType.SORT.getAction();
+			style = OperationType.SORT.getDisplayName();
 
 		}
 
@@ -257,7 +256,7 @@ public class MainController extends MainFrame {
 			popupMenuJCell.add(menuItemOperations);
 			popupMenuJCell.add(menuItemRemove);
 
-			if (cell instanceof OperationCell opCell && !opCell.hasForm() && !opCell.hasOperator()) {
+			if (cell instanceof OperationCell opCell && !opCell.hasBeenInitialized()) {
 
 				popupMenuJCell.remove(menuItemShow);
 				popupMenuJCell.remove(menuItemOperations);
@@ -330,11 +329,11 @@ public class MainController extends MainFrame {
 
 	public static void saveTable(String tableName, Table table) {
 
-		boolean create = !tables.keySet().stream().anyMatch(x -> x.equals(tableName));
+		boolean create = tables.keySet().stream().noneMatch(x -> x.equals(tableName));
 
 		if (create) {
 			tablesGraph.insertVertex((mxCell) tablesGraph.getDefaultParent(), null, tableName, 0, yTables, 80, 30,
-					"tabela");
+					"table");
 
 			tables.put(tableName, table);
 
@@ -414,7 +413,7 @@ public class MainController extends MainFrame {
 	@Override
 	public void mouseMoved(MouseEvent e) {
 
-		if (currentActionRef != null && currentActionRef.get() != null)
+		if (currentActionRef != null &&currentActionRef.get() != null)
 			if (currentActionRef.get().getType() == CurrentAction.ActionType.CREATE_OPERATOR_CELL
 					&& ghostJCell != null) {
 
@@ -466,7 +465,7 @@ public class MainController extends MainFrame {
 		}
 
 		mxCell jTableCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) graph.getDefaultParent(), null,
-				relation.getName(), x, y, 80, 30, "tabela");
+				relation.getName(), x, y, 80, 30, "table");
 
 		relation.setCell(new ImportFile(relation.getName() + ".head", jTableCell).getResult());
 

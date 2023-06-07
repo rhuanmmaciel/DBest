@@ -1,8 +1,11 @@
 package enums;
 
+import entities.Action.CreateOperationAction;
 import enums.interfaces.IOperationType;
-import gui.frames.forms.operations.FormFrameOperation;
-import gui.frames.forms.operations.IOperator;
+import gui.frames.forms.operations.IFormFrameOperation;
+import gui.frames.forms.operations.unary.FormFrameSort;
+import operations.IOperator;
+import gui.frames.forms.operations.binary.FormFrameIntersection;
 import gui.frames.forms.operations.binary.FormFrameJoin;
 import gui.frames.forms.operations.binary.FormFrameLeftJoin;
 import gui.frames.forms.operations.binary.FormFrameRightJoin;
@@ -10,12 +13,14 @@ import gui.frames.forms.operations.binary.FormFrameUnion;
 import gui.frames.forms.operations.unary.FormFrameProjection;
 import gui.frames.forms.operations.unary.FormFrameSelection;
 import operations.binary.CartesianProduct;
+import operations.binary.Intersection;
 import operations.binary.Join;
 import operations.binary.LeftJoin;
 import operations.binary.RightJoin;
 import operations.binary.Union;
 import operations.unary.Projection;
 import operations.unary.Selection;
+import operations.unary.Sort;
 
 public enum OperationType implements IOperationType {
 
@@ -28,7 +33,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDisplayNameAndSymbol() {
-			return "σ Seleção";
+			return getSymbol() + " " + getDisplayName();
 		}
 
 		@Override
@@ -48,11 +53,11 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDslOperation() {
-			return "selection[predicate](source)";
+			return "selection[args](source)";
 		}
 
 		@Override
-		public Class<? extends FormFrameOperation> getForm() {
+		public Class<? extends IFormFrameOperation> getForm() {
 			return FormFrameSelection.class;
 		}
 
@@ -60,9 +65,15 @@ public enum OperationType implements IOperationType {
 		public Class<? extends IOperator> getOperator() {
 			return Selection.class;
 		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
+		}
 	},
 
 	PROJECTION {
+		
 		@Override
 		public String getDisplayName() {
 			return "Projeção";
@@ -70,7 +81,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDisplayNameAndSymbol() {
-			return "π Projeção";
+			return getSymbol() + " " + getDisplayName();
 		}
 
 		@Override
@@ -90,11 +101,11 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDslOperation() {
-			return "projection[predicate](source)";
+			return "projection[args](source)";
 		}
 
 		@Override
-		public Class<? extends FormFrameOperation> getForm() {
+		public Class<? extends IFormFrameOperation> getForm() {
 			return FormFrameProjection.class;
 		}
 
@@ -102,9 +113,15 @@ public enum OperationType implements IOperationType {
 		public Class<? extends IOperator> getOperator() {
 			return Projection.class;
 		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
+		}
 	},
 
 	JOIN {
+		
 		@Override
 		public String getDisplayName() {
 			return "Junção";
@@ -112,7 +129,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDisplayNameAndSymbol() {
-			return "|X| Junção";
+			return getSymbol() + " " + getDisplayName();
 		}
 
 		@Override
@@ -132,11 +149,11 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDslOperation() {
-			return "join[predicate](source1,source2)";
+			return "join[args](source1,source2)";
 		}
 
 		@Override
-		public Class<? extends FormFrameOperation> getForm() {
+		public Class<? extends IFormFrameOperation> getForm() {
 			return FormFrameJoin.class;
 		}
 
@@ -144,9 +161,15 @@ public enum OperationType implements IOperationType {
 		public Class<? extends IOperator> getOperator() {
 			return Join.class;
 		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
+		}
 	},
 
 	LEFT_JOIN {
+		
 		@Override
 		public String getDisplayName() {
 			return "Junção à esquerda";
@@ -154,7 +177,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDisplayNameAndSymbol() {
-			return "⟕ Junção à esquerda";
+			return getSymbol() + " " + getDisplayName();
 		}
 
 		@Override
@@ -174,11 +197,11 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDslOperation() {
-			return "leftJoin[predicate](source1,source2)";
+			return "leftJoin[args](source1,source2)";
 		}
 
 		@Override
-		public Class<? extends FormFrameOperation> getForm() {
+		public Class<? extends IFormFrameOperation> getForm() {
 			return FormFrameLeftJoin.class;
 		}
 
@@ -186,9 +209,15 @@ public enum OperationType implements IOperationType {
 		public Class<? extends IOperator> getOperator() {
 			return LeftJoin.class;
 		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
+		}
 	},
 
 	RIGHT_JOIN {
+		
 		@Override
 		public String getDisplayName() {
 			return "Junção à direita";
@@ -196,7 +225,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDisplayNameAndSymbol() {
-			return "⟖ Junção à direita";
+			return getSymbol() + " " + getDisplayName();
 		}
 
 		@Override
@@ -216,11 +245,11 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDslOperation() {
-			return "rightJoin[predicate](source1,source2)";
+			return "rightJoin[args](source1,source2)";
 		}
 
 		@Override
-		public Class<? extends FormFrameOperation> getForm() {
+		public Class<? extends IFormFrameOperation> getForm() {
 			return FormFrameRightJoin.class;
 		}
 
@@ -228,9 +257,15 @@ public enum OperationType implements IOperationType {
 		public Class<? extends IOperator> getOperator() {
 			return RightJoin.class;
 		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
+		}
 	},
 
 	CARTESIAN_PRODUCT {
+		
 		@Override
 		public String getDisplayName() {
 			return "Produto Cartesiano";
@@ -238,7 +273,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDisplayNameAndSymbol() {
-			return "✕ Produto Cartesiano";
+			return getSymbol() + " " + getDisplayName();
 		}
 
 		@Override
@@ -262,13 +297,18 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends FormFrameOperation> getForm() {
+		public Class<? extends IFormFrameOperation> getForm() {
 			return null;
 		}
 
 		@Override
 		public Class<? extends IOperator> getOperator() {
 			return CartesianProduct.class;
+		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
 		}
 	},
 
@@ -280,7 +320,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDisplayNameAndSymbol() {
-			return "∪ União";
+			return getSymbol() + " " + getDisplayName();
 		}
 
 		@Override
@@ -300,17 +340,69 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDslOperation() {
-			return "union[predicate](source1,source2)";
+			return "union[args](source1,source2)";
 		}
 
 		@Override
-		public Class<? extends FormFrameOperation> getForm() {
+		public Class<? extends IFormFrameOperation> getForm() {
 			return FormFrameUnion.class;
 		}
 
 		@Override
 		public Class<? extends IOperator> getOperator() {
 			return Union.class;
+		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
+		}
+	},
+
+	INTERSECTION {
+		@Override
+		public String getDisplayName() {
+			return "Interseção";
+		}
+
+		@Override
+		public String getDisplayNameAndSymbol() {
+			return getSymbol() + " " + getDisplayName();
+		}
+
+		@Override
+		public OperationArity getArity() {
+			return OperationArity.BINARY;
+		}
+
+		@Override
+		public String getSymbol() {
+			return "∩";
+		}
+
+		@Override
+		public String getOperationName() {
+			return "intersection";
+		}
+
+		@Override
+		public String getDslOperation() {
+			return "intersection[args](source1,source2)";
+		}
+
+		@Override
+		public Class<? extends IFormFrameOperation> getForm() {
+			return FormFrameIntersection.class;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			return Intersection.class;
+		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
 		}
 	},
 
@@ -322,7 +414,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDisplayNameAndSymbol() {
-			return "- Diferença";
+			return getSymbol() + " " + getDisplayName();
 		}
 
 		@Override
@@ -346,7 +438,7 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends FormFrameOperation> getForm() {
+		public Class<? extends IFormFrameOperation> getForm() {
 			return null;
 		}
 
@@ -354,6 +446,11 @@ public enum OperationType implements IOperationType {
 		public Class<? extends IOperator> getOperator() {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
 		}
 	},
 
@@ -365,7 +462,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getDisplayNameAndSymbol() {
-			return "ρ Renomeação";
+			return getSymbol() + " " + getDisplayName();
 		}
 
 		@Override
@@ -389,7 +486,7 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends FormFrameOperation> getForm() {
+		public Class<? extends IFormFrameOperation> getForm() {
 			return null;
 		}
 
@@ -398,17 +495,22 @@ public enum OperationType implements IOperationType {
 			// TODO Auto-generated method stub
 			return null;
 		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
+		}
 	},
 
-	AGGREGATION {
+	GROUP {
 		@Override
 		public String getDisplayName() {
-			return "Agregação";
+			return "Agrupamento";
 		}
 
 		@Override
 		public String getDisplayNameAndSymbol() {
-			return "Σ Agregação";
+			return getSymbol() + " " + getDisplayName();
 		}
 
 		@Override
@@ -432,7 +534,7 @@ public enum OperationType implements IOperationType {
 		}
 
 		@Override
-		public Class<? extends FormFrameOperation> getForm() {
+		public Class<? extends IFormFrameOperation> getForm() {
 			return null;
 		}
 
@@ -441,15 +543,67 @@ public enum OperationType implements IOperationType {
 			// TODO Auto-generated method stub
 			return null;
 		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
+		}
+	},
+
+	SORT{
+		@Override
+		public String getDisplayName() {
+			return "Ordenação";
+		}
+
+		@Override
+		public String getSymbol() {
+			return "↕";
+		}
+
+		@Override
+		public String getDisplayNameAndSymbol() {
+			return getSymbol() + " " + getDisplayName();
+		}
+
+		@Override
+		public String getOperationName() {
+			return "sort";
+		}
+
+		@Override
+		public String getDslOperation() {
+			return "sort[args](relation)";
+		}
+
+		@Override
+		public OperationArity getArity() {
+			return OperationArity.UNARY;
+		}
+
+		@Override
+		public Class<? extends IFormFrameOperation> getForm() {
+			return FormFrameSort.class;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			return Sort.class;
+		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
+		}
 	};
 
 	public static OperationType fromString(String operationType) {
-		
-		for (OperationType operation : OperationType.values()) 
-			if (operation.getOperationName().equalsIgnoreCase(operationType)) 
+
+		for (OperationType operation : OperationType.values())
+			if (operation.getOperationName().equalsIgnoreCase(operationType))
 				return operation;
-			
+
 		throw new IllegalArgumentException("Invalid operation type: " + operationType);
-		
+
 	}
 }

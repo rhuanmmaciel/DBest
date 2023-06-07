@@ -16,14 +16,14 @@
 # Fazendo
 
 - consertar o createTable
-- colocar a operação de Agregação
+- colocar a operação de Agrupamento
 - colocar a operação de Renomeação
-- colocar a operação de Intersecção
-- colocar a operação de Sort
 
 	
 # Prontos
 
+- colocar a operação de Intersecção
+- colocar a operação de Sort
 - mudar tamanho das células de acordo com o nome
 - mostrando qual o erro para o usuário na tela inf
 - mudar a nomeação de colunas

@@ -25,7 +25,6 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 
-import controller.MainController;
 import entities.Action.CurrentAction;
 import entities.buttons.Button;
 import entities.buttons.OperationButton;
@@ -68,6 +67,8 @@ public abstract class MainFrame extends JFrame
 	protected JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.getDisplayName());
 	protected JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getDisplayName());
 	protected JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getDisplayName());
+	protected JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.getDisplayName());
+	protected JMenuItem menuItemSort = new JMenuItem(OperationType.SORT.getDisplayName());
 
 	public MainFrame(Set<Button<?>> buttons) {
 
@@ -90,28 +91,16 @@ public abstract class MainFrame extends JFrame
 		getContentPane().add(operationButtonsPane, BorderLayout.EAST);
 		
 		mxStylesheet stylesheet = graph.getStylesheet();
-
 		
-		buttons.add(new OperationButton(stylesheet, OperationType.PROJECTION.getDisplayNameAndSymbol(),
-				OperationType.PROJECTION.getDisplayName(), this, operationButtonsPane,
-				MainController.projectionOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.SELECTION.getDisplayNameAndSymbol(),
-				OperationType.SELECTION.getDisplayName(), this, operationButtonsPane,
-				MainController.selectionOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.JOIN.getDisplayNameAndSymbol(),
-				OperationType.JOIN.getDisplayName(), this, operationButtonsPane, MainController.joinOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.CARTESIAN_PRODUCT.getDisplayNameAndSymbol(),
-				OperationType.CARTESIAN_PRODUCT.getDisplayName(), this, operationButtonsPane,
-				MainController.cartesianProductOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.UNION.getDisplayNameAndSymbol(),
-				OperationType.UNION.getDisplayName(), this, operationButtonsPane, MainController.unionOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.LEFT_JOIN.getDisplayNameAndSymbol(),
-				OperationType.LEFT_JOIN.getDisplayName(), this, operationButtonsPane,
-				MainController.leftJoinOperation));
-		buttons.add(new OperationButton(stylesheet, OperationType.RIGHT_JOIN.getDisplayNameAndSymbol(),
-				OperationType.RIGHT_JOIN.getDisplayName(), this, operationButtonsPane,
-				MainController.rightJoinOperation));
-
+		buttons.add(new OperationButton(stylesheet, OperationType.PROJECTION, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.SELECTION, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.JOIN, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.LEFT_JOIN, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.RIGHT_JOIN, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.CARTESIAN_PRODUCT, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.UNION, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.INTERSECTION, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.SORT, this, operationButtonsPane));
 		
 		buttons.add(new ToolBarButton<JButton>(JButton.class, " Importar tabela(i) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.IMPORT_FILE)));
@@ -131,8 +120,6 @@ public abstract class MainFrame extends JFrame
 				new CurrentAction(CurrentAction.ActionType.OPEN_CONSOLE)));
 		buttons.add(new ToolBarButton<JButton>(JButton.class, " Editor de texto ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.OPEN_TEXT_EDITOR)));
-
-		
 		
 		getContentPane().add(toolBar, BorderLayout.SOUTH);
 
@@ -175,22 +162,26 @@ public abstract class MainFrame extends JFrame
 		menuItemRightJoin.addActionListener(this);
 		menuItemCartesianProduct.addActionListener(this);
 		menuItemUnion.addActionListener(this);
+		menuItemIntersection.addActionListener(this);
+		menuItemSort.addActionListener(this);
 
 		menuItemOperations.add(menuItemSelection);
 		menuItemOperations.add(menuItemProjection);
+		menuItemOperations.add(menuItemSort);
 		menuItemOperations.addSeparator();
 		menuItemOperations.add(menuItemJoin);
 		menuItemOperations.add(menuItemLeftJoin);
 		menuItemOperations.add(menuItemRightJoin);
 		menuItemOperations.add(menuItemCartesianProduct);
 		menuItemOperations.add(menuItemUnion);
+		menuItemOperations.add(menuItemIntersection);
 
 		mainContainer = getContentPane();
 
 		setVisible(true);
 
 	}
-
+	
 	public static mxGraph getGraph() {
 		return graph;
 	}

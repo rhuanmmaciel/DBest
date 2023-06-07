@@ -33,13 +33,13 @@ import com.mxgraph.model.mxCell;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import enums.ColumnDataType;
-import gui.frames.forms.operations.FormFrameOperation;
+import gui.frames.forms.operations.IFormFrameOperation;
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
 import operations.unary.Selection;
 
 @SuppressWarnings("serial")
-public class FormFrameSelection extends JDialog implements ActionListener, DocumentListener, FormFrameOperation {
+public class FormFrameSelection extends JDialog implements ActionListener, DocumentListener, IFormFrameOperation {
 
 	private List<String> columnsList;
 

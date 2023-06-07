@@ -1,11 +1,11 @@
 package operations;
 
-import java.util.List;
-
 import entities.cells.OperationCell;
 import exceptions.tree.ArgumentsException;
 import exceptions.tree.ParentsAmountException;
 import exceptions.tree.ParentsErrorException;
+
+import java.util.List;
 
 public class OperationErrorVerifier {
 

@@ -1,19 +1,18 @@
 package operations.unary;
 
-import java.util.List;
-
 import com.mxgraph.model.mxCell;
-
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.tree.TreeException;
-import gui.frames.forms.operations.IOperator;
+import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
 import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.table.Table;
+
+import java.util.List;
 
 public class Projection implements IOperator {
 
@@ -25,8 +24,8 @@ public class Projection implements IOperator {
 
 		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 
-		ErrorMessage error = null; 
-		
+		ErrorMessage error = null;
+
 		try {
 			
 			error = ErrorMessage.NO_PARENT;

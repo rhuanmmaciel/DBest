@@ -8,6 +8,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -27,31 +28,27 @@ import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import gui.frames.forms.operations.FormFrameOperation;
+import gui.frames.forms.operations.IFormFrameOperation;
 import operations.unary.Projection;
 
-@SuppressWarnings("serial")
-public class FormFrameProjection extends JDialog implements ActionListener, FormFrameOperation {
+public class FormFrameProjection extends JDialog implements ActionListener, IFormFrameOperation {
 
-	private JPanel contentPane;
 	private JComboBox<String> columnsComboBox;
 	private List<String> columnsList;
 
 	private JButton btnAdd;
 	private JButton btnRemove;
 	private JButton btnReady;
-	private String textColumnsPicked;
 	private JTextArea textArea;
 
 	private List<String> columnsResult;
-	private OperationCell cell;
-	private Cell parentCell;
-	private mxCell jCell;
+	private final Cell parentCell;
+	private final mxCell jCell;
 
 	private JButton btnCancel;
 	private JButton btnAddAll;
 
-	private Projection projection = new Projection();
+	private final Projection projection = new Projection();
 	
 	public FormFrameProjection(mxCell jCell) {
 
@@ -59,8 +56,8 @@ public class FormFrameProjection extends JDialog implements ActionListener, Form
 		setModal(true);
 		setTitle("Projeção");
 
-		this.cell = (OperationCell) Cell.getCells().get(jCell);
-		parentCell = this.cell.getParents().get(0);
+		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
+		parentCell = cell.getParents().get(0);
 		this.jCell = jCell;
 
 		initializeGUI();
@@ -73,12 +70,12 @@ public class FormFrameProjection extends JDialog implements ActionListener, Form
 		setBounds(100, 100, 500, 470);
 		setLocationRelativeTo(null);
 
-		contentPane = new JPanel();
+		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 
-		columnsList = new ArrayList<String>();
+		columnsList = new ArrayList<>();
 
 		columnsList = parentCell.getColumnsName();
 
@@ -87,7 +84,7 @@ public class FormFrameProjection extends JDialog implements ActionListener, Form
 
 		JLabel lblColumns = new JLabel("Colunas");
 
-		JLabel lblTermos = new JLabel("Termos");
+		JLabel lblTxt = new JLabel("Termos");
 
 		textArea = new JTextArea();
 		textArea.getDocument().addDocumentListener(new DocumentListener() {
@@ -115,7 +112,7 @@ public class FormFrameProjection extends JDialog implements ActionListener, Form
 
 		});
 
-		columnsResult = new ArrayList<String>();
+		columnsResult = new ArrayList<>();
 
 		btnAdd = new JButton("Adicionar");
 		btnAdd.addActionListener(this);
@@ -150,7 +147,7 @@ public class FormFrameProjection extends JDialog implements ActionListener, Form
 														GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
 										.addComponent(textArea, GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE))
 										.addGap(11))))
-						.addGroup(groupLayout.createSequentialGroup().addGap(205).addComponent(lblTermos)))
+						.addGroup(groupLayout.createSequentialGroup().addGap(205).addComponent(lblTxt)))
 				.addContainerGap())
 				.addGroup(groupLayout.createSequentialGroup().addContainerGap(211, Short.MAX_VALUE)
 						.addComponent(lblColumns, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
@@ -163,7 +160,7 @@ public class FormFrameProjection extends JDialog implements ActionListener, Form
 						.addGap(18)
 						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(btnAdd)
 								.addComponent(btnRemove).addComponent(btnAddAll))
-						.addGap(37).addComponent(lblTermos).addPreferredGap(ComponentPlacement.RELATED)
+						.addGap(37).addComponent(lblTxt).addPreferredGap(ComponentPlacement.RELATED)
 						.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(ComponentPlacement.RELATED, 55, Short.MAX_VALUE).addGroup(groupLayout
 								.createParallelGroup(Alignment.BASELINE).addComponent(btnReady).addComponent(btnCancel))
@@ -197,7 +194,7 @@ public class FormFrameProjection extends JDialog implements ActionListener, Form
 
 	private void updateToolTipText(boolean noneSelection) {
 
-		String btnReadyToolTipText = new String();
+		String btnReadyToolTipText = "";
 
 		if (noneSelection) {
 
@@ -216,10 +213,11 @@ public class FormFrameProjection extends JDialog implements ActionListener, Form
 
 		verifyConditions();
 
+		String textColumnsPicked;
 		if (e.getSource() == btnAdd) {
 
 			if (columnsComboBox.getItemCount() > 0) {
-				textColumnsPicked = textArea.getText() + "\n" + columnsComboBox.getSelectedItem().toString();
+				textColumnsPicked = textArea.getText() + "\n" + Objects.requireNonNull(columnsComboBox.getSelectedItem()).toString();
 				columnsComboBox.removeItemAt(columnsComboBox.getSelectedIndex());
 				textArea.setText(textColumnsPicked);
 			}
@@ -248,7 +246,7 @@ public class FormFrameProjection extends JDialog implements ActionListener, Form
 
 			while (columnsComboBox.getItemCount() != 0) {
 
-				textColumnsPicked = textArea.getText() + "\n" + columnsComboBox.getSelectedItem().toString();
+				textColumnsPicked = textArea.getText() + "\n" + Objects.requireNonNull(columnsComboBox.getSelectedItem()).toString();
 				columnsComboBox.removeItemAt(columnsComboBox.getSelectedIndex());
 				textArea.setText(textColumnsPicked);
 

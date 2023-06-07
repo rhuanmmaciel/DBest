@@ -22,11 +22,11 @@ import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import gui.frames.forms.operations.FormFrameOperation;
+import gui.frames.forms.operations.IFormFrameOperation;
 import operations.binary.Join;
 
 @SuppressWarnings("serial")
-public class FormFrameJoin extends JDialog implements ActionListener, FormFrameOperation {
+public class FormFrameJoin extends JDialog implements ActionListener, IFormFrameOperation {
 
 	private JPanel contentPane;
 	private JComboBox<?> comboBoxColumns1;

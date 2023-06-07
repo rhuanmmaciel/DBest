@@ -1,5 +1,4 @@
-package dsl.antlr4;
-// Generated from grammar/RelAlgebra.g4 by ANTLR 4.7.2
+package dsl.antlr4;// Generated from grammar/RelAlgebra.g4 by ANTLR 4.7.2
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -203,6 +202,30 @@ public class RelAlgebraBaseListener implements RelAlgebraListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitUnion(RelAlgebraParser.UnionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIntersection(RelAlgebraParser.IntersectionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIntersection(RelAlgebraParser.IntersectionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSort(RelAlgebraParser.SortContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSort(RelAlgebraParser.SortContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

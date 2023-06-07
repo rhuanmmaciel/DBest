@@ -18,7 +18,7 @@ import sgbd.table.components.Header;
 
 public class TableCreator {
 
-	private static List<RowData> getRowData(String tableName, List<entities.Column> columns,
+	private static List<RowData> getRowData(List<entities.Column> columns,
 			Map<Integer, Map<String, String>> content) {
 
 		List<RowData> rows = new ArrayList<>();
@@ -31,7 +31,8 @@ public class TableCreator {
 
 				entities.Column column = columns.stream().filter(x -> x.getName().equals(data)).findFirst()
 						.orElse(null);
-				
+
+				assert column != null;
 				if (column.getType() == ColumnDataType.INTEGER) {
 
 					if (!line.get(data).equals("null") && !line.get(data).equals(""))
@@ -62,7 +63,7 @@ public class TableCreator {
 	public static TableCell createTable(String tableName, List<entities.Column> columns,
 			Map<Integer, Map<String, String>> data) {
 
-		List<RowData> rows = new ArrayList<>(getRowData(tableName, columns, data));
+		List<RowData> rows = new ArrayList<>(getRowData(columns, data));
 
 		Prototype prototype = new Prototype();
 
@@ -86,7 +87,7 @@ public class TableCreator {
 				flags = Column.STRING;
 			}default ->{
 				size = 100;
-				flags = Column.STRING;
+				flags = Column.NONE;
 			}
 			}
 			
@@ -107,10 +108,10 @@ public class TableCreator {
 		
 		table.saveHeader(tableName+".head");
 		
-		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) MainFrame.getGraph().getDefaultParent(), null,
-				tableName, 0, 0, 80, 30, "tabela");
+		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(MainFrame.getGraph().getDefaultParent(), null,
+				tableName, 0, 0, 80, 30, "table");
 		
-		return new TableCell(jCell, tableName, "tabela", columns, table, prototype);
+		return new TableCell(jCell, tableName, "table", columns, table, prototype);
 		
 	}
 

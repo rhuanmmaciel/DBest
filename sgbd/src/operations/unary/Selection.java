@@ -1,24 +1,23 @@
 package operations.unary;
 
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.mxgraph.model.mxCell;
-
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import enums.ColumnDataType;
 import exceptions.tree.TreeException;
-import gui.frames.forms.operations.IOperator;
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
+import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
 import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
 import sgbd.query.unaryop.FilterOperator;
+
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Selection implements IOperator {
 

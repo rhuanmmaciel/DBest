@@ -1,50 +1,52 @@
 package entities.cells;
 
+import com.mxgraph.model.mxCell;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxStyleUtils;
+import controller.MainController;
+import entities.Column;
+import enums.OperationArity;
+import enums.OperationType;
+import gui.frames.main.MainFrame;
+import gui.frames.forms.operations.IFormFrameOperation;
+import operations.IOperator;
+import operations.OperationErrorVerifier.ErrorMessage;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.mxgraph.model.mxCell;
-import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxStyleUtils;
-
-import controller.MainController;
-import entities.Column;
-import enums.OperationArity;
-import enums.OperationType;
-import gui.frames.forms.operations.FormFrameOperation;
-import gui.frames.forms.operations.IOperator;
-import gui.frames.main.MainFrame;
-import operations.OperationErrorVerifier.ErrorMessage;
-
 public final class OperationCell extends Cell {
 
 	private OperationType type;
 	private List<Cell> parents = new ArrayList<>();
 	private OperationArity arity;
-	private Class<? extends FormFrameOperation> form = null;
-	private List<String> arguments = null;
+	private Class<? extends IFormFrameOperation> form = null;
+	private List<String> arguments = new ArrayList<>();
 	private Boolean error = false;
 	private String errorMessage = null;
 	private Class<? extends IOperator> operator = null;
+	private Boolean hasBeenInitialized = false;
 
 	public OperationCell(mxCell jCell, OperationType type) {
 
 		super(type.getDisplayNameAndSymbol(), type.getDisplayName(), jCell, 80, 30);
-		initializeCell(jCell, type);
+		initializeInfos(type);
 
 	}
 
 	public OperationCell(mxCell jCell, OperationType type, List<Cell> parents, List<String> arguments) {
 
 		super(type.getDisplayNameAndSymbol(), type.getDisplayName(), jCell, 80, 30);
-		initializeCell(jCell, type);
+		initializeInfos(type);
 
 		this.arguments = arguments;
 
 		if (parents != null && !parents.isEmpty()) {
+
+			hasBeenInitialized = true;
 
 			this.parents = parents;
 			parents.forEach(parent -> {
@@ -60,21 +62,23 @@ public final class OperationCell extends Cell {
 		}
 	}
 
-	private void initializeCell(mxCell jCell, OperationType type) {
+	private void initializeInfos(OperationType type) {
 
 		this.type = type;
 		arity = type.getArity();
+		this.form = type.getForm();
+		this.operator = type.getOperator();
 
 	}
 
-	public FormFrameOperation editOperation(mxCell jCell) {
+	public void editOperation(mxCell jCell) {
 
-		if (hasForm()) {
+		if (hasBeenInitialized) {
 
 			try {
 
-				Constructor<? extends FormFrameOperation> constructor = form.getDeclaredConstructor(mxCell.class);
-				return constructor.newInstance(jCell);
+				Constructor<? extends IFormFrameOperation> constructor = form.getDeclaredConstructor(mxCell.class);
+				constructor.newInstance(jCell);
 
 			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
 					| InvocationTargetException e) {
@@ -85,31 +89,21 @@ public final class OperationCell extends Cell {
 
 		}
 
-		return null;
 	}
 
-	public void setForm() {
-		this.form = type.getForm();
-		this.operator = type.getOperator();
-	}
-
-	public boolean hasForm() {
-		return form != null;
-	}
-
-	public boolean hasOperator() {
-		return operator != null;
+	public boolean hasBeenInitialized() {
+		return hasBeenInitialized;
 	}
 
 	public void updateOperation() {
 
-		if (hasOperator()) {
+		if (hasBeenInitialized) {
 
 			try {
 
 				Constructor<? extends IOperator> constructor = operator.getDeclaredConstructor();
 				IOperator operation = constructor.newInstance();
-				operation.executeOperation(getJGraphCell(), getData());
+				operation.executeOperation(getJGraphCell(), getArguments());
 
 			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
 					| InvocationTargetException e) {
@@ -121,12 +115,14 @@ public final class OperationCell extends Cell {
 
 	public void setArguments(List<String> arguments) {
 
+		hasBeenInitialized = true;
+
 		if (arguments != null && this.arguments != null)
 			this.arguments = new ArrayList<>(arguments);
 
 	}
 
-	public List<String> getData() {
+	public List<String> getArguments() {
 		return arguments;
 	}
 
@@ -180,13 +176,13 @@ public final class OperationCell extends Cell {
 		errorMessage = switch (message) {
 
 		case NO_ONE_ARGUMENT -> "O parâmetro passado possui erros";
-		case NO_ONE_PARENT -> "A operação não possui apenas 1 pai";
-		case NO_PARENT -> "A operação não possui pai";
+		case NO_ONE_PARENT -> "A operação não possui apenas 1 célula pai";
+		case NO_PARENT -> "A operação não possui célula pai";
 		case NULL_ARGUMENT -> "Parâmetro passado é nulo";
 		case PARENT_ERROR -> "Erro(s) em células anteriores";
-		case PARENT_WITHOUT_COLUMN -> "Alguma coluna fornecida não existe no pai";
-		case NO_TWO_PARENTS -> "A operação não possui 2 pais";
-		case NO_TWO_ARGUMENTS -> "Alguma coluna fornecida não existe no respectivo pai";
+		case PARENT_WITHOUT_COLUMN -> "Alguma coluna fornecida não existe na célula pai";
+		case NO_TWO_PARENTS -> "A operação não possui 2 células pais";
+		case NO_TWO_ARGUMENTS -> "Alguma coluna fornecida não existe na respectiva célula pai";
 
 		};
 		

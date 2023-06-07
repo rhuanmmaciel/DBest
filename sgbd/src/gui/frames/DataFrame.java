@@ -30,14 +30,13 @@ public class DataFrame extends JDialog implements ActionListener {
 
 	private final int WIDTH = (int)(MainFrame.WIDTH * 1.1);
 	private final int HEIGHT = (int)(MainFrame.HEIGHT * 0.6);
-	
-	private JPanel contentPane;
-	private JTable table = new JTable();
+
+	private final JTable table = new JTable();
 	private JButton btnLeft;
 	private JButton btnRight;
-	private JLabel lblText = new JLabel();
+	private final JLabel lblText = new JLabel();
 	private JLabel lblPages;
-	private List<Map<Integer, Map<String, String>>> pages = new ArrayList<>();
+	private final List<Map<Integer, Map<String, String>>> pages = new ArrayList<>();
 	private Map<Integer, Map<String, String>> data;
 	private List<String> columnsName;
 	private int numberOfPages;
@@ -145,7 +144,7 @@ public class DataFrame extends JDialog implements ActionListener {
 		setBounds(0, 0, WIDTH, HEIGHT);
 		setLocationRelativeTo(null);
 
-		contentPane = new JPanel();
+		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);

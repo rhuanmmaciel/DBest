@@ -12,7 +12,7 @@ variableDeclaration: RELATION '=' expression;
 
 createTable: RELATION position?;
 
-expression: (selection | projection | join | leftJoin | rightJoin | cartesianProduct | union) position?;
+expression: (selection | projection | join | leftJoin | rightJoin | cartesianProduct | union | intersection | sort) position?;
 
 position: '<' number ',' number '>';
 
@@ -25,6 +25,8 @@ leftJoin: LEFTJOIN PREDICATE '(' relation ',' relation ')';
 rightJoin: RIGHTJOIN PREDICATE '(' relation ',' relation ')';
 cartesianProduct: CARTESIANPRODUCT '(' relation  ',' relation ')';
 union: UNION PREDICATE '(' relation ',' relation ')';
+intersection: INTERSECTION PREDICATE '(' relation ',' relation ')';
+sort: SORT PREDICATE '(' relation ')';
 relation: RELATION position? #simple | expression #nested;
 
 SELECTION: 'selection';
@@ -34,6 +36,8 @@ LEFTJOIN: 'leftJoin';
 RIGHTJOIN: 'rightJoin';
 UNION: 'union';
 CARTESIANPRODUCT: 'cartesianProduct';
+INTERSECTION: 'intersection';
+SORT: 'sort';
 IMPORT: 'import';
 AS: 'as';
 RELATION: [a-zA-Z] [a-zA-Z0-9_]*;

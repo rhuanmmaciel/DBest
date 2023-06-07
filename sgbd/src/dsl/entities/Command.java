@@ -1,10 +1,8 @@
 package dsl.entities;
 
-import entities.cells.Cell;
+public abstract sealed class Command permits Expression, Import, VariableDeclaration {
 
-public abstract sealed class Command permits Expression<? extends Cell>, Import, VariableDeclaration {
-
-	private String command;
+	private final String command;
 	
 	public Command(String command) {
 		this.command = command;

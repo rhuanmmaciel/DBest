@@ -1,6 +1,10 @@
 package gui.utils;
 
+import enums.OperationType;
+import enums.interfaces.IOperationType;
+
 import java.awt.Color;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,8 +20,7 @@ public class CustomDocumentFilter extends DocumentFilter {
 
 	private final StyledDocument styledDocument;
 	private final String[] tokens = { "import", "as", "this" };
-	private final String[] operations = { "selection", "projection", "join", "leftJoin", "rightJoin",
-			"cartesianProduct", "union", "difference", "rename"};
+	private final String[] operations = Arrays.stream(OperationType.values()).map(IOperationType::getOperationName).toArray(String[]::new);
 	private final JTextPane textPane;
 
 	private final StyleContext styleContext = StyleContext.getDefaultStyleContext();
@@ -28,8 +31,8 @@ public class CustomDocumentFilter extends DocumentFilter {
 	private final javax.swing.text.AttributeSet blackAttributeSet = styleContext
 			.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
 
-	private Pattern pattern = buildPattern();
-	private Pattern operationPattern = buildOperationPattern();
+	private final Pattern pattern = buildPattern();
+	private final Pattern operationPattern = buildOperationPattern();
 
 	public CustomDocumentFilter(JTextPane textPane) {
 
@@ -79,9 +82,8 @@ public class CustomDocumentFilter extends DocumentFilter {
 			sb.deleteCharAt(sb.length() - 1); // Remove the trailing "|"
 		}
 
-		Pattern p = Pattern.compile(sb.toString());
+		return Pattern.compile(sb.toString());
 
-		return p;
 	}
 
 	private Pattern buildOperationPattern() {

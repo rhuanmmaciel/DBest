@@ -5,13 +5,13 @@ import java.util.List;
 
 import com.mxgraph.model.mxCell;
 
+import sgbd.util.statics.Util;
 import entities.Column;
 import enums.ColumnDataType;
 import sgbd.prototype.Prototype;
 import sgbd.query.Operator;
 import sgbd.query.sourceop.TableScan;
 import sgbd.table.Table;
-import sgbd.util.Util;
 
 public final class TableCell extends Cell{
 
@@ -87,7 +87,7 @@ public final class TableCell extends Cell{
 		List<Column> columns = new ArrayList<>();
 		
 		for(sgbd.prototype.Column pColumn : prototypeColumns) {
-			
+
 			ColumnDataType type;
 			switch(Util.typeOfColumn(pColumn)) {
 			

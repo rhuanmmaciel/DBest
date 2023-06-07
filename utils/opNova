@@ -1,0 +1,10 @@
+Criar operação nova
+
+-adicionar o enum
+-adicionar a operação no operations
+-adicionar a operação no formato de formulário no formFrameOperations
+-criar botão menuItem no MainView
+-adicionar no menuItemOperations e actionListener
+-criar botão JButton no MainView
+-adicionar no antlr o comando da operação e dar build
+

@@ -167,9 +167,9 @@ public class DslUtils {
 
 			raw = operationCell.getType().getDslOperation();
 
-			if (operationCell.getData() != null) {
+			if (operationCell.getArguments() != null) {
 
-				raw = raw.replace("[predicate]", operationCell.getData().toString());
+				raw = raw.replace("[args]", operationCell.getArguments().toString());
 
 			}
 

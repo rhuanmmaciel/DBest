@@ -88,8 +88,8 @@ public class ImportFile {
 				if (!exitReference.get()) {
 				
 					mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) MainFrame.getGraph().getDefaultParent(), null,
-							tableName, 0, 0, 80, 30, "tabela");
-					tableCell = new TableCell(jCell, fileUpload.getSelectedFile().getName(), "tabela", table.get());;
+							tableName, 0, 0, 80, 30, "table");
+					tableCell = new TableCell(jCell, fileUpload.getSelectedFile().getName(), "table", table.get());;
 					
 				}
 			}

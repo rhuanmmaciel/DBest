@@ -9,7 +9,7 @@ import java.util.Set;
 import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
-import sgbd.util.Util;
+import sgbd.util.statics.Util;
 
 public class TableFormat {
 
@@ -22,13 +22,9 @@ public class TableFormat {
 	    Set<String> possibleKeys = new LinkedHashSet<>(); 
 	    Map<Integer, Map<String, String>> rows = new LinkedHashMap<>();
 	    
-        for(Map.Entry<String, List<String>> content: aux.getContentInfo().entrySet()){
-            for(String col:content.getValue()){
-            	
+        for(Map.Entry<String, List<String>> content: aux.getContentInfo().entrySet())
+            for(String col:content.getValue())
             	possibleKeys.add(col);
-
-            }
-        }
 
 	    int i = 0;
 	    
@@ -38,26 +34,14 @@ public class TableFormat {
 	    	
 	        Map<String, String> row = new LinkedHashMap<>();
 
-	        for (Map.Entry<String, ComplexRowData> line : t) {
-	            for (Map.Entry<String, byte[]> data : line.getValue()) {
+	        for (Map.Entry<String, ComplexRowData> line : t)
+	            for (Map.Entry<String, byte[]> data : line.getValue())
+					switch (Util.typeOfColumn(line.getValue().getMeta(data.getKey()))) {
+						case "int" -> row.put(data.getKey(), line.getValue().getInt(data.getKey()).toString());
+						case "float" -> row.put(data.getKey(), line.getValue().getFloat(data.getKey()).toString());
+						default -> row.put(data.getKey(), line.getValue().getString(data.getKey()));
+					}
 
-	            	switch(Util.typeOfColumn(line.getValue().getMeta(data.getKey()))) {
-	                    case "int":
-	                        row.put(data.getKey(), line.getValue().getInt(data.getKey()).toString());
-	                        break;
-	                    case "float":
-	                        row.put(data.getKey(), line.getValue().getFloat(data.getKey()).toString());
-	                        break;
-	                    case "string":
-	                    default:
-	                        row.put(data.getKey(), line.getValue().getString(data.getKey()));
-	            	}
-	            	
-	            	
-	            	
-	            }
-	        }
-	        
 	        rows.put(i, row);
 	        i++;
 	    }

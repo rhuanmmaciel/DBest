@@ -11,18 +11,17 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxStylesheet;
 
-import entities.Action.CurrentAction;
+import enums.OperationType;
 
 public class OperationButton extends Button<JButton>{
 
 	private JPanel typePanel;
 	private String style;
 	
-	public OperationButton(mxStylesheet stylesheet, String name, String style, ActionListener listener, JPanel panel,
-			 CurrentAction action) {
+	public OperationButton(mxStylesheet stylesheet, OperationType type, ActionListener listener, JPanel panel) {
 
-		super(JButton.class, name, listener, action);
-		this.style = style;
+		super(JButton.class, type.getDisplayNameAndSymbol(), listener, type.getAction());
+		this.style = type.getDisplayName();
 		getButton().setBounds(600, 300, 100, 50);
 		typePanel = new JPanel();
 		typePanel.add(getButton());

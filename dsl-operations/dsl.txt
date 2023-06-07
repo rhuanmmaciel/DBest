@@ -1,0 +1,18 @@
+import this.people.head;
+import this.mlbplayers.head;
+
+selection[Id < 50](mlbplayers<50,0>)<50,50>;
+
+projection[PrimaryKey,FirstName](people<200,0>)<200,100>;
+
+cartesianProduct(people<50,200>,mlbplayers<150,200>)<75,250>;
+
+join[PrimaryKey,Id](people<250,200>,mlbplayers<350,200>)<275,250>;
+
+leftJoin[PrimaryKey,Id](people<500,200>,mlbplayers<600,200>)<500,300>;
+
+rightJoin[PrimaryKey,Id](people<50,350>,mlbplayers<140,350>)<10,430>;
+
+union[PrimaryKey,Id](people<320,410>,mlbplayers<510,420>)<130,520>;
+
+intersection[PrimaryKey,Id](people<690,320>,mlbplayers<820,320>)<690,430>;
