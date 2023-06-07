@@ -1,9 +1,5 @@
 package gui.frames;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,15 +18,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import gui.frames.main.MainFrame;
+import gui.utils.JTableUtils;
 
 @SuppressWarnings("serial")
 public class DataFrame extends JDialog implements ActionListener {
@@ -132,38 +125,12 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		table.setModel(model);
 
-		minColumnWidth(table, 0);
+		JTableUtils.minColumnWidth(table, 0);
 
 		table.getColumnModel().getColumn(0).setResizable(false);
-		table.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
-			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-					boolean hasFocus, int row, int column) {
-				Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				c.setFont(new Font(c.getFont().getName(), Font.BOLD, c.getFont().getSize()));
-				return c;
-			}
-		});
-
-		table.setDefaultRenderer(Object.class, new TableCellRenderer() {
-			private final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-
-			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-					boolean hasFocus, int row, int column) {
-
-				Component c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-				if (value instanceof String) {
-					String texto = (String) value;
-					if (texto.equals("null")) {
-						c.setForeground(Color.RED);
-					} else {
-						c.setForeground(Color.BLACK);
-					}
-				}
-
-				return c;
-			}
-		});
+		
+		JTableUtils.setColumnBold(table, 0);
+		JTableUtils.setNullInRed(table);
 
 		table.setEnabled(false);
 		table.setFillsViewportHeight(true);
@@ -171,39 +138,7 @@ public class DataFrame extends JDialog implements ActionListener {
 
 	}
 
-	private void minColumnWidth(JTable jTable, int columnIndex) {
-		
-		int minWidth = 0;
-		TableColumn column = jTable.getColumnModel().getColumn(columnIndex);
-		TableModel model = jTable.getModel();
-		Class<?> columnClass = model.getColumnClass(columnIndex);
-		Font font = jTable.getFont();
-		FontMetrics fontMetrics = jTable.getFontMetrics(font);
-		
-		for (int row = 0; row < model.getRowCount(); row++) {
-			
-			Object value = model.getValueAt(row, columnIndex);
-			String text;
-			
-			if (Number.class.isAssignableFrom(columnClass)) {
-				
-				Number number = (Number) value;
-				text = String.valueOf(number);
-				
-			} else {
-
-				text = String.valueOf(value);
-				
-			}
-			minWidth = Math.max(minWidth, fontMetrics.stringWidth(text));
-			
-		}
-		
-		int extraWidth = fontMetrics.charWidth('0') * 2;
-		minWidth += extraWidth;
-		column.setMaxWidth(minWidth);
-
-	}
+	
 
 	private void initializeGUI() {
 

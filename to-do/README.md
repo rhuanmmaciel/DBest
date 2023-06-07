@@ -15,26 +15,24 @@
 
 # Fazendo
 
+- consertar o createTable
 - colocar a operação de Agregação
 - colocar a operação de Renomeação
 - colocar a operação de Intersecção
 - colocar a operação de Sort
-- tela de importar csv:
-	-colocar os comboboxes e os checkboxes na jtable
-	-lidar com o regex 
-	-stringDelimiter
-	-consertar o createTable
-	-consertar quando as primeiras linhas vem vazias
-	-lidar com as exceções
-	-lidar com nome de colunas diversos (caracteres especiais)
 
-
+	
 # Prontos
 
 - mudar tamanho das células de acordo com o nome
 - mostrando qual o erro para o usuário na tela inf
 - mudar a nomeação de colunas
 - tela de importar csv:
+	-colocar os comboboxes e os checkboxes na jtable
 	-permitir chave primária composta
 	-permitir colocar o nome da table (fazer restrições das tables ja existentes)
+	-lidar com nome de colunas diversos (caracteres especiais)
+	-stringDelimiter
+	-lidar com as exceções
+	-lidar com o regex 
 

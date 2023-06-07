@@ -2,11 +2,9 @@ package gui.frames.forms.importexport;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,11 +14,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -37,6 +37,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 import controller.MainController;
 import database.TableUtils;
@@ -45,6 +49,9 @@ import enums.ColumnDataType;
 import exceptions.InvalidCsvException;
 import files.csv.Recognizer;
 import files.csv.Recognizer.CsvData;
+import gui.frames.ErrorFrame;
+import gui.utils.JTableUtils;
+import gui.utils.JTableUtils.CustomTableModel;
 
 @SuppressWarnings("serial")
 public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
@@ -53,32 +60,30 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 	private final JPanel headerPanel = new JPanel();
 	private final JPanel bottomPanel = new JPanel();
 	private final JPanel mainPanel = new JPanel();
-	private JPanel columnsPanel = new JPanel(new GridBagLayout());
-	private GridBagConstraints gbc = new GridBagConstraints();
 	private final JScrollPane scrollPane = new JScrollPane();
 	private JTable jTable;
-	private JButton btnCancel = new JButton("Cancelar");
-	private JButton btnDone = new JButton("Pronto");
-	private JTextField txtFieldStringDelimiter = new JTextField();
-	private JTextField txtFieldOtherSeparator = new JTextField();
-	private JTextField txtFieldTableName = new JTextField();
-	private JSpinner spinnerFromRow = new JSpinner();
-	private ButtonGroup separatorGroup = new ButtonGroup();
-	private JRadioButton radioComma = new JRadioButton("Vírgula");
-	private JRadioButton radioSemiColon = new JRadioButton("Ponto e vírgula");
-	private JRadioButton radioSpace = new JRadioButton("Espaço");
-	private JRadioButton radioOther = new JRadioButton("Outro: ");
+	private DefaultTableModel model;
+	private final JButton btnCancel = new JButton("Cancelar");
+	private final JButton btnDone = new JButton("Pronto");
+	private final JTextField txtFieldStringDelimiter = new JTextField();
+	private final JTextField txtFieldOtherSeparator = new JTextField();
+	private final JTextField txtFieldTableName = new JTextField();
+	private final JSpinner spinnerFromRow = new JSpinner();
+	private final ButtonGroup separatorGroup = new ButtonGroup();
+	private final JRadioButton radioComma = new JRadioButton("Vírgula");
+	private final JRadioButton radioSemiColon = new JRadioButton("Ponto e vírgula");
+	private final JRadioButton radioSpace = new JRadioButton("Espaço");
+	private final JRadioButton radioOther = new JRadioButton("Outro: ");
 
 	private final Map<String, JCheckBox> pkCheckBoxes = new HashMap<>();
 	private final Map<String, JComboBox<?>> typeComboBoxes = new HashMap<>();
-	private final Map<String, JLabel> namesLabel = new HashMap<>();
 	private final List<String> columnsName = new ArrayList<>();
 
 	private CsvData csvData;
 
 	private final String path;
-	private AtomicReference<Boolean> exitReference;
-	private StringBuilder tableName;
+	private final AtomicReference<Boolean> exitReference;
+	private final StringBuilder tableName;
 	private List<Column> columns;
 	private Map<Integer, Map<String, String>> content;
 
@@ -124,9 +129,14 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		contentPane.setLayout(new BorderLayout(0, 0));
 
 		try {
+
 			csvData = Recognizer.importCsv(path, defaultSeparator, defaultStringDelimiter, defaultBeginIndex);
+
 		} catch (InvalidCsvException e) {
-			e.printStackTrace();
+
+			new ErrorFrame(e.getMessage());
+			csvData = new CsvData(List.of(), List.of(), new Vector<>(), new Vector<>());
+
 		}
 
 		loadJTable();
@@ -146,9 +156,6 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
 		Dimension dim = new Dimension(1000, 50);
 
-		JPanel columnsWrapperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JScrollPane columnsScrollPane = new JScrollPane(columnsWrapperPanel);
-		columnsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 		Box mainHeaderBox = Box.createHorizontalBox();
 		Box items = Box.createVerticalBox();
@@ -166,7 +173,6 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		items.add(itemFromRow);
 		items.add(itemSeparator);
 		items.add(itemStringDelimiter);
-		items.add(columnsScrollPane);
 		items.add(Box.createVerticalStrut(5));
 
 		itemsPadding.add(Box.createHorizontalStrut(10));
@@ -194,7 +200,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		itemTableName.add(Box.createHorizontalGlue());
 
 		itemFromRow.add(new JLabel("Começa na linha: "));
-		SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, jTable.getRowCount(), 1);
+		SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, jTable.getRowCount()-2, 1);
 		spinnerFromRow.setModel(spinnerModel);
 		spinnerFromRow.setValue(1);
 		spinnerFromRow.setMaximumSize(dim);
@@ -263,28 +269,9 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 			}
 		});
 		txtFieldStringDelimiter.setMaximumSize(dim);
+		txtFieldStringDelimiter.setText(String.valueOf(defaultStringDelimiter));
 		itemStringDelimiter.add(txtFieldStringDelimiter);
 		itemStringDelimiter.add(Box.createHorizontalGlue());
-
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 10, 5, 10);
-
-		JLabel columnNameLabel = new JLabel("Nome");
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		columnsPanel.add(columnNameLabel, gbc);
-
-		JLabel primaryKeyLabel = new JLabel("Chave Primária");
-		gbc.gridy = 1;
-		columnsPanel.add(primaryKeyLabel, gbc);
-
-		JLabel typeLabel = new JLabel("Tipo");
-		gbc.gridy = 2;
-		columnsPanel.add(typeLabel, gbc);
-
-		loadColumnsInfo();
-
-		columnsWrapperPanel.add(columnsPanel);
 
 	}
 
@@ -341,7 +328,10 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 
 	private void verifyReadyButton() {
 
-		btnDone.setEnabled(!MainController.getTables().containsKey(txtFieldTableName.getText().strip()));
+		boolean tableNameAlreadyExist = MainController.getTables().containsKey(txtFieldTableName.getText().strip());
+		boolean hasPK = pkCheckBoxes.values().stream().anyMatch(JCheckBox::isSelected);
+
+		btnDone.setEnabled(!tableNameAlreadyExist && hasPK);
 
 	}
 
@@ -351,19 +341,25 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 
 		for (String columnName : columnsName) {
 
-			ColumnDataType type = List.of(ColumnDataType.values()).stream()
-					.filter(x -> x.toString().equals(typeComboBoxes.get(columnName).getSelectedItem().toString()))
-					.findFirst().orElseThrow();
+			ColumnDataType type;
+
+			if (typeComboBoxes.get(columnName).getSelectedItem() != null)
+				type = List.of(ColumnDataType.values()).stream()
+						.filter(x -> x.toString().equals(typeComboBoxes.get(columnName).getSelectedItem().toString()))
+						.findFirst().orElseThrow();
+
+			else
+				type = ColumnDataType.NONE;
 
 			columns.add(new Column(columnName, txtFieldTableName.getText().strip(), type,
 					pkCheckBoxes.get(columnName).isSelected()));
 
 		}
 
-		for (int i = 0; i < jTable.getRowCount(); i++) {
+		for (int i = 2; i < jTable.getRowCount(); i++) {
 
 			Map<String, String> column = new HashMap<>();
-			for (int j = 0; j < jTable.getColumnCount(); j++)
+			for (int j = 1; j < jTable.getColumnCount(); j++)
 				column.put(jTable.getColumnName(j), jTable.getValueAt(i, j).toString());
 
 			content.put(i, column);
@@ -385,78 +381,135 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 
 		beginIndex = (int) spinnerFromRow.getValue();
 
-		stringDelimiter = txtFieldStringDelimiter.getText().isEmpty() ? ' '
+		stringDelimiter = txtFieldStringDelimiter.getText().isEmpty() ? '\0'
 				: txtFieldStringDelimiter.getText().charAt(0);
 
 		try {
+
 			csvData = Recognizer.importCsv(path, separator, stringDelimiter, beginIndex);
+
 		} catch (InvalidCsvException e) {
-			e.printStackTrace();
+
+			new ErrorFrame(e.getMessage());
+			csvData = new CsvData(List.of(), List.of(), new Vector<>(), new Vector<>());
+
 		}
 		loadJTable();
-		loadColumnsInfo();
 		revalidate();
-
-	}
-
-	private void loadColumnsInfo() {
-
-		pkCheckBoxes.values().forEach(x -> columnsPanel.remove(x));
-		typeComboBoxes.values().forEach(x -> columnsPanel.remove(x));
-		namesLabel.values().forEach(x -> columnsPanel.remove(x));
-
-		revalidate();
-
-		pkCheckBoxes.clear();
-		typeComboBoxes.clear();
-		namesLabel.clear();
-		columnsName.clear();
-
-		String[] columns = csvData.columnsNameArray();
-		for (int i = 1; i < columns.length + 1; i++) {
-			String columnName = columns[i - 1];
-
-			JLabel columnLabel = new JLabel(columnName);
-			gbc.gridx = i;
-			gbc.gridy = 0;
-			columnsPanel.add(columnLabel, gbc);
-
-			JCheckBox checkBox = new JCheckBox();
-			gbc.gridy = 1;
-			columnsPanel.add(checkBox, gbc);
-
-			List<String> columnData = new ArrayList<>();
-			for (int j = 0; j < jTable.getRowCount(); j++)
-				columnData.add(jTable.getValueAt(j, i - 1).toString());
-
-			String[] types = TableUtils.getPossiblesDataType(columnData, stringDelimiter).stream()
-					.map(x -> x.toString()).toArray(String[]::new);
-
-			JComboBox<String> comboBox = new JComboBox<>(types);
-			gbc.gridy = 2;
-			columnsPanel.add(comboBox, gbc);
-
-			pkCheckBoxes.put(columnName, checkBox);
-			typeComboBoxes.put(columnName, comboBox);
-			namesLabel.put(columnName, columnLabel);
-			columnsName.add(columnName);
-
-			checkBox.setEnabled(TableUtils.canBePrimaryKey(columnData));
-
-		}
 
 	}
 
 	private void loadJTable() {
 
-		jTable = new JTable(csvData.dataArray(), csvData.columnsNameArray());
+		pkCheckBoxes.clear();
+		typeComboBoxes.clear();
+		columnsName.clear();
 
+		columnsName.addAll(csvData.columnsNameList());
+
+		model = new JTableUtils().new CustomTableModel(csvData.dataArray(), csvData.columnsNameArray());
+		model.insertRow(0, new Object[] {});
+		model.insertRow(0, new Object[] {});
+
+		List<JComboBox<?>> comboboxes = new ArrayList<>();
+		List<JCheckBox> checkboxes = new ArrayList<>();
+
+		for (int i = 0; i < columnsName.size(); i++) {
+
+			List<String> columnData = new ArrayList<>();
+			for (int j = 0; j < csvData.dataArray().size() - 2; j++)
+				columnData.add(csvData.dataList().get(j).get(i).toString());
+
+			String[] types = TableUtils.getPossiblesDataType(columnData, stringDelimiter).stream()
+					.map(x -> x.toString()).toArray(String[]::new);
+
+			JComboBox<String> comboBox = new JComboBox<>(types);
+			JCheckBox checkBox = new JCheckBox();
+			comboBox.addActionListener(this);
+			checkBox.addActionListener(this);
+
+			checkBox.setEnabled(TableUtils.canBePrimaryKey(columnData));
+
+			comboboxes.add(comboBox);
+			checkboxes.add(checkBox);
+			pkCheckBoxes.put(columnsName.get(i), checkBox);
+			typeComboBoxes.put(columnsName.get(i), comboBox);
+
+		}
+
+		addFirstColumn();
+
+		jTable = new JTable(model) {
+
+			@Override
+			public TableCellRenderer getCellRenderer(int row, int column) {
+
+				if (row == 0 && column != 0) {
+					return new DefaultTableCellRenderer() {
+
+						@Override
+						public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+								boolean hasFocus, int row, int column) {
+
+							return checkboxes.get(column - 1);
+						}
+					};
+				}
+
+				if (row == 1 && column != 0) {
+					return new DefaultTableCellRenderer() {
+
+						@Override
+						public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+								boolean hasFocus, int row, int column) {
+
+							return comboboxes.get(column - 1);
+						}
+					};
+				}
+
+				return super.getCellRenderer(row, column);
+			}
+
+			@Override
+			public TableCellEditor getCellEditor(int row, int column) {
+
+				if (row == 0 && column != 0)
+					return new DefaultCellEditor(checkboxes.get(column - 1));
+
+				if (row == 1 && column != 0)
+					return new DefaultCellEditor(comboboxes.get(column - 1));
+				else
+					return super.getCellEditor(row, column);
+			}
+		};
+
+		jTable.getColumnModel().moveColumn(model.getColumnCount() - 1, 0);
+		jTable.getColumnModel().getColumn(0).setResizable(false);
+		JTableUtils.setColumnBold(jTable, 0);
+		JTableUtils.minColumnWidth(jTable, 0);
 		jTable.setShowHorizontalLines(true);
 		jTable.setGridColor(Color.blue);
 		jTable.setColumnSelectionAllowed(false);
 		jTable.setRowSelectionAllowed(false);
-
+		jTable.setCellSelectionEnabled(false);
+		JTableUtils.setNullInRed(jTable);
 		scrollPane.setViewportView(jTable);
+		((CustomTableModel) model).setRowEnabled(0, true);
+		((CustomTableModel) model).setRowEnabled(1, true);
+
+	}
+
+	private void addFirstColumn() {
+
+		model.addColumn("Nome:");
+
+		model.setValueAt("Chave Primária:", 0, model.getColumnCount() - 1);
+		model.setValueAt("Tipo:", 1, model.getColumnCount() - 1);
+
+		for (int row = 2; row < model.getRowCount(); row++) {
+			model.setValueAt(row - 1, row, model.getColumnCount() - 1);
+		}
 
 	}
 

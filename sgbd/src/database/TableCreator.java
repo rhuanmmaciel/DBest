@@ -31,7 +31,7 @@ public class TableCreator {
 
 				entities.Column column = columns.stream().filter(x -> x.getName().equals(data)).findFirst()
 						.orElse(null);
-
+				
 				if (column.getType() == ColumnDataType.INTEGER) {
 
 					if (!line.get(data).equals("null") && !line.get(data).equals(""))
