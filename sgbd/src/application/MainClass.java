@@ -1,17 +1,18 @@
 package application;
 
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
 import controller.MainController;
 
 public class MainClass {
 	
 	public MainClass() {
-		
-		MainController main = new MainController();
-		main.setVisible(true);
-		
+
+		SwingUtilities.invokeLater(() -> {
+			MainController main = new MainController();
+			main.setVisible(true);
+		});
+
 	}
 
 	public static void main(String[] args) {
@@ -22,9 +23,9 @@ public class MainClass {
 			
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
-			
+
 			e.printStackTrace();
-			
+
 		}
 		
 		new MainClass();

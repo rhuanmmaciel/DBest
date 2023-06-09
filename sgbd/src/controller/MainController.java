@@ -1,13 +1,13 @@
 package controller;
 
-import java.awt.Container;
-import java.awt.MouseInfo;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Line2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +51,8 @@ import gui.frames.main.MainFrame;
 import sgbd.table.Table;
 import util.Export;
 
+import javax.swing.*;
+
 public class MainController extends MainFrame {
 
 	private static final Map<Integer, Tree> trees = new HashMap<>();
@@ -60,6 +62,7 @@ public class MainController extends MainFrame {
 
 	private mxCell jCell;
 	private mxCell ghostJCell = null;
+	private AtomicReference<mxCell> invisibleJCellRef = new AtomicReference<>(null);
 
 	private final AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>();
 	private final AtomicReference<Edge> edgeRef = new AtomicReference<>(new Edge());
@@ -69,10 +72,15 @@ public class MainController extends MainFrame {
 	public boolean clicked = false;
 
 	private static final Set<Button<?>> buttons = new HashSet<>();
+	private static final Set<JMenuItem> menuItemButtons = new HashSet<>();
 
 	public MainController() {
 
 		super(buttons);
+
+		menuItemButtons.addAll(List.of(menuItemShow, menuItemInformations, menuItemExport, menuItemEdit, menuItemRemove,
+		menuItemSelection, menuItemProjection, menuItemJoin, menuItemLeftJoin, menuItemRightJoin, menuItemCartesianProduct,
+		menuItemUnion, menuItemIntersection, menuItemSort));
 
 		tablesComponent.getGraphControl().addMouseListener(new MouseAdapter() {
 			@Override
@@ -122,7 +130,7 @@ public class MainController extends MainFrame {
 		ghostJCell = null;
 
 		Button<?> btnClicked = buttons.stream().filter(x -> x.getButton() == e.getSource()).findAny().orElse(null);
-		String style = null;
+		String style = "";
 
 		if (btnClicked != null) {
 
@@ -151,42 +159,98 @@ public class MainController extends MainFrame {
 
 		}
 
-		CreateOperationAction opAction = null;
+		menuItemClicked(e, btnClicked, style);
 
-		if (e.getSource() == menuItemShow) {
+		edgeRef.get().reset();
 
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+
+		jCell = (mxCell) MainFrame.getGraphComponent().getCellAt(e.getX(), e.getY());
+
+		if (e.getButton() == MouseEvent.BUTTON3 && Cell.getCells().get(jCell) != null) {
+
+			Cell cell = Cell.getCells().get(jCell);
+
+			popupMenuJCell.add(menuItemShow);
+			popupMenuJCell.add(menuItemInformations);
+			popupMenuJCell.add(menuItemExport);
+			popupMenuJCell.add(menuItemEdit);
+			popupMenuJCell.add(menuItemOperations);
+			popupMenuJCell.add(menuItemRemove);
+
+			if (cell instanceof OperationCell opCell && !opCell.hasBeenInitialized()) {
+
+				popupMenuJCell.remove(menuItemShow);
+				popupMenuJCell.remove(menuItemOperations);
+				popupMenuJCell.remove(menuItemEdit);
+				popupMenuJCell.remove(menuItemExport);
+
+			}
+
+			if (cell instanceof TableCell || ((OperationCell) cell).getType() == OperationType.CARTESIAN_PRODUCT)
+				popupMenuJCell.remove(menuItemEdit);
+
+			if (cell.hasChild())
+				popupMenuJCell.remove(menuItemOperations);
+
+
+			if (cell.hasError()) {
+
+				popupMenuJCell.remove(menuItemShow);
+				popupMenuJCell.remove(menuItemOperations);
+
+				if (!cell.hasParents())
+					popupMenuJCell.remove(menuItemEdit);
+
+			}
+			popupMenuJCell.show(MainFrame.getGraphComponent().getGraphControl(), e.getX(), e.getY());
+
+		}
+
+		ClickController.clicked(currentActionRef, jCell, edgeRef, e, ghostJCell, invisibleJCellRef);
+
+		if (Cell.getCells().get(jCell) != null && e.getClickCount() == 2)
 			CellUtils.showTable(jCell);
 
-		} else if (e.getSource() == menuItemInformations) {
+	}
 
+	public void menuItemClicked(ActionEvent e, Button<?> btnClicked, String style){
+
+		CreateOperationAction opAction = null;
+
+		if (e.getSource() == menuItemShow)
+			CellUtils.showTable(jCell);
+
+		else if (e.getSource() == menuItemInformations)
 			new CellInformationFrame(jCell);
 
-		} else if (e.getSource() == menuItemExport) {
-
+		else if (e.getSource() == menuItemExport)
 			new Export(Cell.getCells().get(jCell).getTree());
 
-		} else if (e.getSource() == menuItemEdit) {
+		else if (e.getSource() == menuItemEdit) {
 
 			((OperationCell) Cell.getCells().get(jCell)).editOperation(jCell);
 			TreeUtils.recalculateContent(Cell.getCells().get(jCell));
 
-		} else if (e.getSource() == menuItemRemove) {
-
+		} else if (e.getSource() == menuItemRemove)
 			CellUtils.deleteCell(jCell);
 
-		} else if (e.getSource() == menuItemSelection) {
+		else if (e.getSource() == menuItemSelection) {
 
 			opAction = OperationType.SELECTION.getAction();
 			style = OperationType.SELECTION.getDisplayName();
 
 		} else if (e.getSource() == menuItemProjection) {
 
-			opAction =  OperationType.PROJECTION.getAction();
+			opAction = OperationType.PROJECTION.getAction();
 			style = OperationType.PROJECTION.getDisplayName();
 
 		} else if (e.getSource() == menuItemJoin) {
 
-			opAction =  OperationType.JOIN.getAction();
+			opAction = OperationType.JOIN.getAction();
 			style = OperationType.JOIN.getDisplayName();
 
 		} else if (e.getSource() == menuItemLeftJoin) {
@@ -230,68 +294,10 @@ public class MainController extends MainFrame {
 
 		if (currentActionRef.get() != null && (opAction != null
 				|| (btnClicked != null && currentActionRef.get().getType() == ActionType.CREATE_OPERATOR_CELL))) {
-
 			ghostJCell = (mxCell) graph.insertVertex((mxCell) graph.getDefaultParent(), "ghost", style,
 					MouseInfo.getPointerInfo().getLocation().getX() - MainFrame.getGraphComponent().getWidth(),
 					MouseInfo.getPointerInfo().getLocation().getY() - MainFrame.getGraphComponent().getHeight(), 80, 30,
 					style);
-		}
-		edgeRef.get().reset();
-
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-
-		jCell = (mxCell) MainFrame.getGraphComponent().getCellAt(e.getX(), e.getY());
-
-		if (e.getButton() == MouseEvent.BUTTON3 && Cell.getCells().get(jCell) != null) {
-
-			Cell cell = Cell.getCells().get(jCell);
-
-			popupMenuJCell.add(menuItemShow);
-			popupMenuJCell.add(menuItemInformations);
-			popupMenuJCell.add(menuItemExport);
-			popupMenuJCell.add(menuItemEdit);
-			popupMenuJCell.add(menuItemOperations);
-			popupMenuJCell.add(menuItemRemove);
-
-			if (cell instanceof OperationCell opCell && !opCell.hasBeenInitialized()) {
-
-				popupMenuJCell.remove(menuItemShow);
-				popupMenuJCell.remove(menuItemOperations);
-				popupMenuJCell.remove(menuItemEdit);
-				popupMenuJCell.remove(menuItemExport);
-
-			}
-			if (cell instanceof TableCell || ((OperationCell) cell).getType() == OperationType.CARTESIAN_PRODUCT) {
-
-				popupMenuJCell.remove(menuItemEdit);
-
-			}
-			if (cell.hasChild()) {
-
-				popupMenuJCell.remove(menuItemOperations);
-
-			}
-			if (cell.hasError()) {
-
-				popupMenuJCell.remove(menuItemShow);
-				popupMenuJCell.remove(menuItemOperations);
-
-				if (!cell.hasParents())
-					popupMenuJCell.remove(menuItemEdit);
-
-			}
-			popupMenuJCell.show(MainFrame.getGraphComponent().getGraphControl(), e.getX(), e.getY());
-
-		}
-
-		ClickController.clicked(currentActionRef, jCell, edgeRef, e, ghostJCell);
-
-		if (Cell.getCells().get(jCell) != null && e.getClickCount() == 2) {
-
-			CellUtils.showTable(jCell);
 
 		}
 
@@ -410,26 +416,41 @@ public class MainController extends MainFrame {
 		}
 	}
 
+	private  void setEdgeCursor(MouseEvent e){
+
+		Cursor edgeCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
+
+		graphComponent.getGraphControl().setCursor(edgeCursor);
+
+	}
+
+	private void moveCell(MouseEvent e, mxCell cellMoved){
+
+		mxGeometry geo = cellMoved.getGeometry();
+		double dx = e.getX() - geo.getCenterX() - 10;
+		double dy = e.getY() - geo.getCenterY() - 10;
+		MainFrame.getGraph().moveCells(new Object[] { cellMoved }, dx, dy);
+
+	}
+
 	@Override
 	public void mouseMoved(MouseEvent e) {
 
-		if (currentActionRef != null &&currentActionRef.get() != null)
+		if (currentActionRef.get() != null)
+
 			if (currentActionRef.get().getType() == CurrentAction.ActionType.CREATE_OPERATOR_CELL
-					&& ghostJCell != null) {
+					&& ghostJCell != null)
+				moveCell(e, ghostJCell);
 
-				mxGeometry geo = ghostJCell.getGeometry();
-				double dx = e.getX() - geo.getCenterX();
-				double dy = e.getY() - geo.getCenterY();
-				MainFrame.getGraph().moveCells(new Object[] { ghostJCell }, dx, dy);
+			else if (currentActionRef.get().getType() == ActionType.EDGE && invisibleJCellRef.get() != null)
+				moveCell(e, invisibleJCellRef.get());
 
-			} else if (currentActionRef.get() instanceof CreateTableAction createTable) {
+			 else if (currentActionRef.get() instanceof CreateTableAction createTable)
+				moveCell(e, createTable.getTableCell().getJGraphCell());
 
-				mxGeometry geo = createTable.getTableCell().getJGraphCell().getGeometry();
-				double dx = e.getX() - geo.getCenterX();
-				double dy = e.getY() - geo.getCenterY();
-				MainFrame.getGraph().moveCells(new Object[] { createTable.getTableCell().getJGraphCell() }, dx, dy);
+			else if(currentActionRef.get().getType() == ActionType.EDGE)
+				setEdgeCursor(e);
 
-			}
 
 	}
 

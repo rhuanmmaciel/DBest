@@ -153,6 +153,7 @@ public class FormFrameJoin extends JDialog implements ActionListener, IFormFrame
 			dispose();
 		} else if (e.getSource() == btnCancel) {
 
+			System.out.println(cell.hasBeenInitialized());
 			dispose();
 
 		}

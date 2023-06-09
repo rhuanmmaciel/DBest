@@ -31,7 +31,6 @@ import entities.buttons.OperationButton;
 import entities.buttons.ToolBarButton;
 import enums.OperationType;
 
-@SuppressWarnings("serial")
 public abstract class MainFrame extends JFrame
 		implements ActionListener, MouseListener, KeyListener, MouseMotionListener {
 

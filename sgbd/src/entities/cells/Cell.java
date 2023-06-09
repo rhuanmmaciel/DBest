@@ -132,16 +132,6 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
 	}
 
-	public List<String> getOnlyColumnsName() {
-
-		List<String> names = new ArrayList<>();
-
-		columns.forEach(x -> names.add(x.getName().substring(x.getName().indexOf("_") + 1)));
-
-		return names;
-
-	}
-
 	public Map<Integer, Map<String, String>> getMapContent() {
 
 		return content;
@@ -152,10 +142,7 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
 		List<List<String>> result = new ArrayList<>();
 		for (Map.Entry<Integer, Map<String, String>> entry : content.entrySet()) {
-			List<String> row = new ArrayList<>();
-			for (String value : entry.getValue().values()) {
-				row.add(value);
-			}
+			List<String> row = new ArrayList<>(entry.getValue().values());
 			result.add(row);
 		}
 		return result;
@@ -198,8 +185,6 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 		cells.clear();
 
 	}
-
-	// jgraph métodos
 
 	public void setStyle(String style) {
 		this.style = style;
