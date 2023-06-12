@@ -68,8 +68,8 @@ public class LeftJoin implements IOperator {
 
 		Operator operator = new LeftNestedLoopJoin(table_1, table_2, (t1, t2) -> {
 
-			return t1.getContent(parentCell1.getSourceTableName(item1)).getInt(item1) == t2
-					.getContent(parentCell2.getSourceTableName(item2)).getInt(item2);
+			return t1.getContent(parentCell1.getSourceTableNameByColumn(item1)).getInt(item1) == t2
+					.getContent(parentCell2.getSourceTableNameByColumn(item2)).getInt(item2);
 
 		});
 

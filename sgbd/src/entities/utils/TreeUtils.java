@@ -30,7 +30,7 @@ public class TreeUtils {
 			Tree childTree = new Tree();
 			
 			fromLeavesToRoot(child.getAllSourceTables(), childTree);
-		
+
 			recalculateContent(child);
 			
 		}
@@ -178,9 +178,6 @@ public class TreeUtils {
 		if(cell != null) {
 			
 			Cell currentCell = cell;
-			
-			if (currentCell instanceof OperationCell operationCell) 
-				operationCell.updateOperation();
 			
 			while(currentCell.hasChild()){
 	

@@ -5,6 +5,7 @@ import exceptions.tree.ArgumentsException;
 import exceptions.tree.ParentsAmountException;
 import exceptions.tree.ParentsErrorException;
 
+import java.util.HashSet;
 import java.util.List;
 
 public class OperationErrorVerifier {
@@ -58,7 +59,7 @@ public class OperationErrorVerifier {
 
 	public static void parentContainsColumns(List<String> parent, List<String> columns) throws ArgumentsException {
 
-		if (!parent.containsAll(columns))
+		if (!new HashSet<>(parent).containsAll(columns))
 			throw new ArgumentsException("");
 
 	}

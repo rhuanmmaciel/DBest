@@ -19,6 +19,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
+import dsl.antlr4.RelAlgebraLexer;
+import dsl.antlr4.RelAlgebraParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -26,8 +28,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import dsl.AntlrController;
 import dsl.DslController;
 import dsl.DslErrorListener;
-import dsl.antlr4.RelAlgebraLexer;
-import dsl.antlr4.RelAlgebraParser;
 
 @SuppressWarnings("serial")
 public class Console extends JFrame implements ActionListener, KeyListener {

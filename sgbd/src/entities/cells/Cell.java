@@ -149,7 +149,7 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
 	}
 
-	public String getSourceTableName(String columnName) {
+	public String getSourceTableNameByColumn(String columnName) {
 
 		for (Cell cell : FindRoots.getRoots(this)) {
 
@@ -157,6 +157,16 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 				return cell.getName();
 
 		}
+
+		return null;
+
+	}
+
+	public Cell getSourceTableByName(String tableName){
+
+		for (Cell cell : FindRoots.getRoots(this))
+			if (cell.getName().equals(tableName))
+				return cell;
 
 		return null;
 

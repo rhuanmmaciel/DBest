@@ -2,6 +2,8 @@ package entities;
 
 import enums.ColumnDataType;
 
+import java.util.List;
+
 public class Column{
 
 	private String name;
@@ -25,15 +27,34 @@ public class Column{
 	public String getName() {
 		return name;
 	}
+
+	public String getSourceAndName(){
+		return source+"."+name;
+	}
 	
 	public ColumnDataType getType() {
 		return type;
 	}
 	
 	public Boolean isPK() {
-		
 		return pk;
-		
 	}
-	
+
+	public static String removeSource(String txt){
+		return txt.substring(txt.indexOf(".")+1);
+	}
+
+	public static String removeName(String txt){
+		return txt.substring(0, txt.indexOf("."));
+	}
+
+	public static List<String> sourceAndNameTogether(List<Column> columns){
+		return columns.stream().map(Column::getSourceAndName).toList();
+	}
+
+	@Override
+	public String toString(){
+		return getSourceAndName();
+	}
+
 }

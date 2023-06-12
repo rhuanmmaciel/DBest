@@ -62,8 +62,8 @@ public class Intersection implements IOperator{
 		List<String> selectedColumns1 = new ArrayList<>(arguments.subList(0, arguments.size() / 2));
 		List<String> selectedColumns2 = new ArrayList<>(arguments.subList(arguments.size() / 2, arguments.size()));
 
-		selectedColumns1.replaceAll(s -> parentCell1.getSourceTableName(s) + "." + s);
-		selectedColumns2.replaceAll(s -> parentCell2.getSourceTableName(s) + "." + s);
+		selectedColumns1.replaceAll(s -> parentCell1.getSourceTableNameByColumn(s) + "." + s);
+		selectedColumns2.replaceAll(s -> parentCell2.getSourceTableNameByColumn(s) + "." + s);
 
 		Operator operator = new IntersectionOperator(table1, table2, selectedColumns1, selectedColumns2);
 

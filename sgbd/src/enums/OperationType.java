@@ -3,6 +3,7 @@ package enums;
 import entities.Action.CreateOperationAction;
 import enums.interfaces.IOperationType;
 import gui.frames.forms.operations.IFormFrameOperation;
+import gui.frames.forms.operations.unary.FormFrameGroup;
 import gui.frames.forms.operations.unary.FormFrameSort;
 import operations.IOperator;
 import gui.frames.forms.operations.binary.FormFrameIntersection;
@@ -18,9 +19,12 @@ import operations.binary.Join;
 import operations.binary.LeftJoin;
 import operations.binary.RightJoin;
 import operations.binary.Union;
+import operations.unary.Group;
 import operations.unary.Projection;
 import operations.unary.Selection;
 import operations.unary.Sort;
+
+import java.util.List;
 
 public enum OperationType implements IOperationType {
 
@@ -520,28 +524,27 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public String getSymbol() {
-			return "Σ";
+			return "G";
 		}
 
 		@Override
 		public String getOperationName() {
-			return "aggregation";
+			return "group";
 		}
 
 		@Override
 		public String getDslOperation() {
-			return null;
+			return "group[args](relation)";
 		}
 
 		@Override
 		public Class<? extends IFormFrameOperation> getForm() {
-			return null;
+			return FormFrameGroup.class;
 		}
 
 		@Override
 		public Class<? extends IOperator> getOperator() {
-			// TODO Auto-generated method stub
-			return null;
+			return Group.class;
 		}
 
 		@Override
@@ -596,6 +599,8 @@ public enum OperationType implements IOperationType {
 			return new CreateOperationAction(this);
 		}
 	};
+
+	public final static List<OperationType> OPERATIONS_WITHOUT_FORM = List.of(CARTESIAN_PRODUCT, UNION, INTERSECTION, DIFFERENCE);
 
 	public static OperationType fromString(String operationType) {
 

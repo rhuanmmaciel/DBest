@@ -1,7 +1,6 @@
 package gui.frames.forms.operations.unary;
 
-import java.awt.Color;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -10,16 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -28,91 +20,33 @@ import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import gui.frames.forms.operations.FormFrameOperation;
 import gui.frames.forms.operations.IFormFrameOperation;
 import operations.unary.Projection;
 
-public class FormFrameProjection extends JDialog implements ActionListener, IFormFrameOperation {
-
-	private JComboBox<String> columnsComboBox;
-	private List<String> columnsList;
+public class FormFrameProjection extends FormFrameOperation implements ActionListener, IFormFrameOperation {
 
 	private JButton btnAdd;
 	private JButton btnRemove;
-	private JButton btnReady;
 	private JTextArea textArea;
 
-	private List<String> columnsResult;
-	private final Cell parentCell;
-	private final mxCell jCell;
-
-	private JButton btnCancel;
 	private JButton btnAddAll;
 
-	private final Projection projection = new Projection();
-	
 	public FormFrameProjection(mxCell jCell) {
 
-		super((Window) null);
-		setModal(true);
-		setTitle("Projeção");
-
-		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
-		parentCell = cell.getParents().get(0);
-		this.jCell = jCell;
+		super(jCell);
 
 		initializeGUI();
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initializeGUI() {
 
-		setBounds(100, 100, 500, 470);
-		setLocationRelativeTo(null);
-
-		JPanel contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		setContentPane(contentPane);
-
-		columnsList = new ArrayList<>();
-
-		columnsList = parentCell.getColumnsName();
-
-		columnsComboBox = new JComboBox(columnsList.toArray(new String[0]));
-		columnsComboBox.addActionListener(this);
-
-		JLabel lblColumns = new JLabel("Colunas");
-
-		JLabel lblTxt = new JLabel("Termos");
+		btnReady.addActionListener(this);
+		btnCancel.addActionListener(this);
 
 		textArea = new JTextArea();
-		textArea.getDocument().addDocumentListener(new DocumentListener() {
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-
-				verifyConditions();
-
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-
-				verifyConditions();
-
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-
-				verifyConditions();
-
-			}
-
-		});
-
-		columnsResult = new ArrayList<>();
+		textArea.setPreferredSize(new Dimension(300,300));
 
 		btnAdd = new JButton("Adicionar");
 		btnAdd.addActionListener(this);
@@ -120,139 +54,70 @@ public class FormFrameProjection extends JDialog implements ActionListener, IFor
 		btnRemove = new JButton("Remover colunas");
 		btnRemove.addActionListener(this);
 
-		btnReady = new JButton("Pronto");
-		btnReady.addActionListener(this);
-
-		btnCancel = new JButton("Cancelar");
-		btnCancel.addActionListener(this);
-
 		btnAddAll = new JButton("Adicionar todas");
 		btnAddAll.addActionListener(this);
 
-		GroupLayout groupLayout = new GroupLayout(contentPane);
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
-				.createSequentialGroup()
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
-						.createSequentialGroup().addGap(23)
-						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addGroup(groupLayout.createSequentialGroup().addComponent(btnCancel)
-										.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnReady))
-								.addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout
-										.createParallelGroup(Alignment.TRAILING)
-										.addComponent(columnsComboBox, Alignment.LEADING, 0, 444, Short.MAX_VALUE)
-										.addGroup(groupLayout.createSequentialGroup()
-												.addComponent(btnAdd, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-												.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(btnAddAll)
-												.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(btnRemove,
-														GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
-										.addComponent(textArea, GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE))
-										.addGap(11))))
-						.addGroup(groupLayout.createSequentialGroup().addGap(205).addComponent(lblTxt)))
-				.addContainerGap())
-				.addGroup(groupLayout.createSequentialGroup().addContainerGap(211, Short.MAX_VALUE)
-						.addComponent(lblColumns, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
-						.addGap(180)));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-						.addComponent(lblColumns, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE).addGap(17)
-						.addComponent(columnsComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addGap(18)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(btnAdd)
-								.addComponent(btnRemove).addComponent(btnAddAll))
-						.addGap(37).addComponent(lblTxt).addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED, 55, Short.MAX_VALUE).addGroup(groupLayout
-								.createParallelGroup(Alignment.BASELINE).addComponent(btnReady).addComponent(btnCancel))
-						.addContainerGap()));
-		contentPane.setLayout(groupLayout);
-		verifyConditions();
+		addExtraComponent(btnAdd, 0, 2, 1, 1);
+		addExtraComponent(btnAddAll, 1, 2, 1, 1);
+		addExtraComponent(btnRemove, 2, 2, 1, 1);
 
-		addWindowListener(new WindowAdapter() {
+		addExtraComponent(new JScrollPane(textArea), 0, 3, 3, 3);
 
-			public void windowClosing(WindowEvent e) {
+		pack();
+		setLocationRelativeTo(null);
 
-				dispose();
-
-			}
-
-		});
-
-		this.setVisible(true);
-
-	}
-
-	private void verifyConditions() {
-
-		boolean noneSelection = textArea.getText().isEmpty();
-
-		btnReady.setEnabled(!noneSelection);
-
-		updateToolTipText(noneSelection);
-
-	}
-
-	private void updateToolTipText(boolean noneSelection) {
-
-		String btnReadyToolTipText = "";
-
-		if (noneSelection) {
-
-			btnReadyToolTipText = "- Selecione pelo menos uma coluna";
-
-		}
-
-		UIManager.put("ToolTip.foreground", Color.RED);
-
-		btnReady.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
+		setVisible(true);
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		verifyConditions();
-
-		String textColumnsPicked;
 		if (e.getSource() == btnAdd) {
 
-			if (columnsComboBox.getItemCount() > 0) {
-				textColumnsPicked = textArea.getText() + "\n" + Objects.requireNonNull(columnsComboBox.getSelectedItem()).toString();
-				columnsComboBox.removeItemAt(columnsComboBox.getSelectedIndex());
-				textArea.setText(textColumnsPicked);
-			}
+			if (comboBoxColumn.getItemCount() > 0)
+				updateColumns();
 
 		} else if (e.getSource() == btnRemove) {
 
 			textArea.setText("");
 
-			columnsComboBox.removeAllItems();
+			restrictedColumns.clear();
+			comboBoxColumn.removeAllItems();
 
-			for (String item : columnsList)
-				columnsComboBox.addItem(item);
+			parent1.getColumnsName().forEach(comboBoxColumn::addItem);
 
-		} else if (e.getSource() == btnReady) {
+		} else if(e.getSource() == btnCancel){
+
+			closeWindow();
+
+		}else if (e.getSource() == btnReady) {
 			
-			dispose();
-			columnsResult = new ArrayList<>(List.of(textArea.getText().split("\n")));
-			columnsResult.remove(0);
-			projection.executeOperation(jCell, columnsResult);
+			arguments.addAll(List.of(textArea.getText().split("\n")));
+			arguments.remove(0);
+			btnReady();
 
-		} else if (e.getSource() == btnCancel) {
+		}  else if (e.getSource() == btnAddAll) {
 
-			dispose();
+			while (comboBoxColumn.getItemCount() != 0) {
 
-		} else if (e.getSource() == btnAddAll) {
-
-			while (columnsComboBox.getItemCount() != 0) {
-
-				textColumnsPicked = textArea.getText() + "\n" + Objects.requireNonNull(columnsComboBox.getSelectedItem()).toString();
-				columnsComboBox.removeItemAt(columnsComboBox.getSelectedIndex());
-				textArea.setText(textColumnsPicked);
+				updateColumns();
 
 			}
 
 		}
+	}
+
+	private void updateColumns(){
+
+		String column = Objects.requireNonNull(comboBoxSource.getSelectedItem()).toString()+
+				"."+
+				Objects.requireNonNull(comboBoxColumn.getSelectedItem()).toString();
+		String textColumnsPicked = textArea.getText() + "\n" + column;
+		restrictedColumns.add(column);
+		comboBoxColumn.removeItemAt(comboBoxColumn.getSelectedIndex());
+		textArea.setText(textColumnsPicked);
+
 	}
 
 }

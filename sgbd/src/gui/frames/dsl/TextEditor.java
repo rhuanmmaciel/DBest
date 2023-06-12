@@ -26,6 +26,8 @@ import javax.swing.JToolBar;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 
+import dsl.antlr4.RelAlgebraLexer;
+import dsl.antlr4.RelAlgebraParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -34,13 +36,10 @@ import controller.MainController;
 import dsl.AntlrController;
 import dsl.DslController;
 import dsl.DslErrorListener;
-import dsl.antlr4.RelAlgebraLexer;
-import dsl.antlr4.RelAlgebraParser;
 import enums.OperationType;
 import gui.utils.CustomDocumentFilter;
 import gui.utils.JTextLineNumber;
 
-@SuppressWarnings("serial")
 public class TextEditor extends JFrame implements ActionListener {
 
 	private JTextPane textPane = new JTextPane();

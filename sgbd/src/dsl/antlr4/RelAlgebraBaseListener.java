@@ -1,5 +1,7 @@
-package dsl.antlr4;// Generated from grammar/RelAlgebra.g4 by ANTLR 4.7.2
+package dsl.antlr4;// Generated from RelAlgebra.g4 by ANTLR 4.7.2
 
+import dsl.antlr4.RelAlgebraListener;
+import dsl.antlr4.RelAlgebraParser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -226,6 +228,18 @@ public class RelAlgebraBaseListener implements RelAlgebraListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitSort(RelAlgebraParser.SortContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterGroup(RelAlgebraParser.GroupContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGroup(RelAlgebraParser.GroupContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

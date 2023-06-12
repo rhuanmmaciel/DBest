@@ -1,6 +1,7 @@
 package operations.unary;
 
 import com.mxgraph.model.mxCell;
+import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.tree.TreeException;
@@ -11,8 +12,10 @@ import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.table.Table;
+import util.Utils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Projection implements IOperator {
 
@@ -41,7 +44,7 @@ public class Projection implements IOperator {
 			OperationErrorVerifier.noNullArgument(arguments);
 			
 			error = ErrorMessage.PARENT_WITHOUT_COLUMN;
-			OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnsName(), arguments);
+			OperationErrorVerifier.parentContainsColumns(Column.sourceAndNameTogether(cell.getParents().get(0).getColumns()), arguments);
 			error = null;
 
 		} catch (TreeException e) {
@@ -54,16 +57,13 @@ public class Projection implements IOperator {
 
 		Cell parentCell = cell.getParents().get(0);
 
-		List<String> aux = parentCell.getColumnsName();
-		aux.removeAll(arguments);
+		List<Column> aux = parentCell.getColumns().stream().filter(x ->
+			!Utils.listElementStartsAndEndsWith(arguments, x.getSource(), x.getName())).toList();
 
 		Operator operator = parentCell.getOperator();
 
-		for (Table table : parentCell.getOperator().getSources()) {
-
-			operator = new FilterColumnsOperator(operator, table.getTableName(), aux);
-
-		}
+		for (Column c : aux)
+			operator = new FilterColumnsOperator(operator, c.getSource(), List.of(c.getName()));
 
 		Operation.operationSetter(cell, "π  " + arguments.toString(), arguments, operator);
 

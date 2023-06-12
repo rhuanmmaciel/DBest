@@ -68,7 +68,7 @@ public class Export extends JPanel {
 		Map<String, Integer> amount = new HashMap<>();
 		for (String columnName : cell.getColumnsName()) {
 
-			String sourceTable = cell.getSourceTableName(columnName);
+			String sourceTable = cell.getSourceTableNameByColumn(columnName);
 
 			int i = 1;
 

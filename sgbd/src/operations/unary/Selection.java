@@ -1,6 +1,7 @@
 package operations.unary;
 
 import com.mxgraph.model.mxCell;
+import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import enums.ColumnDataType;
@@ -14,6 +15,7 @@ import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
 import sgbd.query.unaryop.FilterOperator;
+import util.Utils;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -71,33 +73,35 @@ public class Selection implements IOperator {
 
 				if (isColumn(element)) {
 
-					String columnName = element.substring(2, element.length() - 1);
+					String source = Column.removeName(element.substring(2));
+					String columnName = Column.removeSource(element.substring(0, element.length()-1));
 
 					ColumnDataType type = parentCell.getColumns().stream()
-							.filter(col -> col.getName().equals(columnName)).findFirst().get().getType();
+							.filter(x -> x.getSource().equals(source) && x.getName().equals(columnName))
+							.findAny().orElseThrow().getType();
 
 					String inf;
 
 					if (type == ColumnDataType.INTEGER) {
 
 						inf = String
-								.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getInt(columnName));
+								.valueOf(t.getContent(source).getInt(columnName));
 
 					} else if (type == ColumnDataType.FLOAT) {
 
 						inf = String
-								.valueOf(t.getContent(parentCell.getSourceTableName(columnName)).getFloat(columnName));
+								.valueOf(t.getContent(source).getFloat(columnName));
 
 					} else {
 
-						inf = "'" + t.getContent(parentCell.getSourceTableName(columnName)).getString(columnName) + "'";
+						inf = "'" + t.getContent(source).getString(columnName) + "'";
 
 					}
 
 					if (arguments == null)
 						return false;
 
-					evaluator.putVariable(columnName, inf);
+					evaluator.putVariable(source+"."+columnName, inf);
 
 				}
 			}
@@ -120,7 +124,7 @@ public class Selection implements IOperator {
 
 	public String formatString(String input) {
 
-		input = input.replaceAll("(?<=\\s*|^)([\\w.()-<>]+\\_[\\w.()-<>]+)(?=\\s*|$)", "#{$1}");
+		input = input.replaceAll("(?<=\\s|^)([\\w.-]+\\.[\\w.-]+)(?=[\\s>=<])", "#{$1}");
 
 		input = input.replaceAll("\\bAND\\b", "&&");
 
@@ -141,9 +145,9 @@ public class Selection implements IOperator {
 
 		Pattern pattern = Pattern.compile("#\\{.*?\\}");
 		Matcher matcher = pattern.matcher(input);
-
 		return matcher.matches();
 
 	}
+
 
 }

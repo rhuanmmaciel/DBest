@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.Line2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,8 +19,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.util.mxEvent;
-import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxEventSource;
 
 import dsl.entities.BinaryExpression;
 import dsl.entities.OperationExpression;
@@ -51,8 +48,6 @@ import gui.frames.main.MainFrame;
 import sgbd.table.Table;
 import util.Export;
 
-import javax.swing.*;
-
 public class MainController extends MainFrame {
 
 	private static final Map<Integer, Tree> trees = new HashMap<>();
@@ -62,7 +57,7 @@ public class MainController extends MainFrame {
 
 	private mxCell jCell;
 	private mxCell ghostJCell = null;
-	private AtomicReference<mxCell> invisibleJCellRef = new AtomicReference<>(null);
+	private final AtomicReference<mxCell> invisibleJCellRef = new AtomicReference<>(null);
 
 	private final AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>();
 	private final AtomicReference<Edge> edgeRef = new AtomicReference<>(new Edge());
@@ -72,20 +67,15 @@ public class MainController extends MainFrame {
 	public boolean clicked = false;
 
 	private static final Set<Button<?>> buttons = new HashSet<>();
-	private static final Set<JMenuItem> menuItemButtons = new HashSet<>();
 
 	public MainController() {
 
 		super(buttons);
 
-		menuItemButtons.addAll(List.of(menuItemShow, menuItemInformations, menuItemExport, menuItemEdit, menuItemRemove,
-		menuItemSelection, menuItemProjection, menuItemJoin, menuItemLeftJoin, menuItemRightJoin, menuItemCartesianProduct,
-		menuItemUnion, menuItemIntersection, menuItemSort));
-
 		tablesComponent.getGraphControl().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if ((mxCell) tablesComponent.getCellAt(e.getX(), e.getY()) != null) {
+				if (tablesComponent.getCellAt(e.getX(), e.getY()) != null) {
 					clicked = true;
 					graph.setSelectionCell(
 							new mxCell(((mxCell) tablesComponent.getCellAt(e.getX(), e.getY())).getValue()));
@@ -93,13 +83,10 @@ public class MainController extends MainFrame {
 			}
 		});
 
-		graph.addListener(mxEvent.CELLS_ADDED, new mxEventSource.mxIEventListener() {
-			@Override
-			public void invoke(Object sender, mxEventObject evt) {
-				if (clicked) {
-					CellUtils.verifyCell((mxCell) graph.getSelectionCell(), ghostJCell);
-					clicked = false;
-				}
+		graph.addListener(mxEvent.CELLS_ADDED, (sender, evt) -> {
+			if (clicked) {
+				CellUtils.verifyCell((mxCell) graph.getSelectionCell(), ghostJCell);
+				clicked = false;
 			}
 		});
 
@@ -210,7 +197,7 @@ public class MainController extends MainFrame {
 
 		}
 
-		ClickController.clicked(currentActionRef, jCell, edgeRef, e, ghostJCell, invisibleJCellRef);
+		new ClickController(currentActionRef, new AtomicReference<>(jCell), edgeRef, e, new AtomicReference<>(ghostJCell), invisibleJCellRef);
 
 		if (Cell.getCells().get(jCell) != null && e.getClickCount() == 2)
 			CellUtils.showTable(jCell);
@@ -378,6 +365,7 @@ public class MainController extends MainFrame {
 
 		} else if (e.getKeyCode() == KeyEvent.VK_E) {
 
+			graphComponent.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 			currentActionRef.set(new CurrentAction(CurrentAction.ActionType.EDGE));
 
 		} else if (e.getKeyCode() == KeyEvent.VK_I) {
@@ -392,6 +380,13 @@ public class MainController extends MainFrame {
 		} else if (e.getKeyCode() == KeyEvent.VK_C) {
 
 			newTable(CurrentAction.ActionType.CREATE_TABLE);
+
+		}else if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
+
+			graphComponent.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			currentActionRef.set(null);
+			ghostJCell = null;
+			ClickController.deleteMovableEdge(invisibleJCellRef);
 
 		} else if (e.getKeyCode() == KeyEvent.VK_L) {
 
@@ -426,9 +421,15 @@ public class MainController extends MainFrame {
 
 	private void moveCell(MouseEvent e, mxCell cellMoved){
 
+		int spaceBetweenCursorY = 20;
+
 		mxGeometry geo = cellMoved.getGeometry();
-		double dx = e.getX() - geo.getCenterX() - 10;
-		double dy = e.getY() - geo.getCenterY() - 10;
+
+		if(cellMoved.getEdgeAt(0) != null && cellMoved.getEdgeAt(0).getTerminal(true).getGeometry().getCenterY() < e.getY())
+			spaceBetweenCursorY *= -1;
+
+		double dx = e.getX() - geo.getCenterX() ;
+		double dy = e.getY() - geo.getCenterY() + spaceBetweenCursorY;
 		MainFrame.getGraph().moveCells(new Object[] { cellMoved }, dx, dy);
 
 	}
@@ -450,7 +451,6 @@ public class MainController extends MainFrame {
 
 			else if(currentActionRef.get().getType() == ActionType.EDGE)
 				setEdgeCursor(e);
-
 
 	}
 

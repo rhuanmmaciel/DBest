@@ -12,5 +12,23 @@ public class Utils {
         }
         return false;
     }
+
+    public static boolean listElementStartsWith(List<String> list, String test){
+
+        return list.stream().anyMatch(x -> x.startsWith(test));
+
+    }
+
+    public static boolean listElementEndsWith(List<String> list, String test){
+
+        return list.stream().anyMatch(x -> x.endsWith(test));
+
+    }
+
+    public static boolean listElementStartsAndEndsWith(List<String> list, String testStart, String testEnd){
+
+        return list.stream().anyMatch(x -> x.startsWith(testStart) && x.endsWith(testEnd));
+
+    }
     
 }
