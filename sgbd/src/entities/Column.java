@@ -6,10 +6,10 @@ import java.util.List;
 
 public class Column{
 
-	private String name;
-	private String source;
-	private ColumnDataType type;
-	private Boolean pk;
+	private final String name;
+	private final String source;
+	private final ColumnDataType type;
+	private final Boolean pk;
 	
 	public Column(String name, String tableName, ColumnDataType type, boolean pk) {
 		
@@ -50,6 +50,10 @@ public class Column{
 
 	public static List<String> sourceAndNameTogether(List<Column> columns){
 		return columns.stream().map(Column::getSourceAndName).toList();
+	}
+
+	public static boolean hasSource(String txt){
+		return txt.contains(".") && txt.indexOf(".") > 0 && txt.indexOf(".") < txt.length() - 1;
 	}
 
 	@Override

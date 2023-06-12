@@ -17,6 +17,7 @@ import sgbd.query.Tuple;
 import sgbd.query.unaryop.FilterOperator;
 import util.Utils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,35 +74,27 @@ public class Selection implements IOperator {
 
 				if (isColumn(element)) {
 
-					String source = Column.removeName(element.substring(2));
-					String columnName = Column.removeSource(element.substring(0, element.length()-1));
+					String column = element.substring(2, element.length()-1);
+					boolean hasSource = Column.hasSource(column);
+
+					String source = hasSource ? Column.removeName(element.substring(2))
+							: parentCell.getSourceTableNameByColumn(column);
+					String columnName = hasSource ? Column.removeSource(element.substring(0, element.length()-1))
+							: column;
 
 					ColumnDataType type = parentCell.getColumns().stream()
 							.filter(x -> x.getSource().equals(source) && x.getName().equals(columnName))
 							.findAny().orElseThrow().getType();
 
-					String inf;
+					String inf = switch (type){
+						case INTEGER -> String.valueOf(t.getContent(source).getInt(columnName));
+						case FLOAT -> String.valueOf(t.getContent(source).getFloat(columnName));
+						default -> "'" + t.getContent(source).getString(columnName) + "'";
+					};
 
-					if (type == ColumnDataType.INTEGER) {
+					System.out.println(inf + " " + source + " " + columnName);
 
-						inf = String
-								.valueOf(t.getContent(source).getInt(columnName));
-
-					} else if (type == ColumnDataType.FLOAT) {
-
-						inf = String
-								.valueOf(t.getContent(source).getFloat(columnName));
-
-					} else {
-
-						inf = "'" + t.getContent(source).getString(columnName) + "'";
-
-					}
-
-					if (arguments == null)
-						return false;
-
-					evaluator.putVariable(source+"."+columnName, inf);
+					evaluator.putVariable(hasSource ? source+"."+columnName : column, inf);
 
 				}
 			}
@@ -124,30 +117,23 @@ public class Selection implements IOperator {
 
 	public String formatString(String input) {
 
-		input = input.replaceAll("(?<=\\s|^)([\\w.-]+\\.[\\w.-]+)(?=[\\s>=<])", "#{$1}");
-
 		input = input.replaceAll("\\bAND\\b", "&&");
-
 		input = input.replaceAll("\\bOR\\b", "||");
-
+		input = input.replaceAll("(?<=\\s|^)([\\w.-]+(?:\\.[\\w.-]+)?)(?=[\\s>=<])", "#{$1}");
 		input = input.replaceAll("=", "==");
-
 		input = input.replaceAll("≠", "!=");
-
 		input = input.replaceAll("≥", ">=");
-
 		input = input.replaceAll("≤", "<=");
-
 		return input;
+
 	}
 
 	public boolean isColumn(String input) {
 
-		Pattern pattern = Pattern.compile("#\\{.*?\\}");
+		Pattern pattern = Pattern.compile("#\\{([\\w.-]+(?:\\.[\\w.-]+)?)\\}");
 		Matcher matcher = pattern.matcher(input);
 		return matcher.matches();
 
 	}
-
 
 }
