@@ -4,6 +4,7 @@ import com.mxgraph.model.mxCell;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import enums.OperationType;
 import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
@@ -14,6 +15,7 @@ import sgbd.query.unaryop.FilterColumnsOperator;
 import util.Utils;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Projection implements IOperator {
 
@@ -55,19 +57,17 @@ public class Projection implements IOperator {
 
 		Cell parentCell = cell.getParents().get(0);
 
-		arguments = arguments.stream().map(x -> Column.putSource(x, parentCell.getSourceTableNameByColumn(x))).toList();
-
-		List<String> argumentsWithSource = arguments;
+		final List<String> argumentsFixed = arguments.stream().map(x -> Column.putSource(x, parentCell.getSourceTableNameByColumn(x))).toList();;
 
 		List<Column> aux = parentCell.getColumns().stream().filter(x ->
-			!Utils.anyListElementStartsAndEndsWith(argumentsWithSource, x.getSource(), x.getName())).toList();
+			!Utils.anyListElementStartsAndEndsWith(argumentsFixed, x.getSource(), x.getName())).toList();
 
 		Operator operator = parentCell.getOperator();
 
 		for (Column c : aux)
 			operator = new FilterColumnsOperator(operator, c.getSource(), List.of(c.getName()));
 
-		Operation.operationSetter(cell, "π  " + arguments.toString(), arguments, operator);
+		Operation.operationSetter(cell, "π  " + argumentsFixed.toString(), argumentsFixed, operator);
 
 	}
 

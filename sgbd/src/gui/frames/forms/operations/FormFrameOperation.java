@@ -7,13 +7,10 @@ import entities.cells.OperationCell;
 import enums.OperationArity;
 import enums.OperationType;
 import operations.IOperator;
-import util.Utils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
@@ -37,7 +34,7 @@ public class FormFrameOperation extends JDialog  {
     protected final JButton btnReady = new JButton("Pronto");
     protected final JComboBox<String> comboBoxSource = new JComboBox<>();
     protected final JComboBox<String> comboBoxColumn = new JComboBox<>();
-    private final Box centerBox = Box.createVerticalBox();
+    protected final JPanel centerPanel = new JPanel(new GridBagLayout());
 
     protected final List<String> arguments = new ArrayList<>();
     protected final List<String> restrictedColumns = new ArrayList<>();
@@ -83,7 +80,6 @@ public class FormFrameOperation extends JDialog  {
 
     private void initializeComboBoxes() {
 
-        JPanel centerPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
@@ -122,7 +118,7 @@ public class FormFrameOperation extends JDialog  {
     }
 
     protected void addExtraComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight) {
-        JPanel centerPanel = (JPanel) contentPane.getComponent(0);
+
         GridBagConstraints gbc = ((GridBagLayout) centerPanel.getLayout()).getConstraints(centerPanel);
 
         gbc.gridx = gridx;
@@ -168,6 +164,7 @@ public class FormFrameOperation extends JDialog  {
             Constructor<? extends IOperator> constructor = operator.getDeclaredConstructor();
             IOperator operation = constructor.newInstance();
             operation.executeOperation(jCell, arguments);
+            System.out.println(operation);
 
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
                  | InvocationTargetException e) {

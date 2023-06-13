@@ -49,64 +49,66 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void initializeGUI() {
 
+		centerPanel.removeAll();
+
 		btnReady.addActionListener(this);
 		btnCancel.addActionListener(this);
 
 		textArea = new JTextArea();
-		textArea.setMaximumSize(new Dimension(750, 50));
+		textArea.setPreferredSize(new Dimension(300, 75));
 		textArea.setEditable(false);
 
 		btnColumnAdd = new JButton("Add");
 		btnColumnAdd.addActionListener(this);
-		addExtraComponent(btnColumnAdd, 2, 1, 1, 1);
-
-		addExtraComponent( new JLabel("Operações:"), 0, 2, 1, 1);
 
 		comboBoxOperator = new JComboBox(new String[]{ ">", "<", "=", "≠", "≥", "≤", "(", ")" });
-		addExtraComponent(comboBoxOperator, 1, 2, 1, 1);
 
 		btnOperatorAdd = new JButton("Add");
 		btnOperatorAdd.addActionListener(this);
-		addExtraComponent(btnOperatorAdd, 2, 2, 1, 1);
-
-		addExtraComponent(new JLabel("Operadores Lógicos: "), 0, 3, 1, 1);
 
 		comboBoxLogicalOperator = new JComboBox(new String[]{ "AND", "OR" });
-		addExtraComponent(comboBoxLogicalOperator, 1, 3, 1, 1);
 
 		btnLogicalOperatorAdd = new JButton("Add");
 		btnLogicalOperatorAdd.addActionListener(this);
-		addExtraComponent(btnLogicalOperatorAdd, 2, 3, 1, 1);
-
-		addExtraComponent(new JLabel("Números: "), 0, 4, 1, 1);
 
 		DecimalFormat decimalFormat = new DecimalFormat("#.###");
 		decimalFormat.setMaximumFractionDigits(5);
 		NumberFormatter numberFormatter = new NumberFormatter(decimalFormat);
 		formattedTextFieldNumber = new JFormattedTextField(numberFormatter);
-		addExtraComponent(formattedTextFieldNumber, 1, 4, 1, 1);
 
 		btnNumberAdd = new JButton("Add");
 		btnNumberAdd.addActionListener(this);
-		addExtraComponent(btnNumberAdd, 2, 4, 1, 1);
-
- 		addExtraComponent(new JLabel("Strings: "), 0, 5, 1, 1);
 
 		textFieldString = new JTextField();
-		addExtraComponent(textFieldString, 1, 5, 1, 1);
 
 		btnStringAdd = new JButton("Add");
 		btnStringAdd.addActionListener(this);
-		addExtraComponent(btnStringAdd, 2, 5, 1, 1);
 
 		btnRemoveLastOne = new JButton("Apagar último inserido");
 		btnRemoveLastOne.addActionListener(this);
-		addExtraComponent(btnRemoveLastOne, 0, 6, 1, 1);
 
 		btnRemoveAll = new JButton("Apagar tudo");
 		btnRemoveAll.addActionListener(this);
-		addExtraComponent(btnRemoveAll, 1, 6, 1, 1);
 
+		addExtraComponent(new JLabel("Fonte:"), 0, 0, 1, 1);
+		addExtraComponent(comboBoxSource, 1, 0, 1, 1);
+		addExtraComponent(new JLabel("Coluna:"), 0, 1, 1, 1);
+		addExtraComponent(comboBoxColumn, 1, 1, 1, 1);
+		addExtraComponent(btnColumnAdd, 2, 1, 1, 1);
+		addExtraComponent( new JLabel("Operações:"), 0, 2, 1, 1);
+		addExtraComponent(comboBoxOperator, 1, 2, 1, 1);
+		addExtraComponent(btnOperatorAdd, 2, 2, 1, 1);
+		addExtraComponent(new JLabel("Operadores Lógicos: "), 0, 3, 1, 1);
+		addExtraComponent(comboBoxLogicalOperator, 1, 3, 1, 1);
+		addExtraComponent(btnLogicalOperatorAdd, 2, 3, 1, 1);
+		addExtraComponent(new JLabel("Números: "), 0, 4, 1, 1);
+		addExtraComponent(formattedTextFieldNumber, 1, 4, 1, 1);
+		addExtraComponent(btnNumberAdd, 2, 4, 1, 1);
+		addExtraComponent(new JLabel("Strings: "), 0, 5, 1, 1);
+		addExtraComponent(textFieldString, 1, 5, 1, 1);
+		addExtraComponent(btnStringAdd, 2, 5, 1, 1);
+		addExtraComponent(btnRemoveLastOne, 0, 6, 1, 1);
+		addExtraComponent(btnRemoveAll, 1, 6, 1, 1);
 		addExtraComponent(textArea, 0, 7, 3, 3);
 
 		pack();

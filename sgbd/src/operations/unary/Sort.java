@@ -1,13 +1,13 @@
 package operations.unary;
 
 import com.mxgraph.model.mxCell;
+import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.SortOperator;
 import sgbd.util.statics.Util;
@@ -41,7 +41,7 @@ public class Sort implements IOperator {
             OperationErrorVerifier.noNullArgument(arguments);
 
             error = OperationErrorVerifier.ErrorMessage.PARENT_WITHOUT_COLUMN;
-            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnsName(),
+            OperationErrorVerifier.parentContainsColumns(Column.sourceAndNameTogether(cell.getParents().get(0).getColumns()),
                     Collections.singletonList(arguments.get(0).replace("ASC:", "").replace("DESC:", "")));
             error = null;
 
@@ -65,31 +65,17 @@ public class Sort implements IOperator {
 
             column = column.replace("ASC:", "").replace("DESC:","");
 
-            String item1 = "";
-            for (Map.Entry<String, ComplexRowData> line : entries)
-                for (Map.Entry<String, byte[]> data : line.getValue())
-                    if(Objects.equals(data.getKey(), column))
-                        switch (Util.typeOfColumn(line.getValue().getMeta(data.getKey()))) {
-                            case "int" -> item1 = line.getValue().getInt(data.getKey()).toString();
-                            case "float" -> item1 = line.getValue().getFloat(data.getKey()).toString();
-                            default -> item1 = line.getValue().getString(data.getKey());
-                        }
+            boolean hasSource = Column.hasSource(column);
+            String sourceName = hasSource ? Column.removeName(column)
+                    : parentCell.getSourceTableNameByColumn(column);
+            String columnName = hasSource ? Column.removeSource(column)
+                    : column;
 
-            String item2 = "";
-            for (Map.Entry<String, ComplexRowData> line : t1)
-                for (Map.Entry<String, byte[]> data : line.getValue())
-                    if(Objects.equals(data.getKey(), column))
-                        switch (Util.typeOfColumn(line.getValue().getMeta(data.getKey()))) {
-                            case "int" -> item2 = line.getValue().getInt(data.getKey()).toString();
-                            case "float" -> item2 = line.getValue().getFloat(data.getKey()).toString();
-                            default -> item2 = line.getValue().getString(data.getKey());
-                        }
-
-           switch (Util.typeOfColumn(t1.getContent(cell.getSourceTableNameByColumn(column)).getMeta(column))){
+           switch (Util.typeOfColumn(t1.getContent(sourceName).getMeta(columnName))){
                 case "int" -> {
 
-                    Integer n1 =Integer.parseInt(item1);
-                    Integer n2 =Integer.parseInt(item2);
+                    Integer n1 = entries.getContent(sourceName).getInt(columnName);
+                    Integer n2 = t1.getContent(sourceName).getInt(columnName);
 
                     if(ascendingOrder) return n1.compareTo(n2);
 
@@ -98,8 +84,8 @@ public class Sort implements IOperator {
                 }
                 case "float" -> {
 
-                    Float n1 = Float.parseFloat(item1);
-                    Float n2 = Float.parseFloat(item2);
+                    Float n1 = entries.getContent(sourceName).getFloat(columnName);
+                    Float n2 = t1.getContent(sourceName).getFloat(columnName);
 
                     if(ascendingOrder) return n1.compareTo(n2);
 
@@ -108,9 +94,12 @@ public class Sort implements IOperator {
                 }
                 default ->{
 
-                    if(ascendingOrder) return item1.compareTo(item2);
+                    String w1 = t1.getContent(sourceName).getString(columnName);
+                    String w2 = entries.getContent(sourceName).getString(columnName);
 
-                    return item2.compareTo(item1);
+                    if(ascendingOrder) return w2.compareTo(w1);
+
+                    return w1.compareTo(w2);
 
                 }
             }

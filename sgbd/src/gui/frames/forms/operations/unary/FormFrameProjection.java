@@ -65,7 +65,6 @@ public class FormFrameProjection extends FormFrameOperation implements ActionLis
 
 		pack();
 		setLocationRelativeTo(null);
-
 		setVisible(true);
 
 	}
