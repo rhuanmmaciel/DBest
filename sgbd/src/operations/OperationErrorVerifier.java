@@ -1,5 +1,6 @@
 package operations;
 
+import entities.Column;
 import entities.cells.OperationCell;
 import exceptions.tree.ArgumentsException;
 import exceptions.tree.ParentsAmountException;
@@ -59,9 +60,15 @@ public class OperationErrorVerifier {
 
 	public static void parentContainsColumns(List<String> parent, List<String> columns) throws ArgumentsException {
 
-		if (!new HashSet<>(parent).containsAll(columns))
+		List<String> withSource = columns.stream().filter(Column::hasSource).toList();
+
+		List<String> withoutSource = columns.stream().filter(x -> !x.contains(".")).toList();
+
+		if (!new HashSet<>(parent).containsAll(withSource))
 			throw new ArgumentsException("");
 
+		if(!new HashSet<>(parent.stream().map(x -> x.substring(x.indexOf(".") + 1)).toList()).containsAll(withoutSource))
+			throw new ArgumentsException("");
 	}
 	
 	public static void twoParents(OperationCell cell) throws ParentsAmountException {

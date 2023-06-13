@@ -52,6 +52,12 @@ public class Column{
 		return columns.stream().map(Column::getSourceAndName).toList();
 	}
 
+	public static String putSource(String columnName, String sourceName){
+		if(hasSource(columnName))
+			return columnName;
+		return sourceName+"."+columnName;
+	}
+
 	public static boolean hasSource(String txt){
 		return txt.contains(".") && txt.indexOf(".") > 0 && txt.indexOf(".") < txt.length() - 1;
 	}

@@ -25,7 +25,7 @@ public class Utils {
 
     }
 
-    public static boolean listElementStartsAndEndsWith(List<String> list, String testStart, String testEnd){
+    public static boolean anyListElementStartsAndEndsWith(List<String> list, String testStart, String testEnd){
 
         return list.stream().anyMatch(x -> x.startsWith(testStart) && x.endsWith(testEnd));
 
