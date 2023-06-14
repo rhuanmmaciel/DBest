@@ -1,6 +1,7 @@
 package operations.binary;
 
 import com.mxgraph.model.mxCell;
+import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.tree.TreeException;
@@ -10,8 +11,11 @@ import operations.OperationErrorVerifier;
 import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
+import sgbd.util.statics.Util;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Join implements IOperator {
 
@@ -43,8 +47,8 @@ public class Join implements IOperator {
 			OperationErrorVerifier.noParentError(cell);
 			
 			error = ErrorMessage.PARENT_WITHOUT_COLUMN;
-			OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnsName(), List.of(arguments.get(0)));
-			OperationErrorVerifier.parentContainsColumns(cell.getParents().get(1).getColumnsName(), List.of(arguments.get(1)));
+			OperationErrorVerifier.parentContainsColumns(Column.sourceAndNameTogether(cell.getParents().get(0).getColumns()), List.of(arguments.get(0)));
+			OperationErrorVerifier.parentContainsColumns(Column.sourceAndNameTogether(cell.getParents().get(1).getColumns()), List.of(arguments.get(1)));
 			
 			error = null;
 			
@@ -59,17 +63,25 @@ public class Join implements IOperator {
 		Cell parentCell1 = cell.getParents().get(0);
 		Cell parentCell2 = cell.getParents().get(1);
 
-		Operator table_1 = parentCell1.getOperator();
-		Operator table_2 = parentCell2.getOperator();
-		String item1 = arguments.get(0);
-		String item2 = arguments.get(1);
+		List<String> argumentsFixed = new ArrayList<>();
 
-		Operator operator = new BlockNestedLoopJoin(table_1, table_2, (t1, t2) -> {
-			return t1.getContent(parentCell1.getSourceTableNameByColumn(item1)).getInt(item1) == t2
-					.getContent(parentCell2.getSourceTableNameByColumn(item2)).getInt(item2);
-		});
+		argumentsFixed.add(Column.putSource(arguments.get(0), parentCell1.getSourceTableNameByColumn(arguments.get(0))));
+		argumentsFixed.add(Column.putSource(arguments.get(1), parentCell2.getSourceTableNameByColumn(arguments.get(1))));
 
-		Operation.operationSetter(cell, "|X|   " + item1 + " = " + item2, arguments, operator);
+		Operator op1 = parentCell1.getOperator();
+		Operator op2 = parentCell2.getOperator();
+
+		String source1 = Column.removeName(argumentsFixed.get(0));
+		String source2 = Column.removeName(argumentsFixed.get(1));
+
+		String item1 = Column.removeSource(argumentsFixed.get(0));
+		String item2 = Column.removeSource(argumentsFixed.get(1));;
+
+		Operator operator = new BlockNestedLoopJoin(op1, op2, (t1, t2) -> Objects.equals(t1.getContent(source1).getInt(item1),
+						t2.getContent(source2).getInt(item2))
+		);
+
+		Operation.operationSetter(cell, "|X|   " + Column.putSource(item1, source1) + " = " + Column.putSource(item2, source2), argumentsFixed, operator);
 
 	}
 

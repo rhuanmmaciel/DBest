@@ -1,162 +1,77 @@
 package gui.frames.forms.operations.binary;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.border.EmptyBorder;
 
 import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
-import entities.cells.OperationCell;
+import gui.frames.forms.operations.FormFrameOperation;
 import gui.frames.forms.operations.IFormFrameOperation;
-import operations.binary.Join;
 
-@SuppressWarnings("serial")
-public class FormFrameJoin extends JDialog implements ActionListener, IFormFrameOperation {
+public class FormFrameJoin extends FormFrameOperation implements ActionListener, IFormFrameOperation {
 
-	private JPanel contentPane;
-	private JComboBox<?> comboBoxColumns1;
-	private JComboBox<?> comboBoxColumns2;
-	private JButton btnPronto;
-	private List<String> columnsList_1;
-	private List<String> columnsList_2;
+	private final JComboBox<String> comboBoxSource2 = new JComboBox<>();
+	private final JComboBox<String> comboBoxColumn2 = new JComboBox<>();
 
-	private OperationCell cell;
-	private Cell parentCell1;
-	private Cell parentCell2;
-	private mxCell jCell;
-	private JButton btnCancel;
-
-	private Join join = new Join();
+	private final Cell parent2;
 
 	public FormFrameJoin(mxCell jCell) {
 
-		super((Window) null);
-		setModal(true);
-		setTitle("Junção");
+		super(jCell);
 
-		this.cell = (OperationCell) Cell.getCells().get(jCell);
-		this.parentCell1 = this.cell.getParents().get(0);
-		this.parentCell2 = this.cell.getParents().get(1);
-		this.jCell = jCell;
+		this.parent2 = Cell.getCells().get(jCell).getParents().get(1);
 
 		initializeGUI();
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initializeGUI() {
 
-		setBounds(100, 100, 450, 148);
-		setLocationRelativeTo(null);
+		centerPanel.removeAll();
 
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		setContentPane(contentPane);
-
-		columnsList_1 = new ArrayList<String>();
-		columnsList_1 = parentCell1.getColumnsName();
-
-		comboBoxColumns1 = new JComboBox(columnsList_1.toArray(new String[0]));
-
-		columnsList_2 = new ArrayList<String>();
-		columnsList_2 = parentCell2.getColumnsName();
-
-		comboBoxColumns2 = new JComboBox(columnsList_2.toArray(new String[0]));
-
-		JLabel lblNewLabel = new JLabel("Tabela I");
-
-		JLabel lblNewLabel_1 = new JLabel("Tabela II");
-
-		JLabel lblNewLabel_2 = new JLabel("=");
-
-		btnPronto = new JButton("Pronto");
-		btnPronto.addActionListener(this);
-
-		btnCancel = new JButton("Cancelar");
+		btnReady.addActionListener(this);
 		btnCancel.addActionListener(this);
 
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING).addGroup(gl_contentPane
-				.createSequentialGroup().addGap(40)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addComponent(lblNewLabel)
-						.addGroup(gl_contentPane.createSequentialGroup()
-								.addComponent(comboBoxColumns1, GroupLayout.PREFERRED_SIZE, 146,
-										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
-								.addGap(6)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-										.addGroup(gl_contentPane.createSequentialGroup().addComponent(lblNewLabel_1)
-												.addContainerGap(140, Short.MAX_VALUE))
-										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(comboBoxColumns2, 0, 152, Short.MAX_VALUE).addGap(66))))))
-				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap(223, Short.MAX_VALUE)
-						.addComponent(btnCancel).addPreferredGap(ComponentPlacement.RELATED).addComponent(btnPronto)
-						.addContainerGap()));
-		gl_contentPane
-				.setVerticalGroup(gl_contentPane
-						.createParallelGroup(
-								Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblNewLabel).addComponent(lblNewLabel_1))
-								.addGap(5)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(comboBoxColumns1, GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(comboBoxColumns2, GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE).addComponent(btnPronto)
-										.addComponent(btnCancel)))
-						.addGroup(gl_contentPane.createSequentialGroup().addGap(30)
-								.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(52, Short.MAX_VALUE)));
-		contentPane.setLayout(gl_contentPane);
+		addExtraComponent(new JLabel("Fonte 1"), 0, 0, 1, 1);
+		addExtraComponent(new JLabel("Coluna 1"), 1, 0, 1, 1);
+		addExtraComponent(comboBoxSource, 0, 1, 1, 1);
+		addExtraComponent(comboBoxColumn, 1, 1, 1, 1);
+		addExtraComponent(new JLabel(" "), 0, 2, 1, 1);
+		addExtraComponent(new JLabel("Fonte 2"), 0, 3, 1, 1);
+		addExtraComponent(new JLabel("Coluna 2"), 1, 3, 1, 1);
+		addExtraComponent(comboBoxSource2, 0, 4, 1, 1);
+		addExtraComponent(comboBoxColumn2, 1, 4, 1, 1);
+		addExtraComponent(new JLabel(" "), 0, 5, 1, 1);
 
-		addWindowListener(new WindowAdapter() {
+		parent2.getAllSourceTables().stream()
+				.map(Cell::getName)
+				.forEach(comboBoxSource2::addItem);
 
-			public void windowClosing(WindowEvent e) {
+		comboBoxSource2.addActionListener(actionEvent -> setColumns(comboBoxColumn2, comboBoxSource2, parent2));
 
-				dispose();
+		setColumns(comboBoxColumn2, comboBoxSource2, parent2);
 
-			}
-
-		});
-
-		this.setVisible(true);
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if (e.getSource() == btnPronto) {
-			join.executeOperation(jCell, List.of(comboBoxColumns1.getSelectedItem().toString(),
-					comboBoxColumns2.getSelectedItem().toString()));
-			dispose();
-		} else if (e.getSource() == btnCancel) {
+		if (e.getSource() == btnReady) {
 
-			System.out.println(cell.hasBeenInitialized());
-			dispose();
+			arguments.add(comboBoxSource.getSelectedItem()+"."+comboBoxColumn.getSelectedItem());
+			arguments.add(comboBoxSource2.getSelectedItem()+"."+comboBoxColumn2.getSelectedItem());
+			btnReady();
 
-		}
+		} else if (e.getSource() == btnCancel)
+			closeWindow();
+
 	}
 
 }

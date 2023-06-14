@@ -111,9 +111,9 @@ public class FormFrameOperation extends JDialog  {
                 .map(Cell::getName)
                 .forEach(comboBoxSource::addItem);
 
-        comboBoxSource.addActionListener(actionEvent -> setColumns());
+        comboBoxSource.addActionListener(actionEvent -> setColumns(comboBoxColumn, comboBoxSource, parent1));
 
-        setColumns();
+        setColumns(comboBoxColumn, comboBoxSource, parent1);
 
     }
 
@@ -134,14 +134,14 @@ public class FormFrameOperation extends JDialog  {
         repaint();
     }
 
-    private void setColumns(){
+    protected void setColumns(JComboBox<String> comboBox, JComboBox<String> comboBoxS, Cell parent){
 
-        comboBoxColumn.removeAllItems();
+        comboBox.removeAllItems();
 
-        parent1.getColumns().stream().filter(x -> x.getSource().
-                        equals(Objects.requireNonNull(comboBoxSource.getSelectedItem()).toString())).
+        parent.getColumns().stream().filter(x -> x.getSource().
+                        equals(Objects.requireNonNull(comboBoxS.getSelectedItem()).toString())).
                         map(Column::getSourceAndName).filter(x -> !restrictedColumns.contains(x)).
-                        map(Column::removeSource).forEach(comboBoxColumn::addItem);
+                        map(Column::removeSource).forEach(comboBox::addItem);
 
         pack();
 
@@ -164,7 +164,6 @@ public class FormFrameOperation extends JDialog  {
             Constructor<? extends IOperator> constructor = operator.getDeclaredConstructor();
             IOperator operation = constructor.newInstance();
             operation.executeOperation(jCell, arguments);
-            System.out.println(operation);
 
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
                  | InvocationTargetException e) {

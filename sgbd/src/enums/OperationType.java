@@ -6,11 +6,9 @@ import gui.frames.forms.operations.IFormFrameOperation;
 import gui.frames.forms.operations.unary.FormFrameGroup;
 import gui.frames.forms.operations.unary.FormFrameSort;
 import operations.IOperator;
-import gui.frames.forms.operations.binary.FormFrameIntersection;
 import gui.frames.forms.operations.binary.FormFrameJoin;
 import gui.frames.forms.operations.binary.FormFrameLeftJoin;
 import gui.frames.forms.operations.binary.FormFrameRightJoin;
-import gui.frames.forms.operations.binary.FormFrameUnion;
 import gui.frames.forms.operations.unary.FormFrameProjection;
 import gui.frames.forms.operations.unary.FormFrameSelection;
 import operations.binary.CartesianProduct;
@@ -349,7 +347,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameUnion.class;
+			return null;
 		}
 
 		@Override
@@ -396,7 +394,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameIntersection.class;
+			return null;
 		}
 
 		@Override
