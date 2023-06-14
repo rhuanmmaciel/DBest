@@ -10,16 +10,17 @@ import gui.frames.forms.operations.binary.FormFrameJoins;
 import gui.frames.forms.operations.unary.FormFrameProjection;
 import gui.frames.forms.operations.unary.FormFrameSelection;
 import operations.binary.CartesianProduct;
-import operations.binary.Intersection;
+import operations.binary.set.Intersection;
 import operations.binary.joins.Join;
 import operations.binary.joins.LeftJoin;
 import operations.binary.joins.RightJoin;
-import operations.binary.Union;
+import operations.binary.set.Union;
 import operations.unary.Group;
 import operations.unary.Projection;
 import operations.unary.Selection;
 import operations.unary.Sort;
 
+import java.util.Arrays;
 import java.util.List;
 
 public enum OperationType implements IOperationType {
@@ -596,7 +597,7 @@ public enum OperationType implements IOperationType {
 		}
 	};
 
-	public final static List<OperationType> OPERATIONS_WITHOUT_FORM = List.of(CARTESIAN_PRODUCT, UNION, INTERSECTION, DIFFERENCE);
+	public final static List<OperationType> OPERATIONS_WITHOUT_FORM = Arrays.stream(values()).sequential().filter(x -> x.getForm() == null).toList();
 
 	public static OperationType fromString(String operationType) {
 

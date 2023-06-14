@@ -5,7 +5,7 @@ import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
 
 import java.util.Objects;
 
-public class Join extends Joins {
+public class Join extends JoinOperators {
 
 	public Join() {
 

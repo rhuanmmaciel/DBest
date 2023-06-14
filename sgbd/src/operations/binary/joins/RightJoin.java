@@ -5,7 +5,7 @@ import sgbd.query.binaryop.joins.RightNestedLoopJoin;
 
 import java.util.Objects;
 
-public class RightJoin extends Joins {
+public class RightJoin extends JoinOperators {
 
 	public RightJoin() {
 

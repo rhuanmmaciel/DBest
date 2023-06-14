@@ -13,7 +13,7 @@ import sgbd.query.Operator;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Joins implements IOperator {
+public abstract class JoinOperators implements IOperator {
 
     public void executeOperation(mxCell jCell, List<String> arguments) {
 

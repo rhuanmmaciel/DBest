@@ -19,12 +19,6 @@ public class CartesianProduct implements IOperator {
 
 	}
 
-	public CartesianProduct(mxCell jCell) {
-
-		executeOperation(jCell, null);
-
-	}
-
 	public void executeOperation(mxCell jCell, List<String> arguments) {
 
 		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
@@ -58,9 +52,7 @@ public class CartesianProduct implements IOperator {
 		Operator table1 = parentCell1.getOperator();
 		Operator table2 = parentCell2.getOperator();
 
-		Operator operator = new BlockNestedLoopJoin(table1, table2, (t1, t2) -> {
-			return true;
-		});
+		Operator operator = new BlockNestedLoopJoin(table1, table2, (t1, t2) -> true);
 
 		Operation.operationSetter(cell, "  X  ", List.of(), operator);
 

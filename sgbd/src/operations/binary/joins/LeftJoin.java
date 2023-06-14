@@ -5,7 +5,7 @@ import sgbd.query.binaryop.joins.LeftNestedLoopJoin;
 
 import java.util.Objects;
 
-public class LeftJoin extends Joins {
+public class LeftJoin extends JoinOperators {
 
 	public LeftJoin() {
 

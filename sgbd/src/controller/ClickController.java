@@ -15,10 +15,13 @@ import enums.OperationArity;
 import enums.OperationType;
 import gui.frames.forms.operations.IFormFrameOperation;
 import gui.frames.main.MainFrame;
+import operations.IOperator;
+import operations.Operation;
 
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static entities.cells.Cell.getCells;
@@ -89,8 +92,6 @@ public class ClickController {
 
 		}
 
-		Cell parentCell = edgeRef.get().hasParent() != null ? getCells().get(edgeRef.get().getParent()) : null;
-
 		if (actionType == CurrentAction.ActionType.EDGE && edgeRef.get().isDifferent(jCellRef.get())) {
 
 			if (!edgeRef.get().isReady())
@@ -98,44 +99,75 @@ public class ClickController {
 
 			if (edgeRef.get().isReady()) {
 
-				deleteMovableEdge(invisibleJCellRef);
-
-				MainController.getGraph().insertEdge(edgeRef.get().getParent(), null, "", edgeRef.get().getParent(),
-						jCellRef.get());
-
-				((OperationCell) cell).addParent(parentCell);
-
-				assert parentCell != null;
-				parentCell.setChild((OperationCell) cell);
-
-				cell.setAllNewTrees();
-				TreeUtils.recalculateContent(cell);
-
-				OperationCell operationCell = (OperationCell) cell;
-
-				OperationType type = operationCell.getType();
-
-				if((operationCell.getArity() == OperationArity.UNARY || operationCell.getParents().size() == 2)
-						&& !OperationType.OPERATIONS_WITHOUT_FORM.contains(type)){
-
-					try {
-
-						Constructor<? extends IFormFrameOperation> constructor = type.getForm().getDeclaredConstructor(mxCell.class);
-						constructor.newInstance(jCellRef.get());
-
-					} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
-							 | InvocationTargetException e) {
-
-						e.printStackTrace();
-
-					}
-
-				}
+				executeOperation();
 
 			}
 
 			edgeRef.get().reset();
 			currentActionRef.set(null);
+
+		}
+
+	}
+
+	private void executeOperation(){
+
+		Cell parentCell = getCells().get(edgeRef.get().getParent());
+
+		deleteMovableEdge(invisibleJCellRef);
+
+		MainController.getGraph().insertEdge(edgeRef.get().getParent(), null, "", edgeRef.get().getParent(),
+				jCellRef.get());
+
+		((OperationCell) cell).addParent(parentCell);
+
+		assert parentCell != null;
+		parentCell.setChild((OperationCell) cell);
+
+		cell.setAllNewTrees();
+		TreeUtils.recalculateContent(cell);
+
+		OperationCell operationCell = (OperationCell) cell;
+
+		OperationType type = operationCell.getType();
+
+		if((operationCell.getArity() == OperationArity.UNARY || operationCell.getParents().size() == 2)
+				&& !OperationType.OPERATIONS_WITHOUT_FORM.contains(type))
+			executeOperationWithForm(type);
+
+		if((operationCell.getArity() == OperationArity.UNARY || operationCell.getParents().size() == 2)
+				&& OperationType.OPERATIONS_WITHOUT_FORM.contains(type))
+			executeOperationWithoutForm(type);
+
+	}
+
+	private void executeOperationWithForm(OperationType type){
+
+		try {
+
+			Constructor<? extends IFormFrameOperation> constructor = type.getForm().getDeclaredConstructor(mxCell.class);
+			constructor.newInstance(jCellRef.get());
+
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
+				 | InvocationTargetException e) {
+
+			e.printStackTrace();
+
+		}
+
+	}
+
+	private void executeOperationWithoutForm(OperationType type){
+
+		try {
+
+			Constructor<? extends IOperator> constructor = type.getOperator().getDeclaredConstructor();
+			constructor.newInstance().executeOperation(jCellRef.get(), List.of());
+
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
+				 | InvocationTargetException e) {
+
+			e.printStackTrace();
 
 		}
 
