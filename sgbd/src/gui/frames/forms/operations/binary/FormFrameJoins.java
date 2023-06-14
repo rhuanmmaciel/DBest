@@ -11,14 +11,14 @@ import entities.cells.Cell;
 import gui.frames.forms.operations.FormFrameOperation;
 import gui.frames.forms.operations.IFormFrameOperation;
 
-public class FormFrameJoin extends FormFrameOperation implements ActionListener, IFormFrameOperation {
+public class FormFrameJoins extends FormFrameOperation implements ActionListener, IFormFrameOperation {
 
 	private final JComboBox<String> comboBoxSource2 = new JComboBox<>();
 	private final JComboBox<String> comboBoxColumn2 = new JComboBox<>();
 
 	private final Cell parent2;
 
-	public FormFrameJoin(mxCell jCell) {
+	public FormFrameJoins(mxCell jCell) {
 
 		super(jCell);
 

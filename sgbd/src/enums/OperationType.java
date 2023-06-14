@@ -6,16 +6,14 @@ import gui.frames.forms.operations.IFormFrameOperation;
 import gui.frames.forms.operations.unary.FormFrameGroup;
 import gui.frames.forms.operations.unary.FormFrameSort;
 import operations.IOperator;
-import gui.frames.forms.operations.binary.FormFrameJoin;
-import gui.frames.forms.operations.binary.FormFrameLeftJoin;
-import gui.frames.forms.operations.binary.FormFrameRightJoin;
+import gui.frames.forms.operations.binary.FormFrameJoins;
 import gui.frames.forms.operations.unary.FormFrameProjection;
 import gui.frames.forms.operations.unary.FormFrameSelection;
 import operations.binary.CartesianProduct;
 import operations.binary.Intersection;
-import operations.binary.Join;
-import operations.binary.LeftJoin;
-import operations.binary.RightJoin;
+import operations.binary.joins.Join;
+import operations.binary.joins.LeftJoin;
+import operations.binary.joins.RightJoin;
 import operations.binary.Union;
 import operations.unary.Group;
 import operations.unary.Projection;
@@ -156,7 +154,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameJoin.class;
+			return FormFrameJoins.class;
 		}
 
 		@Override
@@ -204,7 +202,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameLeftJoin.class;
+			return FormFrameJoins.class;
 		}
 
 		@Override
@@ -252,7 +250,7 @@ public enum OperationType implements IOperationType {
 
 		@Override
 		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameRightJoin.class;
+			return FormFrameJoins.class;
 		}
 
 		@Override
