@@ -15,9 +15,8 @@ import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
 import sgbd.query.unaryop.FilterOperator;
-import util.Utils;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,22 +64,20 @@ public class Selection implements IOperator {
 
 		Cell parentCell = cell.getParents().get(0);
 
+		arguments = putSource(arguments, parentCell);
+
 		String expression = arguments.get(0);
-		String[] formattedInput = formatString(expression).split(" ");
+		String[] formattedInput = formatString(expression, parentCell).split(" ");
 
 		Operator operator = new FilterOperator(parentCell.getOperator(), (Tuple t) -> {
 
 			for (String element : formattedInput) {
 
-				if (isColumn(element)) {
+				if (isColumn(element, parentCell)) {
 
-					String column = element.substring(2, element.length()-1);
-					boolean hasSource = Column.hasSource(column);
+					String source =  Column.removeName(element.substring(2));
 
-					String source = hasSource ? Column.removeName(element.substring(2))
-							: parentCell.getSourceTableNameByColumn(column);
-					String columnName = hasSource ? Column.removeSource(element.substring(0, element.length()-1))
-							: column;
+					String columnName = Column.removeSource(element.substring(0, element.length()-1));
 
 					ColumnDataType type = parentCell.getColumns().stream()
 							.filter(x -> x.getSource().equals(source) && x.getName().equals(columnName))
@@ -92,16 +89,14 @@ public class Selection implements IOperator {
 						default -> "'" + t.getContent(source).getString(columnName) + "'";
 					};
 
-					System.out.println(inf + " " + source + " " + columnName);
-
-					evaluator.putVariable(hasSource ? source+"."+columnName : column, inf);
+					evaluator.putVariable(source+"."+columnName, inf);
 
 				}
 			}
 
 			try {
 
-				return evaluator.evaluate(formatString(expression)).equals("1.0");
+				return evaluator.evaluate(formatString(expression, parentCell)).equals("1.0");
 
 			} catch (EvaluationException e) {
 
@@ -115,24 +110,67 @@ public class Selection implements IOperator {
 
 	}
 
-	public String formatString(String input) {
+	public String formatString(String input, Cell parent) {
 
+		Pattern pattern = Pattern.compile("(?<=\\s|^)([\\w.-]+(?:\\.[\\w.-]+)?)(?=[\\s>=<])");
+		Matcher matcher = pattern.matcher(input);
+
+		StringBuilder result = new StringBuilder();
+		while (matcher.find()) {
+
+			String match = matcher.group(1);
+
+			if (parent.getColumnsName().contains(Column.removeSource(match)))
+				matcher.appendReplacement(result, "#{" + match + "}");
+
+		}
+		matcher.appendTail(result);
+
+		input = result.toString();
 		input = input.replaceAll("\\bAND\\b", "&&");
 		input = input.replaceAll("\\bOR\\b", "||");
-		input = input.replaceAll("(?<=\\s|^)([\\w.-]+(?:\\.[\\w.-]+)?)(?=[\\s>=<])", "#{$1}");
 		input = input.replaceAll("=", "==");
 		input = input.replaceAll("≠", "!=");
 		input = input.replaceAll("≥", ">=");
 		input = input.replaceAll("≤", "<=");
+
 		return input;
 
 	}
 
-	public boolean isColumn(String input) {
+
+	public boolean isColumn(String input, Cell parent) {
 
 		Pattern pattern = Pattern.compile("#\\{([\\w.-]+(?:\\.[\\w.-]+)?)\\}");
 		Matcher matcher = pattern.matcher(input);
-		return matcher.matches();
+
+		boolean isColumn;
+
+		if(matcher.matches()) input = input.substring(2, input.length()-1);
+
+		if(Column.hasSource(input)) isColumn = parent.getColumnsName().contains(Column.removeSource(input));
+		else isColumn = parent.getColumnsName().contains(input);
+
+		return matcher.matches() && isColumn;
+
+	}
+
+	private List<String> putSource(List<String> expression, Cell parentCell) {
+
+		List<String> splitted = new ArrayList<>(List.of(expression.get(0).split(" ")));
+		List<String> splittedFormatted = new ArrayList<>();
+
+		for (String element : splitted) {
+			String elementFormatted = element;
+
+			if (parentCell.getColumnsName().contains(element) && !Column.hasSource(element)) {
+				elementFormatted = Column.putSource(element, parentCell.getSourceTableNameByColumn(element));
+			}
+
+			splittedFormatted.add(elementFormatted);
+		}
+
+		return List.of(splittedFormatted.stream().reduce((x, y) -> x.concat(" " + y)).orElseThrow());
 
 	}
 

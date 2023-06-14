@@ -57,19 +57,22 @@ public class Sort implements IOperator {
 
         Operator operator = parentCell.getOperator();
 
+        String column = arguments.get(0);
+
+        boolean ascendingOrder = !column.startsWith("DESC:");
+
+        column = column.replace("ASC:", "").replace("DESC:","");
+
+        boolean hasSource = Column.hasSource(column);
+        String sourceName = hasSource ? Column.removeName(column)
+                : parentCell.getSourceTableNameByColumn(column);
+        String columnName = hasSource ? Column.removeSource(column)
+                : column;
+
+        String prefix = ascendingOrder ? "ASC:" : "DESC:";
+        arguments = List.of(prefix+Column.putSource(columnName, sourceName));
+
         operator = new SortOperator(operator, (entries, t1) -> {
-
-            String column = arguments.get(0);
-
-            boolean ascendingOrder = !column.startsWith("DESC:");
-
-            column = column.replace("ASC:", "").replace("DESC:","");
-
-            boolean hasSource = Column.hasSource(column);
-            String sourceName = hasSource ? Column.removeName(column)
-                    : parentCell.getSourceTableNameByColumn(column);
-            String columnName = hasSource ? Column.removeSource(column)
-                    : column;
 
            switch (Util.typeOfColumn(t1.getContent(sourceName).getMeta(columnName))){
                 case "int" -> {

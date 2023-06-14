@@ -26,8 +26,22 @@ public final class UnaryExpression extends OperationExpression {
 		}
 
 		setType(OperationType.fromString(input.substring(0, endIndex).toLowerCase()));
-		
-		String source = input.substring(input.indexOf("(") + 1, input.lastIndexOf(")"));
+
+		int beginSourceIndex = 0;
+
+		int bracketsAmount = 0;
+		for(int i = 0; i < input.toCharArray().length; i++){
+
+			char c = input.toCharArray()[i];
+
+			if(c == '[') bracketsAmount++;
+			if(c == ']') bracketsAmount--;
+			if(beginSourceIndex == 0 && bracketsAmount == 0 && c == '(')
+				beginSourceIndex = i + 1;
+
+		}
+
+		String source = input.substring(beginSourceIndex, input.lastIndexOf(")"));
 		
 		setSource(DslUtils.expressionRecognizer(source));
 
