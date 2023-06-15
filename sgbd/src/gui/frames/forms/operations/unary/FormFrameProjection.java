@@ -15,11 +15,10 @@ import gui.frames.forms.operations.IFormFrameOperation;
 
 public class FormFrameProjection extends FormFrameOperation implements ActionListener, IFormFrameOperation {
 
-	private JButton btnAdd;
-	private JButton btnRemove;
-	private JTextArea textArea;
-
-	private JButton btnAddAll;
+	private final JButton btnAdd = new JButton("Adicionar");;
+	private final JButton btnRemove = new JButton("Remover colunas");
+	private final JButton btnAddAll = new JButton("Adicionar todas");
+	private final JTextArea textArea = new JTextArea();
 
 	public FormFrameProjection(mxCell jCell) {
 
@@ -34,22 +33,16 @@ public class FormFrameProjection extends FormFrameOperation implements ActionLis
 		btnReady.addActionListener(this);
 		btnCancel.addActionListener(this);
 
-		textArea = new JTextArea();
 		textArea.setPreferredSize(new Dimension(300,300));
+		textArea.setEditable(false);
 
-		btnAdd = new JButton("Adicionar");
 		btnAdd.addActionListener(this);
-
-		btnRemove = new JButton("Remover colunas");
 		btnRemove.addActionListener(this);
-
-		btnAddAll = new JButton("Adicionar todas");
 		btnAddAll.addActionListener(this);
 
 		addExtraComponent(btnAdd, 0, 2, 1, 1);
 		addExtraComponent(btnAddAll, 1, 2, 1, 1);
 		addExtraComponent(btnRemove, 2, 2, 1, 1);
-
 		addExtraComponent(new JScrollPane(textArea), 0, 3, 3, 3);
 
 		pack();

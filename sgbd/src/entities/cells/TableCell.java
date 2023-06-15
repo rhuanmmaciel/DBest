@@ -42,9 +42,9 @@ public final class TableCell extends Cell{
 		this.table = table;
 		Operator operator = new TableScan(table);
 		operator.open();
-		
+
 		setOperator(operator);
-		
+
 	}
 	
 	public Table getTable() {
