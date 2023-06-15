@@ -32,9 +32,12 @@ public class DataFrame extends JDialog implements ActionListener {
 	private final int HEIGHT = (int)(MainFrame.HEIGHT * 0.6);
 
 	private final JLabel lblText = new JLabel();
+	private final JLabel lblPages = new JLabel();;
 	private final JTable table = new JTable();
-	private JButton btnLeft;
-	private JButton btnRight;
+	private final JButton btnLeft = new JButton("<");;
+	private final JButton btnRight = new JButton(">");
+	private final JButton btnAllLeft = new JButton("<<");;
+	private final JButton btnAllRight = new JButton(">>");;
 
 	private Map<String, String> row;
 	private final List<Map<String, String>> rows;
@@ -151,11 +154,10 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		JScrollPane scrollPane = new JScrollPane(table);
 
-		btnLeft = new JButton("<");
 		btnLeft.addActionListener(this);
-
-		btnRight = new JButton(">");
+		btnAllLeft.addActionListener(this);
 		btnRight.addActionListener(this);
+		btnAllRight.addActionListener(this);
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -167,16 +169,20 @@ public class DataFrame extends JDialog implements ActionListener {
 		                                        .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, WIDTH * 92 / 100, GroupLayout.PREFERRED_SIZE))
 		                                .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 		                                        .addGroup(gl_contentPane.createSequentialGroup()
-		                                                .addGap(WIDTH / 100)
-		                                                .addComponent(lblText)
-		                                                .addPreferredGap(ComponentPlacement.RELATED, WIDTH * 85 / 100, Short.MAX_VALUE))
+														.addGap(WIDTH / 100)
+														.addComponent(lblText)
+														.addPreferredGap(ComponentPlacement.RELATED, WIDTH * 85 / 100, Short.MAX_VALUE)
+														.addComponent(lblPages))
 		                                        .addGroup(gl_contentPane.createSequentialGroup()
-		                                                .addContainerGap()
-		                                                .addComponent(btnLeft)
-		                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-		                                                .addComponent(btnRight)
-		                                                .addPreferredGap(ComponentPlacement.RELATED)
-		                                              )))
+														.addContainerGap()
+														.addComponent(btnAllLeft)
+														.addPreferredGap(ComponentPlacement.RELATED)
+														.addComponent(btnLeft)
+														.addPreferredGap(ComponentPlacement.UNRELATED)
+														.addComponent(btnRight)
+														.addPreferredGap(ComponentPlacement.RELATED)
+														.addComponent(btnAllRight, GroupLayout.PREFERRED_SIZE, WIDTH * 4 / 100,
+																GroupLayout.PREFERRED_SIZE))))
 		                                .addGap(WIDTH * 5 / 100)));
 
 
@@ -185,27 +191,36 @@ public class DataFrame extends JDialog implements ActionListener {
 		        .addGroup(gl_contentPane.createSequentialGroup()
 		                .addContainerGap()
 		                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-		                        .addComponent(lblText))
+								.addComponent(lblText)
+								.addComponent(lblPages))
 		                .addGap(HEIGHT * 5 / 100)
 		                .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, HEIGHT * 60 / 100, GroupLayout.PREFERRED_SIZE)
 		                .addGap(HEIGHT * 5 / 100)
 		                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-		                        .addComponent(btnRight)
-		                        .addComponent(btnLeft))
+								.addComponent(btnAllRight)
+								.addComponent(btnRight)
+								.addComponent(btnLeft)
+								.addComponent(btnAllLeft))
 		                .addContainerGap(HEIGHT * 5 / 100, Short.MAX_VALUE)));
 
 
 		contentPane.setLayout(gl_contentPane);
 
 		verifyButtons();
-		
+
+		if(table.getRowCount() == 0) lblPages.setText("0/0");
+
 		this.setVisible(true);
 	}
 
 	private void verifyButtons() {
 
 		btnLeft.setEnabled(currentIndex != 0);
+		btnAllLeft.setEnabled(currentIndex != 0);
 		btnRight.setEnabled(lastPage == null || lastPage != currentIndex);
+		btnAllRight.setEnabled(lastPage == null || lastPage != currentIndex);
+
+		lblPages.setText(currentIndex + 1 + "/" + (lastPage == null ? "?" : lastPage + 1));
 
 	}
 
@@ -219,6 +234,16 @@ public class DataFrame extends JDialog implements ActionListener {
 		} else if (e.getSource() == btnLeft) {
 
 			currentIndex--;
+
+		}if(e.getSource() == btnAllLeft){
+
+			currentIndex = Math.max(currentIndex - 100, 0);
+
+		}else if(e.getSource() == btnAllRight){
+
+			if(lastPage == null)
+				for(int i = 0; lastPage == null && i < 100; i++) updateTable(++currentIndex);
+			else currentIndex = lastPage;
 
 		}
 
