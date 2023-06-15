@@ -12,7 +12,6 @@ import entities.Column;
 import entities.Coordinates;
 import entities.Tree;
 import entities.utils.FindRoots;
-import entities.utils.TableFormat;
 import entities.utils.TreeUtils;
 import sgbd.query.Operator;
 
@@ -22,12 +21,11 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 	protected List<Column> columns;
 	private String style;
 	private String name;
-	private mxCell jCell;
+	private final mxCell jCell;
 	private OperationCell child;
 	private int length;
 	private int width;
 	private Tree tree;
-	protected Map<Integer, Map<String, String>> content;
 	protected static Map<mxCell, Cell> cells = new HashMap<>();
 
 	public Cell(String name, String style, mxCell jCell, int length, int width) {
@@ -81,7 +79,6 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 	public void setOperator(Operator operator) {
 
 		this.operator = operator;
-		this.content = TableFormat.getRows(operator);
 
 	}
 
@@ -127,23 +124,6 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 	public List<String> getColumnSourceNames(){
 
 		return getColumns().stream().map(x -> Column.putSource(x.getName(), x.getSource())).toList();
-
-	}
-
-	public Map<Integer, Map<String, String>> getMapContent() {
-
-		return content;
-
-	}
-
-	public List<List<String>> getListContent() {
-
-		List<List<String>> result = new ArrayList<>();
-		for (Map.Entry<Integer, Map<String, String>> entry : content.entrySet()) {
-			List<String> row = new ArrayList<>(entry.getValue().values());
-			result.add(row);
-		}
-		return result;
 
 	}
 

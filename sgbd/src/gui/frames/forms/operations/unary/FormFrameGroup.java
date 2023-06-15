@@ -11,10 +11,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Objects;
 
 public class FormFrameGroup extends FormFrameOperation implements ActionListener, IFormFrameOperation {
 
-    private final JButton btnAdd = new JButton("Adicionar");;
+    private final JButton btnAdd = new JButton("Adicionar");
     private final JButton btnRemove = new JButton("Remover colunas");
     private final JTextArea textArea = new JTextArea();
     private final JComboBox<String> comboBoxGroupBySource = new JComboBox<>();
@@ -90,8 +91,8 @@ public class FormFrameGroup extends FormFrameOperation implements ActionListener
 
             arguments.addAll(List.of(textArea.getText().split("\n")));
             arguments.remove(0);
-            arguments.add(0, Column.putSource(comboBoxGroupByColumn.getSelectedItem().toString(),
-                    comboBoxGroupBySource.getSelectedItem().toString()));
+            arguments.add(0, Column.putSource(Objects.requireNonNull(comboBoxGroupByColumn.getSelectedItem()).toString(),
+                    Objects.requireNonNull(comboBoxGroupBySource.getSelectedItem()).toString()));
             btnReady();
 
         }
@@ -100,7 +101,7 @@ public class FormFrameGroup extends FormFrameOperation implements ActionListener
 
     private void updateColumns(){
 
-        String aggregation = switch (comboBoxAggregation.getSelectedItem().toString()){
+        String aggregation = switch (Objects.requireNonNull(comboBoxAggregation.getSelectedItem()).toString()){
             case "Máximo" -> "MAX:";
             case "Mínimo" -> "MIN:";
             case "Média" -> "AVG:";

@@ -4,8 +4,6 @@ import com.mxgraph.model.mxCell;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import enums.OperationArity;
-import enums.OperationType;
 import operations.IOperator;
 
 import javax.swing.*;
@@ -24,9 +22,6 @@ public class FormFrameOperation extends JDialog  {
     private final Class<? extends IOperator> operator;
 
     private final mxCell jCell;
-    private final OperationType type;
-    private final OperationCell cell;
-    private final OperationArity arity;
     protected final Cell parent1;
 
     protected final JPanel contentPane = new JPanel(new BorderLayout());
@@ -44,15 +39,13 @@ public class FormFrameOperation extends JDialog  {
         super((Window) null);
         setModal(true);
 
+        OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
+
+        this.operator = cell.getType().getOperator();
         this.jCell = jCell;
-        this.cell = (OperationCell) Cell.getCells().get(jCell);
-        this.type = cell.getType();
-        this.arity = cell.getArity();
-        this.operator = type.getOperator();
+        this.parent1 = cell.getParents().get(0);
 
-        setTitle(type.getDisplayName());
-
-        this.parent1 = this.cell.getParents().get(0);
+        setTitle(cell.getType().getDisplayName());
 
         initializeGUI();
 

@@ -125,7 +125,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/entities/cells/Cell.java</url>
-          <line>34</line>
+          <line>32</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>

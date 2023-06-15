@@ -42,16 +42,16 @@ public class Export extends JPanel {
 
 	public Export(AtomicReference<Cell> cell, FileType type, AtomicReference<Boolean> cancelService) {
 
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Salvar arquivo");
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.setCurrentDirectory(MainController.getLastDirectory());
-		
-		if (type == FileType.CSV)
-			exportToCsv(cell.get().getMapContent(), cell.get(), fileChooser);
-
-		else if (type == FileType.DAT)
-			exportToDat(cell.get(), fileChooser);
+//		JFileChooser fileChooser = new JFileChooser();
+//		fileChooser.setDialogTitle("Salvar arquivo");
+//		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+//		fileChooser.setCurrentDirectory(MainController.getLastDirectory());
+//
+//		if (type == FileType.CSV)
+//			exportToCsv(cell.get().getMapContent(), cell.get(), fileChooser);
+//
+//		else if (type == FileType.DAT)
+//			exportToDat(cell.get(), fileChooser);
 
 	}
 
@@ -63,83 +63,83 @@ public class Export extends JPanel {
 
 	private void exportToDat(Cell cell, JFileChooser fileChooser) {
 
-		Map<String, Integer> amount = new HashMap<>();
-		for (String columnName : cell.getColumnNames()) {
-
-			String sourceTable = cell.getSourceTableNameByColumn(columnName);
-
-			int i = 1;
-
-			if (amount.containsKey(sourceTable)) {
-
-				i = amount.get(sourceTable) + 1;
-				amount.put(sourceTable, i);
-
-			} else {
-
-				amount.put(sourceTable, i);
-
-			}
-
-		}
-
-		String defaultFileName = amount.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey)
-				.orElse(null) + ".head";
-
-		fileChooser.setSelectedFile(new File(defaultFileName));
-
-		int userSelection = fileChooser.showSaveDialog(null);
-
-		if (userSelection == JFileChooser.APPROVE_OPTION) {
-			
-			MainController.setLastDirectory(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
-			File fileToSave = fileChooser.getSelectedFile();
-			String filePath = fileToSave.getAbsolutePath();
-
-			if (!filePath.endsWith(".head")) {
-
-				filePath += ".head";
-				fileToSave = new File(filePath);
-
-			}
-
-			String headFileName = fileChooser.getSelectedFile().getName();
-			String fileName = headFileName.substring(0, headFileName.indexOf("."));
-
-			if (fileToSave.exists()) {
-				int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
-						"Confirmar substituição", JOptionPane.YES_NO_OPTION);
-				if (result == JOptionPane.NO_OPTION) {
-					exportToDat(cell, fileChooser);
-					return;
-				}
-			}
-
-			TableCell createdCell = TableCreator.createTable(fileName, cell.getColumns(), cell.getMapContent());
-
-			createdCell.getTable().saveHeader(headFileName);
-			
-			createdCell.getTable().close();
-			
-			Path source = Paths.get(headFileName);
-			String datFileName = fileName + ".dat";
-			Path source1 = Paths.get(datFileName);
-
-			Path destination = Paths.get(filePath);
-			Path destination2 = Paths.get(filePath.replace(headFileName, datFileName));
-
-			try {
-
-				Files.move(source, destination);
-				Files.move(source1, destination2);
-
-			} catch (Exception e) {
-
-				System.err.println("Ocorreu um erro ao mover o arquivo: " + e.getMessage());
-
-			}
-
-		}
+//		Map<String, Integer> amount = new HashMap<>();
+//		for (String columnName : cell.getColumnNames()) {
+//
+//			String sourceTable = cell.getSourceTableNameByColumn(columnName);
+//
+//			int i = 1;
+//
+//			if (amount.containsKey(sourceTable)) {
+//
+//				i = amount.get(sourceTable) + 1;
+//				amount.put(sourceTable, i);
+//
+//			} else {
+//
+//				amount.put(sourceTable, i);
+//
+//			}
+//
+//		}
+//
+//		String defaultFileName = amount.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey)
+//				.orElse(null) + ".head";
+//
+//		fileChooser.setSelectedFile(new File(defaultFileName));
+//
+//		int userSelection = fileChooser.showSaveDialog(null);
+//
+//		if (userSelection == JFileChooser.APPROVE_OPTION) {
+//
+//			MainController.setLastDirectory(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
+//			File fileToSave = fileChooser.getSelectedFile();
+//			String filePath = fileToSave.getAbsolutePath();
+//
+//			if (!filePath.endsWith(".head")) {
+//
+//				filePath += ".head";
+//				fileToSave = new File(filePath);
+//
+//			}
+//
+//			String headFileName = fileChooser.getSelectedFile().getName();
+//			String fileName = headFileName.substring(0, headFileName.indexOf("."));
+//
+//			if (fileToSave.exists()) {
+//				int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
+//						"Confirmar substituição", JOptionPane.YES_NO_OPTION);
+//				if (result == JOptionPane.NO_OPTION) {
+//					exportToDat(cell, fileChooser);
+//					return;
+//				}
+//			}
+//
+//			TableCell createdCell = TableCreator.createTable(fileName, cell.getColumns(), cell.getMapContent());
+//
+//			createdCell.getTable().saveHeader(headFileName);
+//
+//			createdCell.getTable().close();
+//
+//			Path source = Paths.get(headFileName);
+//			String datFileName = fileName + ".dat";
+//			Path source1 = Paths.get(datFileName);
+//
+//			Path destination = Paths.get(filePath);
+//			Path destination2 = Paths.get(filePath.replace(headFileName, datFileName));
+//
+//			try {
+//
+//				Files.move(source, destination);
+//				Files.move(source1, destination2);
+//
+//			} catch (Exception e) {
+//
+//				System.err.println("Ocorreu um erro ao mover o arquivo: " + e.getMessage());
+//
+//			}
+//
+//		}
 
 	}
 

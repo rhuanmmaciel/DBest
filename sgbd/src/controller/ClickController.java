@@ -16,7 +16,6 @@ import enums.OperationType;
 import gui.frames.forms.operations.IFormFrameOperation;
 import gui.frames.main.MainFrame;
 import operations.IOperator;
-import operations.Operation;
 
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Constructor;

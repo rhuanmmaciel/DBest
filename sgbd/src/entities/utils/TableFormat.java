@@ -1,10 +1,6 @@
 package entities.utils;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
@@ -13,23 +9,17 @@ import sgbd.util.statics.Util;
 
 public class TableFormat {
 
-	public static Map<Integer, Map<String, String>> getRows(Operator operator) {
+	public static Map<String, String> getRow(Operator operator) {
 
-		operator.open();
-
-	    Set<String> possibleKeys = new LinkedHashSet<>(); 
-	    Map<Integer, Map<String, String>> rows = new LinkedHashMap<>();
+	    Set<String> possibleKeys = new LinkedHashSet<>();
+	    Map<String, String> row = new LinkedHashMap<>();
 	    
         for(Map.Entry<String, List<String>> content: operator.getContentInfo().entrySet())
 			possibleKeys.addAll(content.getValue());
 
-	    int i = 0;
-	    
-	    while (operator.hasNext()) {
+	    if (operator.hasNext()) {
 
 	    	Tuple t = operator.next();
-	    	
-	        Map<String, String> row = new LinkedHashMap<>();
 
 	        for (Map.Entry<String, ComplexRowData> line : t)
 	            for (Map.Entry<String, byte[]> data : line.getValue())
@@ -39,39 +29,17 @@ public class TableFormat {
 						default -> row.put(data.getKey(), line.getValue().getString(data.getKey()));
 					}
 
-	        rows.put(i, row);
-	        i++;
-	    }
+	    }else{
 
-	    for (Map<String, String> row : rows.values()) {
-	        for (String key : possibleKeys) {
-	            if (!row.containsKey(key)) {
-	                row.put(key, "null");
-	            }
-	        }
-	    }
+			return null;
 
-	    Map<Integer, Map<String, String>> rowsInOrder = new LinkedHashMap<>();
-	    
-	    for(Map.Entry<Integer, Map<String, String>> row : rows.entrySet()) {
-	    	
-	    	Map<String, String> newRow = new LinkedHashMap<>();
-	    	for(String key : possibleKeys) {
-	    		
-	    		if(row.getValue().containsKey(key)) {
-	    			
-	    			newRow.put(key, row.getValue().get(key));
-	    			
-	    		}
-	    		
-	    	}
-	    	rowsInOrder.put(row.getKey(), newRow);
-	    	
-	    }
-	    
-	    operator.close();
-	    	
-	    return rowsInOrder;
+		}
+
+		for (String key : possibleKeys)
+			if (!row.containsKey(key))
+				row.put(key, "null");
+
+	    return row;
 	
 	}
 
