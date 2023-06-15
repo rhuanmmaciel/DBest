@@ -11,10 +11,13 @@ import operations.OperationErrorVerifier;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.SortOperator;
 import sgbd.util.statics.Util;
+import util.Utils;
 
 import java.util.*;
 
 public class Sort implements IOperator {
+
+    public static List<String> PREFIXES = List.of("ASC:", "DESC:");
 
     public Sort() {
 
@@ -41,8 +44,9 @@ public class Sort implements IOperator {
             OperationErrorVerifier.noNullArgument(arguments);
 
             error = OperationErrorVerifier.ErrorMessage.PARENT_WITHOUT_COLUMN;
-            OperationErrorVerifier.parentContainsColumns(Column.sourceAndNameTogether(cell.getParents().get(0).getColumns()),
-                    Collections.singletonList(arguments.get(0).replace("ASC:", "").replace("DESC:", "")));
+            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(),
+                    Collections.singletonList(
+                            Utils.replaceIfStartsWithIgnoreCase(arguments.get(0), PREFIXES, "")));
             error = null;
 
         } catch (TreeException e) {
@@ -59,9 +63,9 @@ public class Sort implements IOperator {
 
         String column = arguments.get(0);
 
-        boolean ascendingOrder = !column.startsWith("DESC:");
+        boolean ascendingOrder = !Utils.startsWithIgnoreCase(column, "DESC:");
 
-        column = column.replace("ASC:", "").replace("DESC:","");
+        column = Utils.replaceIfStartsWithIgnoreCase(column, PREFIXES, "");
 
         boolean hasSource = Column.hasSource(column);
         String sourceName = hasSource ? Column.removeName(column)

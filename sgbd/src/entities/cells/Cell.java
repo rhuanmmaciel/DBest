@@ -80,8 +80,6 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
 	public void setOperator(Operator operator) {
 
-		operator.close();
-		operator.open();
 		this.operator = operator;
 		this.content = TableFormat.getRows(operator);
 
@@ -92,8 +90,6 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 		if (operator == null)
 			return null;
 
-		operator.close();
-		operator.open();
 		return operator;
 
 	}
@@ -122,13 +118,15 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 		return columns;
 	}
 
-	public List<String> getColumnsName() {
+	public List<String> getColumnNames() {
 
-		List<String> names = new ArrayList<>();
+		return getColumns().stream().map(Column::getName).toList();
 
-		columns.forEach(x -> names.add(x.getName()));
+	}
 
-		return names;
+	public List<String> getColumnSourceNames(){
+
+		return getColumns().stream().map(x -> Column.putSource(x.getName(), x.getSource())).toList();
 
 	}
 
@@ -153,7 +151,7 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
 		for (Cell cell : FindRoots.getRoots(this)) {
 
-			if (cell.getColumnsName().contains(columnName))
+			if (cell.getColumnNames().contains(columnName))
 				return cell.getName();
 
 		}

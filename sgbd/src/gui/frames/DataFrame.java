@@ -57,7 +57,7 @@ public class DataFrame extends JDialog implements ActionListener {
 		else lblText.setText(cell.getName()+":");
 		
 		data = cell.getMapContent();
-		columnsName = cell.getColumnsName();
+		columnsName = cell.getColumnSourceNames();
 		numberOfPages = (int) Math.ceil((double) data.size() / 15.0);
 
 		for (int i = 0; i < numberOfPages; i++) {

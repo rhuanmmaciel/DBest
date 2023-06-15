@@ -24,7 +24,7 @@ public class Operation {
 		for (Cell parent : cell.getParents())
 			parentsColumns.add(parent.getColumns());
 
-		cell.setColumns(parentsColumns, operator.getContentInfo().values());
+		cell.setColumns(parentsColumns, operator.getContentInfo());
 
 		cell.setOperator(operator);
 

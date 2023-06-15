@@ -5,6 +5,7 @@ import entities.cells.OperationCell;
 import exceptions.tree.ArgumentsException;
 import exceptions.tree.ParentsAmountException;
 import exceptions.tree.ParentsErrorException;
+import util.Utils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +14,14 @@ public class OperationErrorVerifier {
 
 	public enum ErrorMessage {
 		NO_PARENT, NO_ONE_PARENT, NULL_ARGUMENT, NO_ONE_ARGUMENT, PARENT_ERROR, PARENT_WITHOUT_COLUMN,
-		NO_TWO_PARENTS, NO_TWO_ARGUMENTS
+		NO_TWO_PARENTS, NO_TWO_ARGUMENTS, EMPTY_ARGUMENT, NO_PREFIX
+	}
+
+	public static void everyoneHavePrefix(List<String> arguments, List<String> prefix) throws ArgumentsException{
+
+		if(!arguments.stream().allMatch(x-> Utils.startsWithIgnoreCase(x, prefix)))
+			throw new ArgumentsException("");
+
 	}
 
 	public static void hasParent(OperationCell cell) throws ParentsAmountException {
@@ -35,6 +43,10 @@ public class OperationErrorVerifier {
 		if (arguments == null)
 			throw new ArgumentsException("");
 
+	}
+
+	public static void noEmptyArgument(List<String> arguments) throws ArgumentsException{
+		if(arguments.isEmpty()) throw new ArgumentsException("");
 	}
 
 	public static void oneArgument(List<String> arguments) throws ArgumentsException {

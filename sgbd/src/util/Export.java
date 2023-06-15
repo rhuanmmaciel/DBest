@@ -63,10 +63,8 @@ public class Export extends JPanel {
 
 	private void exportToDat(Cell cell, JFileChooser fileChooser) {
 
-		
-
 		Map<String, Integer> amount = new HashMap<>();
-		for (String columnName : cell.getColumnsName()) {
+		for (String columnName : cell.getColumnNames()) {
 
 			String sourceTable = cell.getSourceTableNameByColumn(columnName);
 

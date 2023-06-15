@@ -1,61 +1,27 @@
 package operations.unary;
 
 import com.mxgraph.model.mxCell;
+import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
-import sgbd.query.Tuple;
+import sgbd.query.agregation.AgregationOperation;
 import sgbd.query.agregation.AvgAgregation;
+import sgbd.query.agregation.MaxAgregation;
 import sgbd.query.agregation.MinAgregation;
-import sgbd.query.sourceop.TableScan;
 import sgbd.query.unaryop.GroupOperator;
-import sgbd.table.Table;
-import sgbd.util.statics.Util;
+import util.Utils;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Group implements IOperator {
 
-    public static void main(String[] args){
-
-        Table table = Table.loadFromHeader("/home/rhuan/Documents/input/mlbplayers.head");
-
-        table.open();
-
-        Operator op = new TableScan(table);
-
-        Operator aux = new GroupOperator(op, "mlbplayers", "mlbplayers_Team", List.of(
-                new MinAgregation("mlbplayers","mlbplayers_Id"),
-                new MinAgregation("mlbplayers", "mlbplayers_Weightlbs")
-        ));
-        aux.open();
-
-        while (aux.hasNext()) {
-
-            Tuple t = aux.next();
-
-            Map<String, String> row = new LinkedHashMap<>();
-
-            for (Map.Entry<String, ComplexRowData> line : t)
-                for (Map.Entry<String, byte[]> data : line.getValue())
-                    switch (Util.typeOfColumn(line.getValue().getMeta(data.getKey()))) {
-                        case "int" -> row.put(data.getKey(), line.getValue().getInt(data.getKey()).toString());
-                        case "float" -> row.put(data.getKey(), line.getValue().getFloat(data.getKey()).toString());
-                        default -> row.put(data.getKey(), line.getValue().getString(data.getKey()));
-                    }
-
-            System.out.println(row);
-        }
-
-
-    }
+    public static List<String> PREFIXES = List.of("MIN:", "MAX:", "AVG:");
 
     public Group() {
 
@@ -82,8 +48,18 @@ public class Group implements IOperator {
             error = OperationErrorVerifier.ErrorMessage.NULL_ARGUMENT;
             OperationErrorVerifier.noNullArgument(arguments);
 
+            error = OperationErrorVerifier.ErrorMessage.EMPTY_ARGUMENT;
+            OperationErrorVerifier.noEmptyArgument(arguments);
+
             error = OperationErrorVerifier.ErrorMessage.PARENT_WITHOUT_COLUMN;
-            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnsName(), arguments);
+            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(),
+                    arguments.stream().limit(1).toList());
+            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(),
+                    arguments.stream().map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, ""))
+                            .toList().subList(1, arguments.size()));
+
+            error = OperationErrorVerifier.ErrorMessage.NO_PREFIX;
+            OperationErrorVerifier.everyoneHavePrefix(arguments.subList(1, arguments.size()), PREFIXES);
 
             error = null;
 
@@ -99,9 +75,42 @@ public class Group implements IOperator {
 
         Operator operator = parentCell.getOperator();
 
-        operator = new GroupOperator(operator, cell.getSourceTableNameByColumn(arguments.get(0)), arguments.get(0), List.of(
-                new AvgAgregation(cell.getSourceTableNameByColumn(arguments.get(1)),arguments.get(1))
-        ));
+        List<String> fixedArguments = new ArrayList<>();
+
+        fixedArguments.add(Column.putSource(arguments.get(0), parentCell.getSourceTableNameByColumn(arguments.get(0))));
+
+        for(String argument : arguments.subList(1, arguments.size())){
+
+            String fixedArgument = argument.substring(0, 4)+Column.putSource(argument.substring(4),
+                        parentCell.getSourceTableNameByColumn(argument.substring(4)));
+
+            fixedArguments.add(fixedArgument);
+
+        }
+
+        String groupBy = fixedArguments.get(0);
+
+        List<AgregationOperation> aggregations = new ArrayList<>();
+
+        for(String argument : fixedArguments.subList(1, arguments.size())){
+
+            String column = argument.substring(4);
+            String sourceName = Column.removeName(column);
+            String columnName = Column.removeSource(column);
+
+            if(Utils.startsWithIgnoreCase(argument, "MAX:"))
+                aggregations.add(new MaxAgregation(sourceName, columnName));
+            else if(Utils.startsWithIgnoreCase(argument, "MIN:"))
+                aggregations.add(new MinAgregation(sourceName, columnName));
+            else if(Utils.startsWithIgnoreCase(argument, "AVG:"))
+                aggregations.add(new AvgAgregation(sourceName, columnName));
+
+        }
+
+        operator = new GroupOperator(operator, Column.removeName(groupBy), Column.removeSource(groupBy), aggregations);
+
+        System.out.println(fixedArguments);
+        System.out.println(groupBy);
 
         Operation.operationSetter(cell, cell.getType().getSymbol() + arguments.toString(), arguments, operator);
 

@@ -14,23 +14,20 @@ import sgbd.util.statics.Util;
 public class TableFormat {
 
 	public static Map<Integer, Map<String, String>> getRows(Operator operator) {
-		
-	    Operator aux = operator;
-	    aux.close();
-	    aux.open();
+
+		operator.open();
 
 	    Set<String> possibleKeys = new LinkedHashSet<>(); 
 	    Map<Integer, Map<String, String>> rows = new LinkedHashMap<>();
 	    
-        for(Map.Entry<String, List<String>> content: aux.getContentInfo().entrySet())
-            for(String col:content.getValue())
-            	possibleKeys.add(col);
+        for(Map.Entry<String, List<String>> content: operator.getContentInfo().entrySet())
+			possibleKeys.addAll(content.getValue());
 
 	    int i = 0;
 	    
-	    while (aux.hasNext()) {
+	    while (operator.hasNext()) {
 
-	    	Tuple t = aux.next();
+	    	Tuple t = operator.next();
 	    	
 	        Map<String, String> row = new LinkedHashMap<>();
 
@@ -72,7 +69,7 @@ public class TableFormat {
 	    	
 	    }
 	    
-	    aux.close();
+	    operator.close();
 	    	
 	    return rowsInOrder;
 	

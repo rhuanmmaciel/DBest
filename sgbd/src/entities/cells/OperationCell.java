@@ -5,6 +5,7 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxStyleUtils;
 import controller.MainController;
 import entities.Column;
+import enums.ColumnDataType;
 import enums.OperationArity;
 import enums.OperationType;
 import gui.frames.main.MainFrame;
@@ -17,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Map;
 
 public final class OperationCell extends Cell {
 
@@ -184,7 +185,8 @@ public final class OperationCell extends Cell {
 		case PARENT_WITHOUT_COLUMN -> "Alguma coluna fornecida não existe na célula pai";
 		case NO_TWO_PARENTS -> "A operação não possui 2 células pais";
 		case NO_TWO_ARGUMENTS -> "Alguma coluna fornecida não existe na respectiva célula pai";
-
+		case EMPTY_ARGUMENT -> "Não foi passado parâmetro";
+		case NO_PREFIX -> "Algum parâmetro não possui prefixo";
 		};
 		
 	}
@@ -198,6 +200,7 @@ public final class OperationCell extends Cell {
 
 	}
 
+	@Override
 	public boolean hasError() {
 		return error;
 	}
@@ -208,23 +211,15 @@ public final class OperationCell extends Cell {
 		return "Sem erros";
 	}
 
-	public void setColumns(List<List<Column>> parentColumns, Collection<List<String>> cellColumnsName) {
+	public void setColumns(List<List<Column>> parentColumns, Map<String, List<String>> cellColumnsName) {
 
 		List<Column> cellColumns = new ArrayList<>();
 
-		for (List<String> columnsName : cellColumnsName) {
+		for (Map.Entry<String, List<String>> columns : cellColumnsName.entrySet()){
 
-			for (List<Column> columns : parentColumns) {
+			for(String column : columns.getValue()){
 
-				for (Column column : columns) {
-
-					if (columnsName.contains(column.getName())) {
-
-						cellColumns.add(column);
-
-					}
-
-				}
+				cellColumns.add(new Column(column, columns.getKey(), ColumnDataType.STRING, false));
 
 			}
 

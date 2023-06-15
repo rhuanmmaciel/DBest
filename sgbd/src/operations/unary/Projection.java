@@ -44,7 +44,7 @@ public class Projection implements IOperator {
 			OperationErrorVerifier.noNullArgument(arguments);
 			
 			error = ErrorMessage.PARENT_WITHOUT_COLUMN;
-			OperationErrorVerifier.parentContainsColumns(Column.sourceAndNameTogether(cell.getParents().get(0).getColumns()), arguments);
+			OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(), arguments);
 			error = null;
 
 		} catch (TreeException e) {

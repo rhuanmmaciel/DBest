@@ -3,26 +3,15 @@ package gui.frames.forms.operations.unary;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import com.mxgraph.model.mxCell;
 
-import entities.cells.Cell;
-import entities.cells.OperationCell;
 import gui.frames.forms.operations.FormFrameOperation;
 import gui.frames.forms.operations.IFormFrameOperation;
-import operations.unary.Projection;
 
 public class FormFrameProjection extends FormFrameOperation implements ActionListener, IFormFrameOperation {
 
@@ -84,7 +73,7 @@ public class FormFrameProjection extends FormFrameOperation implements ActionLis
 			restrictedColumns.clear();
 			comboBoxColumn.removeAllItems();
 
-			parent1.getColumnsName().forEach(comboBoxColumn::addItem);
+			parent1.getColumnNames().forEach(comboBoxColumn::addItem);
 
 		} else if(e.getSource() == btnCancel){
 

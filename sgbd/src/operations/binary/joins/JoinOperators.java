@@ -39,8 +39,8 @@ public abstract class JoinOperators implements IOperator {
             OperationErrorVerifier.noParentError(cell);
 
             error = OperationErrorVerifier.ErrorMessage.PARENT_WITHOUT_COLUMN;
-            OperationErrorVerifier.parentContainsColumns(Column.sourceAndNameTogether(cell.getParents().get(0).getColumns()), List.of(arguments.get(0)));
-            OperationErrorVerifier.parentContainsColumns(Column.sourceAndNameTogether(cell.getParents().get(1).getColumns()), List.of(arguments.get(1)));
+            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(), List.of(arguments.get(0)));
+            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(1).getColumnSourceNames(), List.of(arguments.get(1)));
 
             error = null;
 

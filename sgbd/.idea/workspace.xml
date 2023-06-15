@@ -60,6 +60,11 @@
       <recent name="gui.frames.forms.operations" />
     </key>
   </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="clear" />
+    </option>
+  </component>
   <component name="RunManager" selected="Application.sgbd">
     <configuration name="FormFrameOperation" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="gui.frames.forms.operations.FormFrameOperation" />
@@ -96,8 +101,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.FormFrameOperation" />
         <item itemvalue="Application.Group" />
+        <item itemvalue="Application.FormFrameOperation" />
       </list>
     </recent_temporary>
   </component>
@@ -114,5 +119,16 @@
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.g4" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/entities/cells/Cell.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

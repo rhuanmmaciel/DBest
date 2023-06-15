@@ -120,7 +120,7 @@ public class Selection implements IOperator {
 
 			String match = matcher.group(1);
 
-			if (parent.getColumnsName().contains(Column.removeSource(match)))
+			if (parent.getColumnNames().contains(Column.removeSource(match)))
 				matcher.appendReplacement(result, "#{" + match + "}");
 
 		}
@@ -148,8 +148,8 @@ public class Selection implements IOperator {
 
 		if(matcher.matches()) input = input.substring(2, input.length()-1);
 
-		if(Column.hasSource(input)) isColumn = parent.getColumnsName().contains(Column.removeSource(input));
-		else isColumn = parent.getColumnsName().contains(input);
+		if(Column.hasSource(input)) isColumn = parent.getColumnSourceNames().contains(input);
+		else isColumn = parent.getColumnNames().contains(input);
 
 		return matcher.matches() && isColumn;
 
@@ -163,7 +163,7 @@ public class Selection implements IOperator {
 		for (String element : splitted) {
 			String elementFormatted = element;
 
-			if (parentCell.getColumnsName().contains(element) && !Column.hasSource(element)) {
+			if (parentCell.getColumnNames().contains(element) && !Column.hasSource(element)) {
 				elementFormatted = Column.putSource(element, parentCell.getSourceTableNameByColumn(element));
 			}
 
