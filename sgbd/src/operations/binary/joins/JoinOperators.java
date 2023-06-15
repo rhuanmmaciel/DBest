@@ -67,11 +67,11 @@ public abstract class JoinOperators implements IOperator {
         String source2 = Column.removeName(argumentsFixed.get(1));
 
         String item1 = Column.removeSource(argumentsFixed.get(0));
-        String item2 = Column.removeSource(argumentsFixed.get(1));;
+        String item2 = Column.removeSource(argumentsFixed.get(1));
 
-        Operator operator = createJoinOperator(op1, op2, source1, source2, item1, item2);
+        Operator readyoperator = createJoinOperator(op1, op2, source1, source2, item1, item2);
 
-        Operation.operationSetter(cell, "|X|   " + Column.putSource(item1, source1) + " = " + Column.putSource(item2, source2), argumentsFixed, operator);
+        Operation.operationSetter(cell, cell.getType().getSymbol()+"   " + Column.putSource(item1, source1) + " = " + Column.putSource(item2, source2), argumentsFixed, readyoperator);
 
     }
 

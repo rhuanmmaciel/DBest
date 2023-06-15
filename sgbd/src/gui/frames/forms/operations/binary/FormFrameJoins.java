@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 
 import com.mxgraph.model.mxCell;
 
+import entities.Column;
 import entities.cells.Cell;
 import gui.frames.forms.operations.FormFrameOperation;
 import gui.frames.forms.operations.IFormFrameOperation;
@@ -53,10 +54,34 @@ public class FormFrameJoins extends FormFrameOperation implements ActionListener
 		comboBoxSource2.addActionListener(actionEvent -> setColumns(comboBoxColumn2, comboBoxSource2, parent2));
 
 		setColumns(comboBoxColumn2, comboBoxSource2, parent2);
+		setPreviousArgs();
 
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+
+	}
+
+	@Override
+	protected void setPreviousArgs() {
+
+		if(!previousArguments.isEmpty()){
+
+			String column1 = previousArguments.get(0);
+			String column2 = previousArguments.get(1);
+
+			String column1Name = Column.removeSource(column1);
+			String column1Source = Column.removeName(column1);
+
+			String column2Name = Column.removeSource(column2);
+			String column2Source = Column.removeName(column2);
+
+			comboBoxSource.setSelectedItem(column1Source);
+			comboBoxColumn.setSelectedItem(column1Name);
+			comboBoxSource2.setSelectedItem(column2Source);
+			comboBoxColumn2.setSelectedItem(column2Name);
+
+		}
 
 	}
 

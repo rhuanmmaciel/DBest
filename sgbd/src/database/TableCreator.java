@@ -110,7 +110,7 @@ public class TableCreator {
 		
 		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(MainFrame.getGraph().getDefaultParent(), null,
 				tableName, 0, 0, 80, 30, "table");
-		
+
 		return new TableCell(jCell, tableName, "table", columns, table, prototype);
 		
 	}

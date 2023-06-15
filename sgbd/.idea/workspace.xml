@@ -65,33 +65,7 @@
       <command value="clear" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.sgbd">
-    <configuration name="FormFrameOperation" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="gui.frames.forms.operations.FormFrameOperation" />
-      <module name="sgbd" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="gui.frames.forms.operations.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Group" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="operations.unary.Group" />
-      <module name="sgbd" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="operations.unary.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager">
     <configuration name="sgbd" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="application.MainClass" />
       <module name="sgbd" />
@@ -99,12 +73,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.Group" />
-        <item itemvalue="Application.FormFrameOperation" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -119,16 +87,5 @@
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.g4" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/entities/cells/Cell.java</url>
-          <line>32</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

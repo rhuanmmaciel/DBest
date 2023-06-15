@@ -17,7 +17,9 @@ import sgbd.query.Tuple;
 import sgbd.query.unaryop.FilterOperator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,7 +71,9 @@ public class Selection implements IOperator {
 		String expression = arguments.get(0);
 		String[] formattedInput = formatString(expression, parentCell).split(" ");
 
-		Operator operator = new FilterOperator(parentCell.getOperator(), (Tuple t) -> {
+		Operator operator = parentCell.getOperator();
+		AtomicInteger i = new AtomicInteger(1);
+		operator = new FilterOperator(operator, (Tuple t) -> {
 
 			for (String element : formattedInput) {
 

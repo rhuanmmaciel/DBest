@@ -64,10 +64,34 @@ public class FormFrameGroup extends FormFrameOperation implements ActionListener
         comboBoxGroupBySource.addActionListener(actionEvent -> setColumns(comboBoxGroupByColumn, comboBoxGroupBySource, parent1));
 
         setColumns(comboBoxGroupByColumn, comboBoxGroupBySource, parent1);
+        setPreviousArgs();
 
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+
+    }
+
+    @Override
+    protected void setPreviousArgs() {
+
+        if(!previousArguments.isEmpty()){
+
+            String groupByColumn = previousArguments.get(0);
+            String groupByColumnName =Column.removeSource(groupByColumn);
+            String groupByColumnSource = Column.removeName(groupByColumn);
+
+            comboBoxGroupBySource.setSelectedItem(groupByColumnSource);
+            comboBoxGroupByColumn.setSelectedItem(groupByColumnName);
+
+            for(String element : previousArguments.subList(1, previousArguments.size())){
+
+                String textColumnsPicked = textArea.getText() + "\n" + element;
+                textArea.setText(textColumnsPicked);
+
+            }
+
+        }
 
     }
 

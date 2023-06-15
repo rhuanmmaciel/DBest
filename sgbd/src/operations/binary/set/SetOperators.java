@@ -46,17 +46,17 @@ public abstract class SetOperators implements IOperator {
         Cell parentCell1 = cell.getParents().get(0);
         Cell parentCell2 = cell.getParents().get(1);
 
-        Operator table1 = parentCell1.getOperator();
-        Operator table2 = parentCell2.getOperator();
+        Operator operator1 = parentCell1.getOperator();
+        Operator operator2 = parentCell2.getOperator();
 
         int numberOfColumns = Math.min(parentCell1.getColumns().size(), parentCell2.getColumns().size());
 
         List<String> selectedColumns1 = new ArrayList<>(parentCell1.getColumnSourceNames().stream().limit(numberOfColumns).toList());
         List<String> selectedColumns2 = new ArrayList<>(parentCell2.getColumnSourceNames().stream().limit(numberOfColumns).toList());
 
-        Operator operator = createSetOperator(table1, table2, selectedColumns1, selectedColumns2);
+        Operator readyOperator = createSetOperator(operator1, operator2, selectedColumns1, selectedColumns2);
 
-        Operation.operationSetter(cell, "   "+cell.getType().getSymbol()+"   ", arguments, operator);
+        Operation.operationSetter(cell, "   "+cell.getType().getSymbol()+"   ", arguments, readyOperator);
 
     }
 

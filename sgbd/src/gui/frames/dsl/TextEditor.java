@@ -42,7 +42,7 @@ import gui.utils.JTextLineNumber;
 
 public class TextEditor extends JFrame implements ActionListener {
 
-	private JTextPane textPane = new JTextPane();
+	private final JTextPane textPane = new JTextPane();
 	private JScrollPane scrollPane = new JScrollPane(textPane);
 	
 	private static String lastPath = null;

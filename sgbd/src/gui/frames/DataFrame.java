@@ -19,6 +19,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.TableFormat;
@@ -55,6 +56,7 @@ public class DataFrame extends JDialog implements ActionListener {
 		else lblText.setText(cell.getName()+":");
 
 		this.operator = cell.getOperator();
+
 		operator.open();
 
 		columnsName = cell.getColumnSourceNames();
@@ -100,8 +102,9 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		if (!rows.isEmpty()) {
 
-			for (String columnName : rows.get(firstElement).keySet())
-				model.addColumn(columnName);
+			for (Map.Entry<String, List<String>> columns : operator.getContentInfo().entrySet())
+				for(String columnName : columns.getValue())
+					model.addColumn(Column.putSource(columnName, columns.getKey()));
 
 			int i = page * 15 + 1;
 			int endOfList = Math.min(lastElement+1, rows.size());
@@ -110,11 +113,12 @@ public class DataFrame extends JDialog implements ActionListener {
 				Object[] line = new Object[rows.get(firstElement).size() + 1];
 				line[0] = i++;
 
-				int k = 1;
-				for (String key : currentRow.keySet()) {
-					line[k] = currentRow.get(key);
-					k++;
+				for (int j = 0; j < currentRow.size(); j++) {
+
+					line[j+1] = currentRow.get(model.getColumnName(j+1));
+
 				}
+
 				model.addRow(line);
 
 			}
@@ -220,7 +224,7 @@ public class DataFrame extends JDialog implements ActionListener {
 		btnRight.setEnabled(lastPage == null || lastPage != currentIndex);
 		btnAllRight.setEnabled(lastPage == null || lastPage != currentIndex);
 
-		lblPages.setText(currentIndex + 1 + "/" + (lastPage == null ? "?" : lastPage + 1));
+		lblPages.setText(currentIndex + 1 + "/" + (lastPage == null ? " ???" : lastPage + 1));
 
 	}
 

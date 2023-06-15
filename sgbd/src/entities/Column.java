@@ -35,7 +35,7 @@ public class Column{
 	public ColumnDataType getType() {
 		return type;
 	}
-	
+
 	public Boolean isPK() {
 		return pk;
 	}

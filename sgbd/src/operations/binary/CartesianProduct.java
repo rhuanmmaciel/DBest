@@ -49,12 +49,13 @@ public class CartesianProduct implements IOperator {
 		Cell parentCell1 = cell.getParents().get(0);
 		Cell parentCell2 = cell.getParents().get(1);
 
-		Operator table1 = parentCell1.getOperator();
-		Operator table2 = parentCell2.getOperator();
+		Operator operator1 = parentCell1.getOperator();
+		Operator operator2 = parentCell2.getOperator();
 
-		Operator operator = new BlockNestedLoopJoin(table1, table2, (t1, t2) -> true);
 
-		Operation.operationSetter(cell, "  X  ", List.of(), operator);
+		Operator readyOperator = new BlockNestedLoopJoin(operator1, operator2, (t1, t2) -> true);
+
+		Operation.operationSetter(cell, "  X  ", List.of(), readyOperator);
 
 	}
 }

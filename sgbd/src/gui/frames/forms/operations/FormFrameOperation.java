@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FormFrameOperation extends JDialog  {
+public abstract class FormFrameOperation extends JDialog  {
 
     private final Class<? extends IOperator> operator;
 
-    private final mxCell jCell;
+    protected final mxCell jCell;
     protected final Cell parent1;
 
     protected final JPanel contentPane = new JPanel(new BorderLayout());
@@ -32,6 +32,7 @@ public class FormFrameOperation extends JDialog  {
     protected final JPanel centerPanel = new JPanel(new GridBagLayout());
 
     protected final List<String> arguments = new ArrayList<>();
+    protected final List<String> previousArguments = new ArrayList<>();
     protected final List<String> restrictedColumns = new ArrayList<>();
 
     public FormFrameOperation(mxCell jCell) {
@@ -44,6 +45,8 @@ public class FormFrameOperation extends JDialog  {
         this.operator = cell.getType().getOperator();
         this.jCell = jCell;
         this.parent1 = cell.getParents().get(0);
+
+        if(!cell.getArguments().isEmpty()) previousArguments.addAll(cell.getArguments());
 
         setTitle(cell.getType().getDisplayName());
 
@@ -168,5 +171,7 @@ public class FormFrameOperation extends JDialog  {
     protected void closeWindow(){
         dispose();
     }
+
+    protected abstract void setPreviousArgs();
 
 }

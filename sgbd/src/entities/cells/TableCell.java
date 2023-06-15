@@ -37,18 +37,15 @@ public final class TableCell extends Cell{
 	}
 	
 	private void setTable(Table table) {
-		
-		table.open();
-		this.table = table;
-		Operator operator = new TableScan(table);
-		operator.open();
 
-		setOperator(operator);
+		this.table = table;
+
+		setOperator(new TableScan(table));
 
 	}
 	
 	public Table getTable() {
-		
+
 		return table;
 	}
 	

@@ -5,16 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.NumberFormatter;
+import javax.swing.text.StyledDocument;
 
 import com.mxgraph.model.mxCell;
 
@@ -23,7 +21,7 @@ import gui.frames.forms.operations.IFormFrameOperation;
 
 public class FormFrameSelection extends FormFrameOperation implements ActionListener, IFormFrameOperation {
 
-	private JTextArea textArea;
+	private JTextPane textPane;
 
 	private JButton btnColumnAdd;
 	private JButton btnOperatorAdd;
@@ -54,9 +52,9 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 		btnReady.addActionListener(this);
 		btnCancel.addActionListener(this);
 
-		textArea = new JTextArea();
-		textArea.setPreferredSize(new Dimension(300, 75));
-		textArea.setEditable(false);
+		textPane = new JTextPane();
+		textPane.setPreferredSize(new Dimension(300, 75));
+		textPane.setEditable(false);
 
 		btnColumnAdd = new JButton("Add");
 		btnColumnAdd.addActionListener(this);
@@ -109,7 +107,9 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 		addExtraComponent(btnStringAdd, 2, 5, 1, 1);
 		addExtraComponent(btnRemoveLastOne, 0, 6, 1, 1);
 		addExtraComponent(btnRemoveAll, 1, 6, 1, 1);
-		addExtraComponent(textArea, 0, 7, 3, 3);
+		addExtraComponent(new JScrollPane(textPane), 0, 7, 3, 3);
+
+		setPreviousArgs();
 
 		pack();
 		setLocationRelativeTo(null);
@@ -119,62 +119,90 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 	}
 
 	@Override
+	protected void setPreviousArgs() {
+
+		if(!previousArguments.isEmpty())
+			insertString(previousArguments.get(0));
+
+	}
+
+	private void insertString(String txt){
+
+		try {
+			textPane.getDocument().insertString(textPane.getCaretPosition(), txt, null);
+		} catch (BadLocationException error) {
+			error.printStackTrace();
+		}
+
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnColumnAdd) {
 
-			textArea.append(" ");
-			textArea.append(comboBoxSource.getSelectedItem()+"."+comboBoxColumn.getSelectedItem());
+			insertString(" ");
+			insertString(comboBoxSource.getSelectedItem()+"."+comboBoxColumn.getSelectedItem());
 
 		}
 
 		if (e.getSource() == btnOperatorAdd) {
 
-			textArea.append(" ");
-			textArea.append(comboBoxOperator.getSelectedItem().toString());
+			insertString(" ");
+			insertString((String) comboBoxOperator.getSelectedItem());
 
 		}
 
 		if (e.getSource() == btnLogicalOperatorAdd) {
 
-			textArea.append(" ");
-			textArea.append(comboBoxLogicalOperator.getSelectedItem().toString());
+			insertString(" ");
+			insertString(Objects.requireNonNull(comboBoxLogicalOperator.getSelectedItem()).toString());
 
 		}
 
 		if (e.getSource() == btnNumberAdd && !formattedTextFieldNumber.getText().isEmpty()) {
 
-			textArea.append(" ");
-			textArea.append(formattedTextFieldNumber.getText());
+			insertString(" ");
+			insertString(formattedTextFieldNumber.getText());
 
 		}
 
 		if (e.getSource() == btnStringAdd && !textFieldString.getText().isEmpty()) {
 
-			textArea.append(" ");
-			textArea.append("'" + textFieldString.getText() + "'");
+			insertString(" ");
+			insertString("'" + textFieldString.getText() + "'");
 
 		}
 
-		if (e.getSource() == btnRemoveLastOne && !textArea.getText().isEmpty()) {
+		if (e.getSource() == btnRemoveLastOne && !textPane.getText().isEmpty()) {
 
-			String text = textArea.getText();
+			String text = textPane.getText();
 			Pattern pattern = Pattern.compile("[^']*\\s");
 			Matcher matcher = pattern.matcher(text);
 
 			if (matcher.find()) {
+
 				int lastIndex = matcher.end() - 1;
-				textArea.replaceRange("", lastIndex, text.length());
+				StyledDocument doc = textPane.getStyledDocument();
+				int end = text.length();
+				String replacement = "";
+
+				try {
+					doc.remove(lastIndex, end - lastIndex);
+					doc.insertString(lastIndex, replacement, null);
+				} catch (BadLocationException exception) {
+					exception.printStackTrace();
+				}
 			}
 
 		}
 
-		if (e.getSource() == btnRemoveAll && !textArea.getText().isEmpty())
-			textArea.setText("");
+		if (e.getSource() == btnRemoveAll && !textPane.getText().isEmpty())
+			textPane.setText("");
 
 		if (e.getSource() == btnReady) {
 
-			arguments.add(textArea.getText());
+			arguments.add(textPane.getText());
 			btnReady();
 
 		}

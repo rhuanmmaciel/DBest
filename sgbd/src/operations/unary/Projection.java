@@ -64,8 +64,9 @@ public class Projection implements IOperator {
 
 		Operator operator = parentCell.getOperator();
 
-		for (Column c : aux)
+		for (Column c : aux) {
 			operator = new FilterColumnsOperator(operator, c.getSource(), List.of(c.getName()));
+		}
 
 		Operation.operationSetter(cell, "π  " + argumentsFixed.toString(), argumentsFixed, operator);
 

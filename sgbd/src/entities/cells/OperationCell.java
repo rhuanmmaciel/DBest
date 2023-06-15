@@ -211,19 +211,13 @@ public final class OperationCell extends Cell {
 		return "Sem erros";
 	}
 
-	public void setColumns(List<List<Column>> parentColumns, Map<String, List<String>> cellColumnsName) {
+	public void setColumns(Map<String, List<String>> cellColumnsName) {
 
 		List<Column> cellColumns = new ArrayList<>();
 
-		for (Map.Entry<String, List<String>> columns : cellColumnsName.entrySet()){
-
-			for(String column : columns.getValue()){
-
+		for (Map.Entry<String, List<String>> columns : cellColumnsName.entrySet())
+			for(String column : columns.getValue())
 				cellColumns.add(new Column(column, columns.getKey(), ColumnDataType.STRING, false));
-
-			}
-
-		}
 
 		this.columns = cellColumns;
 

@@ -4,6 +4,7 @@ import com.mxgraph.model.mxCell;
 import entities.Column;
 import gui.frames.forms.operations.FormFrameOperation;
 import gui.frames.forms.operations.IFormFrameOperation;
+import util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,11 +38,32 @@ public class FormFrameSort extends FormFrameOperation implements ActionListener,
         btnCancel.addActionListener(this);
         btnReady.addActionListener(this);
 
+        setPreviousArgs();
         verifyConditions();
 
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+
+    }
+
+    @Override
+    protected void setPreviousArgs() {
+
+        if(!previousArguments.isEmpty()){
+
+            String column = previousArguments.get(0);
+            String columnName = Column.removeSource(column);
+            String columnSource = Column.removeName(column);
+
+            ascendingRadioButton.setSelected(true);
+            if(Utils.startsWithIgnoreCase(column, "DESC:"))
+               descendingRadioButton.setSelected(true);
+
+            comboBoxSource.setSelectedItem(columnSource);
+            comboBoxColumn.setSelectedItem(columnName);
+
+        }
 
     }
 

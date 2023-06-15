@@ -19,12 +19,12 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
 	private Operator operator;
 	protected List<Column> columns;
-	private String style;
+	private final String style;
 	private String name;
 	private final mxCell jCell;
 	private OperationCell child;
-	private int length;
-	private int width;
+	private final int length;
+	private final int width;
 	private Tree tree;
 	protected static Map<mxCell, Cell> cells = new HashMap<>();
 
@@ -172,10 +172,6 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
 		cells.clear();
 
-	}
-
-	public void setStyle(String style) {
-		this.style = style;
 	}
 
 	public String getStyle() {

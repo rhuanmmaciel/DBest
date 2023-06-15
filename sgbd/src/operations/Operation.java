@@ -19,12 +19,7 @@ public class Operation {
 
 		mxCell jCell = cell.getJGraphCell();
 
-		List<List<Column>> parentsColumns = new ArrayList<>();
-
-		for (Cell parent : cell.getParents())
-			parentsColumns.add(parent.getColumns());
-
-		cell.setColumns(parentsColumns, operator.getContentInfo());
+		cell.setColumns(operator.getContentInfo());
 
 		cell.setOperator(operator);
 

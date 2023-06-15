@@ -73,8 +73,6 @@ public class Group implements IOperator {
 
         Cell parentCell = cell.getParents().get(0);
 
-        Operator operator = parentCell.getOperator();
-
         List<String> fixedArguments = new ArrayList<>();
 
         fixedArguments.add(Column.putSource(arguments.get(0), parentCell.getSourceTableNameByColumn(arguments.get(0))));
@@ -107,12 +105,12 @@ public class Group implements IOperator {
 
         }
 
-        operator = new GroupOperator(operator, Column.removeName(groupBy), Column.removeSource(groupBy), aggregations);
+        Operator operator = parentCell.getOperator();
 
-        System.out.println(fixedArguments);
-        System.out.println(groupBy);
+        System.out.println(aggregations);
+        Operator readyOperator = new GroupOperator(operator, Column.removeName(groupBy), Column.removeSource(groupBy), aggregations);
 
-        Operation.operationSetter(cell, cell.getType().getSymbol() + arguments.toString(), arguments, operator);
+        Operation.operationSetter(cell, cell.getType().getSymbol() + arguments.toString(), arguments, readyOperator);
 
     }
 

@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import com.mxgraph.model.mxCell;
 
+import entities.Column;
 import gui.frames.forms.operations.FormFrameOperation;
 import gui.frames.forms.operations.IFormFrameOperation;
 
@@ -45,9 +46,33 @@ public class FormFrameProjection extends FormFrameOperation implements ActionLis
 		addExtraComponent(btnRemove, 2, 2, 1, 1);
 		addExtraComponent(new JScrollPane(textArea), 0, 3, 3, 3);
 
+		setPreviousArgs();
+
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+
+	}
+
+	@Override
+	protected void setPreviousArgs() {
+
+		if(!previousArguments.isEmpty()){
+
+			for(String element : previousArguments){
+
+				String groupByColumnName = Column.removeSource(element);
+				String groupByColumnSource = Column.removeName(element);
+
+				comboBoxSource.setSelectedItem(groupByColumnSource);
+				comboBoxColumn.setSelectedItem(groupByColumnName);
+
+				if (comboBoxColumn.getItemCount() > 0)
+					updateColumns();
+
+			}
+
+		}
 
 	}
 

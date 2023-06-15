@@ -76,7 +76,7 @@ public class Sort implements IOperator {
         String prefix = ascendingOrder ? "ASC:" : "DESC:";
         arguments = List.of(prefix+Column.putSource(columnName, sourceName));
 
-        operator = new SortOperator(operator, (entries, t1) -> {
+        Operator readyOperator = new SortOperator(operator, (entries, t1) -> {
 
            switch (Util.typeOfColumn(t1.getContent(sourceName).getMeta(columnName))){
                 case "int" -> {
@@ -113,7 +113,7 @@ public class Sort implements IOperator {
 
         });
 
-        Operation.operationSetter(cell, cell.getType().getSymbol() + arguments.toString(), arguments, operator);
+        Operation.operationSetter(cell, cell.getType().getSymbol() + arguments.toString(), arguments, readyOperator);
 
     }
 
