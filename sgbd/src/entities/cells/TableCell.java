@@ -40,8 +40,6 @@ public final class TableCell extends Cell{
 		this.table = table;
 		setOperator(new TableScan(table));
 
-		table.close();
-
 	}
 	
 	public Table getTable() {

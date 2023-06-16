@@ -13,6 +13,7 @@ import entities.Coordinates;
 import entities.Tree;
 import entities.utils.FindRoots;
 import entities.utils.TreeUtils;
+import enums.ColumnDataType;
 import sgbd.query.Operator;
 
 public abstract sealed class Cell permits TableCell, OperationCell {
@@ -184,6 +185,18 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
 	public int getWidth() {
 		return width;
+	}
+
+	public void updateUndefinedColumns(Map<String, ColumnDataType> types){
+
+		if(getColumns().stream().noneMatch(x -> x.getType().equals(ColumnDataType.UNDEFINED))) return;
+
+		getColumns()
+				.stream()
+				.filter(x -> x.getType().equals(ColumnDataType.UNDEFINED))
+				.filter(x -> types.containsKey(x.getSourceAndName()))
+				.forEach(x -> x.setType(types.get(x.getSourceAndName())));
+
 	}
 
 	@Override

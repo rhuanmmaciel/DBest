@@ -46,7 +46,8 @@ public class Column{
 
 	public void setType(ColumnDataType type){
 
-		this.type=type;
+		if(type.equals(ColumnDataType.UNDEFINED))
+			this.type=type;
 
 	}
 

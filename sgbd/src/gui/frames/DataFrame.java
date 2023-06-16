@@ -22,7 +22,9 @@ import javax.swing.table.DefaultTableModel;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import entities.cells.TableCell;
 import entities.utils.TableFormat;
+import enums.ColumnDataType;
 import gui.frames.main.MainFrame;
 import gui.utils.JTableUtils;
 import sgbd.query.Operator;
@@ -40,12 +42,14 @@ public class DataFrame extends JDialog implements ActionListener {
 	private final JButton btnAllLeft = new JButton("<<");;
 	private final JButton btnAllRight = new JButton(">>");;
 
+	private Map<String, ColumnDataType> types = new HashMap<>();
 	private Map<String, String> row;
 	private final List<Map<String, String>> rows;
 	private final List<String> columnsName;
 	private int currentIndex;
 	private final Operator operator;
 	private Integer lastPage = null;
+	private final Cell cell;
 
 	public DataFrame(Cell cell) {
 
@@ -55,7 +59,10 @@ public class DataFrame extends JDialog implements ActionListener {
 		if(cell instanceof OperationCell operationCell) lblText.setText(operationCell.getType().getDisplayName()+":");
 		else lblText.setText(cell.getName()+":");
 
+
 		this.operator = cell.getOperator();
+
+		this.cell = cell;
 
 		operator.open();
 
@@ -86,14 +93,18 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		model.addColumn("");
 
-		row = TableFormat.getRow(operator);
+		TableFormat.Row row = TableFormat.getRow(operator);
 
 		while (row != null && currentElement < lastElement){
 
-			rows.add(row);
+			types.putAll(row.types());
+			rows.add(row.row());
 			row = TableFormat.getRow(operator);
 			if(row != null) currentElement++;
-			if(currentElement >= lastElement) rows.add(row);
+			if(currentElement >= lastElement) {
+				rows.add(row.row());
+				types.putAll(row.types());
+			}
 
 		}
 
@@ -141,6 +152,8 @@ public class DataFrame extends JDialog implements ActionListener {
 		table.setEnabled(false);
 		table.setFillsViewportHeight(true);
 		table.repaint();
+
+		cell.updateUndefinedColumns(types);
 
 	}
 
