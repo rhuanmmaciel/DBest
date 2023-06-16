@@ -36,7 +36,7 @@ public class TableCreator {
 				if (column.getType() == ColumnDataType.INTEGER) {
 
 					if (!line.get(data).equals("null") && !line.get(data).equals(""))
-						rowData.setInt(column.getName(), (int) (Double.parseDouble(line.get(data).strip())));
+						rowData.setLong(column.getName(), (long) (Double.parseDouble(line.get(data).strip())));
 
 				} else if (column.getType() == ColumnDataType.FLOAT) {
 
@@ -74,7 +74,7 @@ public class TableCreator {
 			
 			switch(column.getType()) {
 			case INTEGER -> {
-				size = 100;
+				size = 8;
 				flags =Column.SIGNED_INTEGER_COLUMN;
 			}case FLOAT -> {
 				size = 4;

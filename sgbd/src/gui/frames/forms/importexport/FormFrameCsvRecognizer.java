@@ -399,7 +399,9 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 			csvData = new CsvData(List.of(), List.of(), new Vector<>(), new Vector<>());
 
 		}
+
 		loadJTable();
+		verifyReadyButton();
 		revalidate();
 
 	}

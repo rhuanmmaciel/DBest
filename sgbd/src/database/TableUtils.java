@@ -22,7 +22,7 @@ public class TableUtils {
 
 				try {
 
-					Integer.parseInt(inf);
+					Integer.parseInt(inf.strip());
 
 				} catch (NumberFormatException e) {
 
@@ -32,7 +32,7 @@ public class TableUtils {
 
 				try {
 
-					Float.parseFloat(inf);
+					Float.parseFloat(inf.strip());
 
 				} catch (NumberFormatException e) {
 
@@ -54,17 +54,17 @@ public class TableUtils {
 
 	}
 
-	public static boolean canBePrimaryKey(List<List<String>> columnDatas) {
+	public static boolean canBePrimaryKey(List<List<String>> columns) {
 
-		if(columnDatas.isEmpty()) return false;
+		if(columns.isEmpty()) return false;
 
-		int size = columnDatas.get(0).size();
-		for(List<String> eachColumn : columnDatas)
+		int size = columns.get(0).size();
+		for(List<String> eachColumn : columns)
 			if(eachColumn.size() != size) return false;
 
 		Map<Integer, List<String>> uniqueData = new LinkedHashMap<>();
 
-		for(List<String> columnData : columnDatas) {
+		for(List<String> columnData : columns) {
 
 			if (columnData.contains("") || columnData.contains(null) || columnData.contains("null"))
 				return false;
@@ -87,24 +87,18 @@ public class TableUtils {
 
 		}
 
-		for(int i = 0; i < size; i++){
-
+		for(int i = 0; i < size; i++)
 			for (int j = i + 1; j < size; j++){
 
 				boolean found = true;
 
-				for(int k = 0; k < uniqueData.get(i).size(); k++){
-
+				for(int k = 0; k < uniqueData.get(i).size(); k++)
 					if(!uniqueData.get(i).get(k).strip().equals(uniqueData.get(j).get(k).strip()))
 						found = false;
-
-				}
 
 				if(found) return false;
 
 			}
-
-		}
 
 		return true;
 

@@ -49,7 +49,7 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
 	}
 
-	public Coordinates getPositionLowerRight() {
+	public Coordinates getLowerRightPosition() {
 
 		return new Coordinates((int) jCell.getGeometry().getX() + (int) jCell.getGeometry().getWidth(),
 				(int) jCell.getGeometry().getY() + (int) jCell.getGeometry().getHeight());

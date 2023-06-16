@@ -38,8 +38,9 @@ public final class TableCell extends Cell{
 	private void setTable(Table table) {
 
 		this.table = table;
-
 		setOperator(new TableScan(table));
+
+		table.close();
 
 	}
 	

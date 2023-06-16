@@ -34,17 +34,17 @@ public class CoordinatesUtils {
 		for(Cell cell : tree.getCells()) {
 		
 			minX = Math.min(cell.getUpperLeftPosition().x(), minX);
-			minX = Math.min(cell.getPositionLowerRight().x(), minX);
+			minX = Math.min(cell.getLowerRightPosition().x(), minX);
 			
 			maxX = Math.max(cell.getUpperLeftPosition().x(), maxX);
-			maxX = Math.max(cell.getPositionLowerRight().x(), maxX);
+			maxX = Math.max(cell.getLowerRightPosition().x(), maxX);
 			
 			
 			minY = Math.min(cell.getUpperLeftPosition().y(), minY);
-			minY = Math.min(cell.getPositionLowerRight().y(), minY);
+			minY = Math.min(cell.getLowerRightPosition().y(), minY);
 			
 			maxY = Math.max(cell.getUpperLeftPosition().y(), maxY);
-			maxY = Math.max(cell.getPositionLowerRight().y(), maxY);
+			maxY = Math.max(cell.getLowerRightPosition().y(), maxY);
 			
 		}
 		

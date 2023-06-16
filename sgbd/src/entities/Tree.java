@@ -37,7 +37,7 @@ public class Tree {
 
 		List<Cell> leaves = new ArrayList<>();
 
-		getCells().stream().filter(cell -> !cell.hasParents()).forEach(cell -> leaves.add(cell));
+		getCells().stream().filter(cell -> !cell.hasParents()).forEach(leaves::add);
 
 		return leaves;
 	}

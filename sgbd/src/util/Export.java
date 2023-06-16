@@ -274,6 +274,7 @@ public class Export extends JPanel {
 			}
 			
 			final String finalPath = path.substring(0, path.lastIndexOf("/") + 1);
+
 			tree.getLeaves().forEach(table -> FileUtils.copyDatFilesWithHead(table.getName()+".head", table.getName(), Path.of(finalPath)));
 		
 		}
