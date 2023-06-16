@@ -10,12 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -33,8 +30,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -53,7 +48,6 @@ import gui.frames.ErrorFrame;
 import gui.utils.JTableUtils;
 import gui.utils.JTableUtils.CustomTableModel;
 
-@SuppressWarnings("serial")
 public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 
 	private final JPanel contentPane = new JPanel();
@@ -84,8 +78,8 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 	private final String path;
 	private final AtomicReference<Boolean> exitReference;
 	private final StringBuilder tableName;
-	private List<Column> columns;
-	private Map<Integer, Map<String, String>> content;
+	private final List<Column> columns;
+	private final Map<Integer, Map<String, String>> content;
 
 	private final int defaultBeginIndex = 1;
 	private final char defaultSeparator = ',';
@@ -204,12 +198,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		spinnerFromRow.setModel(spinnerModel);
 		spinnerFromRow.setValue(1);
 		spinnerFromRow.setMaximumSize(dim);
-		spinnerFromRow.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				updateTable();
-			}
-		});
+		spinnerFromRow.addChangeListener(e -> updateTable());
 		itemFromRow.add(spinnerFromRow);
 		itemFromRow.add(Box.createHorizontalGlue());
 
@@ -331,7 +320,23 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		boolean tableNameAlreadyExist = MainController.getTables().containsKey(txtFieldTableName.getText().strip());
 		boolean hasPK = pkCheckBoxes.values().stream().anyMatch(JCheckBox::isSelected);
 
-		btnDone.setEnabled(!tableNameAlreadyExist && hasPK);
+		List<List<String>> columnsSelected = new ArrayList<>();
+		for(Map.Entry<String, JCheckBox> checkBox : pkCheckBoxes.entrySet())
+			if(checkBox.getValue().isSelected()) {
+
+				List<String> columnData = new ArrayList<>();
+				int index = csvData.columnsNameList().indexOf(checkBox.getKey());
+
+				for (List<String> column : csvData.dataList())
+					columnData.add(column.get(index));
+
+				columnsSelected.add(columnData);
+
+			}
+
+		boolean canBePK = TableUtils.canBePrimaryKey(columnsSelected);
+
+		btnDone.setEnabled(!tableNameAlreadyExist && hasPK && canBePK);
 
 	}
 
@@ -344,8 +349,8 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 			ColumnDataType type;
 
 			if (typeComboBoxes.get(columnName).getSelectedItem() != null)
-				type = List.of(ColumnDataType.values()).stream()
-						.filter(x -> x.toString().equals(typeComboBoxes.get(columnName).getSelectedItem().toString()))
+				type = Stream.of(ColumnDataType.values())
+						.filter(x -> x.toString().equals(Objects.requireNonNull(typeComboBoxes.get(columnName).getSelectedItem()).toString()))
 						.findFirst().orElseThrow();
 
 			else
@@ -418,17 +423,15 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 
 			List<String> columnData = new ArrayList<>();
 			for (int j = 0; j < csvData.dataArray().size() - 2; j++)
-				columnData.add(csvData.dataList().get(j).get(i).toString());
+				columnData.add(csvData.dataList().get(j).get(i));
 
 			String[] types = TableUtils.getPossiblesDataType(columnData, stringDelimiter).stream()
-					.map(x -> x.toString()).toArray(String[]::new);
+					.map(ColumnDataType::toString).toArray(String[]::new);
 
 			JComboBox<String> comboBox = new JComboBox<>(types);
 			JCheckBox checkBox = new JCheckBox();
 			comboBox.addActionListener(this);
 			checkBox.addActionListener(this);
-
-			checkBox.setEnabled(TableUtils.canBePrimaryKey(columnData));
 
 			comboboxes.add(comboBox);
 			checkboxes.add(checkBox);

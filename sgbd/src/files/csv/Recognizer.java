@@ -86,14 +86,14 @@ public class Recognizer {
 		
 		for (char c : line.toCharArray()) {
 
-			stringDelimiterFound = c == stringDelimiter ? !stringDelimiterFound : stringDelimiterFound;
+			stringDelimiterFound = (c == stringDelimiter) != stringDelimiterFound;
 
 			if (c != separator || stringDelimiterFound)
 				data.append(c);
 
 			else {
 
-				String inf = data.toString();
+				String inf = data.toString().strip();
 
 				if (isString(inf, stringDelimiter))
 					inf = inf.substring(1, inf.length() - 1);
@@ -109,7 +109,7 @@ public class Recognizer {
 
 		if (!data.isEmpty()) {
 
-			String inf = data.toString();
+			String inf = data.toString().strip();
 
 			if (isString(inf, stringDelimiter))
 				inf = inf.substring(1, inf.length() - 1);

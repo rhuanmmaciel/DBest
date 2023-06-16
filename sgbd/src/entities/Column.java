@@ -8,7 +8,7 @@ public class Column{
 
 	private final String name;
 	private final String source;
-	private final ColumnDataType type;
+	private ColumnDataType type;
 	private final Boolean pk;
 	
 	public Column(String name, String tableName, ColumnDataType type, boolean pk) {
@@ -18,6 +18,14 @@ public class Column{
 		this.type = type;
 		this.pk = pk;
 		
+	}
+
+	public Column(String name, String tableName){
+
+		this.pk = false;
+		this.name = name;
+		this.source = tableName;
+
 	}
 	
 	public String getSource() {
@@ -36,20 +44,40 @@ public class Column{
 		return type;
 	}
 
+	public void setType(ColumnDataType type){
+
+		this.type=type;
+
+	}
+
 	public Boolean isPK() {
 		return pk;
 	}
 
 	public static String removeSource(String txt){
+		if(!hasSource(txt)) return txt;
 		return txt.substring(txt.indexOf(".")+1);
 	}
 
 	public static String removeName(String txt){
+		if(!hasSource(txt)) return txt;
 		return txt.substring(0, txt.indexOf("."));
 	}
 
 	public static List<String> sourceAndNameTogether(List<Column> columns){
 		return columns.stream().map(Column::getSourceAndName).toList();
+	}
+
+	public static boolean columnEquals(String columnAndSource, String column, String source){
+
+		return removeName(columnAndSource).equals(source) && removeSource(columnAndSource).equals(column);
+
+	}
+
+	public static boolean columnEquals(Column c, String column, String source){
+
+		return c.getSource().equals(source) && c.getName().equals(column);
+
 	}
 
 	public static String putSource(String columnName, String sourceName){
@@ -60,6 +88,15 @@ public class Column{
 
 	public static boolean hasSource(String txt){
 		return txt.contains(".") && txt.indexOf(".") > 0 && txt.indexOf(".") < txt.length() - 1;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if(obj instanceof Column columnObj)
+			return getSource().equals(columnObj.getSource()) && getName().equals(columnObj.getName());
+
+		return super.equals(obj);
 	}
 
 	@Override

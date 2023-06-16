@@ -216,9 +216,18 @@ public final class OperationCell extends Cell {
 		List<Column> cellColumns = new ArrayList<>();
 
 		for (Map.Entry<String, List<String>> columns : cellColumnsName.entrySet())
-			for(String column : columns.getValue())
-				cellColumns.add(new Column(column, columns.getKey(), ColumnDataType.STRING, false));
+			for(String column : columns.getValue()) {
 
+				Column c = new Column(column, columns.getKey(), ColumnDataType.UNDEFINED, false);
+
+				for(Cell parent : parents) {
+					Column finalC = c;
+					c = parent.getColumns().stream().filter(x -> x.equals(finalC)).findAny().orElse(c);
+				}
+
+				cellColumns.add(c);
+
+			}
 		this.columns = cellColumns;
 
 	}

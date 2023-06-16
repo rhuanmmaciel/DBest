@@ -1,9 +1,7 @@
 package database;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 import enums.ColumnDataType;
 
@@ -47,7 +45,7 @@ public class TableUtils {
 
 			}
 
-			if (!types.stream().anyMatch(x -> possibleRemovedTypes.contains(x)))
+			if (types.stream().noneMatch(possibleRemovedTypes::contains))
 				return types;
 
 		}
@@ -56,15 +54,57 @@ public class TableUtils {
 
 	}
 
-	public static boolean canBePrimaryKey(List<String> columnData) {
+	public static boolean canBePrimaryKey(List<List<String>> columnDatas) {
 
-		if (columnData.contains("") || columnData.contains(null))
-			return false;
+		if(columnDatas.isEmpty()) return false;
 
-		Set<String> uniqueData = new HashSet<>(columnData);
+		int size = columnDatas.get(0).size();
+		for(List<String> eachColumn : columnDatas)
+			if(eachColumn.size() != size) return false;
 
-		if (columnData.size() != uniqueData.size())
-			return false;
+		Map<Integer, List<String>> uniqueData = new LinkedHashMap<>();
+
+		for(List<String> columnData : columnDatas) {
+
+			if (columnData.contains("") || columnData.contains(null) || columnData.contains("null"))
+				return false;
+
+			int i = 0;
+			for(String data : columnData) {
+
+				if (uniqueData.get(i) == null)
+					uniqueData.put(i, new ArrayList<>(List.of(data)));
+
+				else {
+
+					List<String> row = uniqueData.get(i);
+					row.add(data);
+
+				}
+				i++;
+
+			}
+
+		}
+
+		for(int i = 0; i < size; i++){
+
+			for (int j = i + 1; j < size; j++){
+
+				boolean found = true;
+
+				for(int k = 0; k < uniqueData.get(i).size(); k++){
+
+					if(!uniqueData.get(i).get(k).strip().equals(uniqueData.get(j).get(k).strip()))
+						found = false;
+
+				}
+
+				if(found) return false;
+
+			}
+
+		}
 
 		return true;
 

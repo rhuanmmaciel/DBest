@@ -51,8 +51,15 @@ public enum ColumnDataType implements IColumnDataType{
 			return "none";
 		}
 		
-	};
+	},
+	UNDEFINED{
 
+		@Override
+		public String getTypeName() {
+			return "undefined";
+		}
+
+	};
 
 	
 }

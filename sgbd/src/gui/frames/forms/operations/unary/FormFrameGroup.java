@@ -20,7 +20,7 @@ public class FormFrameGroup extends FormFrameOperation implements ActionListener
     private final JTextArea textArea = new JTextArea();
     private final JComboBox<String> comboBoxGroupBySource = new JComboBox<>();
     private final JComboBox<String> comboBoxGroupByColumn = new JComboBox<>();
-    private final JComboBox<String> comboBoxAggregation = new JComboBox<>(new String[]{"Mínimo", "Máximo", "Média"});
+    private final JComboBox<String> comboBoxAggregation = new JComboBox<>(new String[]{"Mínimo", "Máximo", "Média", "Contagem"});
 
     public FormFrameGroup(mxCell jCell) {
 
@@ -129,6 +129,7 @@ public class FormFrameGroup extends FormFrameOperation implements ActionListener
             case "Máximo" -> "MAX:";
             case "Mínimo" -> "MIN:";
             case "Média" -> "AVG:";
+            case "Contagem" -> "COUNT:";
             default ->
                     throw new IllegalStateException("Unexpected value: " + comboBoxAggregation.getSelectedItem().toString());
         };

@@ -5,13 +5,12 @@ import java.util.List;
 
 import com.mxgraph.model.mxCell;
 
-import sgbd.util.statics.Util;
 import entities.Column;
 import enums.ColumnDataType;
 import sgbd.prototype.Prototype;
-import sgbd.query.Operator;
 import sgbd.query.sourceop.TableScan;
 import sgbd.table.Table;
+import sgbd.util.statitcs.Util;
 
 public final class TableCell extends Cell{
 
@@ -85,30 +84,13 @@ public final class TableCell extends Cell{
 		
 		for(sgbd.prototype.Column pColumn : prototypeColumns) {
 
-			ColumnDataType type;
-			switch(Util.typeOfColumn(pColumn)) {
-			
-				case "int":
-				
-					type = ColumnDataType.INTEGER;
-					break;
-				
-				case "float":
-					
-					type = ColumnDataType.FLOAT;
-					break;
-					
-				case "string":
-					
-					type = pColumn.getSize() == 1 ? ColumnDataType.CHARACTER : ColumnDataType.STRING;
-					
-					break;
-				default:
-					
-					type = ColumnDataType.NONE;
-			
-			}
-			
+			ColumnDataType type = switch (Util.typeOfColumn(pColumn)) {
+				case "int" -> ColumnDataType.INTEGER;
+				case "float" -> ColumnDataType.FLOAT;
+				case "string" -> pColumn.getSize() == 1 ? ColumnDataType.CHARACTER : ColumnDataType.STRING;
+				default -> ColumnDataType.NONE;
+			};
+
 			columns.add(new Column(pColumn.getName(), getName(), type, pColumn.isPrimaryKey()));
 		}
 		

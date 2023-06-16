@@ -3,10 +3,11 @@ package entities.utils;
 import java.util.*;
 
 import entities.Column;
+import sgbd.prototype.BData;
 import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
-import sgbd.util.statics.Util;
+import sgbd.util.statitcs.Util;
 
 public class TableFormat {
 
@@ -26,7 +27,7 @@ public class TableFormat {
 	    	Tuple t = operator.next();
 
 	        for (Map.Entry<String, ComplexRowData> line : t)
-				for (Map.Entry<String, byte[]> data : line.getValue())
+				for (Map.Entry<String, BData> data : line.getValue())
 					switch (Util.typeOfColumn(line.getValue().getMeta(data.getKey()))) {
 						case "int" -> row.put(Column.putSource(data.getKey(), line.getKey()), line.getValue().getInt(data.getKey()).toString());
 						case "float" -> row.put(Column.putSource(data.getKey(), line.getKey()), line.getValue().getFloat(data.getKey()).toString());

@@ -9,10 +9,7 @@ import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
 import sgbd.query.Operator;
-import sgbd.query.agregation.AgregationOperation;
-import sgbd.query.agregation.AvgAgregation;
-import sgbd.query.agregation.MaxAgregation;
-import sgbd.query.agregation.MinAgregation;
+import sgbd.query.agregation.*;
 import sgbd.query.unaryop.GroupOperator;
 import util.Utils;
 
@@ -21,7 +18,7 @@ import java.util.List;
 
 public class Group implements IOperator {
 
-    public static List<String> PREFIXES = List.of("MIN:", "MAX:", "AVG:");
+    public static List<String> PREFIXES = List.of("MIN:", "MAX:", "AVG:", "COUNT:");
 
     public Group() {
 
@@ -102,12 +99,13 @@ public class Group implements IOperator {
                 aggregations.add(new MinAgregation(sourceName, columnName));
             else if(Utils.startsWithIgnoreCase(argument, "AVG:"))
                 aggregations.add(new AvgAgregation(sourceName, columnName));
+            else if(Utils.startsWithIgnoreCase(argument, "COUNT:"))
+                aggregations.add(new CountAgregation(sourceName, columnName));
 
         }
 
         Operator operator = parentCell.getOperator();
 
-        System.out.println(aggregations);
         Operator readyOperator = new GroupOperator(operator, Column.removeName(groupBy), Column.removeSource(groupBy), aggregations);
 
         Operation.operationSetter(cell, cell.getType().getSymbol() + arguments.toString(), arguments, readyOperator);
