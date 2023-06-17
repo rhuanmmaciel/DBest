@@ -115,8 +115,8 @@ public abstract class MainFrame extends JFrame
 				new CurrentAction(CurrentAction.ActionType.DELETE_ALL)));
 		buttons.add(new ToolBarButton<>(JButton.class, " Exportar(x) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.SAVE_CELL)));
-		buttons.add(new ToolBarButton<>(JButton.class, " Mostrar(s) ", this, toolBar,
-				new CurrentAction(CurrentAction.ActionType.SHOW_CELL)));
+//		buttons.add(new ToolBarButton<>(JButton.class, " Mostrar(s) ", this, toolBar,
+//				new CurrentAction(CurrentAction.ActionType.SHOW_CELL)));
 		buttons.add(new ToolBarButton<>(JButton.class, " Console ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.OPEN_CONSOLE)));
 		buttons.add(new ToolBarButton<>(JButton.class, " Editor de texto ", this, toolBar,

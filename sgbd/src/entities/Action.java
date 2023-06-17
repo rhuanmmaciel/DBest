@@ -11,10 +11,10 @@ public class Action {
 
 		public enum ActionType {
 			EDGE, CREATE_OPERATOR_CELL, DELETE_CELL, DELETE_ALL, SAVE_CELL, SHOW_CELL, IMPORT_FILE, CREATE_TABLE,
-			OPEN_CONSOLE, OPEN_TEXT_EDITOR
+			OPEN_CONSOLE, OPEN_TEXT_EDITOR, NONE
 		}
 
-		private ActionType action;
+		private final ActionType action;
 
 		public CurrentAction(ActionType action) {
 			this.action = action;
@@ -56,7 +56,7 @@ public class Action {
 
 	public static class CreateOperationAction extends CreateCellAction {
 
-		private OperationType type;
+		private final OperationType type;
 		private mxCell parent;
 
 		public CreateOperationAction(OperationType type) {
@@ -90,7 +90,7 @@ public class Action {
 
 	public static class CreateTableAction extends CreateCellAction {
 
-		private TableCell tableCell;
+		private final TableCell tableCell;
 
 		public CreateTableAction(ActionType action, String name, String style, TableCell tableCell) {
 

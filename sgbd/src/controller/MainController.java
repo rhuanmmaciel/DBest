@@ -59,7 +59,8 @@ public class MainController extends MainFrame {
 	private mxCell ghostJCell = null;
 	private final AtomicReference<mxCell> invisibleJCellRef = new AtomicReference<>(null);
 
-	private final AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>();
+	private final AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>(NONE_ACTION);
+	public static final CurrentAction NONE_ACTION = new CurrentAction(ActionType.NONE);
 	private final AtomicReference<Edge> edgeRef = new AtomicReference<>(new Edge());
 
 	private static int yTables = 0;
@@ -279,8 +280,8 @@ public class MainController extends MainFrame {
 
 		}
 
-		if (currentActionRef.get() != null && (opAction != null
-				|| (btnClicked != null && currentActionRef.get().getType() == ActionType.CREATE_OPERATOR_CELL))) {
+		if (opAction != null
+				|| (btnClicked != null && currentActionRef.get().getType() == ActionType.CREATE_OPERATOR_CELL)) {
 			ghostJCell = (mxCell) graph.insertVertex( graph.getDefaultParent(), "ghost", style,
 					MouseInfo.getPointerInfo().getLocation().getX() - MainFrame.getGraphComponent().getWidth(),
 					MouseInfo.getPointerInfo().getLocation().getY() - MainFrame.getGraphComponent().getHeight(), 80, 30,
@@ -317,7 +318,13 @@ public class MainController extends MainFrame {
 
 		}
 
-		currentActionRef.set(null);
+		setNoneAction();
+
+	}
+
+	private void setNoneAction(){
+
+		currentActionRef.set(NONE_ACTION);
 
 	}
 
@@ -351,10 +358,13 @@ public class MainController extends MainFrame {
 
 		System.out.println(currentActionRef.get());
 
-		graphComponent.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		currentActionRef.set(null);
-		ghostJCell = null;
-		ClickController.deleteMovableEdge(invisibleJCellRef);
+		if (currentActionRef.get().getType() == ActionType.EDGE) {
+
+			graphComponent.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			ClickController.deleteMovableEdge(invisibleJCellRef);
+
+		}
+		setNoneAction();
 
 	}
 
@@ -371,7 +381,7 @@ public class MainController extends MainFrame {
 			if (jCell != null) {
 
 				CellUtils.deleteCell(jCell);
-				currentActionRef.set(null);
+				setNoneAction();
 
 			}
 
@@ -446,20 +456,20 @@ public class MainController extends MainFrame {
 	@Override
 	public void mouseMoved(MouseEvent e) {
 
-		if (currentActionRef.get() != null)
+		if(currentActionRef.get().getType() == ActionType.NONE) return;
 
-			if (currentActionRef.get().getType() == CurrentAction.ActionType.CREATE_OPERATOR_CELL
-					&& ghostJCell != null)
-				moveCell(e, ghostJCell);
+		if (currentActionRef.get().getType() == CurrentAction.ActionType.CREATE_OPERATOR_CELL
+				&& ghostJCell != null)
+			moveCell(e, ghostJCell);
 
-			else if (currentActionRef.get().getType() == ActionType.EDGE && invisibleJCellRef.get() != null)
-				moveCell(e, invisibleJCellRef.get());
+		else if (currentActionRef.get().getType() == ActionType.EDGE && invisibleJCellRef.get() != null)
+			moveCell(e, invisibleJCellRef.get());
 
-			 else if (currentActionRef.get() instanceof CreateTableAction createTable)
-				moveCell(e, createTable.getTableCell().getJGraphCell());
+		 else if (currentActionRef.get() instanceof CreateTableAction createTable)
+			moveCell(e, createTable.getTableCell().getJGraphCell());
 
-			else if(currentActionRef.get().getType() == ActionType.EDGE)
-				setEdgeCursor();
+		else if(currentActionRef.get().getType() == ActionType.EDGE)
+			setEdgeCursor();
 
 	}
 

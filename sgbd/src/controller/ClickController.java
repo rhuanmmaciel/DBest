@@ -52,7 +52,7 @@ public class ClickController {
 
 	private void clicked() {
 
-		if (currentActionRef.get() == null)
+		if (currentActionRef.get().getType() == CurrentAction.ActionType.NONE)
 			return;
 
 		if(currentActionRef.get().getType() != CurrentAction.ActionType.EDGE) deleteMovableEdge(invisibleJCellRef);
@@ -103,7 +103,7 @@ public class ClickController {
 			}
 
 			edgeRef.get().reset();
-			currentActionRef.set(null);
+			currentActionRef.set(MainController.NONE_ACTION);
 
 		}
 
@@ -220,7 +220,7 @@ public class ClickController {
     }
 
     private void resetCurrentAction(){
-        currentActionRef.set(null);
+        currentActionRef.set(MainController.NONE_ACTION);
     }
 
 	private void addMovableEdge(MouseEvent mouseEvent, AtomicReference<mxCell> invisibleJCellRef, mxCell jCell){
