@@ -212,4 +212,8 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 
 	}
 
+	@Override
+	protected void closeWindow() {
+		dispose();
+	}
 }

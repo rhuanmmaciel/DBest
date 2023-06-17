@@ -1,5 +1,8 @@
 package files;
 
+import entities.cells.Cell;
+import entities.cells.TableCell;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,6 +32,11 @@ public class FileUtils {
 	public static boolean copyDatFilesWithHead(String path, String tableName, Path destinationDirectory) {
 		
 		boolean replaceFileName = !path.endsWith(tableName + ".head");
+
+		Cell tableCell = Cell.getCells().values().stream().filter(x -> x.getName().equals(tableName))
+				.filter(x -> x instanceof TableCell).findFirst().orElse(null);
+
+		if(tableCell != null) ((TableCell)tableCell).getTable().close();
 
 		try {
 

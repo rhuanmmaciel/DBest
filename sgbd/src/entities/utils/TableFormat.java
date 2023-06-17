@@ -8,7 +8,6 @@ import sgbd.prototype.BData;
 import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
-import sgbd.table.Table;
 import sgbd.util.statitcs.Util;
 
 public class TableFormat {

@@ -126,4 +126,8 @@ public class FormFrameProjection extends FormFrameOperation implements ActionLis
 
 	}
 
+	@Override
+	protected void closeWindow() {
+		dispose();
+	}
 }

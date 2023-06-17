@@ -8,27 +8,11 @@ import java.awt.Label;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -38,12 +22,11 @@ import enums.ColumnDataType;
 import gui.frames.forms.create.CustomProviders.MyCustomFaker;
 import net.datafaker.Faker;
 
-@SuppressWarnings("serial")
 public class FormFrameCreateData extends JDialog implements ActionListener, ChangeListener{
 	
-	private List<Column> columns;
+	private final List<Column> columns;
 	
-	private JComboBox<Object> comboBox; 
+	private JComboBox<Object> comboBox = new JComboBox<>();
 	private JLabel lblColumnType;
 	
 	private JButton btnReady;
@@ -86,10 +69,10 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 	
 	private JRadioButton rdbtnBoolRandom;
 	
-	private DefaultTableModel model;
-	private JTable table;
-	private Faker faker;
-	private MyCustomFaker myFaker;
+	private final DefaultTableModel model;
+	private final JTable table;
+	private final Faker faker;
+	private final MyCustomFaker myFaker;
 
 	public FormFrameCreateData(List<Column> columns, DefaultTableModel model, JTable table) {
 		
@@ -114,7 +97,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 	    List<String> columnsName = new ArrayList<>();
 	    columns.forEach(x -> columnsName.add(x.getName()));
 
-	    comboBox = new JComboBox<>(columnsName.toArray());
+		Arrays.stream(columnsName.toArray()).forEach(x -> comboBox.addItem(x));
 	    comboBox.addActionListener(this);
 	    
 	    Label lblComboBox = new Label("Nome da coluna: ");
@@ -357,8 +340,8 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 
 	    btnCancel.addActionListener(this);
 	    btnReady.addActionListener(this);
-		
-		int columnIndex = table.getColumnModel().getColumnIndex(comboBox.getSelectedItem().toString());
+
+		int columnIndex = table.getColumnModel().getColumnIndex(Objects.requireNonNull(comboBox.getSelectedItem()).toString());
 		
 		ColumnDataType selectedColumnType = columns.get(columnIndex).getType();
 		
@@ -434,7 +417,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		int columnIndex = table.getColumnModel().getColumnIndex(comboBox.getSelectedItem().toString());
+		int columnIndex = table.getColumnModel().getColumnIndex(Objects.requireNonNull(comboBox.getSelectedItem()).toString());
 		
 		ColumnDataType selectedColumnType = columns.get(columnIndex).getType();
 		
@@ -472,7 +455,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 	
 	private void verifyReady() {
 		
-		boolean isAnyCharCheckBoxSelected = rdbtnCharRandom.isSelected() && charCheckBoxes.stream().anyMatch(x -> x.isSelected());
+		boolean isAnyCharCheckBoxSelected = rdbtnCharRandom.isSelected() && charCheckBoxes.stream().anyMatch(AbstractButton::isSelected);
 		boolean isAnySelected = jRadioGroup.getSelection() != null && !rdbtnCharRandom.isSelected();
 
 		btnReady.setEnabled(isAnySelected || isAnyCharCheckBoxSelected);
@@ -483,7 +466,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 	
 	private void updateToolTipText(boolean isAnySelected, boolean isAnyCharCheckBoxSelected) {
 		
-		String btnReadyToolTipText = new String();
+		String btnReadyToolTipText = "";
 		
 		if(!isAnyCharCheckBoxSelected) {
 			
@@ -579,7 +562,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 				
 			}else if(rdbtnStringJob.isSelected()) {
 				
-				randomItems = faker.collection(() -> faker.job().field()).len(rowsCount).generate();;
+				randomItems = faker.collection(() -> faker.job().field()).len(rowsCount).generate();
 				
 			}
 			

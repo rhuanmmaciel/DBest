@@ -113,31 +113,33 @@ public class Selection implements IOperator {
 
 	public String formatString(String input, Cell parent) {
 
-		Pattern pattern = Pattern.compile("(?<=\\s|^)([\\w.-]+(?:\\.[\\w.-]+)?)(?=[\\s>=<])");
+		Pattern pattern = Pattern.compile("(?<=\\s|^)([\\w.-]+(?:\\.[\\w.-]+)+)(?=[\\s>=<]|$)");
 		Matcher matcher = pattern.matcher(input);
 
 		StringBuilder result = new StringBuilder();
 		while (matcher.find()) {
 
-			String match = matcher.group(1);
-
-			if (parent.getColumnNames().contains(Column.removeSource(match)))
-				matcher.appendReplacement(result, "#{" + match + "}");
-
+			String matchValue = matcher.group();
+			if (parent.getColumnSourceNames().contains(matchValue)) {
+				matcher.appendReplacement(result, "#{" + matchValue + "}");
+			} else {
+				matcher.appendReplacement(result, matchValue);
+			}
 		}
 		matcher.appendTail(result);
 
-		input = result.toString();
-		input = input.replaceAll("\\bAND\\b", "&&");
-		input = input.replaceAll("\\bOR\\b", "||");
-		input = input.replaceAll("=", "==");
-		input = input.replaceAll("≠", "!=");
-		input = input.replaceAll("≥", ">=");
-		input = input.replaceAll("≤", "<=");
+		result = new StringBuilder(result.toString()
+				.replaceAll("\\bAND\\b", "&&")
+				.replaceAll("\\bOR\\b", "||")
+				.replaceAll("=", "==")
+				.replaceAll("≠", "!=")
+				.replaceAll("≥", ">=")
+				.replaceAll("≤", "<="));
 
-		return input;
-
+		return result.toString();
 	}
+
+
 
 
 	public boolean isColumn(String input, Cell parent) {

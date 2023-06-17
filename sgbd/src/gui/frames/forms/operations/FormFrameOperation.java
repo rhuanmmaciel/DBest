@@ -4,6 +4,7 @@ import com.mxgraph.model.mxCell;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import gui.frames.forms.FormBase;
 import operations.IOperator;
 
 import javax.swing.*;
@@ -17,16 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class FormFrameOperation extends JDialog  {
+public abstract class FormFrameOperation extends FormBase {
 
     private final Class<? extends IOperator> operator;
 
     protected final mxCell jCell;
     protected final Cell parent1;
 
-    protected final JPanel contentPane = new JPanel(new BorderLayout());
-    protected final JButton btnCancel = new JButton("Cancelar");
-    protected final JButton btnReady = new JButton("Pronto");
     protected final JComboBox<String> comboBoxSource = new JComboBox<>();
     protected final JComboBox<String> comboBoxColumn = new JComboBox<>();
     protected final JPanel centerPanel = new JPanel(new GridBagLayout());
@@ -62,13 +60,6 @@ public abstract class FormFrameOperation extends JDialog  {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         initializeComboBoxes();
-        initializeBottomButtons();
-
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                closeWindow();
-            }
-        });
 
         pack();
 
@@ -143,14 +134,6 @@ public abstract class FormFrameOperation extends JDialog  {
 
     }
 
-
-    private void initializeBottomButtons() {
-        JPanel bottomPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        bottomPane.add(btnCancel);
-        bottomPane.add(btnReady);
-        contentPane.add(bottomPane, BorderLayout.SOUTH);
-    }
-
     protected void btnReady(){
 
         dispose();
@@ -166,10 +149,6 @@ public abstract class FormFrameOperation extends JDialog  {
             e.printStackTrace();
         }
 
-    }
-
-    protected void closeWindow(){
-        dispose();
     }
 
     protected abstract void setPreviousArgs();

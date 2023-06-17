@@ -49,6 +49,7 @@ public class DataFrame extends JDialog implements ActionListener {
 	private int currentIndex;
 	private final Operator operator;
 	private Integer lastPage = null;
+	private int currentLastPage = -1;
 	private final Cell cell;
 
 	public DataFrame(Cell cell) {
@@ -61,10 +62,9 @@ public class DataFrame extends JDialog implements ActionListener {
 
 
 		this.operator = cell.getOperator();
+		operator.open();
 
 		this.cell = cell;
-
-		operator.open();
 
 		columnsName = cell.getColumnSourceNames();
 
@@ -93,23 +93,29 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		model.addColumn("");
 
-		TableFormat.Row row = TableFormat.getRow(operator);
+		if(page > currentLastPage) {
 
-		while (row != null && currentElement < lastElement){
+			TableFormat.Row row = TableFormat.getRow(operator);
 
-			types.putAll(row.types());
-			rows.add(row.row());
-			row = TableFormat.getRow(operator);
-			if(row != null) currentElement++;
-			if(currentElement >= lastElement) {
-				rows.add(row.row());
+			while (row != null && currentElement < lastElement) {
+
 				types.putAll(row.types());
+				rows.add(row.row());
+				row = TableFormat.getRow(operator);
+				if (row != null) currentElement++;
+				if (currentElement >= lastElement) {
+					rows.add(row.row());
+					types.putAll(row.types());
+				}
+
 			}
+
+			if (row == null && lastPage == null)
+				lastPage = currentElement / 15;
 
 		}
 
-		if(row == null && lastPage == null)
-			lastPage = currentElement / 15;
+		currentLastPage = Math.max(currentLastPage, page);
 
 		if (!rows.isEmpty()) {
 
@@ -156,8 +162,6 @@ public class DataFrame extends JDialog implements ActionListener {
 		cell.updateUndefinedColumns(types);
 
 	}
-
-	
 
 	private void initializeGUI() {
 

@@ -141,4 +141,8 @@ public class FormFrameGroup extends FormFrameOperation implements ActionListener
 
     }
 
+    @Override
+    protected void closeWindow() {
+        dispose();
+    }
 }

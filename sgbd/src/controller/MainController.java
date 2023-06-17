@@ -281,7 +281,7 @@ public class MainController extends MainFrame {
 
 		if (currentActionRef.get() != null && (opAction != null
 				|| (btnClicked != null && currentActionRef.get().getType() == ActionType.CREATE_OPERATOR_CELL))) {
-			ghostJCell = (mxCell) graph.insertVertex((mxCell) graph.getDefaultParent(), "ghost", style,
+			ghostJCell = (mxCell) graph.insertVertex( graph.getDefaultParent(), "ghost", style,
 					MouseInfo.getPointerInfo().getLocation().getX() - MainFrame.getGraphComponent().getWidth(),
 					MouseInfo.getPointerInfo().getLocation().getY() - MainFrame.getGraphComponent().getHeight(), 80, 30,
 					style);
@@ -307,16 +307,17 @@ public class MainController extends MainFrame {
 
 		if (!cancelServiceReference.get()) {
 
-			currentActionRef.set(new CreateTableAction(action, tableCell.getName(), tableCell.getStyle(), tableCell));
 			saveTable(tableCell.getName(), tableCell.getTable());
+			CellUtils.deleteCell(tableCell.getJGraphCell());
 
 		} else {
 
 			if (tableCell != null)
 				TreeUtils.deleteTree(tableCell.getTree());
-			currentActionRef.set(null);
 
 		}
+
+		currentActionRef.set(null);
 
 	}
 
@@ -325,7 +326,7 @@ public class MainController extends MainFrame {
 		boolean create = tables.keySet().stream().noneMatch(x -> x.equals(tableName));
 
 		if (create) {
-			tablesGraph.insertVertex((mxCell) tablesGraph.getDefaultParent(), null, tableName, 0, yTables, 80, 30,
+			tablesGraph.insertVertex(tablesGraph.getDefaultParent(), null, tableName, 0, yTables, 80, 30,
 					"table");
 
 			tables.put(tableName, table);
@@ -344,6 +345,17 @@ public class MainController extends MainFrame {
 
 		if (!Cell.getCells().isEmpty())
 			new FormFrameExportTable(exitRef);
+	}
+
+	private void deleteAction(){
+
+		System.out.println(currentActionRef.get());
+
+		graphComponent.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		currentActionRef.set(null);
+		ghostJCell = null;
+		ClickController.deleteMovableEdge(invisibleJCellRef);
+
 	}
 
 	@Override
@@ -383,10 +395,7 @@ public class MainController extends MainFrame {
 
 		}else if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
 
-			graphComponent.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			currentActionRef.set(null);
-			ghostJCell = null;
-			ClickController.deleteMovableEdge(invisibleJCellRef);
+			deleteAction();
 
 		} else if (e.getKeyCode() == KeyEvent.VK_L) {
 
@@ -411,7 +420,7 @@ public class MainController extends MainFrame {
 		}
 	}
 
-	private  void setEdgeCursor(MouseEvent e){
+	private  void setEdgeCursor(){
 
 		Cursor edgeCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
 
@@ -450,7 +459,7 @@ public class MainController extends MainFrame {
 				moveCell(e, createTable.getTableCell().getJGraphCell());
 
 			else if(currentActionRef.get().getType() == ActionType.EDGE)
-				setEdgeCursor(e);
+				setEdgeCursor();
 
 	}
 
@@ -485,10 +494,12 @@ public class MainController extends MainFrame {
 
 		}
 
-		mxCell jTableCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) graph.getDefaultParent(), null,
+		mxCell jTableCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
 				relation.getName(), x, y, 80, 30, "table");
 
 		relation.setCell(new ImportFile(relation.getName() + ".head", jTableCell).getResult());
+
+		relation.getCell().getTable().open();
 
 		saveTable(relation.getName(), relation.getCell().getTable());
 
@@ -511,7 +522,7 @@ public class MainController extends MainFrame {
 
 		OperationType type = operationExpression.getType();
 
-		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) graph.getDefaultParent(), null,
+		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
 				type.getDisplayNameAndSymbol(), x, y, 80, 30, type.getDisplayName());
 
 		List<Cell> parents = new ArrayList<>();

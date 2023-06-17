@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FormFrameSort extends FormFrameOperation implements ActionListener, IFormFrameOperation {
@@ -102,8 +103,8 @@ public class FormFrameSort extends FormFrameOperation implements ActionListener,
         if (actionEvent.getSource() == btnReady) {
 
             String order = ascendingRadioButton.isSelected() ? "ASC:" : "DESC:";
-            arguments.add(order+Column.putSource(comboBoxColumn.getSelectedItem().toString(),
-                     comboBoxSource.getSelectedItem().toString()));
+            arguments.add(order+Column.putSource(Objects.requireNonNull(comboBoxColumn.getSelectedItem()).toString(),
+                     Objects.requireNonNull(comboBoxSource.getSelectedItem()).toString()));
             btnReady();
 
         } else if (actionEvent.getSource() == btnCancel) {
@@ -113,4 +114,8 @@ public class FormFrameSort extends FormFrameOperation implements ActionListener,
         }
     }
 
+    @Override
+    protected void closeWindow() {
+        dispose();
+    }
 }

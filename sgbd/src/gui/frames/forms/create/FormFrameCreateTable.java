@@ -202,7 +202,7 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
 			
 		}
 		if(e.getSource() == btnCreateData) {
-			
+
 			new FormFrameCreateData(columns, model, table);
 			
 		}

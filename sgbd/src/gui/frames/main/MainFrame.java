@@ -103,23 +103,23 @@ public abstract class MainFrame extends JFrame
 		buttons.add(new OperationButton(stylesheet, OperationType.SORT, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.GROUP, this, operationButtonsPane));
 		
-		buttons.add(new ToolBarButton<JButton>(JButton.class, " Importar tabela(i) ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " Importar tabela(i) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.IMPORT_FILE)));
-		buttons.add(new ToolBarButton<JButton>(JButton.class, " Criar tabela(c) ", this, toolBar,
-				new CurrentAction(CurrentAction.ActionType.CREATE_TABLE)));
-		buttons.add(new ToolBarButton<JButton>(JButton.class, " Edge(e) ", this, toolBar,
+//		buttons.add(new ToolBarButton<>(JButton.class, " Criar tabela(c) ", this, toolBar,
+//				new CurrentAction(CurrentAction.ActionType.CREATE_TABLE)));
+		buttons.add(new ToolBarButton<>(JButton.class, " Edge(e) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.EDGE)));
-		buttons.add(new ToolBarButton<JButton>(JButton.class, " Remover(del) ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " Remover(del) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.DELETE_CELL)));
-		buttons.add(new ToolBarButton<JButton>(JButton.class, " Remover tudo ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " Remover tudo ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.DELETE_ALL)));
-		buttons.add(new ToolBarButton<JButton>(JButton.class, " Exportar(x) ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " Exportar(x) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.SAVE_CELL)));
-		buttons.add(new ToolBarButton<JButton>(JButton.class, " Mostrar(s) ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " Mostrar(s) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.SHOW_CELL)));
-		buttons.add(new ToolBarButton<JButton>(JButton.class, " Console ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " Console ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.OPEN_CONSOLE)));
-		buttons.add(new ToolBarButton<JButton>(JButton.class, " Editor de texto ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " Editor de texto ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.OPEN_TEXT_EDITOR)));
 		
 		getContentPane().add(toolBar, BorderLayout.SOUTH);

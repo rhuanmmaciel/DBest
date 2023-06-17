@@ -99,4 +99,8 @@ public class FormFrameJoins extends FormFrameOperation implements ActionListener
 
 	}
 
+	@Override
+	protected void closeWindow() {
+		dispose();
+	}
 }

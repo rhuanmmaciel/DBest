@@ -10,6 +10,9 @@ import operations.OperationErrorVerifier;
 import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
+import sgbd.query.binaryop.joins.FKNestedLoopJoin;
+import sgbd.query.binaryop.joins.MergeJoin;
+import sgbd.query.binaryop.joins.NestedLoopJoin;
 
 import java.util.List;
 
@@ -52,8 +55,7 @@ public class CartesianProduct implements IOperator {
 		Operator operator1 = parentCell1.getOperator();
 		Operator operator2 = parentCell2.getOperator();
 
-
-		Operator readyOperator = new BlockNestedLoopJoin(operator1, operator2, (t1, t2) -> true);
+		Operator readyOperator = new NestedLoopJoin(operator1, operator2, (t1, t2) -> true);
 
 		Operation.operationSetter(cell, "  X  ", List.of(), readyOperator);
 

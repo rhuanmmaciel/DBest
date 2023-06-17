@@ -7,16 +7,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Objects;
 
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -24,13 +17,13 @@ import javax.swing.table.DefaultTableModel;
 
 import entities.Column;
 import enums.ColumnDataType;
+import gui.frames.forms.FormBase;
 
-@SuppressWarnings("serial")
-public class FormFrameAddColumn extends JDialog implements ActionListener, DocumentListener{
+public class FormFrameAddColumn extends FormBase implements ActionListener, DocumentListener{
 
-	private JPanel contentPane;
 	private JTextField txtColumnName;
 	private JComboBox<Object> comboBox;
+	private final JCheckBox pkCheckBox = new JCheckBox();
 	private DefaultTableModel table;
 	private JButton btnReady;
 	private JButton btnCancel;
@@ -51,21 +44,10 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 	
 	private void initializeGUI() {
 
-		
-		setBounds(100, 100, 312, 263);
 		setLocationRelativeTo(null);
 		
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
-		
-		btnReady = new JButton("Pronto");
-		btnReady.addActionListener(this);
-		
-		btnCancel = new JButton("Cancelar");
-		btnCancel.addActionListener(this);
-		
+
 		lblColumnName = new JLabel("Nome da coluna");
 		
 		txtColumnName = new JTextField();
@@ -77,45 +59,10 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 		String[] options = {"None", "Integer", "Float", "Character", "String", "Boolean"};
 		comboBox = new JComboBox<Object>(options);
 		
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(582, Short.MAX_VALUE)
-					.addComponent(btnCancel)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnReady)
-					.addGap(6))
-				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblColumnName)
-						.addComponent(lblTypeq))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtColumnName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(comboBox, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-					.addContainerGap())
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblColumnName)
-						.addComponent(txtColumnName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(15)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblTypeq)
-						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnCancel)
-						.addComponent(btnReady))
-					.addContainerGap())
-		);
+
 		
 		updateButton();
-		contentPane.setLayout(gl_contentPane);
+		pack();
 		this.setVisible(true);
 	}
 
@@ -125,7 +72,9 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 		if(e.getSource() == btnReady) {
 			
 			ColumnDataType type;
-			
+
+			boolean isPK = pkCheckBox.isSelected();
+
 			String itemSelected = comboBox.getSelectedItem().toString();
 			
 			if(Objects.equals(itemSelected, "None")) {
@@ -159,14 +108,14 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 			}
 			
 			table.addColumn(txtColumnName.getText().replaceAll("[^\\p{Alnum}]", ""));
-			//columns.add(new Column(txtColumnName.getText().replaceAll("[^\\p{Alnum}]", ""), type));
-			dispose();
-			
+//			columns.add(new Column(txtColumnName, , type));
+			closeWindow();
+
 		}
 		if(e.getSource() == btnCancel) {
 			
-			dispose();
-			
+			closeWindow();
+
 		}
 		
 	}
@@ -223,5 +172,10 @@ public class FormFrameAddColumn extends JDialog implements ActionListener, Docum
 		
 		btnReady.setToolTipText(btnCreateColumnToolTipText.isEmpty() ? null : btnCreateColumnToolTipText);
 		
+	}
+
+	@Override
+	protected void closeWindow() {
+		dispose();
 	}
 }
