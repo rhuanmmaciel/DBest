@@ -86,18 +86,24 @@ public class CellUtils extends MainController {
 
 	public static void deleteAllGraph() {
 
-		mxGraph graph = MainController.getGraph();
+		int answer = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja deletar todas as árvores?", "Confirmação", JOptionPane.YES_NO_OPTION);
 
-		graph.getModel().beginUpdate();
-		try {
-			graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
-			Cell.clearCells();
+		if(answer == JOptionPane.YES_OPTION) {
 
-		} finally {
-			graph.getModel().endUpdate();
+			mxGraph graph = MainController.getGraph();
+
+			graph.getModel().beginUpdate();
+			try {
+				graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
+				Cell.clearCells();
+
+			} finally {
+				graph.getModel().endUpdate();
+			}
+
+			graph.refresh();
+
 		}
-
-		graph.refresh();
 
 	}
 
