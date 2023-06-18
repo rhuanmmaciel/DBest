@@ -18,9 +18,9 @@ public class TreeUtils {
 	public static Map<Integer, Tree> trees = MainController.getTrees();
 	
 	public static void updateTreesAboveAndBelow(List<Cell> parents, OperationCell child) {
-		
+
 		if(child == null && (parents == null || parents.isEmpty())) return;
-		
+
 		Tree previousTree = null;
 		
 		if(child != null) {
@@ -29,29 +29,31 @@ public class TreeUtils {
 			
 			Tree childTree = new Tree();
 			
-			fromLeavesToRoot(child.getAllSourceTables(), childTree);
+			setTreeFromLeavesToRoot(child.getAllSourceTables(), childTree);
 
 			recalculateContent(child);
 			
 		}
-		
+
+		deleteTree(previousTree);
+
 		if(parents != null && !parents.isEmpty()) {
 			
 			for(Cell parent : parents) {
 				
 				previousTree = parent.getTree();
 				Tree parentTree = new Tree();
-				fromLeavesToRoot(parent.getAllSourceTables(), parentTree);
-			
+				setTreeFromLeavesToRoot(parent.getAllSourceTables(), parentTree);
+				deleteTree(previousTree);
+
 			}
 			
 		}
 		
-		deleteTree(previousTree);
-		
+
 	}
 	
-	private static void fromLeavesToRoot(List<Cell> level, Tree tree) {
+	private static void setTreeFromLeavesToRoot(List<Cell> level, Tree tree) {
 		
 		while(!level.isEmpty()) {
 			
@@ -77,8 +79,6 @@ public class TreeUtils {
 	}
 	
 	public static void updateTree(Cell cell) {
-		
-//		System.out.println("update tree cell" + cell);
 		
 		Set<Tree> trees = new HashSet<>();
 		
@@ -138,7 +138,6 @@ public class TreeUtils {
 	}
 
 	public static void recalculateContent(Tree tree) {
-//		System.out.println("recalculate COntent t" + tree);
 
 		if(tree != null) {
 			
@@ -173,17 +172,17 @@ public class TreeUtils {
 		
 	}
 	
-	public static void recalculateContent(Cell cell) {
+	public static void recalculateContent(OperationCell cell) {
 
 		if(cell != null) {
 			
-			Cell currentCell = cell;
+			OperationCell currentCell = cell;
 			
-			while(currentCell.hasChild()){
-	
+			while(currentCell != null){
+
+				currentCell.updateOperation();
 				currentCell = currentCell.getChild();
-				((OperationCell) currentCell).updateOperation();
-	
+
 			}
 			
 		}

@@ -7,14 +7,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.*;
 
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -42,7 +36,7 @@ public class DataFrame extends JDialog implements ActionListener {
 	private final JButton btnAllLeft = new JButton("<<");;
 	private final JButton btnAllRight = new JButton(">>");;
 
-	private Map<String, ColumnDataType> types = new HashMap<>();
+	private final Map<String, ColumnDataType> types = new HashMap<>();
 	private Map<String, String> row;
 	private final List<Map<String, String>> rows;
 	private final List<String> columnsName;

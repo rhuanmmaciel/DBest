@@ -113,28 +113,28 @@ public class ClickController {
 
 		Cell parentCell = getCells().get(edgeRef.get().getParent());
 
+		if(!(cell instanceof OperationCell opCell)) return;
+
 		deleteMovableEdge(invisibleJCellRef);
 
 		MainController.getGraph().insertEdge(edgeRef.get().getParent(), null, "", edgeRef.get().getParent(),
 				jCellRef.get());
 
-		((OperationCell) cell).addParent(parentCell);
+		opCell.addParent(parentCell);
 
 		assert parentCell != null;
-		parentCell.setChild((OperationCell) cell);
+		parentCell.setChild(opCell);
 
 		cell.setAllNewTrees();
-		TreeUtils.recalculateContent(cell);
+		TreeUtils.recalculateContent(opCell);
 
-		OperationCell operationCell = (OperationCell) cell;
+		OperationType type = opCell.getType();
 
-		OperationType type = operationCell.getType();
-
-		if((operationCell.getArity() == OperationArity.UNARY || operationCell.getParents().size() == 2)
+		if((opCell.getArity() == OperationArity.UNARY || opCell.getParents().size() == 2)
 				&& !OperationType.OPERATIONS_WITHOUT_FORM.contains(type))
 			executeOperationWithForm(type);
 
-		if((operationCell.getArity() == OperationArity.UNARY || operationCell.getParents().size() == 2)
+		if((opCell.getArity() == OperationArity.UNARY || opCell.getParents().size() == 2)
 				&& OperationType.OPERATIONS_WITHOUT_FORM.contains(type))
 			executeOperationWithoutForm(type);
 

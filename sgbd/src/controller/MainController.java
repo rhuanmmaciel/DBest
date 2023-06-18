@@ -220,8 +220,9 @@ public class MainController extends MainFrame {
 
 		else if (e.getSource() == menuItemEdit) {
 
-			((OperationCell) Cell.getCells().get(jCell)).editOperation(jCell);
-			TreeUtils.recalculateContent(Cell.getCells().get(jCell));
+			OperationCell opCell = (OperationCell)Cell.getCells().get(jCell);
+			opCell.editOperation(jCell);
+			TreeUtils.recalculateContent(opCell);
 
 		} else if (e.getSource() == menuItemRemove)
 			CellUtils.deleteCell(jCell);

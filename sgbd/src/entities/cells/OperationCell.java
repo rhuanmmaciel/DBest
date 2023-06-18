@@ -98,8 +98,9 @@ public final class OperationCell extends Cell {
 
 	public void updateOperation() {
 
+		System.out.println(getParents());
 		if (hasBeenInitialized) {
-
+			System.out.println("entrou hasBeen");
 			try {
 
 				Constructor<? extends IOperator> constructor = operator.getDeclaredConstructor();

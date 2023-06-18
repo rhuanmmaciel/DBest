@@ -10,13 +10,9 @@ import entities.cells.Cell;
 
 public class Tree {
 
-	private int index;
+	private int index = 0;
 
-	private int size = 0;
-	
 	{
-
-		index = 0;
 
 		while (MainController.getTrees().containsKey(index))
 			index++;
@@ -29,10 +25,6 @@ public class Tree {
 
 	}
 	
-	public int getSize() {
-		return size;
-	}
-
 	public List<Cell> getLeaves() {
 
 		List<Cell> leaves = new ArrayList<>();
@@ -52,8 +44,11 @@ public class Tree {
 
 		Set<Cell> cells = new HashSet<>();
 
-		Cell.getCells().values().stream().filter(cell -> cell.getTree() == this)
-				.forEach(cell -> cells.add(cell));
+		Cell.getCells()
+				.values()
+				.stream()
+				.filter(cell -> cell.getTree() == this)
+				.forEach(cells::add);
 
 		return cells;
 
@@ -68,10 +63,10 @@ public class Tree {
 
 		StringBuilder text = new StringBuilder();
 
-		text.append(index + ": ");
+		text.append(index).append(": ");
 
 		for (Cell cell : getCells())
-			text.append(cell.getName() + ", ");
+			text.append(cell.getName()).append(", ");
 
 		return text.toString();
 
