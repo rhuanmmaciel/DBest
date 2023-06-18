@@ -178,7 +178,7 @@ public class MainController extends MainFrame {
 
 			}
 
-			if (cell instanceof TableCell || (OperationType.OPERATIONS_WITHOUT_FORM.contains(((OperationCell) cell).getType())))
+			if (cell instanceof TableCell || OperationType.OPERATIONS_WITHOUT_FORM.contains(((OperationCell) cell).getType()))
 				popupMenuJCell.remove(menuItemEdit);
 
 			if (cell.hasChild())

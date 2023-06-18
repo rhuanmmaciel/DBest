@@ -124,6 +124,8 @@ public abstract class MainFrame extends JFrame
 		
 		getContentPane().add(toolBar, BorderLayout.SOUTH);
 
+		getContentPane().addKeyListener(this);
+
 		mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
 		layout.setUseBoundingBox(false);
 
@@ -138,6 +140,7 @@ public abstract class MainFrame extends JFrame
 		tablesGraph.setCellsDeletable(false);
 		
 		graphComponent.getGraphControl().addMouseMotionListener(this);
+		graphComponent.getGraphControl().addKeyListener(this);
 		graphComponent.setConnectable(false);
 		graphComponent.getGraphControl().addMouseListener(this);
 		graphComponent.addKeyListener(this);
