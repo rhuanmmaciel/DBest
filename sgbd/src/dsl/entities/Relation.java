@@ -5,7 +5,7 @@ import entities.cells.TableCell;
 
 public final class Relation extends Expression<TableCell> {
 
-	private String name;
+	private final String name;
 	private TableCell cell = null;
 	
 	public Relation(String command) {

@@ -11,7 +11,7 @@ public abstract sealed class OperationExpression extends Expression<OperationCel
 
 	private OperationType type;
 	private OperationArity arity;
-	private List<String> arguments = new ArrayList<>();
+	private final List<String> arguments = new ArrayList<>();
 	private Expression<?> source;
 	private OperationCell cell = null;
 	
@@ -28,15 +28,18 @@ public abstract sealed class OperationExpression extends Expression<OperationCel
 	
 	private void setArity() {
 		
-		if(type == null) arity = null;
-		
+		if(type == null) {
+			arity = null;
+			return;
+		}
+
 		arity = type.getArity();
 		
 	}
 
 	protected void setArguments(List<String> arguments) {
 		
-		this.arguments.addAll(arguments);
+		this.arguments.addAll(arguments.stream().map(String::strip).toList());
 		
 	}
 	
