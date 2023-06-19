@@ -1,0 +1,1 @@
+{"information":{"saved":"true","clear":"false","table-type":"SimpleTable","tablename":"diretor","file-path":"diretor.dat"},"prototype":{"columns":[{"size":4,"flags":24,"name":"idDiretor"},{"size":100,"flags":34,"name":"nacionalidade"},{"size":100,"flags":34,"name":"nome"}],"stat":true,"headerSize":0}}
