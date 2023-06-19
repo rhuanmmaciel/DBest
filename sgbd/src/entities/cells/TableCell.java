@@ -85,7 +85,9 @@ public final class TableCell extends Cell{
 
 			ColumnDataType type = switch (Util.typeOfColumn(pColumn)) {
 				case "int" -> ColumnDataType.INTEGER;
+				case "long" -> ColumnDataType.LONG;
 				case "float" -> ColumnDataType.FLOAT;
+				case "double" -> ColumnDataType.DOUBLE;
 				case "string" -> pColumn.getSize() == 1 ? ColumnDataType.CHARACTER : ColumnDataType.STRING;
 				default -> ColumnDataType.NONE;
 			};

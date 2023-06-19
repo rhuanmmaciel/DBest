@@ -42,11 +42,11 @@ import gui.frames.CellInformationFrame;
 import gui.frames.dsl.Console;
 import gui.frames.dsl.TextEditor;
 import gui.frames.forms.create.FormFrameCreateTable;
-import gui.frames.forms.importexport.FormFrameExportTable;
+import gui.frames.forms.importexport.FormFrameExportAs;
 import gui.frames.forms.importexport.FormFrameImportAs;
 import gui.frames.main.MainFrame;
 import sgbd.table.Table;
-import util.Export;
+import files.ExportFile;
 
 public class MainController extends MainFrame {
 
@@ -129,7 +129,7 @@ public class MainController extends MainFrame {
 
 			case DELETE_CELL -> CellUtils.deleteCell(jCell);
 			case DELETE_ALL -> CellUtils.deleteAllGraph();
-			case SAVE_CELL -> exportTable();
+			case PRINT_SCREEN -> printScreen();
 			case SHOW_CELL -> CellUtils.showTable(jCell);
 			case IMPORT_FILE -> newTable(CurrentAction.ActionType.IMPORT_FILE);
 			case CREATE_TABLE -> newTable(CurrentAction.ActionType.CREATE_TABLE);
@@ -165,6 +165,7 @@ public class MainController extends MainFrame {
 			popupMenuJCell.add(menuItemShow);
 			popupMenuJCell.add(menuItemInformations);
 			popupMenuJCell.add(menuItemExport);
+			popupMenuJCell.add(menuItemExportTree);
 			popupMenuJCell.add(menuItemEdit);
 			popupMenuJCell.add(menuItemOperations);
 			popupMenuJCell.add(menuItemRemove);
@@ -175,6 +176,7 @@ public class MainController extends MainFrame {
 				popupMenuJCell.remove(menuItemOperations);
 				popupMenuJCell.remove(menuItemEdit);
 				popupMenuJCell.remove(menuItemExport);
+				popupMenuJCell.remove(menuItemExportTree);
 
 			}
 
@@ -216,7 +218,10 @@ public class MainController extends MainFrame {
 			new CellInformationFrame(jCell);
 
 		else if (e.getSource() == menuItemExport)
-			new Export(Cell.getCells().get(jCell).getTree());
+			export();
+
+		else if(e.getSource() == menuItemExportTree)
+			new ExportFile(Cell.getCells().get(jCell).getTree());
 
 		else if (e.getSource() == menuItemEdit) {
 
@@ -285,8 +290,8 @@ public class MainController extends MainFrame {
 				|| (btnClicked != null && currentActionRef.get().getType() == ActionType.CREATE_OPERATOR_CELL)) {
 			ghostJCell = (mxCell) graph.insertVertex( graph.getDefaultParent(), "ghost", style,
 					MouseInfo.getPointerInfo().getLocation().getX() - MainFrame.getGraphComponent().getWidth(),
-					MouseInfo.getPointerInfo().getLocation().getY() - MainFrame.getGraphComponent().getHeight(), 80, 30,
-					style);
+					MouseInfo.getPointerInfo().getLocation().getY() - MainFrame.getGraphComponent().getHeight(),
+					80, 30, style);
 
 		}
 
@@ -329,6 +334,14 @@ public class MainController extends MainFrame {
 
 	}
 
+	private void export(){
+
+		AtomicReference<Boolean> cancelService = new AtomicReference<>(false);
+
+		new FormFrameExportAs(jCell, cancelService);
+
+	}
+
 	public static void saveTable(String tableName, Table table) {
 
 		boolean create = tables.keySet().stream().noneMatch(x -> x.equals(tableName));
@@ -347,12 +360,9 @@ public class MainController extends MainFrame {
 
 	}
 
-	private void exportTable() {
+	private void printScreen() {
 
-		AtomicReference<Boolean> exitRef = new AtomicReference<>(false);
-
-		if (!Cell.getCells().isEmpty())
-			new FormFrameExportTable(exitRef);
+			new ExportFile();
 	}
 
 	private void deleteAction(){
@@ -394,15 +404,6 @@ public class MainController extends MainFrame {
 		} else if (e.getKeyCode() == KeyEvent.VK_I) {
 
 			newTable(CurrentAction.ActionType.IMPORT_FILE);
-
-		} else if (e.getKeyCode() == KeyEvent.VK_X) {
-
-			if (Cell.getCells().size() > 0)
-				exportTable();
-
-		} else if (e.getKeyCode() == KeyEvent.VK_C) {
-
-			newTable(CurrentAction.ActionType.CREATE_TABLE);
 
 		}else if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
 

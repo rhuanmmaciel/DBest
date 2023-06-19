@@ -12,7 +12,7 @@ import sgbd.util.statitcs.Util;
 
 public class TableFormat {
 
-	public static Row getRow(Operator operator) {
+	public static Row getRow(Operator operator, boolean sourceAndName) {
 
 		if(operator == null) return null;
 
@@ -22,7 +22,7 @@ public class TableFormat {
 
         for(Map.Entry<String, List<String>> content: operator.getContentInfo().entrySet())
 			possibleKeys.addAll(content.getValue().stream()
-					.map(x-> entities.Column.putSource(x, content.getKey()))
+					.map(x-> sourceAndName ? entities.Column.putSource(x, content.getKey()) : x)
 					.toList());
 
 	    if (operator.hasNext()) {
@@ -32,12 +32,20 @@ public class TableFormat {
 	        for (Map.Entry<String, ComplexRowData> line : t)
 				for (Map.Entry<String, BData> data : line.getValue()) {
 
-					String columnName = Column.putSource(data.getKey(), line.getKey());
+					String columnName = sourceAndName ? Column.putSource(data.getKey(), line.getKey()) : data.getKey();
 
 					switch (Util.typeOfColumn(line.getValue().getMeta(data.getKey()))) {
 						case "int" -> {
 							row.put(columnName, line.getValue().getInt(data.getKey()).toString());
 							types.put(columnName, ColumnDataType.INTEGER);
+						}
+						case "long" -> {
+							row.put(columnName, line.getValue().getLong(data.getKey()).toString());
+							types.put(columnName, ColumnDataType.LONG);
+						}
+						case "double" -> {
+							row.put(columnName, line.getValue().getDouble(data.getKey()).toString());
+							types.put(columnName, ColumnDataType.DOUBLE);
 						}
 						case "float" -> {
 							row.put(columnName, line.getValue().getFloat(data.getKey()).toString());
@@ -48,7 +56,7 @@ public class TableFormat {
 							types.put(columnName, ColumnDataType.BOOLEAN);
 						}
 						default -> {
-							row.put(Column.putSource(data.getKey(), line.getKey()), line.getValue().getString(data.getKey()));
+							row.put(columnName, line.getValue().getString(data.getKey()));
 							types.put(columnName, ColumnDataType.STRING);
 						}
 					}

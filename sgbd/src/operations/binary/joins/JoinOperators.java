@@ -12,6 +12,7 @@ import operations.OperationErrorVerifier;
 import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
+import sgbd.util.statitcs.Util;
 import util.Utils;
 
 import java.util.ArrayList;

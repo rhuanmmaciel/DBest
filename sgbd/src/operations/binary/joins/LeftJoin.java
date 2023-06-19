@@ -16,6 +16,5 @@ public class LeftJoin extends JoinOperators {
 
 		return new LeftNestedLoopJoin(op1, op2, (t1, t2) -> compare(t1, source1, item1, t2, source2, item2));
 
-
 	}
 }

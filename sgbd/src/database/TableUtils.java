@@ -11,7 +11,8 @@ public class TableUtils {
 
 		List<ColumnDataType> types = new ArrayList<>(List.of(ColumnDataType.values()));
 		List<ColumnDataType> possibleRemovedTypes = new ArrayList<>(List.of(ColumnDataType.CHARACTER,
-				ColumnDataType.INTEGER, ColumnDataType.FLOAT, ColumnDataType.BOOLEAN));
+				ColumnDataType.INTEGER, ColumnDataType.LONG, ColumnDataType.FLOAT, ColumnDataType.DOUBLE,
+				ColumnDataType.BOOLEAN));
 
 		for (String inf : columnData) {
 
@@ -27,6 +28,26 @@ public class TableUtils {
 				} catch (NumberFormatException e) {
 
 					types.remove(ColumnDataType.INTEGER);
+
+				}
+
+				try {
+
+					Long.parseLong(inf.strip());
+
+				} catch (NumberFormatException e) {
+
+					types.remove(ColumnDataType.LONG);
+
+				}
+
+				try {
+
+					Double.parseDouble(inf.strip());
+
+				} catch (NumberFormatException e) {
+
+					types.remove(ColumnDataType.DOUBLE);
 
 				}
 

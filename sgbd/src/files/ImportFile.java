@@ -86,10 +86,15 @@ public class ImportFile {
 				header(table);
 
 				if (!exitReference.get()) {
-				
-					mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex((mxCell) MainFrame.getGraph().getDefaultParent(), null,
-							tableName, 0, 0, 80, 30, "table");
-					tableCell = new TableCell(jCell, fileUpload.getSelectedFile().getName(), "table", table.get());;
+
+					String fileName = fileUpload.getSelectedFile().getName().endsWith(".head")  ?
+							fileUpload.getSelectedFile().getName().substring(0,fileUpload.getSelectedFile().getName().indexOf(".")):
+							fileUpload.getSelectedFile().getName();
+
+					mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(MainFrame.getGraph().getDefaultParent(), null,
+							fileName, 0, 0, 80, 30, "table");
+					table.get().open();
+					tableCell = new TableCell(jCell, fileName, "table", table.get());;
 					
 				}
 			}

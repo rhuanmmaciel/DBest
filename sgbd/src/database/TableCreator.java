@@ -1,17 +1,21 @@
 package database;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.mxgraph.model.mxCell;
 
+import entities.cells.Cell;
 import entities.cells.TableCell;
+import entities.utils.TableFormat;
 import enums.ColumnDataType;
 import gui.frames.main.MainFrame;
 import sgbd.prototype.Column;
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
+import sgbd.query.Operator;
 import sgbd.table.SimpleTable;
 import sgbd.table.Table;
 import sgbd.table.components.Header;
@@ -30,10 +34,14 @@ public class TableCreator {
 			for (String data : line.keySet()) {
 
 				entities.Column column = columns.stream().filter(x -> x.getName().equals(data)).findFirst()
-						.orElse(null);
+						.orElseThrow();
 
-				assert column != null;
 				if (column.getType() == ColumnDataType.INTEGER) {
+
+					if (!line.get(data).equals("null") && !line.get(data).equals(""))
+						rowData.setInt(column.getName(), (int) (Double.parseDouble(line.get(data).strip())));
+
+				}else if (column.getType() == ColumnDataType.LONG) {
 
 					if (!line.get(data).equals("null") && !line.get(data).equals(""))
 						rowData.setLong(column.getName(), (long) (Double.parseDouble(line.get(data).strip())));
@@ -43,7 +51,12 @@ public class TableCreator {
 					if (!line.get(data).equals("null") && !line.get(data).equals(""))
 						rowData.setFloat(column.getName(), Float.parseFloat(line.get(data).strip()));
 
-				} else {
+				} else if (column.getType() == ColumnDataType.DOUBLE) {
+
+					if (!line.get(data).equals("null") && !line.get(data).equals(""))
+						rowData.setDouble(column.getName(), Double.parseDouble(line.get(data).strip()));
+
+				}else {
 
 					if (!line.get(data).equals("null") && !line.get(data).equals(""))
 						rowData.setString(column.getName(), line.get(data).strip());
@@ -74,10 +87,16 @@ public class TableCreator {
 			
 			switch(column.getType()) {
 			case INTEGER -> {
-				size = 8;
+				size = 4;
 				flags =Column.SIGNED_INTEGER_COLUMN;
+			}case LONG ->{
+				size = 8;
+				flags = Column.SIGNED_INTEGER_COLUMN;
 			}case FLOAT -> {
 				size = 4;
+				flags = Column.FLOATING_POINT;
+			}case DOUBLE -> {
+				size = 8;
 				flags = Column.FLOATING_POINT;
 			}case STRING -> {
 				size = 100;

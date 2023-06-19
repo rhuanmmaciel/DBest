@@ -55,7 +55,6 @@ public abstract class FormFrameOperation extends FormBase {
     private void initializeGUI(){
 
         setLocationRelativeTo(null);
-        setContentPane(contentPane);
 
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 

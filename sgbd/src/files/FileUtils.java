@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class FileUtils {
 
@@ -18,6 +19,7 @@ public class FileUtils {
 		File directory = new File(".");
 		File[] filesList = directory.listFiles();
 
+		assert filesList != null;
 		for (File file : filesList) {
 
 			if (file.isFile() && file.getName().endsWith(".dat"))
@@ -32,11 +34,6 @@ public class FileUtils {
 	public static boolean copyDatFilesWithHead(String path, String tableName, Path destinationDirectory) {
 		
 		boolean replaceFileName = !path.endsWith(tableName + ".head");
-
-		Cell tableCell = Cell.getCells().values().stream().filter(x -> x.getName().equals(tableName))
-				.filter(x -> x instanceof TableCell).findFirst().orElse(null);
-
-		if(tableCell != null) ((TableCell)tableCell).getTable().close();
 
 		try {
 

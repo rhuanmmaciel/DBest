@@ -1,6 +1,5 @@
 package gui.frames.forms.importexport;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.atomic.AtomicReference;
@@ -9,21 +8,34 @@ import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
 import enums.FileType;
-import util.Export;
+import files.ExportFile;
 
-@SuppressWarnings("serial")
+import javax.swing.*;
+
 public class FormFrameExportAs extends FormFrameImportExportAs implements ActionListener{
 
-	private AtomicReference<Boolean> cancelService;
+	private final AtomicReference<Boolean> cancelService;
+	private final JButton btnFyi = new JButton("Fyi DataBase");
+	private final Cell cell;
 	
-	public FormFrameExportAs(mxCell cell, AtomicReference<Boolean> cancelService) {
+	public FormFrameExportAs(mxCell jCell, AtomicReference<Boolean> cancelService) {
 
-		super((Window)null);
 		setModal(true);
-		
+
 		this.cancelService = cancelService;
-		
-		this.setVisible(true);
+		this.cell = Cell.getCells().get(jCell);
+
+		initGUI();
+
+	}
+
+	private void initGUI(){
+
+		contentPane.add(btnFyi);
+		btnFyi.addActionListener(this);
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
 
 	}
 
@@ -33,40 +45,27 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 		if(e.getSource() == btnCancel) {
 			
 			cancelService.set(true);
-			dispose();
-			
+			closeWindow();
+
 		}else if(e.getSource() == btnCsv) {
 			
-			dispose();
-			
-			AtomicReference<Cell> cell = new AtomicReference<>();
-			
-			//new FormFrameSelectCell(jCell, cell, cancelService);
-			
+			closeWindow();
+
 			if(!cancelService.get())
-				new Export(cell, FileType.CSV, cancelService);
+				new ExportFile(cell, FileType.CSV);
 			
-		}else if(e.getSource() == btnXlsXlsxOdt) {
+		}else if(e.getSource() == btnFyi) {
 			
-			dispose();
-			
-		}else if(e.getSource() == btnSql) {
-			
-			dispose();
-			
-		}else if(e.getSource() == btnHead) {
-			
-			dispose();
-			
-			AtomicReference<Cell> cell = new AtomicReference<>();
-			
-			//new FormFrameSelectCell(jCell, cell, cancelService);
-			
+			closeWindow();
 			if(!cancelService.get())
-				new Export(cell, FileType.DAT, cancelService);
+				new ExportFile(cell, FileType.DAT);
 			
 		}
 		
-	}		
-	
+	}
+
+	@Override
+	protected void closeWindow() {
+		dispose();
+	}
 }

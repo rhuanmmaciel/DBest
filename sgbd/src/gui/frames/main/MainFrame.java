@@ -54,7 +54,8 @@ public abstract class MainFrame extends JFrame
 	protected JPopupMenu popupMenuJCell = new JPopupMenu();
 	protected JMenuItem menuItemShow = new JMenuItem("Mostrar");
 	protected JMenuItem menuItemInformations = new JMenuItem("Informações");
-	protected JMenuItem menuItemExport = new JMenuItem("Exportar");
+	protected JMenuItem menuItemExport = new JMenuItem("Exportar tabela");
+	protected JMenuItem menuItemExportTree = new JMenuItem("Exportar árvore");
 	protected JMenuItem menuItemEdit = new JMenuItem("Editar");
 	protected JMenuItem menuItemRemove = new JMenuItem("Remover");
 
@@ -113,8 +114,8 @@ public abstract class MainFrame extends JFrame
 				new CurrentAction(CurrentAction.ActionType.DELETE_CELL)));
 		buttons.add(new ToolBarButton<>(JButton.class, " Remover tudo ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.DELETE_ALL)));
-		buttons.add(new ToolBarButton<>(JButton.class, " Exportar(x) ", this, toolBar,
-				new CurrentAction(CurrentAction.ActionType.SAVE_CELL)));
+		buttons.add(new ToolBarButton<>(JButton.class, " Captura de tela ", this, toolBar,
+				new CurrentAction(CurrentAction.ActionType.PRINT_SCREEN)));
 //		buttons.add(new ToolBarButton<>(JButton.class, " Mostrar(s) ", this, toolBar,
 //				new CurrentAction(CurrentAction.ActionType.SHOW_CELL)));
 		buttons.add(new ToolBarButton<>(JButton.class, " Console ", this, toolBar,
@@ -156,6 +157,7 @@ public abstract class MainFrame extends JFrame
 
 		menuItemInformations.addActionListener(this);
 		menuItemExport.addActionListener(this);
+		menuItemExportTree.addActionListener(this);
 		menuItemShow.addActionListener(this);
 		menuItemEdit.addActionListener(this);
 		menuItemRemove.addActionListener(this);

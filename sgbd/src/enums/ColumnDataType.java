@@ -12,6 +12,14 @@ public enum ColumnDataType implements IColumnDataType{
 		}
 	
 	},
+	LONG{
+
+		@Override
+		public String getTypeName() {
+			return "long";
+		}
+
+	},
 	FLOAT{
 
 		@Override
@@ -19,6 +27,14 @@ public enum ColumnDataType implements IColumnDataType{
 			return "float";
 		}
 		
+	},
+	DOUBLE{
+
+		@Override
+		public String getTypeName() {
+			return "double";
+		}
+
 	},
 	CHARACTER{
 

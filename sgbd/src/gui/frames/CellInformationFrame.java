@@ -35,7 +35,6 @@ public class CellInformationFrame extends JDialog {
 
 	private void initGUI() {
 
-	    setLocationRelativeTo(null);
 		setModal(true);
 
 	    JPanel mainPane = new JPanel();
@@ -207,7 +206,9 @@ public class CellInformationFrame extends JDialog {
 	    }
 
 	    getContentPane().add(mainPane, BorderLayout.CENTER);
-	    pack(); 
+	    pack();
+
+		setLocationRelativeTo(null);
 
 	    setVisible(true);
 	}

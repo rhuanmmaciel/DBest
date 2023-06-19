@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -16,7 +17,6 @@ import javax.swing.table.DefaultTableModel;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import entities.cells.TableCell;
 import entities.utils.TableFormat;
 import enums.ColumnDataType;
 import gui.frames.main.MainFrame;
@@ -35,6 +35,7 @@ public class DataFrame extends JDialog implements ActionListener {
 	private final JButton btnRight = new JButton(">");
 	private final JButton btnAllLeft = new JButton("<<");;
 	private final JButton btnAllRight = new JButton(">>");;
+	ProgressWindow progressWindow = new ProgressWindow();
 
 	private final Map<String, ColumnDataType> types = new HashMap<>();
 	private Map<String, String> row;
@@ -89,13 +90,13 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		if(page > currentLastPage) {
 
-			TableFormat.Row row = TableFormat.getRow(operator);
+			TableFormat.Row row = TableFormat.getRow(operator, true);
 
 			while (row != null && currentElement < lastElement) {
 
 				types.putAll(row.types());
 				rows.add(row.row());
-				row = TableFormat.getRow(operator);
+				row = TableFormat.getRow(operator, true);
 				if (row != null) currentElement++;
 				if (currentElement >= lastElement) {
 					rows.add(row.row());
@@ -270,6 +271,7 @@ public class DataFrame extends JDialog implements ActionListener {
 	private void closeWindow(){
 
 		operator.close();
+		operator.clearTempFile();
 		dispose();
 
 	}

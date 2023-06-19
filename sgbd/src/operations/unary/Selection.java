@@ -86,7 +86,9 @@ public class Selection implements IOperator {
 
 					String inf = switch (type){
 						case INTEGER -> String.valueOf(t.getContent(source).getInt(columnName));
+						case LONG -> String.valueOf(t.getContent(source).getLong(columnName));
 						case FLOAT -> String.valueOf(t.getContent(source).getFloat(columnName));
+						case DOUBLE -> String.valueOf(t.getContent(source).getDouble(columnName));
 						default -> "'" + t.getContent(source).getString(columnName) + "'";
 					};
 

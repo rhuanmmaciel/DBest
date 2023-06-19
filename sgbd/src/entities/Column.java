@@ -102,7 +102,10 @@ public class Column{
 
 	@Override
 	public String toString(){
-		return getSourceAndName();
+		return "Nome:" + getName() + "--" +
+				"Source:" + getSource() + "--" +
+				"Tipo:" + getType() + "--" +
+				"PK:" + isPK();
 	}
 
 }
