@@ -168,11 +168,8 @@ public class DslUtils {
 
 			raw = operationCell.getType().getDslOperation();
 
-			if (operationCell.getArguments() != null) {
-
-				raw = raw.replace("[args]", operationCell.getArguments().toString());
-
-			}
+			raw = raw.replace("[args]", OperationType.OPERATIONS_WITHOUT_FORM.contains(operationCell.getType()) ? "" :
+			operationCell.getArguments().toString());
 
 			if (operationCell.getArity() == OperationArity.UNARY)
 				raw = raw.replace("source", generateExpression(cell.getParents().get(0)));

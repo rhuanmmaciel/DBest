@@ -108,7 +108,7 @@ public class DslController {
 			DslErrorListener
 					.addErrors("Já existe uma tabela com o mesmo nome: '" + DslUtils.clearTableName(tableName) + "'");
 
-		else if (path == null || !FileUtils.copyDatFilesWithHead(path, tableName, Path.of("")))
+		else if (!FileUtils.copyDatFilesWithHead(path, tableName, Path.of("")))
 			DslErrorListener.addErrors("Arquivo '" + DslUtils.clearTableName(tableName) + ".head" + "' ou '"
 					+ DslUtils.clearTableName(tableName) + ".dat' não encontrado");
 

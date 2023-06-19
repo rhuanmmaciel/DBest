@@ -61,6 +61,8 @@ public class TextEditor extends JFrame implements ActionListener {
 	private final JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.getDisplayName());
 	private final JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getDisplayName());
 	private final JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getDisplayName());
+	private final JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.getDisplayName());
+	private final JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.getDisplayName());
 
 	private JButton btnRun = new JButton("Executar");
 	private JButton btnRunSelection = new JButton("Executar texto selecionado");
@@ -130,6 +132,10 @@ public class TextEditor extends JFrame implements ActionListener {
 		menuItemCartesianProduct.addActionListener(this);
 		mnOperations.add(menuItemUnion);
 		menuItemUnion.addActionListener(this);
+		mnOperations.add(menuItemIntersection);
+		menuItemIntersection.addActionListener(this);
+		mnOperations.add(menuItemGroup);
+		menuItemGroup.addActionListener(this);
 
 		btnBack.addActionListener(this);
 		btnImport.addActionListener(this);
@@ -211,7 +217,13 @@ public class TextEditor extends JFrame implements ActionListener {
 			insertOperation("cartesianProduct(tabela1,tabela2);");
 		
 		else if (e.getSource() == menuItemUnion)
-			insertOperation("union[colunas1,colunas2](tabela1,tabela2);");
+			insertOperation("union(tabela1,tabela2);");
+
+		else if (e.getSource() == menuItemIntersection)
+			insertOperation("intersection(tabela1,tabela2);");
+
+		else if (e.getSource() == menuItemGroup)
+			insertOperation("group[colunaAgrupada,coluna1Agregação,coluna2Agregação,colunaNAgregação](tabela);");
 
 		else if(e.getSource() == btnImport)
 			importText();
