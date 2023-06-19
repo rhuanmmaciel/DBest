@@ -3,6 +3,7 @@ package files.csv;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -11,13 +12,13 @@ import exceptions.InvalidCsvException;
 
 public class Recognizer {
 
-	public static CsvData importCsv(String path, char separator, char stringDelimiter, int beginIndex)
+	public static CsvData importCsv(Path path, char separator, char stringDelimiter, int beginIndex)
 			throws InvalidCsvException {
 
 		List<List<String>> dataList = new ArrayList<>();
 		List<String> columnsNameList = new ArrayList<>();
 
-		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(path.toFile()))) {
 
 			for (int i = 1; i < beginIndex; i++)
 				br.readLine();
@@ -64,11 +65,8 @@ public class Recognizer {
 		Vector<Vector<Object>> dataArray = new Vector<>();
 		
 		for(List<String> row : dataList) {
-			
-			Vector<Object> rowVector = new Vector<>();
-			
-			for(String data : row)
-				rowVector.add(data);
+
+			Vector<Object> rowVector = new Vector<>(row);
 			
 			dataArray.add(rowVector);
 			

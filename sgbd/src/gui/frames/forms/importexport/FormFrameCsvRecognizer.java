@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
@@ -75,17 +76,15 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 
 	private CsvData csvData;
 
-	private final String path;
+	private final Path path;
 	private final AtomicReference<Boolean> exitReference;
 	private final StringBuilder tableName;
 	private final List<Column> columns;
 	private final Map<Integer, Map<String, String>> content;
 
-	private final int defaultBeginIndex = 1;
 	private final char defaultSeparator = ',';
 	private final char defaultStringDelimiter = '"';
 
-	private int beginIndex = defaultBeginIndex;
 	private char separator = defaultSeparator;
 	private char stringDelimiter = defaultStringDelimiter;
 
@@ -96,7 +95,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		setModal(true);
 
 		this.exitReference = exitReference;
-		this.path = path;
+		this.path = Path.of(path);
 		this.columns = columns;
 		this.content = content;
 		this.tableName = tableName;
@@ -124,7 +123,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 
 		try {
 
-			csvData = Recognizer.importCsv(path, defaultSeparator, defaultStringDelimiter, defaultBeginIndex);
+			csvData = Recognizer.importCsv(path, defaultSeparator, defaultStringDelimiter, 1);
 
 		} catch (InvalidCsvException e) {
 
@@ -149,7 +148,6 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		contentPane.add(headerPanel, BorderLayout.NORTH);
 		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
 		Dimension dim = new Dimension(1000, 50);
-
 
 		Box mainHeaderBox = Box.createHorizontalBox();
 		Box items = Box.createVerticalBox();
@@ -190,7 +188,9 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 			}
 		});
 		txtFieldTableName.setMaximumSize(new Dimension(3000, 50));
-		txtFieldTableName.setText(path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf(".")));
+		String fileName = String.valueOf(path.getFileName());
+		fileName = fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf(".")) : fileName;
+		txtFieldTableName.setText(fileName);
 		itemTableName.add(Box.createHorizontalGlue());
 
 		itemFromRow.add(new JLabel("Começa na linha: "));
@@ -384,7 +384,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		else if (radioOther.isSelected())
 			separator = txtFieldOtherSeparator.getText().isEmpty() ? ' ' : txtFieldOtherSeparator.getText().charAt(0);
 
-		beginIndex = (int) spinnerFromRow.getValue();
+		int beginIndex = (int) spinnerFromRow.getValue();
 
 		stringDelimiter = txtFieldStringDelimiter.getText().isEmpty() ? '\0'
 				: txtFieldStringDelimiter.getText().charAt(0);
