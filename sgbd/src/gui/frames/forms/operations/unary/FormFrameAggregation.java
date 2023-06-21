@@ -10,11 +10,15 @@ import util.Utils;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class FormFrameAggregation extends FormFrameOperation implements ActionListener, IFormFrameOperation {
 
-    protected final JComboBox<String> comboBoxAggregation = new JComboBox<>(new String[]{"Mínimo", "Máximo", "Média", "Contagem"});
+    protected final JComboBox<String> comboBoxAggregation = new JComboBox<>(Arrays.stream(Aggregation.Function.values())
+            .map(Aggregation.Function::getDisplayName)
+            .toArray(String[]::new));
 
     public FormFrameAggregation(mxCell jCell) {
 
@@ -60,7 +64,7 @@ public class FormFrameAggregation extends FormFrameOperation implements ActionLi
                 comboBoxAggregation.setSelectedItem(switch (prefix){
                     case "MAX:" -> "Máximo";
                     case "MIN:" -> "Mínimo";
-                    case "AVG" -> "Média";
+                    case "AVG:" -> "Média";
                     case "COUNT:" -> "Contagem";
                     default -> throw new IllegalStateException("Unexpected value: " + prefix);
                 });
@@ -94,9 +98,7 @@ public class FormFrameAggregation extends FormFrameOperation implements ActionLi
                default ->
                        throw new IllegalStateException("Unexpected value: " + comboBoxAggregation.getSelectedItem().toString());
            };
-            arguments.add(aggregation+(
-                    comboBoxColumn.getSelectedItem().equals("*") ? "*" : comboBoxSource.getSelectedItem()+
-                   "."+comboBoxColumn.getSelectedItem()));
+            arguments.add(aggregation+(comboBoxSource.getSelectedItem()+"."+comboBoxColumn.getSelectedItem()));
             btnReady();
 
         }

@@ -23,15 +23,14 @@ import sgbd.query.Operator;
 public class DataFrame extends JDialog implements ActionListener {
 
 	private final JLabel lblText = new JLabel();
-	private final JLabel lblPages = new JLabel();;
+	private final JLabel lblPages = new JLabel();
 	private final JTable table = new JTable();
-	private final JButton btnLeft = new JButton("<");;
+	private final JButton btnLeft = new JButton("<");
 	private final JButton btnRight = new JButton(">");
-	private final JButton btnAllLeft = new JButton("<<");;
-	private final JButton btnAllRight = new JButton(">>");;
+	private final JButton btnAllLeft = new JButton("<<");
+	private final JButton btnAllRight = new JButton(">>");
 
 	private final Map<String, ColumnDataType> types = new HashMap<>();
-	private Map<String, String> row;
 	private final List<Map<String, String>> rows;
 	private final List<String> columnsName;
 	private int currentIndex;
@@ -173,12 +172,8 @@ public class DataFrame extends JDialog implements ActionListener {
 		southPane.add(btnRight);
 		southPane.add(btnAllRight);
 
-		JPanel centerPane = new JPanel(new BorderLayout());
-		centerPane.add(table, BorderLayout.CENTER);
-		centerPane.add(table.getTableHeader(), BorderLayout.NORTH);
-
 		contentPane.add(northPane, BorderLayout.NORTH);
-		contentPane.add(centerPane, BorderLayout.CENTER);
+		contentPane.add(new JScrollPane(table), BorderLayout.CENTER);
 		contentPane.add(southPane, BorderLayout.SOUTH);
 
 		verifyButtons();

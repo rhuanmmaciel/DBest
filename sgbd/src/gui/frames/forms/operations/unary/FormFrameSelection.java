@@ -1,6 +1,6 @@
 package gui.frames.forms.operations.unary;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -30,6 +30,7 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 	private JButton btnStringAdd;
 	private JButton btnRemoveLastOne;
 	private JButton btnRemoveAll;
+	private final JButton btnNull = new JButton("null");
 
 	private JComboBox<List<String>> comboBoxOperator;
 	private JComboBox<List<String>> comboBoxLogicalOperator;
@@ -82,6 +83,9 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 		btnStringAdd = new JButton("Add");
 		btnStringAdd.addActionListener(this);
 
+		btnNull.setForeground(Color.RED);
+		btnNull.addActionListener(this);
+
 		btnRemoveLastOne = new JButton("Apagar último inserido");
 		btnRemoveLastOne.addActionListener(this);
 
@@ -105,9 +109,10 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 		addExtraComponent(new JLabel("Strings: "), 0, 5, 1, 1);
 		addExtraComponent(textFieldString, 1, 5, 1, 1);
 		addExtraComponent(btnStringAdd, 2, 5, 1, 1);
-		addExtraComponent(btnRemoveLastOne, 0, 6, 1, 1);
-		addExtraComponent(btnRemoveAll, 1, 6, 1, 1);
-		addExtraComponent(new JScrollPane(textPane), 0, 7, 3, 3);
+		addExtraComponent(btnNull, 0, 6, 3, 1);
+		addExtraComponent(btnRemoveLastOne, 0, 7, 1, 1);
+		addExtraComponent(btnRemoveAll, 1, 7, 1, 1);
+		addExtraComponent(new JScrollPane(textPane), 0, 8, 3, 3);
 
 		setPreviousArgs();
 
@@ -195,6 +200,11 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 				}
 			}
 
+		}
+
+		if(btnNull == e.getSource()) {
+			insertString(" ");
+			insertString("'null'");
 		}
 
 		if (e.getSource() == btnRemoveAll && !textPane.getText().isEmpty())

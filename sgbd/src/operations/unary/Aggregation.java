@@ -121,8 +121,6 @@ public class Aggregation implements IOperator {
                     +Column.putSource(arguments.get(0).substring(Utils.getLastIndexOfPrefix(Utils.getStartPrefixIgnoreCase(arguments.get(0), PREFIXES))),
                     parentCell.getSourceTableNameByColumn(arguments.get(0).substring(Utils.getLastIndexOfPrefix(Utils.getStartPrefixIgnoreCase(arguments.get(0), PREFIXES)))));
 
-        System.out.println(fixedArgument);
-
         String sourceName = Column.removeName(fixedArgument).substring(Utils.getLastIndexOfPrefix(Utils.getStartPrefixIgnoreCase(fixedArgument, PREFIXES)));
         String columnName = Column.removeSource(fixedArgument);
 
@@ -135,7 +133,7 @@ public class Aggregation implements IOperator {
         else if(Utils.startsWithIgnoreCase(fixedArgument, "AVG:"))
             aggregations.add(new AvgAgregation(sourceName, columnName));
         else if(Utils.startsWithIgnoreCase(fixedArgument, "COUNT:"))
-           new CountAgregation(sourceName, columnName);
+            aggregations.add(new CountAgregation(sourceName, columnName));
 
         Prototype p = new Prototype();
         p.addColumn("madeUp", 4, sgbd.prototype.Column.SIGNED_INTEGER_COLUMN | sgbd.prototype.Column.PRIMARY_KEY);

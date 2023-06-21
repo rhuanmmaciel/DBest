@@ -48,12 +48,13 @@ public class Utils {
 
     public static boolean compareNumbers(Number x, Number y){
 
+        if(x == null || y == null) return false;
+
         return Objects.equals(x.doubleValue(), y.doubleValue());
 
     }
 
     public static boolean startsWithIgnoreCase(String word, String prefix){
-
         return word.toLowerCase().startsWith(prefix.toLowerCase());
 
     }

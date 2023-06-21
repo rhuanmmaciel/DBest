@@ -92,6 +92,8 @@ public class Selection implements IOperator {
 						default -> "'" + t.getContent(source).getString(columnName) + "'";
 					};
 
+					if(inf.equals("null")) inf = "'" + inf + "'";
+
 					evaluator.putVariable(source+"."+columnName, inf);
 
 				}
