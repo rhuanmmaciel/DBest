@@ -3,22 +3,16 @@ package enums;
 import entities.Action.CreateOperationAction;
 import enums.interfaces.IOperationType;
 import gui.frames.forms.operations.IFormFrameOperation;
-import gui.frames.forms.operations.unary.FormFrameGroup;
-import gui.frames.forms.operations.unary.FormFrameSort;
+import gui.frames.forms.operations.unary.*;
 import operations.IOperator;
 import gui.frames.forms.operations.binary.FormFrameJoins;
-import gui.frames.forms.operations.unary.FormFrameProjection;
-import gui.frames.forms.operations.unary.FormFrameSelection;
 import operations.binary.CartesianProduct;
 import operations.binary.set.Intersection;
 import operations.binary.joins.Join;
 import operations.binary.joins.LeftJoin;
 import operations.binary.joins.RightJoin;
 import operations.binary.set.Union;
-import operations.unary.Group;
-import operations.unary.Projection;
-import operations.unary.Selection;
-import operations.unary.Sort;
+import operations.unary.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -549,7 +543,52 @@ public enum OperationType implements IOperationType {
 			return new CreateOperationAction(this);
 		}
 	},
+	AGGREGATION{
+		@Override
+		public String getDisplayName() {
+			return "Agregação";
+		}
 
+		@Override
+		public String getDisplayNameAndSymbol() {
+			return getSymbol() + " " + getDisplayName();
+		}
+
+		@Override
+		public OperationArity getArity() {
+			return OperationArity.UNARY;
+		}
+
+		@Override
+		public String getSymbol() {
+			return "G";
+		}
+
+		@Override
+		public String getOperationName() {
+			return "aggregation";
+		}
+
+		@Override
+		public String getDslOperation() {
+			return "aggregation[args](relation)";
+		}
+
+		@Override
+		public Class<? extends IFormFrameOperation> getForm() {
+			return FormFrameAggregation.class;
+		}
+
+		@Override
+		public Class<? extends IOperator> getOperator() {
+			return Aggregation.class;
+		}
+
+		@Override
+		public CreateOperationAction getAction() {
+			return new CreateOperationAction(this);
+		}
+	},
 	SORT{
 		@Override
 		public String getDisplayName() {

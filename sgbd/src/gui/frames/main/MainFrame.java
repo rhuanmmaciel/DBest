@@ -70,6 +70,7 @@ public abstract class MainFrame extends JFrame
 	protected JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.getDisplayName());
 	protected JMenuItem menuItemSort = new JMenuItem(OperationType.SORT.getDisplayName());
 	protected JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.getDisplayName());
+	protected JMenuItem menuItemAggregation = new JMenuItem(OperationType.AGGREGATION.getDisplayName());
 
 	public MainFrame(Set<Button<?>> buttons) {
 
@@ -103,6 +104,7 @@ public abstract class MainFrame extends JFrame
 		buttons.add(new OperationButton(stylesheet, OperationType.INTERSECTION, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.SORT, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.GROUP, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.AGGREGATION, this, operationButtonsPane));
 		
 		buttons.add(new ToolBarButton<>(JButton.class, " Importar tabela(i) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.IMPORT_FILE)));
@@ -171,10 +173,12 @@ public abstract class MainFrame extends JFrame
 		menuItemIntersection.addActionListener(this);
 		menuItemSort.addActionListener(this);
 		menuItemGroup.addActionListener(this);
+		menuItemAggregation.addActionListener(this);
 
 		menuItemOperations.add(menuItemSelection);
 		menuItemOperations.add(menuItemProjection);
 		menuItemOperations.add(menuItemSort);
+		menuItemOperations.add(menuItemAggregation);
 		menuItemOperations.add(menuItemGroup);
 		menuItemOperations.addSeparator();
 		menuItemOperations.add(menuItemJoin);

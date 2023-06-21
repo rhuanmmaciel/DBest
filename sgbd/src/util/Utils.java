@@ -64,6 +64,16 @@ public class Utils {
 
     }
 
+    public static int getLastIndexOfPrefix(String prefix){
+        return prefix.length();
+    }
+
+    public static String getStartPrefixIgnoreCase(String word, List<String> prefixes){
+
+        return prefixes.stream().filter(prefix -> startsWithIgnoreCase(word, prefix)).findFirst().orElse(null);
+
+    }
+
     public static String replaceIfStartsWithIgnoreCase(String word, List<String> out, String in){
 
         String formatted = word;

@@ -14,7 +14,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -24,12 +23,11 @@ import com.mxgraph.swing.mxGraphComponent;
 
 import controller.MainController;
 import database.TableCreator;
-import database.TableUtils;
 import dsl.utils.DslUtils;
 import entities.Tree;
 import entities.cells.Cell;
 import entities.cells.TableCell;
-import entities.utils.TableFormat;
+import database.TuplesExtractor;
 import enums.FileType;
 import gui.frames.ErrorFrame;
 import net.coobird.thumbnailator.Thumbnails;
@@ -101,7 +99,7 @@ public class ExportFile extends JPanel {
 			operator.open();
 			int i = 0;
 			while(operator.hasNext()) {
-				TableFormat.Row row =  TableFormat.getRow(cell.getOperator(), false);
+				TuplesExtractor.Row row =  TuplesExtractor.getRow(cell.getOperator(), false);
 				if(row != null)
 					rows.put(i++, row.row());
 			}

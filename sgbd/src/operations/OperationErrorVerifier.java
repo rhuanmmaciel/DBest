@@ -7,6 +7,7 @@ import exceptions.tree.ParentsAmountException;
 import exceptions.tree.ParentsErrorException;
 import util.Utils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -67,6 +68,17 @@ public class OperationErrorVerifier {
 
 		if (cell.hasParentErrors())
 			throw new ParentsErrorException("");
+
+	}
+
+	public static void parentContainsColumns(List<String> parent, List<String> columns, List<String> columnExceptions) throws ArgumentsException{
+
+		List<String> filteredColumns = new ArrayList<>(columns);
+		filteredColumns.removeIf(x ->
+			 columnExceptions.stream().anyMatch(c -> c.equals(Column.hasSource(x) ? Column.removeSource(x) : x))
+		);
+
+		parentContainsColumns(parent, filteredColumns);
 
 	}
 

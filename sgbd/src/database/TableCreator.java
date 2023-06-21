@@ -1,21 +1,17 @@
 package database;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.mxgraph.model.mxCell;
 
-import entities.cells.Cell;
 import entities.cells.TableCell;
-import entities.utils.TableFormat;
 import enums.ColumnDataType;
 import gui.frames.main.MainFrame;
 import sgbd.prototype.Column;
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
-import sgbd.query.Operator;
 import sgbd.table.SimpleTable;
 import sgbd.table.Table;
 import sgbd.table.components.Header;

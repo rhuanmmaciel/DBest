@@ -76,8 +76,9 @@ public class Group implements IOperator {
 
         for(String argument : arguments.subList(1, arguments.size())){
 
-            String fixedArgument = argument.substring(0, 4)+Column.putSource(argument.substring(4),
-                        parentCell.getSourceTableNameByColumn(argument.substring(4)));
+            String fixedArgument = argument.substring(0, Utils.getLastIndexOfPrefix(Utils.getStartPrefixIgnoreCase(argument, PREFIXES)))
+                    +Column.putSource(argument.substring(Utils.getLastIndexOfPrefix(Utils.getStartPrefixIgnoreCase(argument, PREFIXES))),
+                    parentCell.getSourceTableNameByColumn(argument.substring(Utils.getLastIndexOfPrefix(Utils.getStartPrefixIgnoreCase(argument, PREFIXES)))));
 
             fixedArguments.add(fixedArgument);
 
@@ -89,7 +90,7 @@ public class Group implements IOperator {
 
         for(String argument : fixedArguments.subList(1, arguments.size())){
 
-            String column = argument.substring(4);
+            String column = argument.substring(Utils.getLastIndexOfPrefix(Utils.getStartPrefixIgnoreCase(argument, PREFIXES)));
             String sourceName = Column.removeName(column);
             String columnName = Column.removeSource(column);
 
@@ -101,6 +102,7 @@ public class Group implements IOperator {
                 aggregations.add(new AvgAgregation(sourceName, columnName));
             else if(Utils.startsWithIgnoreCase(argument, "COUNT:"))
                 aggregations.add(new CountAgregation(sourceName, columnName));
+
 
         }
 

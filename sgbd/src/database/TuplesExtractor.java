@@ -1,4 +1,4 @@
-package entities.utils;
+package database;
 
 import java.util.*;
 
@@ -10,7 +10,7 @@ import sgbd.query.Operator;
 import sgbd.query.Tuple;
 import sgbd.util.statitcs.Util;
 
-public class TableFormat {
+public class TuplesExtractor {
 
 	public static Row getRow(Operator operator, boolean sourceAndName) {
 

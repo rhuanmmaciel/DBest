@@ -1,32 +1,26 @@
 package gui.frames;
 
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import entities.utils.TableFormat;
+import database.TuplesExtractor;
 import enums.ColumnDataType;
-import gui.frames.main.MainFrame;
 import gui.utils.JTableUtils;
 import sgbd.query.Operator;
 
 public class DataFrame extends JDialog implements ActionListener {
-
-	private final int WIDTH = (int)(MainFrame.WIDTH * 1.1);
-	private final int HEIGHT = (int)(MainFrame.HEIGHT * 0.6);
 
 	private final JLabel lblText = new JLabel();
 	private final JLabel lblPages = new JLabel();;
@@ -35,7 +29,6 @@ public class DataFrame extends JDialog implements ActionListener {
 	private final JButton btnRight = new JButton(">");
 	private final JButton btnAllLeft = new JButton("<<");;
 	private final JButton btnAllRight = new JButton(">>");;
-	ProgressWindow progressWindow = new ProgressWindow();
 
 	private final Map<String, ColumnDataType> types = new HashMap<>();
 	private Map<String, String> row;
@@ -90,13 +83,13 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		if(page > currentLastPage) {
 
-			TableFormat.Row row = TableFormat.getRow(operator, true);
+			TuplesExtractor.Row row = TuplesExtractor.getRow(operator, true);
 
 			while (row != null && currentElement < lastElement) {
 
 				types.putAll(row.types());
 				rows.add(row.row());
-				row = TableFormat.getRow(operator, true);
+				row = TuplesExtractor.getRow(operator, true);
 				if (row != null) currentElement++;
 				if (currentElement >= lastElement) {
 					rows.add(row.row());
@@ -160,72 +153,40 @@ public class DataFrame extends JDialog implements ActionListener {
 
 	private void initializeGUI() {
 
-		setBounds(0, 0, WIDTH, HEIGHT);
-		setLocationRelativeTo(null);
-
-		JPanel contentPane = new JPanel();
+		JPanel contentPane = new JPanel(new BorderLayout());
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-
-		JScrollPane scrollPane = new JScrollPane(table);
 
 		btnLeft.addActionListener(this);
 		btnAllLeft.addActionListener(this);
 		btnRight.addActionListener(this);
 		btnAllRight.addActionListener(this);
 
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-		        .addGroup(Alignment.TRAILING,
-		                gl_contentPane.createSequentialGroup()
-		                        .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-		                                .addGroup(gl_contentPane.createSequentialGroup()
-		                                        .addContainerGap()
-		                                        .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, WIDTH * 92 / 100, GroupLayout.PREFERRED_SIZE))
-		                                .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-		                                        .addGroup(gl_contentPane.createSequentialGroup()
-														.addGap(WIDTH / 100)
-														.addComponent(lblText)
-														.addPreferredGap(ComponentPlacement.RELATED, WIDTH * 85 / 100, Short.MAX_VALUE)
-														.addComponent(lblPages))
-		                                        .addGroup(gl_contentPane.createSequentialGroup()
-														.addContainerGap()
-														.addComponent(btnAllLeft)
-														.addPreferredGap(ComponentPlacement.RELATED)
-														.addComponent(btnLeft)
-														.addPreferredGap(ComponentPlacement.UNRELATED)
-														.addComponent(btnRight)
-														.addPreferredGap(ComponentPlacement.RELATED)
-														.addComponent(btnAllRight, GroupLayout.PREFERRED_SIZE, WIDTH * 4 / 100,
-																GroupLayout.PREFERRED_SIZE))))
-		                                .addGap(WIDTH * 5 / 100)));
+		JPanel northPane = new JPanel(new FlowLayout());
+		northPane.add(lblText);
+		northPane.add(lblPages);
 
+		JPanel southPane = new JPanel(new FlowLayout());
+		southPane.add(btnAllLeft);
+		southPane.add(btnLeft);
+		southPane.add(btnRight);
+		southPane.add(btnAllRight);
 
+		JPanel centerPane = new JPanel(new BorderLayout());
+		centerPane.add(table, BorderLayout.CENTER);
+		centerPane.add(table.getTableHeader(), BorderLayout.NORTH);
 
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-		        .addGroup(gl_contentPane.createSequentialGroup()
-		                .addContainerGap()
-		                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblText)
-								.addComponent(lblPages))
-		                .addGap(HEIGHT * 5 / 100)
-		                .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, HEIGHT * 60 / 100, GroupLayout.PREFERRED_SIZE)
-		                .addGap(HEIGHT * 5 / 100)
-		                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnAllRight)
-								.addComponent(btnRight)
-								.addComponent(btnLeft)
-								.addComponent(btnAllLeft))
-		                .addContainerGap(HEIGHT * 5 / 100, Short.MAX_VALUE)));
-
-
-		contentPane.setLayout(gl_contentPane);
+		contentPane.add(northPane, BorderLayout.NORTH);
+		contentPane.add(centerPane, BorderLayout.CENTER);
+		contentPane.add(southPane, BorderLayout.SOUTH);
 
 		verifyButtons();
 
 		if(table.getRowCount() == 0) lblPages.setText("0/0");
 
+		pack();
+		setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
 
@@ -271,7 +232,7 @@ public class DataFrame extends JDialog implements ActionListener {
 	private void closeWindow(){
 
 		operator.close();
-		operator.clearTempFile();
+		operator.freeResources();
 		dispose();
 
 	}
