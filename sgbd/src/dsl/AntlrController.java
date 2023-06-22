@@ -1,7 +1,7 @@
 package dsl;
 
-import dsl.antlr4.RelAlgebraParser;
 import dsl.antlr4.RelAlgebraBaseListener;
+import dsl.antlr4.RelAlgebraParser;
 
 public class AntlrController extends RelAlgebraBaseListener {
 

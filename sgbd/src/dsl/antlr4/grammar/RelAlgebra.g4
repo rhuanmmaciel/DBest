@@ -12,34 +12,44 @@ variableDeclaration: RELATION '=' expression;
 
 createTable: RELATION position?;
 
-expression: (selection | projection | join | leftJoin | rightJoin | cartesianProduct | union | intersection | sort | group) position?;
+expression: (selection | projection | join | leftJoin | rightJoin | cartesianProduct | union | intersection | sort |
+ group | aggregation | rename) position?;
 
 position: '<' number ',' number '>';
 
 number: DIGIT+;
 
-selection: SELECTION PREDICATE '(' relation ')';
-projection: PROJECTION PREDICATE '(' relation ')';
-join: JOIN PREDICATE '(' relation ',' relation ')';
-leftJoin: LEFTJOIN PREDICATE '(' relation ',' relation ')';
-rightJoin: RIGHTJOIN PREDICATE '(' relation ',' relation ')';
-cartesianProduct: CARTESIANPRODUCT '(' relation  ',' relation ')';
-union: UNION '(' relation ',' relation ')';
-intersection: INTERSECTION '(' relation ',' relation ')';
-sort: SORT PREDICATE '(' relation ')';
-group: GROUP PREDICATE '(' relation ')';
+selection: SELECTION PREDICATE unary;
+projection: PROJECTION PREDICATE unary;
+sort: SORT PREDICATE unary;
+group: GROUP PREDICATE unary;
+rename: RENAME PREDICATE unary;
+aggregation: AGGREGATION PREDICATE unary;
+
+join: JOIN PREDICATE binary;
+leftJoin: LEFT_JOIN PREDICATE binary;
+rightJoin: RIGHT_JOIN PREDICATE binary;
+cartesianProduct: CARTESIAN_PRODUCT binary;
+union: UNION binary;
+intersection: INTERSECTION binary;
+
+unary: '(' relation ')';
+binary: '(' relation ',' relation ')';
+
 relation: RELATION position? #simple | expression #nested;
 
 SELECTION: 'selection';
 PROJECTION: 'projection';
 JOIN: 'join';
-LEFTJOIN: 'leftJoin';
-RIGHTJOIN: 'rightJoin';
+LEFT_JOIN: 'leftJoin';
+RIGHT_JOIN: 'rightJoin';
 UNION: 'union';
-CARTESIANPRODUCT: 'cartesianProduct';
+CARTESIAN_PRODUCT: 'cartesianProduct';
 INTERSECTION: 'intersection';
 SORT: 'sort';
 GROUP: 'group';
+AGGREGATION: 'aggregation';
+RENAME: 'rename';
 
 IMPORT: 'import';
 AS: 'as';

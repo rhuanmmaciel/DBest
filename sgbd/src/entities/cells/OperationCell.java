@@ -12,6 +12,7 @@ import gui.frames.main.MainFrame;
 import gui.frames.forms.operations.IFormFrameOperation;
 import operations.IOperator;
 import operations.OperationErrorVerifier.ErrorMessage;
+import sgbd.query.Operator;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +29,7 @@ public final class OperationCell extends Cell {
 	private List<String> arguments = new ArrayList<>();
 	private Boolean error = false;
 	private String errorMessage = null;
-	private Class<? extends IOperator> operator = null;
+	private Class<? extends IOperator> operatorClass = null;
 	private Boolean hasBeenInitialized = false;
 
 	public OperationCell(mxCell jCell, OperationType type) {
@@ -57,7 +58,7 @@ public final class OperationCell extends Cell {
 
 			});
 			this.form = type.getForm();
-			this.operator = type.getOperator();
+			this.operatorClass = type.getOperator();
 			updateOperation();
 
 		}
@@ -68,7 +69,7 @@ public final class OperationCell extends Cell {
 		this.type = type;
 		arity = type.getArity();
 		this.form = type.getForm();
-		this.operator = type.getOperator();
+		this.operatorClass = type.getOperator();
 
 	}
 
@@ -102,7 +103,7 @@ public final class OperationCell extends Cell {
 			
 			try {
 
-				Constructor<? extends IOperator> constructor = operator.getDeclaredConstructor();
+				Constructor<? extends IOperator> constructor = operatorClass.getDeclaredConstructor();
 				IOperator operation = constructor.newInstance();
 				operation.executeOperation(getJGraphCell(), getArguments());
 
@@ -210,14 +211,14 @@ public final class OperationCell extends Cell {
 		return "Sem erros";
 	}
 
-	public void setColumns(Map<String, List<String>> cellColumnsName) {
+	public void setColumns() {
 
 		List<Column> cellColumns = new ArrayList<>();
 
-		for (Map.Entry<String, List<String>> columns : cellColumnsName.entrySet())
+		for (Map.Entry<String, List<String>> columns : getOperator().getContentInfo().entrySet())
 			for(String column : columns.getValue()) {
 
-				Column c = new Column(column, columns.getKey(), ColumnDataType.UNDEFINED, false);
+				Column c = new Column(column, columns.getKey(), ColumnDataType.NONE, false);
 
 				for(Cell parent : parents) {
 					Column finalC = c;
@@ -244,6 +245,12 @@ public final class OperationCell extends Cell {
 		}
 
 		return error;
+	}
+
+	@Override
+	public void setOperator(Operator operator){
+		this.operator = operator;
+		setColumns();
 	}
 
 }

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.io.BufferedReader;
 import java.io.File;
@@ -82,12 +81,7 @@ public class TextEditor extends JFrame implements ActionListener {
         JTextLineNumber lineNumber = new JTextLineNumber(textPane);
         scrollPane.setRowHeaderView(lineNumber);
 
-        scrollPane.getVerticalScrollBar().addAdjustmentListener((AdjustmentListener) new AdjustmentListener() {
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-                lineNumber.repaint();
-            }
-        });
+        scrollPane.getVerticalScrollBar().addAdjustmentListener((AdjustmentListener) e -> lineNumber.repaint());
 
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		getContentPane().add(toolBar, BorderLayout.NORTH);

@@ -48,6 +48,7 @@ public class OperationErrorVerifier {
 
 	public static void noEmptyArgument(List<String> arguments) throws ArgumentsException{
 		if(arguments.isEmpty()) throw new ArgumentsException("");
+		if(arguments.get(0).isEmpty()) throw new ArgumentsException("");
 	}
 
 	public static void oneArgument(List<String> arguments) throws ArgumentsException {
@@ -86,7 +87,7 @@ public class OperationErrorVerifier {
 
 		List<String> withSource = columns.stream().filter(Column::hasSource).toList();
 
-		List<String> withoutSource = columns.stream().filter(x -> !x.contains(".")).toList();
+		List<String> withoutSource = columns.stream().filter(x -> !Column.hasSource(x)).toList();
 
 		if (!new HashSet<>(parent).containsAll(withSource))
 			throw new ArgumentsException("");

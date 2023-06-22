@@ -1,5 +1,6 @@
 package entities;
 
+import entities.cells.Cell;
 import enums.ColumnDataType;
 
 import java.util.List;
@@ -44,13 +45,6 @@ public class Column{
 		return type;
 	}
 
-	public void setType(ColumnDataType type){
-
-		if(type.equals(ColumnDataType.UNDEFINED))
-			this.type=type;
-
-	}
-
 	public Boolean isPK() {
 		return pk;
 	}
@@ -85,6 +79,12 @@ public class Column{
 		if(hasSource(columnName))
 			return columnName;
 		return sourceName+"."+columnName;
+	}
+
+	public static List<String> putSource(List<String> args, Cell parentCell){
+
+		return args.stream().map(x -> Column.putSource(x, parentCell.getSourceTableNameByColumn(x))).toList();
+
 	}
 
 	public static boolean hasSource(String txt){

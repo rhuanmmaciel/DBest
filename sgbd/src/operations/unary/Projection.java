@@ -4,19 +4,15 @@ import com.mxgraph.model.mxCell;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import enums.OperationType;
 import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
 import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
-import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.query.unaryop.SelectColumnsOperator;
-import util.Utils;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Projection implements IOperator {
 
@@ -31,7 +27,7 @@ public class Projection implements IOperator {
 		ErrorMessage error = null;
 
 		try {
-			
+
 			error = ErrorMessage.NO_PARENT;
 			OperationErrorVerifier.hasParent(cell);
 			
@@ -43,7 +39,10 @@ public class Projection implements IOperator {
 			
 			error = ErrorMessage.NULL_ARGUMENT;
 			OperationErrorVerifier.noNullArgument(arguments);
-			
+
+			error = ErrorMessage.EMPTY_ARGUMENT;
+			OperationErrorVerifier.noEmptyArgument(arguments);
+
 			error = ErrorMessage.PARENT_WITHOUT_COLUMN;
 			OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(), arguments);
 			error = null;
@@ -58,13 +57,13 @@ public class Projection implements IOperator {
 
 		Cell parentCell = cell.getParents().get(0);
 
-		final List<String> argumentsFixed = arguments.stream().map(x -> Column.putSource(x, parentCell.getSourceTableNameByColumn(x))).toList();;
+		List<String> argumentsFixed = Column.putSource(arguments, parentCell);
 
 		Operator operator = parentCell.getOperator();
 
 		Operator readyOperator = new SelectColumnsOperator(operator, argumentsFixed);
 
-		Operation.operationSetter(cell, "π  " + argumentsFixed.toString(), argumentsFixed, readyOperator);
+		Operation.operationSetter(cell, "π  " + argumentsFixed, argumentsFixed, readyOperator);
 
 	}
 

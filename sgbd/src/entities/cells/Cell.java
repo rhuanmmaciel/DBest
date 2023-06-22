@@ -18,7 +18,7 @@ import sgbd.query.Operator;
 
 public abstract sealed class Cell permits TableCell, OperationCell {
 
-	private Operator operator;
+	protected Operator operator;
 	protected List<Column> columns;
 	private final String style;
 	private String name;
@@ -77,9 +77,9 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 		return jCell;
 	}
 
-	public void setOperator(Operator operator) {
+	public void setOperator(Operator operatorClass) {
 
-		this.operator = operator;
+		this.operator = operatorClass;
 
 	}
 
@@ -185,18 +185,6 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
 	public int getWidth() {
 		return width;
-	}
-
-	public void updateUndefinedColumns(Map<String, ColumnDataType> types){
-
-		if(getColumns().stream().noneMatch(x -> x.getType().equals(ColumnDataType.UNDEFINED))) return;
-
-		getColumns()
-				.stream()
-				.filter(x -> x.getType().equals(ColumnDataType.UNDEFINED))
-				.filter(x -> types.containsKey(x.getSourceAndName()))
-				.forEach(x -> x.setType(types.get(x.getSourceAndName())));
-
 	}
 
 	@Override

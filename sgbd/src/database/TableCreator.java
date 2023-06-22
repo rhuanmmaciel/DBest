@@ -32,32 +32,14 @@ public class TableCreator {
 				entities.Column column = columns.stream().filter(x -> x.getName().equals(data)).findFirst()
 						.orElseThrow();
 
-				if (column.getType() == ColumnDataType.INTEGER) {
-
-					if (!line.get(data).equals("null") && !line.get(data).equals(""))
-						rowData.setInt(column.getName(), (int) (Double.parseDouble(line.get(data).strip())));
-
-				}else if (column.getType() == ColumnDataType.LONG) {
-
-					if (!line.get(data).equals("null") && !line.get(data).equals(""))
-						rowData.setLong(column.getName(), (long) (Double.parseDouble(line.get(data).strip())));
-
-				} else if (column.getType() == ColumnDataType.FLOAT) {
-
-					if (!line.get(data).equals("null") && !line.get(data).equals(""))
-						rowData.setFloat(column.getName(), Float.parseFloat(line.get(data).strip()));
-
-				} else if (column.getType() == ColumnDataType.DOUBLE) {
-
-					if (!line.get(data).equals("null") && !line.get(data).equals(""))
-						rowData.setDouble(column.getName(), Double.parseDouble(line.get(data).strip()));
-
-				}else {
-
-					if (!line.get(data).equals("null") && !line.get(data).equals(""))
-						rowData.setString(column.getName(), line.get(data).strip());
-
-				}
+				if (!line.get(data).equals("null") && !line.get(data).equals(""))
+					switch (column.getType()) {
+						case INTEGER -> rowData.setInt(column.getName(), (int) (Double.parseDouble(line.get(data).strip())));
+						case LONG -> rowData.setLong(column.getName(), (long) (Double.parseDouble(line.get(data).strip())));
+						case FLOAT -> rowData.setFloat(column.getName(), Float.parseFloat(line.get(data).strip()));
+						case DOUBLE -> rowData.setDouble(column.getName(), Double.parseDouble(line.get(data).strip()));
+						default -> rowData.setString(column.getName(), line.get(data).strip());
+					}
 
 			}
 

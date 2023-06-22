@@ -20,7 +20,7 @@ public enum OperationType {
 
 	SELECTION("Seleção", "σ", "selection", "selection[args](source)", OperationArity.UNARY, FormFrameSelection.class, Selection.class),
 	PROJECTION("Projeção", "π", "projection", "projection[args](source)",OperationArity.UNARY, FormFrameProjection.class, Projection.class),
-	RENAME("Renomeação", "ρ", "rename", "rename[args](source)", OperationArity.UNARY, null, null),
+	RENAME("Renomeação", "ρ", "rename", "rename[args](source)", OperationArity.UNARY, FormFrameRename.class, Rename.class),
 	GROUP("Agrupamento", "G", "group", "group[args](relation)",OperationArity.UNARY, FormFrameGroup.class, Group.class),
 	AGGREGATION("Agregação", "G", "aggregation", "aggregation[args](relation)",OperationArity.UNARY, FormFrameAggregation.class, Aggregation.class),
 	SORT("Ordenação", "↕", "sort", "sort[args](relation)", OperationArity.UNARY, FormFrameSort.class, Sort.class),

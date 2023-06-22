@@ -9,8 +9,7 @@ public enum ColumnDataType{
 	CHARACTER("char"),
 	STRING("string"),
 	BOOLEAN("bool"),
-	NONE("none"),
-	UNDEFINED("undefined");
+	NONE("none");
 
 	private final String typeName;
 

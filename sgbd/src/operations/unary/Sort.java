@@ -78,8 +78,8 @@ public class Sort implements IOperator {
 
         Operator readyOperator = new SortOperator(operator, (entries, t1) -> {
 
-           switch (Util.typeOfColumn(t1.getContent(sourceName).getMeta(columnName))){
-                case "int" -> {
+           switch (Utils.getType(t1, sourceName, columnName)){
+               case INTEGER -> {
 
                     Integer n1 = entries.getContent(sourceName).getInt(columnName);
                     Integer n2 = t1.getContent(sourceName).getInt(columnName);
@@ -89,7 +89,17 @@ public class Sort implements IOperator {
                     return n2.compareTo(n1);
 
                 }
-                case "float" -> {
+               case LONG -> {
+
+                   Long n1 = entries.getContent(sourceName).getLong(columnName);
+                   Long n2 = t1.getContent(sourceName).getLong(columnName);
+
+                   if(ascendingOrder) return n1.compareTo(n2);
+
+                   return n2.compareTo(n1);
+
+               }
+               case FLOAT -> {
 
                     Float n1 = entries.getContent(sourceName).getFloat(columnName);
                     Float n2 = t1.getContent(sourceName).getFloat(columnName);
@@ -99,6 +109,16 @@ public class Sort implements IOperator {
                     return n2.compareTo(n1);
 
                 }
+               case DOUBLE -> {
+
+                   Double n1 = entries.getContent(sourceName).getDouble(columnName);
+                   Double n2 = t1.getContent(sourceName).getDouble(columnName);
+
+                   if(ascendingOrder) return n1.compareTo(n2);
+
+                   return n2.compareTo(n1);
+
+               }
                 default ->{
 
                     String w1 = t1.getContent(sourceName).getString(columnName);

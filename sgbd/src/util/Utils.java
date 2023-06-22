@@ -18,9 +18,9 @@ public class Utils {
         return false;
     }
 
-    public static ColumnDataType getType(Tuple t1, String source1, String item1){
+    public static ColumnDataType getType(Tuple tuple, String sourceName, String columnName){
 
-        switch (Util.typeOfColumn(t1.getContent(source1).getMeta(item1))){
+        switch (Util.typeOfColumn(tuple.getContent(sourceName).getMeta(columnName))){
 
             case "int" -> {
                 return ColumnDataType.INTEGER;

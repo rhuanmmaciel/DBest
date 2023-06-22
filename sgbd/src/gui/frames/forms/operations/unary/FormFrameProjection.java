@@ -61,11 +61,11 @@ public class FormFrameProjection extends FormFrameOperation implements ActionLis
 
 			for(String element : previousArguments){
 
-				String groupByColumnName = Column.removeSource(element);
-				String groupByColumnSource = Column.removeName(element);
+				String columnName = Column.removeSource(element);
+				String sourceName = Column.removeName(element);
 
-				comboBoxSource.setSelectedItem(groupByColumnSource);
-				comboBoxColumn.setSelectedItem(groupByColumnName);
+				comboBoxSource.setSelectedItem(sourceName);
+				comboBoxColumn.setSelectedItem(columnName);
 
 				if (comboBoxColumn.getItemCount() > 0)
 					updateColumns();

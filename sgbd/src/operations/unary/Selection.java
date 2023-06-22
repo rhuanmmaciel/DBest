@@ -15,6 +15,7 @@ import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
 import sgbd.query.unaryop.FilterOperator;
+import util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,11 +81,7 @@ public class Selection implements IOperator {
 
 					String columnName = Column.removeSource(element.substring(0, element.length()-1));
 
-					ColumnDataType type = parentCell.getColumns().stream()
-							.filter(x -> x.getSource().equals(source) && x.getName().equals(columnName))
-							.findAny().orElseThrow().getType();
-
-					String inf = switch (type){
+					String inf = switch (Utils.getType(t, source, columnName)){
 						case INTEGER -> String.valueOf(t.getContent(source).getInt(columnName));
 						case LONG -> String.valueOf(t.getContent(source).getLong(columnName));
 						case FLOAT -> String.valueOf(t.getContent(source).getFloat(columnName));

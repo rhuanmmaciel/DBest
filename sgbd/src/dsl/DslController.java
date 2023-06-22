@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mxgraph.model.mxCell;
-
 import controller.MainController;
 import dsl.entities.BinaryExpression;
 import dsl.entities.Expression;
@@ -21,9 +19,8 @@ import sgbd.table.Table;
 
 public class DslController {
 
-	private static List<String> commands = new ArrayList<>();
-	private static Map<String, VariableDeclaration> declarations = new HashMap<>();
-	private static List<String> sources = new ArrayList<>();
+	private static final List<String> commands = new ArrayList<>();
+	private static final Map<String, VariableDeclaration> declarations = new HashMap<>();
 
 	public static void addCommand(String command) {
 
@@ -65,7 +62,7 @@ public class DslController {
 
 			case IMPORT_STATEMENT -> importTable(command);
 			case EXPRESSION ->
-				solveExpression(DslUtils.expressionRecognizer(command), new HashMap<Expression<?>, mxCell>());
+				solveExpression(DslUtils.expressionRecognizer(command));
 			case VARIABLE_DECLARATION -> solveDeclaration(new VariableDeclaration(command));
 
 			}
@@ -81,7 +78,7 @@ public class DslController {
 
 		String path = importStatement.substring(6, importStatement.indexOf(".head") + 5);
 
-		String tableName = null;
+		String tableName;
 
 		if (path.startsWith("this.")) {
 
@@ -101,8 +98,6 @@ public class DslController {
 			tableName = importStatement.substring(importStatement.indexOf(".head") + 7);
 
 		}
-
-		sources.add(tableName);
 
 		if (MainController.getTables().containsKey(DslUtils.clearTableName(tableName)))
 			DslErrorListener
@@ -124,7 +119,7 @@ public class DslController {
 
 	}
 
-	private static void solveExpression(Expression<?> expression, Map<Expression<?>, mxCell> operationsReady) {
+	private static void solveExpression(Expression<?> expression) {
 
 		if (!DslErrorListener.getErrors().isEmpty())
 			return;
@@ -134,14 +129,14 @@ public class DslController {
 			if (operationExpression.getSource() instanceof Relation relation)
 				createTable(relation);
 			else
-				solveExpression(operationExpression.getSource(), operationsReady);
+				solveExpression(operationExpression.getSource());
 
 			if (operationExpression instanceof BinaryExpression binaryExpression)
 
 				if (binaryExpression.getSource2() instanceof Relation relation)
 					createTable(relation);
 				else
-					solveExpression(binaryExpression.getSource2(), operationsReady);
+					solveExpression(binaryExpression.getSource2());
 
 		} else if (expression instanceof Relation relation) {
 

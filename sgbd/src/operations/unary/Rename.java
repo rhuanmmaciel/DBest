@@ -1,11 +1,15 @@
 package operations.unary;
 
 import com.mxgraph.model.mxCell;
+import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.tree.TreeException;
 import operations.IOperator;
+import operations.Operation;
 import operations.OperationErrorVerifier;
+import sgbd.query.Operator;
+import sgbd.query.unaryop.RenameSourceOperator;
 
 import java.util.List;
 
@@ -36,8 +40,9 @@ public class Rename implements IOperator {
             error = OperationErrorVerifier.ErrorMessage.NULL_ARGUMENT;
             OperationErrorVerifier.noNullArgument(arguments);
 
-            error = OperationErrorVerifier.ErrorMessage.PARENT_WITHOUT_COLUMN;
-            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(), arguments);
+            error = OperationErrorVerifier.ErrorMessage.EMPTY_ARGUMENT;
+            OperationErrorVerifier.noEmptyArgument(arguments);
+
             error = null;
 
         } catch (TreeException e) {
@@ -45,6 +50,18 @@ public class Rename implements IOperator {
             cell.setError(error);
 
         }
+
+        if(error != null) return;
+
+        Cell parentCell = cell.getParents().get(0);
+
+        Operator operator = parentCell.getOperator();
+
+        for(String name : arguments)
+            operator = new RenameSourceOperator(operator, name.substring(0, name.indexOf(":")), name.substring(name.indexOf(":") + 1));
+
+        Operation.operationSetter(cell, cell.getType().getSymbol()+" " + arguments, arguments, operator);
+
     }
 
 }

@@ -146,8 +146,6 @@ public class DataFrame extends JDialog implements ActionListener {
 		table.setFillsViewportHeight(true);
 		table.repaint();
 
-		cell.updateUndefinedColumns(types);
-
 	}
 
 	private void initializeGUI() {

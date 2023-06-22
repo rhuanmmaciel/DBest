@@ -47,8 +47,8 @@ public class FormFrameJoins extends FormFrameOperation implements ActionListener
 		addExtraComponent(comboBoxColumn2, 1, 4, 1, 1);
 		addExtraComponent(new JLabel(" "), 0, 5, 1, 1);
 
-		parent2.getAllSourceTables().stream()
-				.map(Cell::getName)
+		parent2.getColumns().stream()
+				.map(Column::getSource).distinct()
 				.forEach(comboBoxSource2::addItem);
 
 		comboBoxSource2.addActionListener(actionEvent -> setColumns(comboBoxColumn2, comboBoxSource2, parent2));

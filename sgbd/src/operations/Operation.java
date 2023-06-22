@@ -3,14 +3,11 @@ package operations;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import controller.MainController;
-import entities.Column;
-import entities.cells.Cell;
 import entities.cells.OperationCell;
 import sgbd.query.Operator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Operation {
@@ -18,8 +15,6 @@ public class Operation {
 	public static void operationSetter(OperationCell cell, String name, List<String> arguments, Operator operator) {
 
 		mxCell jCell = cell.getJGraphCell();
-
-		cell.setColumns(operator.getContentInfo());
 
 		cell.setOperator(operator);
 

@@ -93,8 +93,8 @@ public abstract class FormFrameOperation extends FormBase {
 
         contentPane.add(centerPanel, BorderLayout.CENTER);
 
-        parent1.getAllSourceTables().stream()
-                .map(Cell::getName)
+        parent1.getColumns().stream()
+                .map(Column::getSource).distinct()
                 .forEach(comboBoxSource::addItem);
 
         comboBoxSource.addActionListener(actionEvent -> setColumns(comboBoxColumn, comboBoxSource, parent1));

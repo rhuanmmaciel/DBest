@@ -1,6 +1,4 @@
-// Generated from RelAlgebra.g4 by ANTLR 4.7.2
 package dsl.antlr4;// Generated from RelAlgebra.g4 by ANTLR 4.7.2
-
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -119,6 +117,46 @@ public interface RelAlgebraListener extends ParseTreeListener {
 	 */
 	void exitProjection(RelAlgebraParser.ProjectionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#sort}.
+	 * @param ctx the parse tree
+	 */
+	void enterSort(RelAlgebraParser.SortContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#sort}.
+	 * @param ctx the parse tree
+	 */
+	void exitSort(RelAlgebraParser.SortContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#group}.
+	 * @param ctx the parse tree
+	 */
+	void enterGroup(RelAlgebraParser.GroupContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#group}.
+	 * @param ctx the parse tree
+	 */
+	void exitGroup(RelAlgebraParser.GroupContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#rename}.
+	 * @param ctx the parse tree
+	 */
+	void enterRename(RelAlgebraParser.RenameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#rename}.
+	 * @param ctx the parse tree
+	 */
+	void exitRename(RelAlgebraParser.RenameContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#aggregation}.
+	 * @param ctx the parse tree
+	 */
+	void enterAggregation(RelAlgebraParser.AggregationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#aggregation}.
+	 * @param ctx the parse tree
+	 */
+	void exitAggregation(RelAlgebraParser.AggregationContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RelAlgebraParser#join}.
 	 * @param ctx the parse tree
 	 */
@@ -179,25 +217,25 @@ public interface RelAlgebraListener extends ParseTreeListener {
 	 */
 	void exitIntersection(RelAlgebraParser.IntersectionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RelAlgebraParser#sort}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#unary}.
 	 * @param ctx the parse tree
 	 */
-	void enterSort(RelAlgebraParser.SortContext ctx);
+	void enterUnary(RelAlgebraParser.UnaryContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RelAlgebraParser#sort}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#unary}.
 	 * @param ctx the parse tree
 	 */
-	void exitSort(RelAlgebraParser.SortContext ctx);
+	void exitUnary(RelAlgebraParser.UnaryContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RelAlgebraParser#group}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#binary}.
 	 * @param ctx the parse tree
 	 */
-	void enterGroup(RelAlgebraParser.GroupContext ctx);
+	void enterBinary(RelAlgebraParser.BinaryContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RelAlgebraParser#group}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#binary}.
 	 * @param ctx the parse tree
 	 */
-	void exitGroup(RelAlgebraParser.GroupContext ctx);
+	void exitBinary(RelAlgebraParser.BinaryContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code simple}
 	 * labeled alternative in {@link RelAlgebraParser#relation}.
