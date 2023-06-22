@@ -492,7 +492,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		jTable.getColumnModel().moveColumn(model.getColumnCount() - 1, 0);
 		jTable.getColumnModel().getColumn(0).setResizable(false);
 		JTableUtils.setColumnBold(jTable, 0);
-		JTableUtils.minColumnWidth(jTable, 0);
+		JTableUtils.minColumnWidthByValues(jTable, 0);
 		jTable.setShowHorizontalLines(true);
 		jTable.setGridColor(Color.blue);
 		jTable.setColumnSelectionAllowed(false);

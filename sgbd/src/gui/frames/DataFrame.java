@@ -12,19 +12,22 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import controller.MainController;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import database.TuplesExtractor;
 import enums.ColumnDataType;
 import gui.utils.JTableUtils;
+import org.jdesktop.swingx.JXTable;
+import sgbd.query.Main;
 import sgbd.query.Operator;
 
 public class DataFrame extends JDialog implements ActionListener {
 
 	private final JLabel lblText = new JLabel();
 	private final JLabel lblPages = new JLabel();
-	private final JTable table = new JTable();
+	private final JXTable table = new JXTable();
 	private final JButton btnLeft = new JButton("<");
 	private final JButton btnRight = new JButton(">");
 	private final JButton btnAllLeft = new JButton("<<");
@@ -135,7 +138,10 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		table.setModel(model);
 
-		JTableUtils.minColumnWidth(table, 0);
+		JTableUtils.minColumnWidthByValues(table, 0);
+
+		for(int i = 1; i < table.getColumnCount(); i++)
+			JTableUtils.minColumnWidthByColumnName(table, i);
 
 		table.getColumnModel().getColumn(0).setResizable(false);
 		
@@ -164,6 +170,13 @@ public class DataFrame extends JDialog implements ActionListener {
 		northPane.add(lblText);
 		northPane.add(lblPages);
 
+		JPanel tablePanel = new JPanel(new BorderLayout());
+		tablePanel.add(table.getTableHeader(), BorderLayout.NORTH);
+		tablePanel.add(table, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(tablePanel);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
 		JPanel southPane = new JPanel(new FlowLayout());
 		southPane.add(btnAllLeft);
 		southPane.add(btnLeft);
@@ -171,7 +184,7 @@ public class DataFrame extends JDialog implements ActionListener {
 		southPane.add(btnAllRight);
 
 		contentPane.add(northPane, BorderLayout.NORTH);
-		contentPane.add(new JScrollPane(table), BorderLayout.CENTER);
+		contentPane.add(scrollPane, BorderLayout.CENTER);
 		contentPane.add(southPane, BorderLayout.SOUTH);
 
 		verifyButtons();
@@ -179,6 +192,10 @@ public class DataFrame extends JDialog implements ActionListener {
 		if(table.getRowCount() == 0) lblPages.setText("0/0");
 
 		pack();
+		if (getWidth() > MainController.WIDTH) {
+			int height = getHeight();
+			setSize(MainController.WIDTH, height);
+		}
 		setLocationRelativeTo(null);
 		this.setVisible(true);
 	}

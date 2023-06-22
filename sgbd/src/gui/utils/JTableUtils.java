@@ -1,38 +1,65 @@
 package gui.utils;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.FontMetrics;
+import java.awt.*;
 import java.util.Vector;
 
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
+import javax.swing.table.*;
 
 public class JTableUtils {
 
-	public static void minColumnWidth(JTable jTable, int columnIndex) {
+	public static void minColumnWidthByColumnName(JTable jTable, int columnIndex) {
 
-	    int minWidth = 0;
-	    TableColumn column = jTable.getColumnModel().getColumn(columnIndex);
-	    TableCellRenderer cellRenderer = jTable.getCellRenderer(0, columnIndex);
-	    Component cellComponent = cellRenderer.getTableCellRendererComponent(jTable, column.getHeaderValue(), false, false, 0, columnIndex);
-	    FontMetrics fontMetrics = cellComponent.getFontMetrics(cellComponent.getFont());
+		TableColumn column = jTable.getColumnModel().getColumn(columnIndex);
+		TableCellRenderer headerRenderer = jTable.getTableHeader().getDefaultRenderer();
+		Component headerComponent = headerRenderer.getTableCellRendererComponent(jTable, column.getHeaderValue(), false, false, -1, columnIndex);
+		FontMetrics fontMetrics = headerComponent.getFontMetrics(headerComponent.getFont());
 
-	    for (int row = 0; row < jTable.getRowCount(); row++) {
-	        Object value = jTable.getValueAt(row, columnIndex);
-	        String text = (value != null) ? value.toString() : "";
-	        int width = fontMetrics.stringWidth(text);
-	        minWidth = Math.max(minWidth, width);
-	    }
+		int minWidth = fontMetrics.stringWidth(column.getHeaderValue().toString());
+		int extraWidth = fontMetrics.charWidth('0') * 2;
+		minWidth += extraWidth;
 
-	    int extraWidth = fontMetrics.charWidth('0') * 2;
-	    minWidth += extraWidth;
-	    column.setMinWidth(minWidth);
-	    column.setMaxWidth(minWidth);
+		column.setMinWidth(minWidth);
+
+	}
+
+	public static void minColumnWidthByValues(JTable jTable, int columnIndex) {
+		int minWidth = 0;
+		TableColumn column = jTable.getColumnModel().getColumn(columnIndex);
+		TableCellRenderer cellRenderer = jTable.getCellRenderer(0, columnIndex);
+		Component cellComponent = cellRenderer.getTableCellRendererComponent(jTable, column.getHeaderValue(), false, false, 0, columnIndex);
+		FontMetrics fontMetrics = cellComponent.getFontMetrics(cellComponent.getFont());
+
+		for (int row = 0; row < jTable.getRowCount(); row++) {
+			Object value = jTable.getValueAt(row, columnIndex);
+			String text = (value != null) ? value.toString() : "";
+			int width = fontMetrics.stringWidth(text);
+			minWidth = Math.max(minWidth, width);
+		}
+
+		int extraWidth = fontMetrics.charWidth('0') * 2;
+		minWidth += extraWidth;
+		column.setMinWidth(minWidth);
+	}
+
+	public static void adjustTableColumns(JTable jTable, int tableWidth) {
+		int totalWidth = 0;
+		TableColumnModel columnModel = jTable.getColumnModel();
+		int columnCount = columnModel.getColumnCount();
+
+		for (int i = 0; i < columnCount; i++) {
+			TableColumn column = columnModel.getColumn(i);
+			totalWidth += column.getPreferredWidth();
+		}
+
+		double scaleFactor = (double) tableWidth / totalWidth;
+
+		for (int i = 0; i < columnCount; i++) {
+			TableColumn column = columnModel.getColumn(i);
+			int preferredWidth = column.getPreferredWidth();
+			int newWidth = (int) (preferredWidth * scaleFactor);
+			column.setPreferredWidth(newWidth);
+		}
 	}
 
 
