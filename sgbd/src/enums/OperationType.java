@@ -19,622 +19,38 @@ import java.util.List;
 
 public enum OperationType implements IOperationType {
 
-	SELECTION {
-
-		@Override
-		public String getDisplayName() {
-			return "Seleção";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.UNARY;
-		}
-
-		@Override
-		public String getSymbol() {
-			return "σ";
-		}
-
-		@Override
-		public String getOperationName() {
-			return "selection";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return "selection[args](source)";
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameSelection.class;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			return Selection.class;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-
-	PROJECTION {
-		
-		@Override
-		public String getDisplayName() {
-			return "Projeção";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public String getSymbol() {
-			return "π";
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.UNARY;
-		}
-
-		@Override
-		public String getOperationName() {
-			return "projection";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return "projection[args](source)";
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameProjection.class;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			return Projection.class;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-
-	JOIN {
-		
-		@Override
-		public String getDisplayName() {
-			return "Junção";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public String getSymbol() {
-			return "|X|";
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.BINARY;
-		}
-
-		@Override
-		public String getOperationName() {
-			return "join";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return "join[args](source1,source2)";
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameJoins.class;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			return Join.class;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-
-	LEFT_JOIN {
-		
-		@Override
-		public String getDisplayName() {
-			return "Junção à esquerda";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.BINARY;
-		}
-
-		@Override
-		public String getSymbol() {
-			return "⟕";
-		}
-
-		@Override
-		public String getOperationName() {
-			return "leftJoin";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return "leftJoin[args](source1,source2)";
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameJoins.class;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			return LeftJoin.class;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-
-	RIGHT_JOIN {
-		
-		@Override
-		public String getDisplayName() {
-			return "Junção à direita";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.BINARY;
-		}
-
-		@Override
-		public String getSymbol() {
-			return "⟖";
-		}
-
-		@Override
-		public String getOperationName() {
-			return "rightJoin";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return "rightJoin[args](source1,source2)";
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameJoins.class;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			return RightJoin.class;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-
-	CARTESIAN_PRODUCT {
-		
-		@Override
-		public String getDisplayName() {
-			return "Produto Cartesiano";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.BINARY;
-		}
-
-		@Override
-		public String getSymbol() {
-			return "✕";
-		}
-
-		@Override
-		public String getOperationName() {
-			return "cartesianProduct";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return "cartesianProduct(source1,source2)";
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return null;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			return CartesianProduct.class;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-
-	UNION {
-		@Override
-		public String getDisplayName() {
-			return "União";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.BINARY;
-		}
-
-		@Override
-		public String getSymbol() {
-			return "∪";
-		}
-
-		@Override
-		public String getOperationName() {
-			return "union";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return "union[args](source1,source2)";
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return null;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			return Union.class;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-
-	INTERSECTION {
-		@Override
-		public String getDisplayName() {
-			return "Interseção";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.BINARY;
-		}
-
-		@Override
-		public String getSymbol() {
-			return "∩";
-		}
-
-		@Override
-		public String getOperationName() {
-			return "intersection";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return "intersection[args](source1,source2)";
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return null;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			return Intersection.class;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-
-	DIFFERENCE {
-		@Override
-		public String getDisplayName() {
-			return "Diferença";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.BINARY;
-		}
-
-		@Override
-		public String getSymbol() {
-			return "-";
-		}
-
-		@Override
-		public String getOperationName() {
-			return "difference";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return null;
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return null;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-
-	RENAME {
-		@Override
-		public String getDisplayName() {
-			return "Renomeação";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.UNARY;
-		}
-
-		@Override
-		public String getSymbol() {
-			return "ρ";
-		}
-
-		@Override
-		public String getOperationName() {
-			return "rename";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return null;
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return null;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-
-	GROUP {
-		@Override
-		public String getDisplayName() {
-			return "Agrupamento";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.UNARY;
-		}
-
-		@Override
-		public String getSymbol() {
-			return "G";
-		}
-
-		@Override
-		public String getOperationName() {
-			return "group";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return "group[args](relation)";
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameGroup.class;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			return Group.class;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-	AGGREGATION{
-		@Override
-		public String getDisplayName() {
-			return "Agregação";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.UNARY;
-		}
-
-		@Override
-		public String getSymbol() {
-			return "G";
-		}
-
-		@Override
-		public String getOperationName() {
-			return "aggregation";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return "aggregation[args](relation)";
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameAggregation.class;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			return Aggregation.class;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	},
-	SORT{
-		@Override
-		public String getDisplayName() {
-			return "Ordenação";
-		}
-
-		@Override
-		public String getSymbol() {
-			return "↕";
-		}
-
-		@Override
-		public String getDisplayNameAndSymbol() {
-			return getSymbol() + " " + getDisplayName();
-		}
-
-		@Override
-		public String getOperationName() {
-			return "sort";
-		}
-
-		@Override
-		public String getDslOperation() {
-			return "sort[args](relation)";
-		}
-
-		@Override
-		public OperationArity getArity() {
-			return OperationArity.UNARY;
-		}
-
-		@Override
-		public Class<? extends IFormFrameOperation> getForm() {
-			return FormFrameSort.class;
-		}
-
-		@Override
-		public Class<? extends IOperator> getOperator() {
-			return Sort.class;
-		}
-
-		@Override
-		public CreateOperationAction getAction() {
-			return new CreateOperationAction(this);
-		}
-	};
+	SELECTION("Seleção", "σ", "selection", "selection[args](source)", OperationArity.UNARY, FormFrameSelection.class, Selection.class),
+	PROJECTION("Projeção", "π", "projection", "projection[args](source)",OperationArity.UNARY, FormFrameProjection.class, Projection.class),
+	JOIN("Junção", "|X|", "join", "join[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, Join.class),
+	LEFT_JOIN("Junção à esquerda", "⟕", "leftJoin", "leftJoin[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, LeftJoin.class),
+	RIGHT_JOIN("Junção à direita", "⟖", "rightJoin", "rightJoin[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, RightJoin.class),
+	CARTESIAN_PRODUCT("Produto Cartesiano", "✕", "cartesianProduct", "cartesianProduct(source1,source2)", OperationArity.BINARY, null, CartesianProduct.class),
+	UNION("União", "∪", "union", "union(source1,source2)", OperationArity.BINARY, null, Union.class),
+	INTERSECTION("Interseção", "∩", "intersection", "intersection(source1,source2)", OperationArity.BINARY, null, Intersection.class),
+	DIFFERENCE("Diferença", "-", "difference", "difference(source1,source2)", OperationArity.BINARY, null, null),
+	RENAME("Renomeação", "ρ", "rename", "rename[args](source)", OperationArity.UNARY, null, null),
+	GROUP("Agrupamento", "G", "group", "group[args](relation)",OperationArity.UNARY, FormFrameGroup.class, Group.class),
+	AGGREGATION("Agregação", "G", "aggregation", "aggregation[args](relation)",OperationArity.UNARY, FormFrameAggregation.class, Aggregation.class),
+	SORT("Ordenação", "↕", "sort", "sort[args](relation)", OperationArity.UNARY, FormFrameSort.class, Sort.class);
+
+	private final String displayName;
+	private final String symbol;
+	private final String operationName;
+	private final String dslOperation;
+	private final OperationArity arity;
+	private final Class<? extends IFormFrameOperation> form;
+	private final Class<? extends IOperator> operator;
+
+	OperationType(String displayName, String symbol, String operationName, String dslOperation, OperationArity arity,
+				  Class<? extends IFormFrameOperation> form, Class<? extends IOperator> operator) {
+		this.displayName = displayName;
+		this.symbol = symbol;
+		this.operationName = operationName;
+		this.dslOperation = dslOperation;
+		this.arity = arity;
+		this.form = form;
+		this.operator = operator;
+	}
 
 	public final static List<OperationType> OPERATIONS_WITHOUT_FORM = Arrays.stream(values()).sequential().filter(x -> x.getForm() == null).toList();
 
@@ -646,5 +62,50 @@ public enum OperationType implements IOperationType {
 
 		throw new IllegalArgumentException("Invalid operation type: " + operationType);
 
+	}
+
+	@Override
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	@Override
+	public String getSymbol() {
+		return symbol;
+	}
+
+	@Override
+	public String getDisplayNameAndSymbol() {
+		return getSymbol() + " " + getDisplayName();
+	}
+
+	@Override
+	public String getOperationName() {
+		return operationName;
+	}
+
+	@Override
+	public String getDslOperation() {
+		return dslOperation;
+	}
+
+	@Override
+	public OperationArity getArity() {
+		return arity;
+	}
+
+	@Override
+	public Class<? extends IFormFrameOperation> getForm() {
+		return form;
+	}
+
+	@Override
+	public Class<? extends IOperator> getOperator() {
+		return operator;
+	}
+
+	@Override
+	public CreateOperationAction getAction() {
+		return new CreateOperationAction(this);
 	}
 }
