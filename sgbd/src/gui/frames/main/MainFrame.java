@@ -62,15 +62,18 @@ public abstract class MainFrame extends JFrame
 	protected JMenu menuItemOperations = new JMenu("Operações");
 	protected JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.getDisplayName());
 	protected JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.getDisplayName());
+	protected JMenuItem menuItemSort = new JMenuItem(OperationType.SORT.getDisplayName());
+	protected JMenuItem menuItemAggregation = new JMenuItem(OperationType.AGGREGATION.getDisplayName());
+	protected JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.getDisplayName());
+	protected JMenuItem menuItemRename = new JMenuItem(OperationType.RENAME.getDisplayName());
+
 	protected JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.getDisplayName());
 	protected JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.getDisplayName());
 	protected JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.getDisplayName());
 	protected JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getDisplayName());
 	protected JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getDisplayName());
 	protected JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.getDisplayName());
-	protected JMenuItem menuItemSort = new JMenuItem(OperationType.SORT.getDisplayName());
-	protected JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.getDisplayName());
-	protected JMenuItem menuItemAggregation = new JMenuItem(OperationType.AGGREGATION.getDisplayName());
+
 
 	public MainFrame(Set<Button<?>> buttons) {
 
@@ -92,20 +95,51 @@ public abstract class MainFrame extends JFrame
 		getContentPane().add(tablesPane, BorderLayout.WEST);
 		getContentPane().add(operationButtonsPane, BorderLayout.EAST);
 		
+		addOperationButtons();
+		addBottomButtons();
+
+		getContentPane().add(toolBar, BorderLayout.SOUTH);
+
+		getContentPane().addKeyListener(this);
+
+		mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
+		layout.setUseBoundingBox(false);
+
+		setTablesSavedConfig();
+		setGraphConfig();
+
+		setMenuItemsListener();
+
+		addMenuItemOperations();
+
+		mainContainer = getContentPane();
+
+		setVisible(true);
+
+	}
+
+	private void addOperationButtons(){
+
 		mxStylesheet stylesheet = graph.getStylesheet();
-		
+
 		buttons.add(new OperationButton(stylesheet, OperationType.PROJECTION, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.SELECTION, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.SORT, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.AGGREGATION, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.GROUP, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.RENAME, this, operationButtonsPane));
+
 		buttons.add(new OperationButton(stylesheet, OperationType.JOIN, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.LEFT_JOIN, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.RIGHT_JOIN, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.CARTESIAN_PRODUCT, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.UNION, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.INTERSECTION, this, operationButtonsPane));
-		buttons.add(new OperationButton(stylesheet, OperationType.SORT, this, operationButtonsPane));
-		buttons.add(new OperationButton(stylesheet, OperationType.GROUP, this, operationButtonsPane));
-		buttons.add(new OperationButton(stylesheet, OperationType.AGGREGATION, this, operationButtonsPane));
-		
+
+	}
+
+	private void addBottomButtons(){
+
 		buttons.add(new ToolBarButton<>(JButton.class, " Importar tabela(i) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.IMPORT_FILE)));
 //		buttons.add(new ToolBarButton<>(JButton.class, " Criar tabela(c) ", this, toolBar,
@@ -118,19 +152,14 @@ public abstract class MainFrame extends JFrame
 				new CurrentAction(CurrentAction.ActionType.DELETE_ALL)));
 		buttons.add(new ToolBarButton<>(JButton.class, " Captura de tela ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.PRINT_SCREEN)));
-//		buttons.add(new ToolBarButton<>(JButton.class, " Mostrar(s) ", this, toolBar,
-//				new CurrentAction(CurrentAction.ActionType.SHOW_CELL)));
 		buttons.add(new ToolBarButton<>(JButton.class, " Console ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.OPEN_CONSOLE)));
 		buttons.add(new ToolBarButton<>(JButton.class, " Editor de texto ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.OPEN_TEXT_EDITOR)));
-		
-		getContentPane().add(toolBar, BorderLayout.SOUTH);
 
-		getContentPane().addKeyListener(this);
+	}
 
-		mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
-		layout.setUseBoundingBox(false);
+	private void setTablesSavedConfig(){
 
 		tablesComponent.getGraphControl().addMouseListener(this);
 		tablesComponent.setConnectable(false);
@@ -141,7 +170,11 @@ public abstract class MainFrame extends JFrame
 		tablesGraph.setAllowDanglingEdges(false);
 		tablesGraph.setCellsMovable(false);
 		tablesGraph.setCellsDeletable(false);
-		
+
+	}
+
+	private void setGraphConfig(){
+
 		graphComponent.getGraphControl().addMouseMotionListener(this);
 		graphComponent.getGraphControl().addKeyListener(this);
 		graphComponent.setConnectable(false);
@@ -157,29 +190,41 @@ public abstract class MainFrame extends JFrame
 		graph.setCellsEditable(false);
 		graph.setAllowDanglingEdges(false);
 
+	}
+
+	private void setMenuItemsListener(){
+
 		menuItemInformations.addActionListener(this);
 		menuItemExport.addActionListener(this);
 		menuItemExportTree.addActionListener(this);
 		menuItemShow.addActionListener(this);
 		menuItemEdit.addActionListener(this);
 		menuItemRemove.addActionListener(this);
+
 		menuItemSelection.addActionListener(this);
 		menuItemProjection.addActionListener(this);
+		menuItemSort.addActionListener(this);
+		menuItemAggregation.addActionListener(this);
+		menuItemGroup.addActionListener(this);
+		menuItemRename.addActionListener(this);
+
 		menuItemJoin.addActionListener(this);
 		menuItemLeftJoin.addActionListener(this);
 		menuItemRightJoin.addActionListener(this);
 		menuItemCartesianProduct.addActionListener(this);
 		menuItemUnion.addActionListener(this);
 		menuItemIntersection.addActionListener(this);
-		menuItemSort.addActionListener(this);
-		menuItemGroup.addActionListener(this);
-		menuItemAggregation.addActionListener(this);
+
+	}
+
+	private void addMenuItemOperations(){
 
 		menuItemOperations.add(menuItemSelection);
 		menuItemOperations.add(menuItemProjection);
 		menuItemOperations.add(menuItemSort);
 		menuItemOperations.add(menuItemAggregation);
 		menuItemOperations.add(menuItemGroup);
+		menuItemOperations.add(menuItemRename);
 		menuItemOperations.addSeparator();
 		menuItemOperations.add(menuItemJoin);
 		menuItemOperations.add(menuItemLeftJoin);
@@ -187,10 +232,6 @@ public abstract class MainFrame extends JFrame
 		menuItemOperations.add(menuItemCartesianProduct);
 		menuItemOperations.add(menuItemUnion);
 		menuItemOperations.add(menuItemIntersection);
-
-		mainContainer = getContentPane();
-
-		setVisible(true);
 
 	}
 	

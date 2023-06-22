@@ -1,7 +1,6 @@
 package gui.utils;
 
 import enums.OperationType;
-import enums.interfaces.IOperationType;
 
 import java.awt.Color;
 import java.util.Arrays;
@@ -20,7 +19,7 @@ public class CustomDocumentFilter extends DocumentFilter {
 
 	private final StyledDocument styledDocument;
 	private final String[] tokens = { "import", "as", "this" };
-	private final String[] operations = Arrays.stream(OperationType.values()).map(IOperationType::getOperationName).toArray(String[]::new);
+	private final String[] operations = Arrays.stream(OperationType.values()).map(OperationType::getOperationName).toArray(String[]::new);
 	private final JTextPane textPane;
 
 	private final StyleContext styleContext = StyleContext.getDefaultStyleContext();

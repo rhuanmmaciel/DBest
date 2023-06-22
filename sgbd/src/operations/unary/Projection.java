@@ -12,6 +12,7 @@ import operations.OperationErrorVerifier;
 import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.FilterColumnsOperator;
+import sgbd.query.unaryop.SelectColumnsOperator;
 import util.Utils;
 
 import java.util.List;
@@ -59,16 +60,11 @@ public class Projection implements IOperator {
 
 		final List<String> argumentsFixed = arguments.stream().map(x -> Column.putSource(x, parentCell.getSourceTableNameByColumn(x))).toList();;
 
-		List<Column> aux = parentCell.getColumns().stream().filter(x ->
-			!Utils.anyListElementStartsAndEndsWith(argumentsFixed, x.getSource(), x.getName())).toList();
-
 		Operator operator = parentCell.getOperator();
 
-		for (Column c : aux) {
-			operator = new FilterColumnsOperator(operator, c.getSource(), List.of(c.getName()));
-		}
+		Operator readyOperator = new SelectColumnsOperator(operator, argumentsFixed);
 
-		Operation.operationSetter(cell, "π  " + argumentsFixed.toString(), argumentsFixed, operator);
+		Operation.operationSetter(cell, "π  " + argumentsFixed.toString(), argumentsFixed, readyOperator);
 
 	}
 

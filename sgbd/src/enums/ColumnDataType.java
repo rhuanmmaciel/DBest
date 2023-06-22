@@ -1,81 +1,26 @@
 package enums;
 
-import enums.interfaces.IColumnDataType;
-
-public enum ColumnDataType implements IColumnDataType{
+public enum ColumnDataType{
 	
-	INTEGER{
+	INTEGER("integer"),
+	LONG("long"),
+	FLOAT("float"),
+	DOUBLE("double"),
+	CHARACTER("char"),
+	STRING("string"),
+	BOOLEAN("bool"),
+	NONE("none"),
+	UNDEFINED("undefined");
 
-		@Override
-		public String getTypeName() {
-			return "integer";
-		}
-	
-	},
-	LONG{
+	private final String typeName;
 
-		@Override
-		public String getTypeName() {
-			return "long";
-		}
+	ColumnDataType(String typeName){
 
-	},
-	FLOAT{
+		this.typeName = typeName;
 
-		@Override
-		public String getTypeName() {
-			return "float";
-		}
-		
-	},
-	DOUBLE{
+	}
 
-		@Override
-		public String getTypeName() {
-			return "double";
-		}
-
-	},
-	CHARACTER{
-
-		@Override
-		public String getTypeName() {
-			return "char";
-		}
-		
-	},
-	STRING{
-
-		@Override
-		public String getTypeName() {
-			return "string";
-		}
-		
-	},
-	BOOLEAN{
-
-		@Override
-		public String getTypeName() {
-			return "bool";
-		}
-		
-	},
-	NONE{
-
-		@Override
-		public String getTypeName() {
-			return "none";
-		}
-		
-	},
-	UNDEFINED{
-
-		@Override
-		public String getTypeName() {
-			return "undefined";
-		}
-
-	};
-
-	
+	public String getTypeName() {
+		return typeName;
+	}
 }
