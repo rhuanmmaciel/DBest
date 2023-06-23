@@ -187,6 +187,7 @@ public final class OperationCell extends Cell {
 		case NO_TWO_ARGUMENTS -> "Alguma coluna fornecida não existe na respectiva célula pai";
 		case EMPTY_ARGUMENT -> "Não foi passado parâmetro";
 		case NO_PREFIX -> "Algum parâmetro não possui prefixo";
+		case SAME_SOURCE -> "Existem colunas com a mesma fonte. É necessário a renomeação.";
 		};
 		
 	}

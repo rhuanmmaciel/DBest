@@ -1,5 +1,8 @@
 package gui.utils;
 
+import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.*;
+
 import java.awt.*;
 import java.util.Vector;
 
@@ -42,26 +45,21 @@ public class JTableUtils {
 		column.setMinWidth(minWidth);
 	}
 
-	public static void adjustTableColumns(JTable jTable, int tableWidth) {
-		int totalWidth = 0;
-		TableColumnModel columnModel = jTable.getColumnModel();
-		int columnCount = columnModel.getColumnCount();
 
-		for (int i = 0; i < columnCount; i++) {
-			TableColumn column = columnModel.getColumn(i);
-			totalWidth += column.getPreferredWidth();
-		}
-
-		double scaleFactor = (double) tableWidth / totalWidth;
-
-		for (int i = 0; i < columnCount; i++) {
-			TableColumn column = columnModel.getColumn(i);
-			int preferredWidth = column.getPreferredWidth();
-			int newWidth = (int) (preferredWidth * scaleFactor);
-			column.setPreferredWidth(newWidth);
-		}
+	public static void setNullInRed(JXTable table) {
+		table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+														   boolean hasFocus, int row, int column) {
+				Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				if ("null".equals(value)) {
+					c.setForeground(Color.RED);
+				} else {
+					c.setForeground(table.getForeground());
+				}
+				return c;
+			}
+		});
 	}
-
 
 	public static void setNullInRed(JTable table) {
 
@@ -73,9 +71,8 @@ public class JTableUtils {
 
 				Component c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-				if (value instanceof String) {
-					String texto = (String) value;
-					if (texto.equals("null")) {
+				if (value instanceof String text) {
+					if (text.equals("null")) {
 						c.setForeground(Color.RED);
 					} else {
 						c.setForeground(Color.BLACK);
@@ -88,7 +85,6 @@ public class JTableUtils {
 
 	}
 
-	@SuppressWarnings("serial")
 	public static void setColumnBold(JTable table, int i) {
 
 		table.getColumnModel().getColumn(i).setCellRenderer(new DefaultTableCellRenderer() {

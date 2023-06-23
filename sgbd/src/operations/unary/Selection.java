@@ -4,7 +4,6 @@ import com.mxgraph.model.mxCell;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import enums.ColumnDataType;
 import exceptions.tree.TreeException;
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
@@ -89,7 +88,7 @@ public class Selection implements IOperator {
 						default -> "'" + t.getContent(source).getString(columnName) + "'";
 					};
 
-					if(inf.equals("null")) inf = "'" + inf + "'";
+					if(inf.equals("null") || inf.equals("'null'")) inf = null;
 
 					evaluator.putVariable(source+"."+columnName, inf);
 

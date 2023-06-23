@@ -12,7 +12,6 @@ import operations.OperationErrorVerifier;
 import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
-import sgbd.util.statitcs.Util;
 import util.Utils;
 
 import java.util.ArrayList;
@@ -47,6 +46,9 @@ public abstract class JoinOperators implements IOperator {
             error = OperationErrorVerifier.ErrorMessage.PARENT_WITHOUT_COLUMN;
             OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(), List.of(arguments.get(0)));
             OperationErrorVerifier.parentContainsColumns(cell.getParents().get(1).getColumnSourceNames(), List.of(arguments.get(1)));
+
+            error = OperationErrorVerifier.ErrorMessage.SAME_SOURCE;
+            OperationErrorVerifier.haveDifferentSources(cell.getParents().get(0), cell.getParents().get(1));
 
             error = null;
 

@@ -204,7 +204,7 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 
 		if(btnNull == e.getSource()) {
 			insertString(" ");
-			insertString("'null'");
+			insertString("null");
 		}
 
 		if (e.getSource() == btnRemoveAll && !textPane.getText().isEmpty())

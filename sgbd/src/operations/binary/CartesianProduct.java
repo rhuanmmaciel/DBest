@@ -38,7 +38,10 @@ public class CartesianProduct implements IOperator {
 			
 			error = ErrorMessage.PARENT_ERROR;
 			OperationErrorVerifier.noParentError(cell);
-			
+
+			error = OperationErrorVerifier.ErrorMessage.SAME_SOURCE;
+			OperationErrorVerifier.haveDifferentSources(cell.getParents().get(0), cell.getParents().get(1));
+
 			error = null;
 			
 		} catch (TreeException e) {

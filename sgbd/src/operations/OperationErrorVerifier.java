@@ -1,6 +1,7 @@
 package operations;
 
 import entities.Column;
+import entities.cells.Cell;
 import entities.cells.OperationCell;
 import exceptions.tree.ArgumentsException;
 import exceptions.tree.ParentsAmountException;
@@ -15,12 +16,20 @@ public class OperationErrorVerifier {
 
 	public enum ErrorMessage {
 		NO_PARENT, NO_ONE_PARENT, NULL_ARGUMENT, NO_ONE_ARGUMENT, PARENT_ERROR, PARENT_WITHOUT_COLUMN,
-		NO_TWO_PARENTS, NO_TWO_ARGUMENTS, EMPTY_ARGUMENT, NO_PREFIX
+		NO_TWO_PARENTS, NO_TWO_ARGUMENTS, EMPTY_ARGUMENT, NO_PREFIX, SAME_SOURCE
 	}
 
 	public static void everyoneHavePrefix(List<String> arguments, List<String> prefix) throws ArgumentsException{
 
 		if(!arguments.stream().allMatch(x-> Utils.startsWithIgnoreCase(x, prefix)))
+			throw new ArgumentsException("");
+
+	}
+
+	public static void haveDifferentSources(Cell parent1, Cell parent2) throws ArgumentsException{
+
+		if(parent1.getColumns().stream().map(Column::getSource)
+				.anyMatch(x -> parent2.getColumns().stream().map(Column::getSource).anyMatch(x::equals)))
 			throw new ArgumentsException("");
 
 	}

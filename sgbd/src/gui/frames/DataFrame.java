@@ -194,7 +194,7 @@ public class DataFrame extends JDialog implements ActionListener {
 		pack();
 		if (getWidth() > MainController.WIDTH) {
 			int height = getHeight();
-			setSize(MainController.WIDTH, height);
+			setSize((int) (MainController.WIDTH*0.95), height);
 		}
 		setLocationRelativeTo(null);
 		this.setVisible(true);
