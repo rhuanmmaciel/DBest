@@ -1,0 +1,12 @@
+/application/
+/controller/
+/database/
+/dsl/
+/entities/
+/enums/
+/exceptions/
+/files/
+/gui/
+/operations/
+/util/
+/META-INF/

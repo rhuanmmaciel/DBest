@@ -2,9 +2,6 @@ package operations.binary.joins;
 
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.LeftNestedLoopJoin;
-import sgbd.query.binaryop.joins.RightNestedLoopJoin;
-
-import java.util.Objects;
 
 public class LeftJoin extends JoinOperators {
 
