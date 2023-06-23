@@ -31,6 +31,8 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 	private JButton btnRemoveLastOne;
 	private JButton btnRemoveAll;
 	private final JButton btnNull = new JButton("null");
+	private final JButton btnIs = new JButton("is");
+	private final JButton btnIsNot = new JButton("is not");
 
 	private JComboBox<List<String>> comboBoxOperator;
 	private JComboBox<List<String>> comboBoxLogicalOperator;
@@ -86,6 +88,9 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 		btnNull.setForeground(Color.RED);
 		btnNull.addActionListener(this);
 
+		btnIs.addActionListener(this);
+		btnIsNot.addActionListener(this);
+
 		btnRemoveLastOne = new JButton("Apagar último inserido");
 		btnRemoveLastOne.addActionListener(this);
 
@@ -109,7 +114,9 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 		addExtraComponent(new JLabel("Strings: "), 0, 5, 1, 1);
 		addExtraComponent(textFieldString, 1, 5, 1, 1);
 		addExtraComponent(btnStringAdd, 2, 5, 1, 1);
-		addExtraComponent(btnNull, 0, 6, 3, 1);
+		addExtraComponent(btnNull, 0, 6, 1, 1);
+		addExtraComponent(btnIs, 1, 6, 1, 1);
+		addExtraComponent(btnIsNot, 2, 6, 1, 1);
 		addExtraComponent(btnRemoveLastOne, 0, 7, 1, 1);
 		addExtraComponent(btnRemoveAll, 1, 7, 1, 1);
 		addExtraComponent(new JScrollPane(textPane), 0, 8, 3, 3);
@@ -205,6 +212,16 @@ public class FormFrameSelection extends FormFrameOperation implements ActionList
 		if(btnNull == e.getSource()) {
 			insertString(" ");
 			insertString("null");
+		}
+
+		if(btnIs == e.getSource()){
+			insertString(" ");
+			insertString("is");
+		}
+
+		if(btnIsNot == e.getSource()){
+			insertString(" ");
+			insertString("is not");
 		}
 
 		if (e.getSource() == btnRemoveAll && !textPane.getText().isEmpty())

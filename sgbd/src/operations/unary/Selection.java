@@ -17,6 +17,7 @@ import sgbd.query.unaryop.FilterOperator;
 import util.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,6 +70,8 @@ public class Selection implements IOperator {
 		String expression = arguments.get(0);
 		String[] formattedInput = formatString(expression, parentCell).split(" ");
 
+		evaluator.putVariable("null", "86758593");
+
 		Operator operator = parentCell.getOperator();
 		operator = new FilterOperator(operator, (Tuple t) -> {
 
@@ -88,11 +91,12 @@ public class Selection implements IOperator {
 						default -> "'" + t.getContent(source).getString(columnName) + "'";
 					};
 
-					if(inf.equals("null") || inf.equals("'null'")) inf = null;
+					if(inf.equals("null") || inf.equals("'null'")) inf = "86758593";
 
 					evaluator.putVariable(source+"."+columnName, inf);
 
 				}
+
 			}
 
 			try {
@@ -113,28 +117,30 @@ public class Selection implements IOperator {
 
 	public String formatString(String input, Cell parent) {
 
-		Pattern pattern = Pattern.compile("(?<=\\s|^)([\\w.-]+(?:\\.[\\w.-]+)+)(?=[\\s>=<]|$)");
+		input = input
+				.replaceAll("\\bAND\\b", "&&")
+				.replaceAll("\\bOR\\b", "||")
+				.replaceAll("=", "==")
+				.replaceAll("≠", "!=")
+				.replaceAll("≥", ">=")
+				.replaceAll("≤", "<=")
+				.replaceAll("\\bis not\\b", "!=")
+				.replaceAll("\\bis\\b", "==");
+
+		Pattern pattern = Pattern.compile("(?<=\\s|^|\\(|\\))(null|[\\w.-]+(?:\\.[\\w.-]+)+)(?=[\\s>=<]|$|\\(|\\))");
 		Matcher matcher = pattern.matcher(input);
 
 		StringBuilder result = new StringBuilder();
 		while (matcher.find()) {
 
 			String matchValue = matcher.group();
-			if (parent.getColumnSourceNames().contains(matchValue)) {
+			if (matchValue.equals("null") || parent.getColumnSourceNames().contains(matchValue)) {
 				matcher.appendReplacement(result, "#{" + matchValue + "}");
 			} else {
 				matcher.appendReplacement(result, matchValue);
 			}
 		}
 		matcher.appendTail(result);
-
-		result = new StringBuilder(result.toString()
-				.replaceAll("\\bAND\\b", "&&")
-				.replaceAll("\\bOR\\b", "||")
-				.replaceAll("=", "==")
-				.replaceAll("≠", "!=")
-				.replaceAll("≥", ">=")
-				.replaceAll("≤", "<="));
 
 		return result.toString();
 	}
@@ -143,6 +149,8 @@ public class Selection implements IOperator {
 
 
 	public boolean isColumn(String input, Cell parent) {
+
+		if(input.equals("#{null}")) return false;
 
 		Pattern pattern = Pattern.compile("#\\{([\\w.-]+(?:\\.[\\w.-]+)?)\\}");
 		Matcher matcher = pattern.matcher(input);
