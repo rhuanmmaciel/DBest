@@ -414,7 +414,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 
 		columnsName.addAll(csvData.columnsNameList());
 
-		model = new JTableUtils().new CustomTableModel(csvData.dataArray(), csvData.columnsNameArray());
+		model = new CustomTableModel(csvData.dataArray(), csvData.columnsNameArray());
 		model.insertRow(0, new Object[] {});
 		model.insertRow(0, new Object[] {});
 
@@ -492,7 +492,7 @@ public class FormFrameCsvRecognizer extends JDialog implements ActionListener {
 		jTable.getColumnModel().moveColumn(model.getColumnCount() - 1, 0);
 		jTable.getColumnModel().getColumn(0).setResizable(false);
 		JTableUtils.setColumnBold(jTable, 0);
-		JTableUtils.minColumnWidthByValues(jTable, 0);
+		JTableUtils.preferredColumnWidthByValues(jTable, 0);
 		jTable.setShowHorizontalLines(true);
 		jTable.setGridColor(Color.blue);
 		jTable.setColumnSelectionAllowed(false);

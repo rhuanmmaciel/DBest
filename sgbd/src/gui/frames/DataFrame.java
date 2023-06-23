@@ -18,7 +18,6 @@ import entities.cells.Cell;
 import entities.cells.OperationCell;
 import database.TuplesExtractor;
 import gui.utils.JTableUtils;
-import org.jdesktop.swingx.JXTable;
 import sgbd.query.Operator;
 
 public class DataFrame extends JDialog implements ActionListener {
@@ -130,10 +129,10 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		table.setModel(model);
 
-		JTableUtils.minColumnWidthByValues(table, 0);
+		JTableUtils.preferredColumnWidthByValues(table, 0);
 
 		for(int i = 1; i < table.getColumnCount(); i++)
-			JTableUtils.minColumnWidthByColumnName(table, i);
+			JTableUtils.preferredColumnWidthByColumnName(table, i);
 
 		table.getColumnModel().getColumn(0).setResizable(false);
 		

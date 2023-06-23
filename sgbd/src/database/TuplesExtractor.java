@@ -7,7 +7,7 @@ import sgbd.prototype.BData;
 import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
 import sgbd.query.Tuple;
-import sgbd.util.statitcs.Util;
+import util.Utils;
 
 public class TuplesExtractor {
 
@@ -31,13 +31,11 @@ public class TuplesExtractor {
 				for (Map.Entry<String, BData> data : line.getValue()) {
 
 					String columnName = sourceAndName ? Column.putSource(data.getKey(), line.getKey()) : data.getKey();
-
-					switch (Util.typeOfColumn(line.getValue().getMeta(data.getKey()))) {
-						case "int" -> row.put(columnName, line.getValue().getInt(data.getKey()).toString());
-						case "long" -> row.put(columnName, line.getValue().getLong(data.getKey()).toString());
-						case "double" -> row.put(columnName, line.getValue().getDouble(data.getKey()).toString());
-						case "float" -> row.put(columnName, line.getValue().getFloat(data.getKey()).toString());
-						case "boolean" -> row.put(columnName, line.getValue().getBoolean(data.getKey()).toString());
+					switch (Utils.getType(t, line.getKey(), data.getKey())) {
+						case INTEGER -> row.put(columnName, line.getValue().getInt(data.getKey()).toString());
+						case LONG -> row.put(columnName, line.getValue().getLong(data.getKey()).toString());
+						case DOUBLE -> row.put(columnName, line.getValue().getDouble(data.getKey()).toString());
+						case FLOAT -> row.put(columnName, line.getValue().getFloat(data.getKey()).toString());
 						default -> row.put(columnName, line.getValue().getString(data.getKey()));
 					}
 				}

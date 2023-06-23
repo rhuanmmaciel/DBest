@@ -1,8 +1,5 @@
 package gui.utils;
 
-import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.decorator.*;
-
 import java.awt.*;
 import java.util.Vector;
 
@@ -11,7 +8,7 @@ import javax.swing.table.*;
 
 public class JTableUtils {
 
-	public static void minColumnWidthByColumnName(JTable jTable, int columnIndex) {
+	public static void preferredColumnWidthByColumnName(JTable jTable, int columnIndex) {
 
 		TableColumn column = jTable.getColumnModel().getColumn(columnIndex);
 		TableCellRenderer headerRenderer = jTable.getTableHeader().getDefaultRenderer();
@@ -26,7 +23,7 @@ public class JTableUtils {
 
 	}
 
-	public static void minColumnWidthByValues(JTable jTable, int columnIndex) {
+	public static void preferredColumnWidthByValues(JTable jTable, int columnIndex) {
 		int minWidth = 0;
 		TableColumn column = jTable.getColumnModel().getColumn(columnIndex);
 		TableCellRenderer cellRenderer = jTable.getCellRenderer(0, columnIndex);
@@ -82,9 +79,8 @@ public class JTableUtils {
 
 	}
 
-	@SuppressWarnings("serial")
-	public class CustomTableModel extends DefaultTableModel {
-	    private boolean[] enabledRows;
+	public static class CustomTableModel extends DefaultTableModel {
+	    private final boolean[] enabledRows;
 
 	    public CustomTableModel(Vector<Vector<Object>> vector, Vector<String> vector2) {
 	        super(vector, vector2);

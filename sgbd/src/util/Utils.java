@@ -20,29 +20,17 @@ public class Utils {
 
     public static ColumnDataType getType(Tuple tuple, String sourceName, String columnName){
 
-        switch (Util.typeOfColumn(tuple.getContent(sourceName).getMeta(columnName))){
+        return switch (Util.typeOfColumn(tuple.getContent(sourceName).getMeta(columnName))){
 
-            case "int" -> {
-                return ColumnDataType.INTEGER;
-            }
+            case "int" ->  ColumnDataType.INTEGER;
+            case "long" ->  ColumnDataType.LONG;
+            case "float" -> ColumnDataType.FLOAT;
+            case "double" -> ColumnDataType.DOUBLE;
+            case "boolean" -> ColumnDataType.BOOLEAN;
+            case "string" -> ColumnDataType.STRING;
+            default -> ColumnDataType.NONE;
 
-            case "float" -> {
-                return ColumnDataType.FLOAT;
-            }
-
-            case "boolean" ->{
-                return ColumnDataType.BOOLEAN;
-            }
-
-            case "string" -> {
-                return ColumnDataType.STRING;
-            }
-
-            default -> {
-                return ColumnDataType.NONE;
-            }
-
-        }
+        };
 
     }
 
