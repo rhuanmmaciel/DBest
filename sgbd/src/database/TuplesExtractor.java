@@ -3,7 +3,6 @@ package database;
 import java.util.*;
 
 import entities.Column;
-import enums.ColumnDataType;
 import sgbd.prototype.BData;
 import sgbd.prototype.ComplexRowData;
 import sgbd.query.Operator;
@@ -12,13 +11,12 @@ import sgbd.util.statitcs.Util;
 
 public class TuplesExtractor {
 
-	public static Row getRow(Operator operator, boolean sourceAndName) {
+	public static Map<String, String> getRow(Operator operator, boolean sourceAndName) {
 
 		if(operator == null) return null;
 
 		Set<String> possibleKeys = new LinkedHashSet<>();
 	    Map<String, String> row = new LinkedHashMap<>();
-		Map<String, ColumnDataType> types = new LinkedHashMap<>();
 
         for(Map.Entry<String, List<String>> content: operator.getContentInfo().entrySet())
 			possibleKeys.addAll(content.getValue().stream()
@@ -35,30 +33,12 @@ public class TuplesExtractor {
 					String columnName = sourceAndName ? Column.putSource(data.getKey(), line.getKey()) : data.getKey();
 
 					switch (Util.typeOfColumn(line.getValue().getMeta(data.getKey()))) {
-						case "int" -> {
-							row.put(columnName, line.getValue().getInt(data.getKey()).toString());
-							types.put(columnName, ColumnDataType.INTEGER);
-						}
-						case "long" -> {
-							row.put(columnName, line.getValue().getLong(data.getKey()).toString());
-							types.put(columnName, ColumnDataType.LONG);
-						}
-						case "double" -> {
-							row.put(columnName, line.getValue().getDouble(data.getKey()).toString());
-							types.put(columnName, ColumnDataType.DOUBLE);
-						}
-						case "float" -> {
-							row.put(columnName, line.getValue().getFloat(data.getKey()).toString());
-							types.put(columnName, ColumnDataType.FLOAT);
-						}
-						case "boolean" -> {
-							row.put(columnName, line.getValue().getString(data.getKey()));
-							types.put(columnName, ColumnDataType.BOOLEAN);
-						}
-						default -> {
-							row.put(columnName, line.getValue().getString(data.getKey()));
-							types.put(columnName, ColumnDataType.STRING);
-						}
+						case "int" -> row.put(columnName, line.getValue().getInt(data.getKey()).toString());
+						case "long" -> row.put(columnName, line.getValue().getLong(data.getKey()).toString());
+						case "double" -> row.put(columnName, line.getValue().getDouble(data.getKey()).toString());
+						case "float" -> row.put(columnName, line.getValue().getFloat(data.getKey()).toString());
+						case "boolean" -> row.put(columnName, line.getValue().getBoolean(data.getKey()).toString());
+						default -> row.put(columnName, line.getValue().getString(data.getKey()));
 					}
 				}
 	    }else{
@@ -71,10 +51,8 @@ public class TuplesExtractor {
 			if (!row.containsKey(key))
 				row.put(key, "null");
 
-		return new Row(row, types);
+		return row;
 	
 	}
-
-	public record Row(Map<String, String> row, Map<String, ColumnDataType> types){}
 
 }

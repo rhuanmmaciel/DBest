@@ -22,7 +22,7 @@ public class JTableUtils {
 		int extraWidth = fontMetrics.charWidth('0') * 2;
 		minWidth += extraWidth;
 
-		column.setMinWidth(minWidth);
+		column.setPreferredWidth(minWidth);
 
 	}
 
@@ -42,23 +42,7 @@ public class JTableUtils {
 
 		int extraWidth = fontMetrics.charWidth('0') * 2;
 		minWidth += extraWidth;
-		column.setMinWidth(minWidth);
-	}
-
-
-	public static void setNullInRed(JXTable table) {
-		table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-														   boolean hasFocus, int row, int column) {
-				Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				if ("null".equals(value)) {
-					c.setForeground(Color.RED);
-				} else {
-					c.setForeground(table.getForeground());
-				}
-				return c;
-			}
-		});
+		column.setPreferredWidth(minWidth);
 	}
 
 	public static void setNullInRed(JTable table) {

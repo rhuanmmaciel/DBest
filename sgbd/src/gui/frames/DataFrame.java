@@ -17,30 +17,26 @@ import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import database.TuplesExtractor;
-import enums.ColumnDataType;
 import gui.utils.JTableUtils;
 import org.jdesktop.swingx.JXTable;
-import sgbd.query.Main;
 import sgbd.query.Operator;
 
 public class DataFrame extends JDialog implements ActionListener {
 
 	private final JLabel lblText = new JLabel();
 	private final JLabel lblPages = new JLabel();
-	private final JXTable table = new JXTable();
+	private final JTable table = new JTable();
 	private final JButton btnLeft = new JButton("<");
 	private final JButton btnRight = new JButton(">");
 	private final JButton btnAllLeft = new JButton("<<");
 	private final JButton btnAllRight = new JButton(">>");
 
-	private final Map<String, ColumnDataType> types = new HashMap<>();
 	private final List<Map<String, String>> rows;
 	private final List<String> columnsName;
 	private int currentIndex;
 	private final Operator operator;
 	private Integer lastPage = null;
 	private int currentLastPage = -1;
-	private final Cell cell;
 
 	public DataFrame(Cell cell) {
 
@@ -53,8 +49,6 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		this.operator = cell.getOperator();
 		operator.open();
-
-		this.cell = cell;
 
 		columnsName = cell.getColumnSourceNames();
 
@@ -85,17 +79,15 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		if(page > currentLastPage) {
 
-			TuplesExtractor.Row row = TuplesExtractor.getRow(operator, true);
+			Map<String, String> row = TuplesExtractor.getRow(operator, true);
 
 			while (row != null && currentElement < lastElement) {
 
-				types.putAll(row.types());
-				rows.add(row.row());
+				rows.add(row);
 				row = TuplesExtractor.getRow(operator, true);
 				if (row != null) currentElement++;
 				if (currentElement >= lastElement) {
-					rows.add(row.row());
-					types.putAll(row.types());
+					rows.add(row);
 				}
 
 			}
@@ -191,13 +183,17 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		if(table.getRowCount() == 0) lblPages.setText("0/0");
 
+		resize();
+		setLocationRelativeTo(null);
+		this.setVisible(true);
+	}
+
+	private void resize(){
 		pack();
 		if (getWidth() > MainController.WIDTH) {
 			int height = getHeight();
 			setSize((int) (MainController.WIDTH*0.95), height);
 		}
-		setLocationRelativeTo(null);
-		this.setVisible(true);
 	}
 
 	private void verifyButtons() {

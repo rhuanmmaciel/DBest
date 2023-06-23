@@ -99,9 +99,9 @@ public class ExportFile extends JPanel {
 			operator.open();
 			int i = 0;
 			while(operator.hasNext()) {
-				TuplesExtractor.Row row =  TuplesExtractor.getRow(cell.getOperator(), false);
+				Map<String, String> row =  TuplesExtractor.getRow(cell.getOperator(), false);
 				if(row != null)
-					rows.put(i++, row.row());
+					rows.put(i++, row);
 			}
 
 			operator.close();
