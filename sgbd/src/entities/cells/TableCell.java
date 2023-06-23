@@ -10,7 +10,7 @@ import enums.ColumnDataType;
 import sgbd.prototype.Prototype;
 import sgbd.query.sourceop.TableScan;
 import sgbd.table.Table;
-import sgbd.util.statitcs.Util;
+import sgbd.util.global.Util;
 
 public final class TableCell extends Cell{
 
@@ -77,11 +77,11 @@ public final class TableCell extends Cell{
 	
 	public void setColumns() {
 		
-		List<sgbd.prototype.Column> prototypeColumns = table.getHeader().getPrototype().getColumns();
+		List<sgbd.prototype.column.Column> prototypeColumns = table.getHeader().getPrototype().getColumns();
 
 		List<Column> columns = new ArrayList<>();
 		
-		for(sgbd.prototype.Column pColumn : prototypeColumns) {
+		for(sgbd.prototype.column.Column pColumn : prototypeColumns) {
 
 			ColumnDataType type = switch (Util.typeOfColumn(pColumn)) {
 				case "int" -> ColumnDataType.INTEGER;

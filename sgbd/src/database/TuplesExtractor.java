@@ -5,8 +5,8 @@ import java.util.*;
 import entities.Column;
 import sgbd.prototype.BData;
 import sgbd.prototype.ComplexRowData;
+import sgbd.prototype.query.Tuple;
 import sgbd.query.Operator;
-import sgbd.query.Tuple;
 import util.Utils;
 
 public class TuplesExtractor {

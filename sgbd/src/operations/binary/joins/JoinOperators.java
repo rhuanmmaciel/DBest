@@ -10,8 +10,8 @@ import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
 import sgbd.prototype.ComplexRowData;
+import sgbd.prototype.query.Tuple;
 import sgbd.query.Operator;
-import sgbd.query.Tuple;
 import util.Utils;
 
 import java.util.ArrayList;

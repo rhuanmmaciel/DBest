@@ -1,11 +1,7 @@
 package operations.binary.joins;
 
 import sgbd.query.Operator;
-import sgbd.query.Tuple;
 import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
-import sgbd.query.binaryop.joins.NestedLoopJoin;
-
-import java.util.Objects;
 
 public class Join extends JoinOperators {
 

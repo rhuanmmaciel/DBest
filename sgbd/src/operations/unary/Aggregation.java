@@ -136,7 +136,7 @@ public class Aggregation implements IOperator {
             aggregations.add(new CountAgregation(sourceName, columnName));
 
         Prototype p = new Prototype();
-        p.addColumn("madeUp", 4, sgbd.prototype.Column.SIGNED_INTEGER_COLUMN | sgbd.prototype.Column.PRIMARY_KEY);
+        p.addColumn("madeUp", 4, sgbd.prototype.column.Column.SIGNED_INTEGER_COLUMN | sgbd.prototype.column.Column.PRIMARY_KEY);
 
         Table table = MemoryTable.openTable(new Header(p, "Aux"));
         table.open();

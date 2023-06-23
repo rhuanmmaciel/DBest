@@ -10,7 +10,6 @@ import operations.Operation;
 import operations.OperationErrorVerifier;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.SortOperator;
-import sgbd.util.statitcs.Util;
 import util.Utils;
 
 import java.util.*;

@@ -7,11 +7,10 @@ import java.util.Map;
 import com.mxgraph.model.mxCell;
 
 import entities.cells.TableCell;
-import enums.ColumnDataType;
 import gui.frames.main.MainFrame;
-import sgbd.prototype.Column;
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
+import sgbd.prototype.column.Column;
 import sgbd.table.SimpleTable;
 import sgbd.table.Table;
 import sgbd.table.components.Header;
@@ -66,7 +65,7 @@ public class TableCreator {
 			switch(column.getType()) {
 			case INTEGER -> {
 				size = 4;
-				flags =Column.SIGNED_INTEGER_COLUMN;
+				flags = Column.SIGNED_INTEGER_COLUMN;
 			}case LONG ->{
 				size = 8;
 				flags = Column.SIGNED_INTEGER_COLUMN;

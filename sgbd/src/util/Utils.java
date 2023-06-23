@@ -1,8 +1,8 @@
 package util;
 
 import enums.ColumnDataType;
-import sgbd.query.Tuple;
-import sgbd.util.statitcs.Util;
+import sgbd.prototype.query.Tuple;
+import sgbd.util.global.Util;
 
 import java.util.List;
 import java.util.Objects;

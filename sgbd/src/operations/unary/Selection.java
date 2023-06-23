@@ -11,13 +11,12 @@ import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
 import operations.OperationErrorVerifier.ErrorMessage;
+import sgbd.prototype.query.Tuple;
 import sgbd.query.Operator;
-import sgbd.query.Tuple;
 import sgbd.query.unaryop.FilterOperator;
 import util.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
