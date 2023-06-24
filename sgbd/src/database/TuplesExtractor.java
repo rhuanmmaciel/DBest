@@ -11,6 +11,28 @@ import util.Utils;
 
 public class TuplesExtractor {
 
+	public static List<Map<String, String>> getAllRows(Operator operator, boolean sourceAndName){
+
+		operator.open();
+
+		List<Map<String, String>> rows = new ArrayList<>();
+
+		Map<String, String> row = new HashMap<>();
+		row = getRow(operator, sourceAndName);
+
+		while(row != null){
+
+			rows.add(row);
+			row = getRow(operator, sourceAndName);
+
+		}
+
+		operator.close();
+
+		return rows;
+
+	}
+
 	public static Map<String, String> getRow(Operator operator, boolean sourceAndName) {
 
 		if(operator == null) return null;
@@ -31,12 +53,13 @@ public class TuplesExtractor {
 				for (Map.Entry<String, BData> data : line.getValue()) {
 
 					String columnName = sourceAndName ? Column.putSource(data.getKey(), line.getKey()) : data.getKey();
+
 					switch (Utils.getType(t, line.getKey(), data.getKey())) {
-						case INTEGER -> row.put(columnName, line.getValue().getInt(data.getKey()).toString());
-						case LONG -> row.put(columnName, line.getValue().getLong(data.getKey()).toString());
-						case DOUBLE -> row.put(columnName, line.getValue().getDouble(data.getKey()).toString());
-						case FLOAT -> row.put(columnName, line.getValue().getFloat(data.getKey()).toString());
-						default -> row.put(columnName, line.getValue().getString(data.getKey()));
+						case INTEGER -> row.put(columnName, Objects.toString(line.getValue().getInt(data.getKey()), "null"));
+						case LONG -> row.put(columnName, Objects.toString(line.getValue().getLong(data.getKey()), "null"));
+						case DOUBLE -> row.put(columnName, Objects.toString(line.getValue().getDouble(data.getKey()), "null"));
+						case FLOAT -> row.put(columnName, Objects.toString(line.getValue().getFloat(data.getKey()), "null"));
+						default -> row.put(columnName, Objects.toString(line.getValue().getString(data.getKey()), "null"));
 					}
 				}
 	    }else{

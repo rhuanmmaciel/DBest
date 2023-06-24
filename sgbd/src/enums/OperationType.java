@@ -13,87 +13,86 @@ import operations.binary.joins.RightJoin;
 import operations.binary.set.Union;
 import operations.unary.*;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import static enums.OperationErrorType.*;
+import static enums.OperationFlags.*;
 
 public enum OperationType {
 
-	SELECTION("Seleção", "σ", "selection", "selection[args](source)", OperationArity.UNARY, FormFrameSelection.class, Selection.class),
-	PROJECTION("Projeção", "π", "projection", "projection[args](source)",OperationArity.UNARY, FormFrameProjection.class, Projection.class),
+	SELECTION("Seleção", "σ", "selection", "selection[args](source)", OperationArity.UNARY, FormFrameSelection.class, Selection.class,
+			   NO_ONE_ARGUMENT),
+	PROJECTION("Projeção", "π", "projection", "projection[args](source)",OperationArity.UNARY, FormFrameProjection.class, Projection.class,
+			   PARENT_WITHOUT_COLUMN),
 	RENAME("Renomeação", "ρ", "rename", "rename[args](source)", OperationArity.UNARY, FormFrameRename.class, Rename.class),
-	GROUP("Agrupamento", "G", "group", "group[args](relation)",OperationArity.UNARY, FormFrameGroup.class, Group.class),
-	AGGREGATION("Agregação", "G", "aggregation", "aggregation[args](relation)",OperationArity.UNARY, FormFrameAggregation.class, Aggregation.class),
-	SORT("Ordenação", "↕", "sort", "sort[args](relation)", OperationArity.UNARY, FormFrameSort.class, Sort.class),
+	GROUP("Agrupamento", "G", "group", "group[args](relation)",OperationArity.UNARY, FormFrameGroup.class, Group.class,
+			   NO_ONE_ARGUMENT, PARENT_WITHOUT_COLUMN, NO_PREFIX),
+	AGGREGATION("Agregação", "G", "aggregation", "aggregation[args](relation)",OperationArity.UNARY,
+			FormFrameAggregation.class, Aggregation.class,
+			    NO_ONE_ARGUMENT, PARENT_WITHOUT_COLUMN, NO_PREFIX),
+	SORT("Ordenação", "↕", "sort", "sort[args](relation)", OperationArity.UNARY, FormFrameSort.class, Sort.class,
+			    PARENT_WITHOUT_COLUMN),
 
-	JOIN("Junção", "|X|", "join", "join[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, Join.class),
-	LEFT_JOIN("Junção à esquerda", "⟕", "leftJoin", "leftJoin[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, LeftJoin.class),
-	RIGHT_JOIN("Junção à direita", "⟖", "rightJoin", "rightJoin[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, RightJoin.class),
-	CARTESIAN_PRODUCT("Produto Cartesiano", "✕", "cartesianProduct", "cartesianProduct(source1,source2)", OperationArity.BINARY, null, CartesianProduct.class),
+	JOIN("Junção", "|X|", "join", "join[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, Join.class,
+			 NO_TWO_ARGUMENTS,  PARENT_WITHOUT_COLUMN),
+	LEFT_JOIN("Junção à esquerda", "⟕", "leftJoin", "leftJoin[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, LeftJoin.class,
+			 NO_TWO_ARGUMENTS,  PARENT_WITHOUT_COLUMN),
+	RIGHT_JOIN("Junção à direita", "⟖", "rightJoin", "rightJoin[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, RightJoin.class,
+			 NO_TWO_ARGUMENTS, PARENT_WITHOUT_COLUMN),
+	CARTESIAN_PRODUCT("Produto Cartesiano", "✕", "cartesianProduct", "cartesianProduct(source1,source2)", OperationArity.BINARY, null, CartesianProduct.class,
+			SAME_SOURCE),
 	UNION("União", "∪", "union", "union(source1,source2)", OperationArity.BINARY, null, Union.class),
 	INTERSECTION("Interseção", "∩", "intersection", "intersection(source1,source2)", OperationArity.BINARY, null, Intersection.class),
 	DIFFERENCE("Diferença", "-", "difference", "difference(source1,source2)", OperationArity.BINARY, null, null);
 
-	private final String displayName;
-	private final String symbol;
-	private final String operationName;
-	private final String dslOperation;
-	private final OperationArity arity;
-	private final Class<? extends IFormFrameOperation> form;
-	private final Class<? extends IOperator> operator;
+	public final String DISPLAY_NAME;
+	public final String SYMBOL;
+	public final String NAME;
+	public final String DSL_SYNTAX;
+	public final OperationArity ARITY;
+	public final Class<? extends IFormFrameOperation> FORM;
+	public final Class<? extends IOperator> OPERATOR_CLASS;
+	public final Set<OperationErrorType> POSSIBLE_ERRORS;
 
-	OperationType(String displayName, String symbol, String operationName, String dslOperation, OperationArity arity,
-				  Class<? extends IFormFrameOperation> form, Class<? extends IOperator> operator) {
-		this.displayName = displayName;
-		this.symbol = symbol;
-		this.operationName = operationName;
-		this.dslOperation = dslOperation;
-		this.arity = arity;
-		this.form = form;
-		this.operator = operator;
+
+	OperationType(String DISPLAY_NAME, String SYMBOL, String NAME, String DSL_SYNTAX, OperationArity ARITY,
+				  Class<? extends IFormFrameOperation> FORM, Class<? extends IOperator> OPERATOR_CLASS,
+				  OperationErrorType... errors) {
+		this.DISPLAY_NAME = DISPLAY_NAME;
+		this.SYMBOL = SYMBOL;
+		this.NAME = NAME;
+		this.DSL_SYNTAX = DSL_SYNTAX;
+		this.ARITY = ARITY;
+		this.FORM = FORM;
+		this.OPERATOR_CLASS = OPERATOR_CLASS;
+
+		LinkedHashSet<OperationErrorType> aux = new LinkedHashSet<>();
+
+		aux.add(NO_PARENT);
+		aux.add(PARENT_ERROR);
+
+		aux.add(ARITY == OperationArity.UNARY ? NO_ONE_PARENT : NO_TWO_PARENTS);
+//		if((FLAGS & NO_ARGUMENT_NEEDED) == 0) aux.addAll(List.of(NULL_ARGUMENT, EMPTY_ARGUMENT));
+		aux.addAll(List.of(errors));
+
+		this.POSSIBLE_ERRORS = Collections.unmodifiableSet(aux);
+
 	}
 
-	public final static List<OperationType> OPERATIONS_WITHOUT_FORM = Arrays.stream(values()).sequential().filter(x -> x.getForm() == null).toList();
+	public final static List<OperationType> OPERATIONS_WITHOUT_FORM = Arrays.stream(values()).sequential().filter(x -> x.FORM == null).toList();
+
+	public String getDisplayNameAndSymbol(){
+		return SYMBOL+" "+DISPLAY_NAME;
+	}
 
 	public static OperationType fromString(String operationType) {
 
 		for (OperationType operation : OperationType.values())
-			if (operation.getOperationName().equalsIgnoreCase(operationType))
+			if (operation.NAME.equalsIgnoreCase(operationType))
 				return operation;
 
 		throw new IllegalArgumentException("Invalid operation type: " + operationType);
 
-	}
-
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public String getSymbol() {
-		return symbol;
-	}
-
-	public String getDisplayNameAndSymbol() {
-		return getSymbol() + " " + getDisplayName();
-	}
-
-	public String getOperationName() {
-		return operationName;
-	}
-
-	public String getDslOperation() {
-		return dslOperation;
-	}
-
-	public OperationArity getArity() {
-		return arity;
-	}
-
-	public Class<? extends IFormFrameOperation> getForm() {
-		return form;
-	}
-
-	public Class<? extends IOperator> getOperator() {
-		return operator;
 	}
 
 	public CreateOperationAction getAction() {

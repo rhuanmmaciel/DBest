@@ -4,6 +4,7 @@ import com.mxgraph.model.mxCell;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import enums.OperationErrorType;
 import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
@@ -17,7 +18,6 @@ import sgbd.query.sourceop.TableScan;
 import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.query.unaryop.GroupOperator;
 import sgbd.table.MemoryTable;
-import sgbd.table.SimpleTable;
 import sgbd.table.Table;
 import sgbd.table.components.Header;
 import util.Utils;
@@ -73,34 +73,34 @@ public class Aggregation implements IOperator {
 
         OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 
-        OperationErrorVerifier.ErrorMessage error = null;
+        OperationErrorType error = null;
 
         try {
 
-            error = OperationErrorVerifier.ErrorMessage.NO_PARENT;
+            error = OperationErrorType.NO_PARENT;
             OperationErrorVerifier.hasParent(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.NO_ONE_PARENT;
+            error = OperationErrorType.NO_ONE_PARENT;
             OperationErrorVerifier.oneParent(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.PARENT_ERROR;
+            error = OperationErrorType.PARENT_ERROR;
             OperationErrorVerifier.noParentError(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.NULL_ARGUMENT;
+            error = OperationErrorType.NULL_ARGUMENT;
             OperationErrorVerifier.noNullArgument(arguments);
 
-            error = OperationErrorVerifier.ErrorMessage.EMPTY_ARGUMENT;
+            error = OperationErrorType.EMPTY_ARGUMENT;
             OperationErrorVerifier.noEmptyArgument(arguments);
 
-            error = OperationErrorVerifier.ErrorMessage.NO_ONE_ARGUMENT;
+            error = OperationErrorType.NO_ONE_ARGUMENT;
             OperationErrorVerifier.oneArgument(arguments);
 
-            error = OperationErrorVerifier.ErrorMessage.PARENT_WITHOUT_COLUMN;
+            error = OperationErrorType.PARENT_WITHOUT_COLUMN;
             OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(),
                     arguments.stream().map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, ""))
                             .toList(), List.of("*"));
 
-            error = OperationErrorVerifier.ErrorMessage.NO_PREFIX;
+            error = OperationErrorType.NO_PREFIX;
             OperationErrorVerifier.everyoneHavePrefix(arguments, PREFIXES);
 
             error = null;

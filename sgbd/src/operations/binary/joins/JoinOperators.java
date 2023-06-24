@@ -5,6 +5,7 @@ import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import enums.ColumnDataType;
+import enums.OperationErrorType;
 import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
@@ -24,30 +25,30 @@ public abstract class JoinOperators implements IOperator {
 
         OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 
-        OperationErrorVerifier.ErrorMessage error = null;
+        OperationErrorType error = null;
 
         try {
 
-            error = OperationErrorVerifier.ErrorMessage.NULL_ARGUMENT;
+            error = OperationErrorType.NULL_ARGUMENT;
             OperationErrorVerifier.noNullArgument(arguments);
 
-            error = OperationErrorVerifier.ErrorMessage.NO_TWO_ARGUMENTS;
+            error = OperationErrorType.NO_TWO_ARGUMENTS;
             OperationErrorVerifier.twoArguments(arguments);
 
-            error = OperationErrorVerifier.ErrorMessage.NO_PARENT;
+            error = OperationErrorType.NO_PARENT;
             OperationErrorVerifier.hasParent(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.NO_TWO_PARENTS;
+            error = OperationErrorType.NO_TWO_PARENTS;
             OperationErrorVerifier.twoParents(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.PARENT_ERROR;
+            error = OperationErrorType.PARENT_ERROR;
             OperationErrorVerifier.noParentError(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.PARENT_WITHOUT_COLUMN;
+            error = OperationErrorType.PARENT_WITHOUT_COLUMN;
             OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(), List.of(arguments.get(0)));
             OperationErrorVerifier.parentContainsColumns(cell.getParents().get(1).getColumnSourceNames(), List.of(arguments.get(1)));
 
-            error = OperationErrorVerifier.ErrorMessage.SAME_SOURCE;
+            error = OperationErrorType.SAME_SOURCE;
             OperationErrorVerifier.haveDifferentSources(cell.getParents().get(0), cell.getParents().get(1));
 
             error = null;
@@ -79,7 +80,7 @@ public abstract class JoinOperators implements IOperator {
 
         Operator readyoperator = createJoinOperator(op1, op2, source1, source2, item1, item2);
 
-        Operation.operationSetter(cell, cell.getType().getSymbol()+"   " + Column.putSource(item1, source1) + " = " + Column.putSource(item2, source2), argumentsFixed, readyoperator);
+        Operation.operationSetter(cell, cell.getType().SYMBOL+"   " + Column.putSource(item1, source1) + " = " + Column.putSource(item2, source2), argumentsFixed, readyoperator);
 
     }
 

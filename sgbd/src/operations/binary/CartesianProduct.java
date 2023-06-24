@@ -3,15 +3,12 @@ package operations.binary;
 import com.mxgraph.model.mxCell;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import enums.OperationErrorType;
 import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
-import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
-import sgbd.query.binaryop.joins.FKNestedLoopJoin;
-import sgbd.query.binaryop.joins.MergeJoin;
 import sgbd.query.binaryop.joins.NestedLoopJoin;
 
 import java.util.List;
@@ -26,20 +23,20 @@ public class CartesianProduct implements IOperator {
 
 		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 
-		ErrorMessage error = null;
+		OperationErrorType error = null;
 
 		try {
 
-			error = ErrorMessage.NO_PARENT;
+			error = OperationErrorType.NO_PARENT;
 			OperationErrorVerifier.hasParent(cell);
 			
-			error = ErrorMessage.NO_TWO_PARENTS;
+			error = OperationErrorType.NO_TWO_PARENTS;
 			OperationErrorVerifier.twoParents(cell);
 			
-			error = ErrorMessage.PARENT_ERROR;
+			error = OperationErrorType.PARENT_ERROR;
 			OperationErrorVerifier.noParentError(cell);
 
-			error = OperationErrorVerifier.ErrorMessage.SAME_SOURCE;
+			error = OperationErrorType.SAME_SOURCE;
 			OperationErrorVerifier.haveDifferentSources(cell.getParents().get(0), cell.getParents().get(1));
 
 			error = null;

@@ -10,8 +10,6 @@ import operations.IOperator;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -35,18 +33,18 @@ public abstract class FormFrameOperation extends FormBase {
 
     public FormFrameOperation(mxCell jCell) {
 
-        super((Window) null);
+        super(null);
         setModal(true);
 
         OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 
-        this.operator = cell.getType().getOperator();
+        this.operator = cell.getType().OPERATOR_CLASS;
         this.jCell = jCell;
         this.parent1 = cell.getParents().get(0);
 
         if(!cell.getArguments().isEmpty()) previousArguments.addAll(cell.getArguments());
 
-        setTitle(cell.getType().getDisplayName());
+        setTitle(cell.getType().DISPLAY_NAME);
 
         initializeGUI();
 

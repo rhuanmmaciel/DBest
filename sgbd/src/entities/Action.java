@@ -61,7 +61,7 @@ public class Action {
 
 		public CreateOperationAction(OperationType type) {
 
-			super(ActionType.CREATE_OPERATOR_CELL, type.getDisplayNameAndSymbol(), type.getDisplayName());
+			super(ActionType.CREATE_OPERATOR_CELL, type.getDisplayNameAndSymbol(), type.DISPLAY_NAME);
 			this.type = type;
 			parent = null;
 

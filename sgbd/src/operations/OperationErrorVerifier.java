@@ -3,6 +3,7 @@ package operations;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import enums.OperationErrorType;
 import exceptions.tree.ArgumentsException;
 import exceptions.tree.ParentsAmountException;
 import exceptions.tree.ParentsErrorException;
@@ -14,10 +15,36 @@ import java.util.List;
 
 public class OperationErrorVerifier {
 
-	public enum ErrorMessage {
-		NO_PARENT, NO_ONE_PARENT, NULL_ARGUMENT, NO_ONE_ARGUMENT, PARENT_ERROR, PARENT_WITHOUT_COLUMN,
-		NO_TWO_PARENTS, NO_TWO_ARGUMENTS, EMPTY_ARGUMENT, NO_PREFIX, SAME_SOURCE
-	}
+//	public static void verifyError(List<OperationErrorType> possibleErrors, OperationCell cell, List<String> arguments) throws ParentsAmountException, ParentsErrorException, ArgumentsException {
+//
+//		List<OperationErrorType> loopableList = List.copyOf(possibleErrors);
+//		for(OperationErrorType currentError : loopableList) {
+//
+//			switch (currentError){
+//
+//				case NO_PARENT -> hasParent(cell);
+//				case NO_ONE_PARENT -> oneParent(cell);
+//				case NULL_ARGUMENT -> noNullArgument(arguments);
+//				case NO_ONE_ARGUMENT -> oneArgument(arguments);
+//				case PARENT_ERROR -> noParentError(cell);
+//				case PARENT_WITHOUT_COLUMN -> {
+//				}
+//				case NO_TWO_PARENTS -> {
+//				}
+//				case NO_TWO_ARGUMENTS -> {
+//				}
+//				case EMPTY_ARGUMENT -> noEmptyArgument(arguments);
+//				case NO_PREFIX -> {
+//				}
+//				case SAME_SOURCE -> {
+//				}
+//			}
+//
+//			possibleErrors.remove(currentError);
+//
+//		}
+//
+//	}
 
 	public static void everyoneHavePrefix(List<String> arguments, List<String> prefix) throws ArgumentsException{
 

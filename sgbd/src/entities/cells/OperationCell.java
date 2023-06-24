@@ -7,11 +7,11 @@ import controller.MainController;
 import entities.Column;
 import enums.ColumnDataType;
 import enums.OperationArity;
+import enums.OperationErrorType;
 import enums.OperationType;
 import gui.frames.main.MainFrame;
 import gui.frames.forms.operations.IFormFrameOperation;
 import operations.IOperator;
-import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.query.Operator;
 
 import java.lang.reflect.Constructor;
@@ -34,14 +34,14 @@ public final class OperationCell extends Cell {
 
 	public OperationCell(mxCell jCell, OperationType type) {
 
-		super(type.getDisplayNameAndSymbol(), type.getDisplayName(), jCell, 80, 30);
+		super(type.getDisplayNameAndSymbol(), type.DISPLAY_NAME, jCell, 80, 30);
 		initializeInfos(type);
 
 	}
 
 	public OperationCell(mxCell jCell, OperationType type, List<Cell> parents, List<String> arguments) {
 
-		super(type.getDisplayNameAndSymbol(), type.getDisplayName(), jCell, 80, 30);
+		super(type.getDisplayNameAndSymbol(), type.DISPLAY_NAME, jCell, 80, 30);
 		initializeInfos(type);
 
 		this.arguments = arguments;
@@ -57,8 +57,8 @@ public final class OperationCell extends Cell {
 				MainFrame.getGraph().insertEdge(parent.getJGraphCell(), null, "", parent.getJGraphCell(), jCell);
 
 			});
-			this.form = type.getForm();
-			this.operatorClass = type.getOperator();
+			this.form = type.FORM;
+			this.operatorClass = type.OPERATOR_CLASS;
 			updateOperation();
 
 		}
@@ -67,9 +67,9 @@ public final class OperationCell extends Cell {
 	private void initializeInfos(OperationType type) {
 
 		this.type = type;
-		arity = type.getArity();
-		this.form = type.getForm();
-		this.operatorClass = type.getOperator();
+		arity = type.ARITY;
+		this.form = type.FORM;
+		this.operatorClass = type.OPERATOR_CLASS;
 
 	}
 
@@ -166,7 +166,7 @@ public final class OperationCell extends Cell {
 		return getOperator() != null;
 	}
 
-	public void setError(ErrorMessage message) {
+	public void setError(OperationErrorType message) {
 
 		String style = getJGraphCell().getStyle();
 		style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKECOLOR, "red");

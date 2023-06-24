@@ -144,7 +144,7 @@ public class ClickController {
 
 		try {
 
-			Constructor<? extends IFormFrameOperation> constructor = type.getForm().getDeclaredConstructor(mxCell.class);
+			Constructor<? extends IFormFrameOperation> constructor = type.FORM.getDeclaredConstructor(mxCell.class);
 			constructor.newInstance(jCellRef.get());
 
 		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
@@ -160,7 +160,7 @@ public class ClickController {
 
 		try {
 
-			Constructor<? extends IOperator> constructor = type.getOperator().getDeclaredConstructor();
+			Constructor<? extends IOperator> constructor = type.OPERATOR_CLASS.getDeclaredConstructor();
 			constructor.newInstance().executeOperation(jCellRef.get(), List.of());
 
 		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException

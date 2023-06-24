@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFileChooser;
@@ -24,6 +25,7 @@ import com.mxgraph.swing.mxGraphComponent;
 import controller.MainController;
 import database.TableCreator;
 import dsl.utils.DslUtils;
+import entities.Column;
 import entities.Tree;
 import entities.cells.Cell;
 import entities.cells.TableCell;
@@ -48,8 +50,8 @@ public class ExportFile extends JPanel {
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setCurrentDirectory(MainController.getLastDirectory());
 
-//		if (type == FileType.CSV)
-//			exportToCsv(cell, cell.get(), fileChooser);
+		if (type == FileType.CSV)
+			exportToCsv(cell, fileChooser);
 
 		if (type == FileType.DAT)
 			exportToDat(cell, fileChooser);
@@ -135,7 +137,7 @@ public class ExportFile extends JPanel {
 
 	}
 
-	private void exportToCsv(Map<Integer, Map<String, String>> data, Cell cell, JFileChooser fileChooser) {
+	private void exportToCsv(Cell cell, JFileChooser fileChooser) {
 		
 		try {
 
@@ -159,28 +161,18 @@ public class ExportFile extends JPanel {
 					int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
 							"Confirmar substituição", JOptionPane.YES_NO_OPTION);
 					if (result == JOptionPane.NO_OPTION) {
-						exportToCsv(data, cell, fileChooser);
+						exportToCsv(cell, fileChooser);
 						return;
 					}
 				}
 
 				FileWriter csv = new FileWriter(fileToSave);
 
-				for (String columnName : data.get(0).keySet()) {
+				for (Map<String, String> row : TuplesExtractor.getAllRows(cell.getOperator(), true)) {
 
-					csv.write(columnName.substring(columnName.indexOf("_") + 1) + ",");
-
-				}
-
-				csv.write("\n");
-
-				for (Map<String, String> row : data.values()) {
-
-					for (String inf : row.values()) {
-
+					for (String inf : row.values())
 						csv.write(inf + ",");
 
-					}
 					csv.write("\n");
 
 				}

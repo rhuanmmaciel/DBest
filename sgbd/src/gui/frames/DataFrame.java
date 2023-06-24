@@ -42,7 +42,7 @@ public class DataFrame extends JDialog implements ActionListener {
 		super((Window) null, "DataFrame");
 		setModal(true);
 		
-		if(cell instanceof OperationCell operationCell) lblText.setText(operationCell.getType().getDisplayName()+":");
+		if(cell instanceof OperationCell operationCell) lblText.setText(operationCell.getType().DISPLAY_NAME+":");
 		else lblText.setText(cell.getName()+":");
 
 
@@ -148,7 +148,7 @@ public class DataFrame extends JDialog implements ActionListener {
 	private void initializeGUI() {
 
 		JPanel contentPane = new JPanel(new BorderLayout());
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
 
 		setContentPane(contentPane);
 

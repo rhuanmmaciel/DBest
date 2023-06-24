@@ -1,5 +1,6 @@
 package gui.frames.forms.importexport;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.atomic.AtomicReference;
@@ -31,8 +32,15 @@ public class FormFrameExportAs extends FormFrameImportExportAs implements Action
 
 	private void initGUI(){
 
-		contentPane.add(btnFyi);
+		JPanel pane = new JPanel(new FlowLayout());
+
+		pane.add(btnFyi);
+		pane.add(btnCsv);
+
+		contentPane.add(pane, BorderLayout.CENTER);
+
 		btnFyi.addActionListener(this);
+
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);

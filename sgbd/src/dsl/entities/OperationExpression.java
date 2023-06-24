@@ -33,7 +33,7 @@ public abstract sealed class OperationExpression extends Expression<OperationCel
 			return;
 		}
 
-		arity = type.getArity();
+		arity = type.ARITY;
 		
 	}
 

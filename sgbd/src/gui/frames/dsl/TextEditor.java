@@ -4,10 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -42,32 +40,27 @@ import gui.utils.JTextLineNumber;
 public class TextEditor extends JFrame implements ActionListener {
 
 	private final JTextPane textPane = new JTextPane();
-	private JScrollPane scrollPane = new JScrollPane(textPane);
-	
+
 	private static String lastPath = null;
 
-	private Box bottomPane = Box.createVerticalBox();
-	private JTextPane console = new JTextPane();
+	private final JTextPane console = new JTextPane();
 
-	private final JToolBar toolBar = new JToolBar();
 	private final JButton btnBack = new JButton("<");
 	private final JButton btnImport = new JButton("Importar");
-	private final JMenu mnOperations = new JMenu("Operações");
-	private final JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.getDisplayName());
-	private final JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.getDisplayName());
-	private final JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.getDisplayName());
-	private final JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.getDisplayName());
-	private final JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.getDisplayName());
-	private final JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getDisplayName());
-	private final JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getDisplayName());
-	private final JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.getDisplayName());
-	private final JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.getDisplayName());
+	private final JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.DISPLAY_NAME);
+	private final JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.DISPLAY_NAME);
+	private final JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.DISPLAY_NAME);
+	private final JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.DISPLAY_NAME);
+	private final JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.DISPLAY_NAME);
+	private final JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.DISPLAY_NAME);
+	private final JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.DISPLAY_NAME);
+	private final JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.DISPLAY_NAME);
+	private final JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.DISPLAY_NAME);
 
-	private JButton btnRun = new JButton("Executar");
-	private JButton btnRunSelection = new JButton("Executar texto selecionado");
+	private final JButton btnRun = new JButton("Executar");
+	private final JButton btnRunSelection = new JButton("Executar texto selecionado");
 
-	private MainController main;
-	private final JMenuBar menuBar = new JMenuBar();
+	private final MainController main;
 
 	public TextEditor(MainController main) {
 		
@@ -75,16 +68,19 @@ public class TextEditor extends JFrame implements ActionListener {
 		
 		this.main = main;
 
+		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
 		console.setEditable(false);
 
         JTextLineNumber lineNumber = new JTextLineNumber(textPane);
-        scrollPane.setRowHeaderView(lineNumber);
+		JScrollPane scrollPane = new JScrollPane(textPane);
+		scrollPane.setRowHeaderView(lineNumber);
 
-        scrollPane.getVerticalScrollBar().addAdjustmentListener((AdjustmentListener) e -> lineNumber.repaint());
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(e -> lineNumber.repaint());
 
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		getContentPane().add(toolBar, BorderLayout.NORTH);
+		Box bottomPane = Box.createVerticalBox();
 		getContentPane().add(bottomPane, BorderLayout.SOUTH);
 
 		bottomPane.setPreferredSize(new Dimension(bottomPane.getWidth(), main.getContentPane().getHeight() / 4));
@@ -109,7 +105,9 @@ public class TextEditor extends JFrame implements ActionListener {
 		toolBar.add(btnBack);
 		toolBar.add(btnImport);
 
+		JMenuBar menuBar = new JMenuBar();
 		toolBar.add(menuBar);
+		JMenu mnOperations = new JMenu("Operações");
 		menuBar.add(mnOperations);
 
 		mnOperations.add(menuItemSelection);
@@ -245,10 +243,6 @@ public class TextEditor extends JFrame implements ActionListener {
 	                stringBuilder.append(line).append("\n");
 	            
 	            
-	        } catch (FileNotFoundException e) {
-			
-	        	e.printStackTrace();
-			
 	        } catch (IOException e) {
 
 				e.printStackTrace();

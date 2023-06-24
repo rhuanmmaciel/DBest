@@ -1,9 +1,9 @@
 package operations.unary;
 
 import com.mxgraph.model.mxCell;
-import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import enums.OperationErrorType;
 import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
@@ -24,23 +24,23 @@ public class Rename implements IOperator {
 
         OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 
-        OperationErrorVerifier.ErrorMessage error = null;
+        OperationErrorType error = null;
 
         try {
 
-            error = OperationErrorVerifier.ErrorMessage.NO_PARENT;
+            error = OperationErrorType.NO_PARENT;
             OperationErrorVerifier.hasParent(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.NO_ONE_PARENT;
+            error = OperationErrorType.NO_ONE_PARENT;
             OperationErrorVerifier.oneParent(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.PARENT_ERROR;
+            error = OperationErrorType.PARENT_ERROR;
             OperationErrorVerifier.noParentError(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.NULL_ARGUMENT;
+            error = OperationErrorType.NULL_ARGUMENT;
             OperationErrorVerifier.noNullArgument(arguments);
 
-            error = OperationErrorVerifier.ErrorMessage.EMPTY_ARGUMENT;
+            error = OperationErrorType.EMPTY_ARGUMENT;
             OperationErrorVerifier.noEmptyArgument(arguments);
 
             error = null;
@@ -60,7 +60,7 @@ public class Rename implements IOperator {
         for(String name : arguments)
             operator = new RenameSourceOperator(operator, name.substring(0, name.indexOf(":")), name.substring(name.indexOf(":") + 1));
 
-        Operation.operationSetter(cell, cell.getType().getSymbol()+" " + arguments, arguments, operator);
+        Operation.operationSetter(cell, cell.getType().SYMBOL+" " + arguments, arguments, operator);
 
     }
 

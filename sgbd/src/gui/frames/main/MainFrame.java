@@ -60,19 +60,19 @@ public abstract class MainFrame extends JFrame
 	protected JMenuItem menuItemRemove = new JMenuItem("Remover");
 
 	protected JMenu menuItemOperations = new JMenu("Operações");
-	protected JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.getDisplayName());
-	protected JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.getDisplayName());
-	protected JMenuItem menuItemSort = new JMenuItem(OperationType.SORT.getDisplayName());
-	protected JMenuItem menuItemAggregation = new JMenuItem(OperationType.AGGREGATION.getDisplayName());
-	protected JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.getDisplayName());
-	protected JMenuItem menuItemRename = new JMenuItem(OperationType.RENAME.getDisplayName());
+	protected JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.DISPLAY_NAME);
+	protected JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.DISPLAY_NAME);
+	protected JMenuItem menuItemSort = new JMenuItem(OperationType.SORT.DISPLAY_NAME);
+	protected JMenuItem menuItemAggregation = new JMenuItem(OperationType.AGGREGATION.DISPLAY_NAME);
+	protected JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.DISPLAY_NAME);
+	protected JMenuItem menuItemRename = new JMenuItem(OperationType.RENAME.DISPLAY_NAME);
 
-	protected JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.getDisplayName());
-	protected JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.getDisplayName());
-	protected JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.getDisplayName());
-	protected JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.getDisplayName());
-	protected JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.getDisplayName());
-	protected JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.getDisplayName());
+	protected JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.DISPLAY_NAME);
+	protected JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.DISPLAY_NAME);
+	protected JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.DISPLAY_NAME);
+	protected JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.DISPLAY_NAME);
+	protected JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.DISPLAY_NAME);
+	protected JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.DISPLAY_NAME);
 
 
 	public MainFrame(Set<Button<?>> buttons) {

@@ -15,23 +15,18 @@ import enums.OperationType;
 
 public class OperationButton extends Button<JButton>{
 
-	private JPanel typePanel;
-	private String style;
+	private final String style;
 	
 	public OperationButton(mxStylesheet stylesheet, OperationType type, ActionListener listener, JPanel panel) {
 
 		super(JButton.class, type.getDisplayNameAndSymbol(), listener, type.getAction());
-		this.style = type.getDisplayName();
+		this.style = type.DISPLAY_NAME;
 		getButton().setBounds(600, 300, 100, 50);
-		typePanel = new JPanel();
+		JPanel typePanel = new JPanel();
 		typePanel.add(getButton());
 		stylesheet.putCellStyle(style, createStyle());
 		panel.add(typePanel);
 
-	}
-	
-	public JPanel getPanel() {
-		return typePanel;
 	}
 	
 	public String getStyle() {
@@ -39,7 +34,7 @@ public class OperationButton extends Button<JButton>{
 	}
 	
 	private Hashtable<String, Object> createStyle() {
-		Hashtable<String, Object> style = new Hashtable<String, Object>();
+		Hashtable<String, Object> style = new Hashtable<>();
 		style.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(Color.WHITE));
 		style.put(mxConstants.STYLE_STROKEWIDTH, 1.5);
 		style.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(new Color(0, 0, 170)));

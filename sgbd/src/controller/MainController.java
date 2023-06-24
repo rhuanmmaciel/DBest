@@ -235,47 +235,47 @@ public class MainController extends MainFrame {
 		else if (e.getSource() == menuItemSelection) {
 
 			opAction = OperationType.SELECTION.getAction();
-			style = OperationType.SELECTION.getDisplayName();
+			style = OperationType.SELECTION.DISPLAY_NAME;
 
 		} else if (e.getSource() == menuItemProjection) {
 
 			opAction = OperationType.PROJECTION.getAction();
-			style = OperationType.PROJECTION.getDisplayName();
+			style = OperationType.PROJECTION.DISPLAY_NAME;
 
 		} else if (e.getSource() == menuItemJoin) {
 
 			opAction = OperationType.JOIN.getAction();
-			style = OperationType.JOIN.getDisplayName();
+			style = OperationType.JOIN.DISPLAY_NAME;
 
 		} else if (e.getSource() == menuItemLeftJoin) {
 
 			opAction = OperationType.LEFT_JOIN.getAction();
-			style = OperationType.LEFT_JOIN.getDisplayName();
+			style = OperationType.LEFT_JOIN.DISPLAY_NAME;
 
 		} else if (e.getSource() == menuItemRightJoin) {
 
 			opAction = OperationType.RIGHT_JOIN.getAction();
-			style = OperationType.RIGHT_JOIN.getDisplayName();
+			style = OperationType.RIGHT_JOIN.DISPLAY_NAME;
 
 		} else if (e.getSource() == menuItemCartesianProduct) {
 
 			opAction = OperationType.CARTESIAN_PRODUCT.getAction();
-			style = OperationType.CARTESIAN_PRODUCT.getDisplayName();
+			style = OperationType.CARTESIAN_PRODUCT.DISPLAY_NAME;
 
 		} else if (e.getSource() == menuItemUnion) {
 
 			opAction = OperationType.UNION.getAction();
-			style = OperationType.UNION.getDisplayName();
+			style = OperationType.UNION.DISPLAY_NAME;
 
 		}else if (e.getSource() == menuItemIntersection) {
 
 			opAction = OperationType.INTERSECTION.getAction();
-			style = OperationType.INTERSECTION.getDisplayName();
+			style = OperationType.INTERSECTION.DISPLAY_NAME;
 
 		}else if (e.getSource() == menuItemSort) {
 
 			opAction = OperationType.SORT.getAction();
-			style = OperationType.SORT.getDisplayName();
+			style = OperationType.SORT.DISPLAY_NAME;
 
 		}
 
@@ -535,7 +535,7 @@ public class MainController extends MainFrame {
 		OperationType type = operationExpression.getType();
 
 		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
-				type.getDisplayNameAndSymbol(), x, y, 80, 30, type.getDisplayName());
+				type.getDisplayNameAndSymbol(), x, y, 80, 30, type.DISPLAY_NAME);
 
 		List<Cell> parents = new ArrayList<>();
 		parents.add(operationExpression.getSource().getCell());

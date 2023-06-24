@@ -4,6 +4,7 @@ import com.mxgraph.model.mxCell;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import enums.OperationErrorType;
 import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
@@ -29,33 +30,33 @@ public class Group implements IOperator {
 
         OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 
-        OperationErrorVerifier.ErrorMessage error = null;
+        OperationErrorType error = null;
 
         try {
 
-            error = OperationErrorVerifier.ErrorMessage.NO_PARENT;
+            error = OperationErrorType.NO_PARENT;
             OperationErrorVerifier.hasParent(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.NO_ONE_PARENT;
+            error = OperationErrorType.NO_ONE_PARENT;
             OperationErrorVerifier.oneParent(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.PARENT_ERROR;
+            error = OperationErrorType.PARENT_ERROR;
             OperationErrorVerifier.noParentError(cell);
 
-            error = OperationErrorVerifier.ErrorMessage.NULL_ARGUMENT;
+            error = OperationErrorType.NULL_ARGUMENT;
             OperationErrorVerifier.noNullArgument(arguments);
 
-            error = OperationErrorVerifier.ErrorMessage.EMPTY_ARGUMENT;
+            error = OperationErrorType.EMPTY_ARGUMENT;
             OperationErrorVerifier.noEmptyArgument(arguments);
 
-            error = OperationErrorVerifier.ErrorMessage.PARENT_WITHOUT_COLUMN;
+            error = OperationErrorType.PARENT_WITHOUT_COLUMN;
             OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(),
                     arguments.stream().limit(1).toList());
             OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(),
                     arguments.stream().map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, ""))
                             .toList().subList(1, arguments.size()));
 
-            error = OperationErrorVerifier.ErrorMessage.NO_PREFIX;
+            error = OperationErrorType.NO_PREFIX;
             OperationErrorVerifier.everyoneHavePrefix(arguments.subList(1, arguments.size()), PREFIXES);
 
             error = null;
@@ -110,7 +111,7 @@ public class Group implements IOperator {
 
         Operator readyOperator = new GroupOperator(operator, Column.removeName(groupBy), Column.removeSource(groupBy), aggregations);
 
-        Operation.operationSetter(cell, cell.getType().getSymbol() + arguments.toString(), arguments, readyOperator);
+        Operation.operationSetter(cell, cell.getType().SYMBOL + arguments.toString(), arguments, readyOperator);
 
     }
 

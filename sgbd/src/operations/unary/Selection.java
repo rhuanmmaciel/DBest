@@ -4,13 +4,13 @@ import com.mxgraph.model.mxCell;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import enums.OperationErrorType;
 import exceptions.tree.TreeException;
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import operations.OperationErrorVerifier.ErrorMessage;
 import sgbd.prototype.query.Tuple;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.FilterOperator;
@@ -31,23 +31,23 @@ public class Selection implements IOperator {
 
 		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
 
-		ErrorMessage error = null;
+		OperationErrorType error = null;
 		
 		try {
 			
-			error = ErrorMessage.NULL_ARGUMENT;
+			error = OperationErrorType.NULL_ARGUMENT;
 			OperationErrorVerifier.noNullArgument(arguments);
 			
-			error = ErrorMessage.NO_ONE_ARGUMENT;
+			error = OperationErrorType.NO_ONE_ARGUMENT;
 			OperationErrorVerifier.oneArgument(arguments);
 			
-			error = ErrorMessage.NO_PARENT;
+			error = OperationErrorType.NO_PARENT;
 			OperationErrorVerifier.hasParent(cell);
 			
-			error = ErrorMessage.NO_ONE_PARENT;
+			error = OperationErrorType.NO_ONE_PARENT;
 			OperationErrorVerifier.oneParent(cell);
 			
-			error = ErrorMessage.PARENT_ERROR;
+			error = OperationErrorType.PARENT_ERROR;
 			OperationErrorVerifier.noParentError(cell);
 			
 			error = null;

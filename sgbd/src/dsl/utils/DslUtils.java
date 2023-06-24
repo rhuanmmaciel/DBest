@@ -46,7 +46,7 @@ public class DslUtils {
 			if (input.contains("["))
 				endIndex = Math.min(input.indexOf('['), endIndex);
 
-			if (OperationType.fromString(input.substring(0, endIndex).toLowerCase()).getArity() == OperationArity.UNARY)
+			if (OperationType.fromString(input.substring(0, endIndex).toLowerCase()).ARITY == OperationArity.UNARY)
 				return new UnaryExpression(input);
 
 			return new BinaryExpression(input);
@@ -166,7 +166,7 @@ public class DslUtils {
 
 		if (cell instanceof OperationCell operationCell) {
 
-			raw = operationCell.getType().getDslOperation();
+			raw = operationCell.getType().DSL_SYNTAX;
 
 			raw = raw.replace("[args]", OperationType.OPERATIONS_WITHOUT_FORM.contains(operationCell.getType()) ? "" :
 			operationCell.getArguments().toString());
