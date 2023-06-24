@@ -17,7 +17,7 @@ public class TuplesExtractor {
 
 		List<Map<String, String>> rows = new ArrayList<>();
 
-		Map<String, String> row = new HashMap<>();
+		Map<String, String> row;
 		row = getRow(operator, sourceAndName);
 
 		while(row != null){
@@ -37,8 +37,8 @@ public class TuplesExtractor {
 
 		if(operator == null) return null;
 
-		Set<String> possibleKeys = new LinkedHashSet<>();
-	    Map<String, String> row = new LinkedHashMap<>();
+		Set<String> possibleKeys = new HashSet<>();
+	    Map<String, String> row = new TreeMap<>();
 
         for(Map.Entry<String, List<String>> content: operator.getContentInfo().entrySet())
 			possibleKeys.addAll(content.getValue().stream()

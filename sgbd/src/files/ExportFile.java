@@ -12,9 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -168,7 +166,27 @@ public class ExportFile extends JPanel {
 
 				FileWriter csv = new FileWriter(fileToSave);
 
+				boolean columnsPut = false;
+
 				for (Map<String, String> row : TuplesExtractor.getAllRows(cell.getOperator(), true)) {
+
+					if(!columnsPut){
+
+						boolean repeatedColumnName = false;
+						Set<String> columnNames = new HashSet<>();
+						for(String column : row.keySet())
+							if(!columnNames.add(Column.removeSource(column))) repeatedColumnName = true;
+
+						for (String inf : row.keySet()) {
+
+							String columnName = repeatedColumnName ? inf : Column.removeSource(inf);
+							csv.write(columnName + ",");
+
+						}
+						csv.write("\n");
+						columnsPut = true;
+
+					}
 
 					for (String inf : row.values())
 						csv.write(inf + ",");
