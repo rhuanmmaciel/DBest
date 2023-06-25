@@ -148,8 +148,7 @@ public class TableCreator extends JDialog{
 
 	}
 
-	private List<RowData> getRowData(List<entities.Column> columns,
-									 Map<Integer, Map<String, String>> content) {
+	private List<RowData> getRowData(List<entities.Column> columns, Map<Integer, Map<String, String>> content) {
 
 		List<RowData> rows = new ArrayList<>();
 
