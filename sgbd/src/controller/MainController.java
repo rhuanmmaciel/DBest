@@ -37,6 +37,7 @@ import entities.cells.TableCell;
 import entities.utils.CellUtils;
 import entities.utils.TreeUtils;
 import enums.OperationType;
+import files.FileUtils;
 import files.ImportFile;
 import gui.frames.CellInformationFrame;
 import gui.frames.dsl.Console;
@@ -95,12 +96,7 @@ public class MainController extends MainFrame {
 
 			public void windowClosing(WindowEvent e) {
 
-				File directory = new File(".");
-				File[] filesList = directory.listFiles();
-				assert filesList != null;
-				for (File file : filesList) 
-					if (file.isFile() && (file.getName().endsWith(".dat") || file.getName().endsWith(".head")))
-						file.delete();
+				FileUtils.clearMemory();
 
 				System.exit(0);
 

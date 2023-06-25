@@ -29,7 +29,7 @@ public class Recognizer {
 			
 			recognizeItems(line, columnsNameList, stringDelimiter, separator);
 
-			isColumnEmpty(columnsNameList, "O csv deve possuir nome para todas as colunas");
+			isColumnEmpty(columnsNameList);
 
 			line = br.readLine();
 
@@ -58,7 +58,9 @@ public class Recognizer {
 
 			}
 
-		} catch (IOException e) {
+		} catch (IOException ignored) {
+
+			throw new InvalidCsvException("Não foi possível ler o csv");
 
 		}
 
@@ -76,7 +78,7 @@ public class Recognizer {
 
 	}
 	
-	private static void recognizeItems(String line, List<String> tuple, char stringDelimiter, char separator) throws InvalidCsvException {
+	private static void recognizeItems(String line, List<String> tuple, char stringDelimiter, char separator) {
 		
 		boolean stringDelimiterFound = false;
 		
@@ -99,8 +101,6 @@ public class Recognizer {
 				tuple.add(inf);
 				data = new StringBuilder();
 
-				isStringDelimiterWrong(inf, stringDelimiter);
-
 			}
 
 		}
@@ -114,8 +114,6 @@ public class Recognizer {
 
 			tuple.add(inf);
 
-			isStringDelimiterWrong(inf, stringDelimiter);
-
 		}
 		
 	}
@@ -125,34 +123,14 @@ public class Recognizer {
 				&& data.length() > 1;
 	}
 
-	private static void isStringDelimiterWrong(String data, char stringDelimiter) throws InvalidCsvException {
-		int i = 0;
-
-		for (char c : data.toCharArray())
-			if (c == stringDelimiter)
-				i++;
-
-		if (i > 2)
-			throw new InvalidCsvException("Não é possível ter mais de dois delimitadores de String: \n" + data);
-
-		if (i == 1)
-			throw new InvalidCsvException("Não é possível ter apenas um delimitador de String: \n" + data);
-
-		if (i == 2 && (!data.strip().startsWith(String.valueOf(stringDelimiter))
-				|| !data.strip().endsWith(String.valueOf(stringDelimiter))))
-			throw new InvalidCsvException(
-					"Os delimitadores de String precisam estar no começo e no final do dado: \n" + data);
-
-	}
-
 	private static void isLineNull(String line, String txt) throws InvalidCsvException {
 		if (line == null)
 			throw new InvalidCsvException(txt);
 	}
 
-	private static void isColumnEmpty(List<String> columns, String txt) throws InvalidCsvException {
+	private static void isColumnEmpty(List<String> columns) throws InvalidCsvException {
 		if (columns.contains("") || columns.contains(null))
-			throw new InvalidCsvException(txt);
+			throw new InvalidCsvException("O csv deve possuir nome para todas as colunas");
 	}
 
 	public record CsvData(List<List<String>> dataList, List<String> columnsNameList, Vector<Vector<Object>> dataArray,

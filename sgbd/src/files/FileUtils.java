@@ -1,17 +1,30 @@
 package files;
 
-import entities.cells.Cell;
-import entities.cells.TableCell;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class FileUtils {
+
+	public static void deleteFile(Path path){
+
+		path.toFile().delete();
+
+	}
+
+	public static void clearMemory(){
+
+		File directory = new File(".");
+		File[] filesList = directory.listFiles();
+		assert filesList != null;
+		for (File file : filesList)
+			if (file.isFile() && (file.getName().endsWith(".dat") || file.getName().endsWith(".head")))
+				deleteFile(file.toPath());
+
+	}
 
 	public static List<String> getDatFilesNames() {
 

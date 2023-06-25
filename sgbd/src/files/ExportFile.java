@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -106,7 +107,14 @@ public class ExportFile extends JPanel {
 
 			operator.close();
 
-			TableCell createdCell = TableCreator.createTable(fileName, cell.getColumns(), rows);
+			AtomicReference<Boolean> exitReference = new AtomicReference<>(false);
+
+			TableCreator tableCreator = new TableCreator(fileName, cell.getColumns(), rows, exitReference, true);
+
+			if(exitReference.get())
+				return;
+
+			TableCell createdCell = tableCreator.getTableCell();
 
 			createdCell.getTable().saveHeader(headFileName);
 

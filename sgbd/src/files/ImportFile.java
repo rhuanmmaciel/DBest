@@ -16,7 +16,6 @@ import com.mxgraph.model.mxCell;
 import controller.MainController;
 import database.TableCreator;
 import entities.Column;
-import entities.cells.Cell;
 import entities.cells.TableCell;
 import enums.FileType;
 import gui.frames.forms.importexport.FormFrameCsvRecognizer;
@@ -25,17 +24,15 @@ import sgbd.table.Table;
 
 public class ImportFile {
 
-	private List<String> tablesName = new ArrayList<>();
-	private JFileChooser fileUpload = new JFileChooser();
+	private final JFileChooser fileUpload = new JFileChooser();
 	private AtomicReference<Boolean> exitReference;
-	private StringBuilder tableName = new StringBuilder();
-	private Map<Integer, Map<String, String>> content = new LinkedHashMap<>();
-	private List<Column> columns = new ArrayList<>();
+	private final StringBuilder tableName = new StringBuilder();
+	private final Map<Integer, Map<String, String>> content = new LinkedHashMap<>();
+	private final List<Column> columns = new ArrayList<>();
 	private FileType fileType;
 	private TableCell tableCell;
 
 	{
-		Cell.getCells().values().forEach(cell -> tablesName.add(cell.getName()));
 		this.tableCell = null;
 	}
 
@@ -58,7 +55,7 @@ public class ImportFile {
 	
 	private void importFile() {
 		
-		FileNameExtensionFilter filter = null;
+		FileNameExtensionFilter filter;
 
 		switch (fileType) {
 	
@@ -94,7 +91,7 @@ public class ImportFile {
 					mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(MainFrame.getGraph().getDefaultParent(), null,
 							fileName, 0, 0, 80, 30, "table");
 					table.get().open();
-					tableCell = new TableCell(jCell, fileName, "table", table.get());;
+					tableCell = new TableCell(jCell, fileName, "table", table.get());
 					
 				}
 			}
@@ -103,9 +100,10 @@ public class ImportFile {
 			
 			}
 
-			if (!exitReference.get() && FileType.DAT != fileType)
-				tableCell = TableCreator.createTable(tableName.toString(), columns, content);
-
+			if (!exitReference.get() && FileType.DAT != fileType) {
+				TableCreator tableCreator = new TableCreator(tableName.toString(), columns, content, exitReference, false);
+				tableCell = tableCreator.getTableCell();
+			}
 			return;
 			
 		}
@@ -136,7 +134,7 @@ public class ImportFile {
 		AtomicReference<Table> table = new AtomicReference<>();
 		table.set(Table.loadFromHeader(fileName));
 
-		tableCell = new TableCell(jTableCell, fileName.substring(0, fileName.indexOf(".")), "tabela", table.get());;
+		tableCell = new TableCell(jTableCell, fileName.substring(0, fileName.indexOf(".")), "tabela", table.get());
 		
 	}
 
