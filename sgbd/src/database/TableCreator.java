@@ -1,6 +1,5 @@
 package database;
 
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.nio.file.Path;
@@ -12,8 +11,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.mxgraph.model.mxCell;
 
+import controller.MainController;
 import entities.cells.TableCell;
 import files.FileUtils;
+import gui.frames.ProgressFrame;
 import gui.frames.main.MainFrame;
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
@@ -24,32 +25,21 @@ import sgbd.table.components.Header;
 
 import javax.swing.*;
 
-public class TableCreator extends JDialog{
-
-	private final JProgressBar progressBar = new JProgressBar(0, 100);
-	private final JButton loadTuples = new JButton("Carregar tuplas");
+public class TableCreator {
 
 	private TableCell tableCell = null;
 
 	private boolean stopProgress = false;
-
+	private final ProgressFrame progressFrame = new ProgressFrame();
 	private final boolean mustExport;
 
 	public TableCreator(String tableName, List<entities.Column> columns,
 						Map<Integer, Map<String, String>> data, AtomicReference<Boolean> exitReference,
 						boolean mustExport){
-		super((Window) null, "Progresso");
 
 		this.mustExport = mustExport;
 
-		setModal(true);
-		setLayout(new FlowLayout());
-		progressBar.setStringPainted(true);
-		add(progressBar);
-		add(loadTuples);
-
-		loadTuples.addActionListener(e -> {
-			loadTuples.setEnabled(false);
+		progressFrame.setBtnLoadTuplesListener(e -> {
 			SwingWorker<TableCell, Void> worker = new SwingWorker<>() {
 				@Override
 				protected TableCell doInBackground() {
@@ -60,7 +50,7 @@ public class TableCreator extends JDialog{
 				protected void done() {
 					try {
 						tableCell = get();
-						dispose();
+						progressFrame.dispose();
 					} catch (InterruptedException | ExecutionException ex) {
 						ex.printStackTrace();
 					}
@@ -70,17 +60,15 @@ public class TableCreator extends JDialog{
 			worker.execute();
 		});
 
-		addWindowListener(new WindowAdapter() {
+		progressFrame.setWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				stopProgress = true;
 				exitReference.set(true);
-				dispose();
+				progressFrame.dispose();
 			}
 		});
 
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
+		progressFrame.adjust();
 
 	}
 
@@ -161,7 +149,7 @@ public class TableCreator extends JDialog{
 				entities.Column column = columns.stream().filter(x -> x.getName().equals(data)).findFirst()
 						.orElseThrow();
 
-				if (!line.get(data).equals("null") && !line.get(data).equals(""))
+				if (!line.get(data).equals(MainController.NULL) && !line.get(data).equals(""))
 					switch (column.getType()) {
 						case INTEGER -> rowData.setInt(column.getName(), (int) (Double.parseDouble(line.get(data).strip())));
 						case LONG -> rowData.setLong(column.getName(), (long) (Double.parseDouble(line.get(data).strip())));
@@ -192,10 +180,7 @@ public class TableCreator extends JDialog{
 			int percentage = 100 * progress / totalRows;
 
 			int finalProgress = progress;
-			SwingUtilities.invokeLater(() -> {
-				progressBar.setValue(percentage);
-				progressBar.setString(finalProgress + "/" + totalRows);
-			});
+			SwingUtilities.invokeLater(() -> progressFrame.updateLoadBar(percentage, finalProgress + "/" + totalRows));
 		}
 
 		System.out.println("Tempo gasto: " + (System.currentTimeMillis() - startTime) + " milissegundos.");

@@ -43,13 +43,15 @@ import gui.frames.CellInformationFrame;
 import gui.frames.dsl.Console;
 import gui.frames.dsl.TextEditor;
 import gui.frames.forms.create.FormFrameCreateTable;
-import gui.frames.forms.importexport.FormFrameExportAs;
-import gui.frames.forms.importexport.FormFrameImportAs;
+import gui.frames.forms.importexport.ExportAsForm;
+import gui.frames.forms.importexport.ImportAsForm;
 import gui.frames.main.MainFrame;
 import sgbd.table.Table;
 import files.ExportFile;
 
 public class MainController extends MainFrame {
+
+	public static String NULL = "null";
 
 	private static final Map<Integer, Tree> trees = new HashMap<>();
 	private static File lastDirectory = new File("");
@@ -106,7 +108,6 @@ public class MainController extends MainFrame {
 
 	}
 
-	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -306,7 +307,7 @@ public class MainController extends MainFrame {
 
 		TableCell tableCell = action == CurrentAction.ActionType.CREATE_TABLE
 				? new FormFrameCreateTable(cancelServiceReference).getResult()
-				: new FormFrameImportAs(cancelServiceReference).getResult();
+				: new ImportAsForm(cancelServiceReference).getResult();
 
 		if (!cancelServiceReference.get()) {
 
@@ -334,7 +335,7 @@ public class MainController extends MainFrame {
 
 		AtomicReference<Boolean> cancelService = new AtomicReference<>(false);
 
-		new FormFrameExportAs(jCell, cancelService);
+		new ExportAsForm(jCell, cancelService);
 
 	}
 

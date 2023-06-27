@@ -1,10 +1,10 @@
 package enums;
 
 import entities.Action.CreateOperationAction;
-import gui.frames.forms.operations.IFormFrameOperation;
+import gui.frames.forms.operations.IOperationForm;
 import gui.frames.forms.operations.unary.*;
 import operations.IOperator;
-import gui.frames.forms.operations.binary.FormFrameJoins;
+import gui.frames.forms.operations.binary.JoinsForm;
 import operations.binary.CartesianProduct;
 import operations.binary.set.Intersection;
 import operations.binary.joins.Join;
@@ -16,28 +16,27 @@ import operations.unary.*;
 import java.util.*;
 
 import static enums.OperationErrorType.*;
-import static enums.OperationFlags.*;
 
 public enum OperationType {
 
-	SELECTION("Seleção", "σ", "selection", "selection[args](source)", OperationArity.UNARY, FormFrameSelection.class, Selection.class,
+	SELECTION("Seleção", "σ", "selection", "selection[args](source)", OperationArity.UNARY, SelectionForm.class, Selection.class,
 			   NO_ONE_ARGUMENT),
-	PROJECTION("Projeção", "π", "projection", "projection[args](source)",OperationArity.UNARY, FormFrameProjection.class, Projection.class,
+	PROJECTION("Projeção", "π", "projection", "projection[args](source)",OperationArity.UNARY, ProjectionForm.class, Projection.class,
 			   PARENT_WITHOUT_COLUMN),
-	RENAME("Renomeação", "ρ", "rename", "rename[args](source)", OperationArity.UNARY, FormFrameRename.class, Rename.class),
-	GROUP("Agrupamento", "G", "group", "group[args](relation)",OperationArity.UNARY, FormFrameGroup.class, Group.class,
+	RENAME("Renomeação", "ρ", "rename", "rename[args](source)", OperationArity.UNARY, RenameForm.class, Rename.class),
+	GROUP("Agrupamento", "G", "group", "group[args](relation)",OperationArity.UNARY, GroupForm.class, Group.class,
 			   NO_ONE_ARGUMENT, PARENT_WITHOUT_COLUMN, NO_PREFIX),
 	AGGREGATION("Agregação", "G", "aggregation", "aggregation[args](relation)",OperationArity.UNARY,
-			FormFrameAggregation.class, Aggregation.class,
+			AggregationForm.class, Aggregation.class,
 			    NO_ONE_ARGUMENT, PARENT_WITHOUT_COLUMN, NO_PREFIX),
-	SORT("Ordenação", "↕", "sort", "sort[args](relation)", OperationArity.UNARY, FormFrameSort.class, Sort.class,
+	SORT("Ordenação", "↕", "sort", "sort[args](relation)", OperationArity.UNARY, SortForm.class, Sort.class,
 			    PARENT_WITHOUT_COLUMN),
 
-	JOIN("Junção", "|X|", "join", "join[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, Join.class,
+	JOIN("Junção", "|X|", "join", "join[args](source1,source2)", OperationArity.BINARY, JoinsForm.class, Join.class,
 			 NO_TWO_ARGUMENTS,  PARENT_WITHOUT_COLUMN),
-	LEFT_JOIN("Junção à esquerda", "⟕", "leftJoin", "leftJoin[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, LeftJoin.class,
+	LEFT_JOIN("Junção à esquerda", "⟕", "leftJoin", "leftJoin[args](source1,source2)", OperationArity.BINARY, JoinsForm.class, LeftJoin.class,
 			 NO_TWO_ARGUMENTS,  PARENT_WITHOUT_COLUMN),
-	RIGHT_JOIN("Junção à direita", "⟖", "rightJoin", "rightJoin[args](source1,source2)", OperationArity.BINARY, FormFrameJoins.class, RightJoin.class,
+	RIGHT_JOIN("Junção à direita", "⟖", "rightJoin", "rightJoin[args](source1,source2)", OperationArity.BINARY, JoinsForm.class, RightJoin.class,
 			 NO_TWO_ARGUMENTS, PARENT_WITHOUT_COLUMN),
 	CARTESIAN_PRODUCT("Produto Cartesiano", "✕", "cartesianProduct", "cartesianProduct(source1,source2)", OperationArity.BINARY, null, CartesianProduct.class,
 			SAME_SOURCE),
@@ -50,13 +49,13 @@ public enum OperationType {
 	public final String NAME;
 	public final String DSL_SYNTAX;
 	public final OperationArity ARITY;
-	public final Class<? extends IFormFrameOperation> FORM;
+	public final Class<? extends IOperationForm> FORM;
 	public final Class<? extends IOperator> OPERATOR_CLASS;
 	public final Set<OperationErrorType> POSSIBLE_ERRORS;
 
 
 	OperationType(String DISPLAY_NAME, String SYMBOL, String NAME, String DSL_SYNTAX, OperationArity ARITY,
-				  Class<? extends IFormFrameOperation> FORM, Class<? extends IOperator> OPERATOR_CLASS,
+				  Class<? extends IOperationForm> FORM, Class<? extends IOperator> OPERATOR_CLASS,
 				  OperationErrorType... errors) {
 		this.DISPLAY_NAME = DISPLAY_NAME;
 		this.SYMBOL = SYMBOL;

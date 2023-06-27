@@ -18,7 +18,7 @@ import database.TableCreator;
 import entities.Column;
 import entities.cells.TableCell;
 import enums.FileType;
-import gui.frames.forms.importexport.FormFrameCsvRecognizer;
+import gui.frames.forms.importexport.CsvRecognizerForm;
 import gui.frames.main.MainFrame;
 import sgbd.table.Table;
 
@@ -229,7 +229,7 @@ public class ImportFile {
 
 		}
 		
-		new FormFrameCsvRecognizer(fileUpload.getSelectedFile().getAbsolutePath(), tableName, columns, content, exitReference);
+		new CsvRecognizerForm(fileUpload.getSelectedFile().getAbsolutePath(), tableName, columns, content, exitReference);
 		
 	}
 	

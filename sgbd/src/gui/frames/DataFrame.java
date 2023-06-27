@@ -111,11 +111,8 @@ public class DataFrame extends JDialog implements ActionListener {
 				Object[] line = new Object[rows.get(firstElement).size() + 1];
 				line[0] = i++;
 
-				for (int j = 0; j < currentRow.size(); j++) {
-
+				for (int j = 0; j < currentRow.size(); j++)
 					line[j+1] = currentRow.get(model.getColumnName(j+1));
-
-				}
 
 				model.addRow(line);
 

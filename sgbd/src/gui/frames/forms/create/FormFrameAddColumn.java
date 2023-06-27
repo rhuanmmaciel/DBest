@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,6 +45,12 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
 	}
 	
 	private void initializeGUI() {
+
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				closeWindow();
+			}
+		});
 
 		setLocationRelativeTo(null);
 		
@@ -174,7 +182,6 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
 		
 	}
 
-	@Override
 	protected void closeWindow() {
 		dispose();
 	}

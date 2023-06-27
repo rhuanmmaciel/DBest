@@ -1,11 +1,7 @@
 package gui.frames.forms;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public abstract class FormBase extends JDialog {
 
@@ -17,12 +13,6 @@ public abstract class FormBase extends JDialog {
 
         super(window);
         contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                closeWindow();
-            }
-        });
 
         initBottomButtons();
 
@@ -38,7 +28,5 @@ public abstract class FormBase extends JDialog {
 
 
     }
-
-    protected abstract void closeWindow();
 
 }

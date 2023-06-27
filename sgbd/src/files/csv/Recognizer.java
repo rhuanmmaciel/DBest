@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import controller.MainController;
 import exceptions.InvalidCsvException;
 
 public class Recognizer {
@@ -49,7 +50,7 @@ public class Recognizer {
 						tuple.remove(tuple.size() - 1);
 
 					while (tuple.size() < size)
-						tuple.add("null");
+						tuple.add(MainController.NULL);
 
 					dataList.add(tuple);
 

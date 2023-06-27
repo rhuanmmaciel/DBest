@@ -13,7 +13,7 @@ import entities.utils.CellUtils;
 import entities.utils.TreeUtils;
 import enums.OperationArity;
 import enums.OperationType;
-import gui.frames.forms.operations.IFormFrameOperation;
+import gui.frames.forms.operations.IOperationForm;
 import gui.frames.main.MainFrame;
 import operations.IOperator;
 
@@ -144,7 +144,7 @@ public class ClickController {
 
 		try {
 
-			Constructor<? extends IFormFrameOperation> constructor = type.FORM.getDeclaredConstructor(mxCell.class);
+			Constructor<? extends IOperationForm> constructor = type.FORM.getDeclaredConstructor(mxCell.class);
 			constructor.newInstance(jCellRef.get());
 
 		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException

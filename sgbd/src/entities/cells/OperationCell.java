@@ -10,7 +10,7 @@ import enums.OperationArity;
 import enums.OperationErrorType;
 import enums.OperationType;
 import gui.frames.main.MainFrame;
-import gui.frames.forms.operations.IFormFrameOperation;
+import gui.frames.forms.operations.IOperationForm;
 import operations.IOperator;
 import sgbd.query.Operator;
 
@@ -25,7 +25,7 @@ public final class OperationCell extends Cell {
 	private OperationType type;
 	private List<Cell> parents = new ArrayList<>();
 	private OperationArity arity;
-	private Class<? extends IFormFrameOperation> form = null;
+	private Class<? extends IOperationForm> form = null;
 	private List<String> arguments = new ArrayList<>();
 	private Boolean error = false;
 	private String errorMessage = null;
@@ -79,7 +79,7 @@ public final class OperationCell extends Cell {
 
 			try {
 
-				Constructor<? extends IFormFrameOperation> constructor = form.getDeclaredConstructor(mxCell.class);
+				Constructor<? extends IOperationForm> constructor = form.getDeclaredConstructor(mxCell.class);
 				constructor.newInstance(jCell);
 
 			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException

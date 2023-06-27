@@ -1,5 +1,7 @@
 package gui.utils;
 
+import controller.MainController;
+
 import java.awt.*;
 import java.util.Vector;
 
@@ -53,7 +55,7 @@ public class JTableUtils {
 				Component c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
 				if (value instanceof String text) {
-					if (text.equals("null")) {
+					if (text.equals(MainController.NULL)) {
 						c.setForeground(Color.RED);
 					} else {
 						c.setForeground(Color.BLACK);
