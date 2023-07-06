@@ -28,7 +28,7 @@ import database.TuplesExtractor;
 import enums.ColumnDataType;
 import enums.FileType;
 import gui.frames.ErrorFrame;
-import gui.frames.forms.importexport.ExportMySQLScriptForm;
+import gui.frames.forms.importexport.ExportSQLScriptForm;
 import net.coobird.thumbnailator.Thumbnails;
 import sgbd.query.Operator;
 
@@ -91,19 +91,11 @@ public class ExportFile extends JPanel {
 
 			AtomicReference<Boolean> exitReference = new AtomicReference<>(false);
 
-			StringBuilder databaseName = new StringBuilder();
-			StringBuilder tableName = new StringBuilder();
-			Map<String, JTextField> newColumnNames = new HashMap<>();
-			Map<String, JCheckBox> pkCheckBoxes = new HashMap<>();
-			Map<String, JCheckBox> nullCheckBoxes = new HashMap<>();
-			Vector<String> columnNames = new Vector<>();
-			Vector<Vector<Object>> content = new Vector<>();
-			JCheckBox checkBoxCreateDatabase = new JCheckBox("Criar Database novo: ");
+			ExportSQLScriptForm.SQLScriptInf inf = new ExportSQLScriptForm.SQLScriptInf(new StringBuilder(), new StringBuilder(),
+					new HashMap<>(), new HashMap<>(), new HashMap<>(), new JCheckBox("Criar Database novo: "), new StringBuilder(),
+					new Vector<>(), new Vector<>());
 
-			new ExportMySQLScriptForm(cell, databaseName, tableName, newColumnNames, pkCheckBoxes, nullCheckBoxes,
-					checkBoxCreateDatabase, columnNames, content, exitReference);
-
-			columnNames = new Vector<>(columnNames.subList(0, columnNames.size() - 1));
+			new ExportSQLScriptForm(cell, inf, exitReference);
 
 			if(exitReference.get()) return;
 
@@ -111,19 +103,23 @@ public class ExportFile extends JPanel {
 
 				FileWriter sql = new FileWriter(fileToSave);
 
-				String beginning = checkBoxCreateDatabase.isSelected() ? "drop database if exists "+databaseName+";\n"
-				+"create database "+databaseName+";\n" : "";
+				String beginning = inf.checkBoxCreateDatabase().isSelected() ? "drop database if exists "+inf.databaseName()+";\n"
+				+"create database "+inf.databaseName()+";\n" : "";
 
 				sql.write(beginning);
-				sql.write("use " + databaseName+";\n\n");
+				sql.write("use " + inf.databaseName()+";\n\n");
 
-				sql.write("CREATE TABLE "+tableName+" (\n");
+				sql.write("CREATE TABLE "+inf.tableName()+" (\n");
 
-				for(String columnName : columnNames) {
+				for(String columnName : inf.columnNames().subList(0, inf.columnNames().size()-1)) {
+
+					if(!inf.columnNames().get(0).equals(columnName))
+						sql.write(",\n");
 
 					Column c = cell.getColumns().stream().filter(x -> x.getSourceAndName().equals(columnName))
 							.findFirst().orElseThrow();
-					sql.write(newColumnNames.get(columnName).getText()+" ");
+					sql.write("\t");
+					sql.write(inf.newColumnNameTxtFields().get(columnName).getText()+" ");
 					sql.write(switch (c.getType()){
 						case INTEGER, LONG -> "INT ";
 						case FLOAT -> "FLOAT ";
@@ -133,21 +129,21 @@ public class ExportFile extends JPanel {
 						case BOOLEAN -> "BOOLEAN ";
 					});
 
-					if(!nullCheckBoxes.get(columnName).isSelected())
+					if(!inf.nullCheckBoxes().get(columnName).isSelected())
 						sql.write("NOT ");
 
-					sql.write("NULL,\n");
+					sql.write("NULL");
 
 				}
 
-				int nPks = pkCheckBoxes.values().stream().filter(AbstractButton::isSelected).toList().size();
+				int nPks = inf.pkCheckBoxes().values().stream().filter(AbstractButton::isSelected).toList().size();
 				if(nPks > 0){
 
-					sql.write("PRIMARY KEY(");
-					for(Map.Entry<String, JCheckBox> pk : pkCheckBoxes.entrySet())
+					sql.write("\n\tPRIMARY KEY(");
+					for(Map.Entry<String, JCheckBox> pk : inf.pkCheckBoxes().entrySet())
 						if(pk.getValue().isSelected()) {
 
-							sql.write(newColumnNames.get(pk.getKey()).getText());
+							sql.write(inf.newColumnNameTxtFields().get(pk.getKey()).getText());
 							nPks--;
 
 							String txt = nPks != 0 ? ", " : ")";
@@ -157,32 +153,39 @@ public class ExportFile extends JPanel {
 
 				}
 
-				sql.write(");\n\n");
+				sql.write("\n);\n\n");
 
-				for (Vector<Object> row : content.subList(3, content.size())) {
+				for (Vector<Object> row : inf.content()) {
 
-					sql.write("INSERT INTO "+tableName+" values(");
+					sql.write("INSERT INTO "+inf.tableName()+" values(");
 
 					for(int i = 0; i < row.size() - 1; i++){
 
 						int finalI = i;
-						Vector<String> finalColumnNames = columnNames;
+						Vector<String> finalColumnNames = inf.columnNames();
 						ColumnDataType type = cell.getColumns().stream().filter(x -> x.getSourceAndName().equals(finalColumnNames.get(finalI)))
 								.findFirst().orElseThrow().getType();
 
 						boolean isString = type.equals(ColumnDataType.STRING) || type.equals(ColumnDataType.NONE) || type.equals(ColumnDataType.CHARACTER);
 
-						String inf = Objects.toString(row.get(i)).replaceAll("'", "\\\\'");
+						String data = Objects.toString(row.get(i)).replaceAll("'", "\\\\'");
 
-						if(isString && !inf.equals("null")) inf = "'" + inf + "'";
+						if(isString && !data.equals("null")) data = "'" + data + "'";
 
-						sql.write(inf);
+						sql.write(data);
 
 						if(i != row.size() - 2) sql.write(", ");
 
 					}
 
 					sql.write(");\n");
+
+				}
+
+				if(!inf.additionalCommand().isEmpty()){
+
+					sql.write("\n\n");
+					sql.write(inf.additionalCommand().toString());
 
 				}
 
