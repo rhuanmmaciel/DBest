@@ -19,7 +19,7 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener{
 
 	private final AtomicReference<Boolean> cancelService;
 	private final JButton btnFyi = new JButton("Fyi DataBase");
-	private final JButton btnMySQLScript = new JButton("Script MySQL");
+	private final JButton btnMySQLScript = new JButton("Script SQL");
 	private final Cell cell;
 	
 	public ExportAsForm(mxCell jCell, AtomicReference<Boolean> cancelService) {

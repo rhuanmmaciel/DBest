@@ -1,20 +1,14 @@
 package database;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.mxgraph.model.mxCell;
 
 import controller.MainController;
 import entities.cells.TableCell;
-import files.FileUtils;
-import gui.frames.ProgressFrame;
 import gui.frames.main.MainFrame;
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
@@ -23,14 +17,11 @@ import sgbd.table.SimpleTable;
 import sgbd.table.Table;
 import sgbd.table.components.Header;
 
-import javax.swing.*;
 
 public class TableCreator {
 
 	private TableCell tableCell = null;
 
-	private boolean stopProgress = false;
-	private final ProgressFrame progressFrame = new ProgressFrame();
 	private final boolean mustExport;
 
 	public TableCreator(String tableName, List<entities.Column> columns,
@@ -38,41 +29,11 @@ public class TableCreator {
 						boolean mustExport){
 
 		this.mustExport = mustExport;
-
-		progressFrame.setBtnLoadTuplesListener(e -> {
-			SwingWorker<TableCell, Void> worker = new SwingWorker<>() {
-				@Override
-				protected TableCell doInBackground() {
-					return createTable(tableName, columns, data);
-				}
-
-				@Override
-				protected void done() {
-					try {
-						tableCell = get();
-						progressFrame.dispose();
-					} catch (InterruptedException | ExecutionException ex) {
-						ex.printStackTrace();
-					}
-				}
-			};
-
-			worker.execute();
-		});
-
-		progressFrame.setWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				stopProgress = true;
-				exitReference.set(true);
-				progressFrame.dispose();
-			}
-		});
-
-		progressFrame.adjust();
+		createTable(tableName, columns, data);
 
 	}
 
-	private TableCell createTable(String tableName, List<entities.Column> columns,
+	private void createTable(String tableName, List<entities.Column> columns,
 			Map<Integer, Map<String, String>> data) {
 
 		List<RowData> rows = new ArrayList<>(getRowData(columns, data));
@@ -118,21 +79,23 @@ public class TableCreator {
 		Table table = SimpleTable.openTable(new Header(prototype, tableName));
 		table.open();
 
-		insertRows(table, rows);
-
-		if(stopProgress){
-			FileUtils.deleteFile(Path.of(tableName+".dat"));
-			return null;
-		}
+		table.insert(rows);
 
 		table.saveHeader(tableName+".head");
 
-		if(mustExport) return new TableCell(null, tableName, "table", columns, table, prototype);
+		if(mustExport){
+
+			tableCell = new TableCell(null, tableName, "table", columns, table, prototype);
+
+			return;
+
+		}
+
 
 		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(MainFrame.getGraph().getDefaultParent(), null,
 				tableName, 0, 0, 80, 30, "table");
 
-		return new TableCell(jCell, tableName, "table", columns, table, prototype);
+		tableCell = new TableCell(jCell, tableName, "table", columns, table, prototype);
 
 	}
 
@@ -166,24 +129,6 @@ public class TableCreator {
 
 		return rows;
 
-	}
-
-	public void insertRows(Table table, List<RowData> rows) {
-		int totalRows = rows.size();
-		int progress = 0;
-		long startTime = System.currentTimeMillis();
-
-		while (progress < totalRows && !stopProgress) {
-			RowData row = rows.get(progress);
-			table.insert(row);
-			progress++;
-			int percentage = 100 * progress / totalRows;
-
-			int finalProgress = progress;
-			SwingUtilities.invokeLater(() -> progressFrame.updateLoadBar(percentage, finalProgress + "/" + totalRows));
-		}
-
-		System.out.println("Tempo gasto: " + (System.currentTimeMillis() - startTime) + " milissegundos.");
 	}
 
 	public TableCell getTableCell(){

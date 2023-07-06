@@ -323,10 +323,14 @@ public class ExportFile extends JPanel {
 						for(String column : row.keySet())
 							if(!columnNames.add(Column.removeSource(column))) repeatedColumnName = true;
 
+						int i = 0;
 						for (String inf : row.keySet()) {
 
+							if(i++ != 0)
+								csv.write(",");
+
 							String columnName = repeatedColumnName ? inf : Column.removeSource(inf);
-							csv.write(columnName + ",");
+							csv.write(columnName);
 
 						}
 						csv.write("\n");
@@ -334,8 +338,14 @@ public class ExportFile extends JPanel {
 
 					}
 
-					for (String inf : row.values())
-						csv.write(inf + ",");
+					int i = 0;
+					for (String inf : row.values()) {
+						if(i++ != 0)
+							csv.write(",");
+
+						csv.write(inf);
+
+					}
 
 					csv.write("\n");
 

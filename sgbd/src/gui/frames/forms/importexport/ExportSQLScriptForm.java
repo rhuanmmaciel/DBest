@@ -300,8 +300,8 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
         model.addColumn("Nome:");
 
-        for (int row = 1; row < model.getRowCount(); row++) {
-            model.setValueAt(row - 1, row, model.getColumnCount() - 1);
+        for (int row = 0; row < model.getRowCount(); row++) {
+            model.setValueAt(row + 1, row, model.getColumnCount() - 1);
         }
 
     }
