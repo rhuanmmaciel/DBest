@@ -195,6 +195,18 @@ public class RelAlgebraBaseListener implements RelAlgebraListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIndexer(RelAlgebraParser.IndexerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIndexer(RelAlgebraParser.IndexerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterJoin(RelAlgebraParser.JoinContext ctx) { }
 	/**
 	 * {@inheritDoc}

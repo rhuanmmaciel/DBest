@@ -66,6 +66,7 @@ public abstract class MainFrame extends JFrame
 	protected JMenuItem menuItemAggregation = new JMenuItem(OperationType.AGGREGATION.DISPLAY_NAME);
 	protected JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.DISPLAY_NAME);
 	protected JMenuItem menuItemRename = new JMenuItem(OperationType.RENAME.DISPLAY_NAME);
+	protected JMenuItem menuItemIndexer = new JMenuItem(OperationType.INDEXER.DISPLAY_NAME);
 
 	protected JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.DISPLAY_NAME);
 	protected JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.DISPLAY_NAME);
@@ -128,6 +129,7 @@ public abstract class MainFrame extends JFrame
 		buttons.add(new OperationButton(stylesheet, OperationType.AGGREGATION, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.GROUP, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.RENAME, this, operationButtonsPane));
+		buttons.add(new OperationButton(stylesheet, OperationType.INDEXER, this, operationButtonsPane));
 
 		buttons.add(new OperationButton(stylesheet, OperationType.JOIN, this, operationButtonsPane));
 		buttons.add(new OperationButton(stylesheet, OperationType.LEFT_JOIN, this, operationButtonsPane));
@@ -207,6 +209,7 @@ public abstract class MainFrame extends JFrame
 		menuItemAggregation.addActionListener(this);
 		menuItemGroup.addActionListener(this);
 		menuItemRename.addActionListener(this);
+		menuItemIndexer.addActionListener(this);
 
 		menuItemJoin.addActionListener(this);
 		menuItemLeftJoin.addActionListener(this);
@@ -225,6 +228,7 @@ public abstract class MainFrame extends JFrame
 		menuItemOperations.add(menuItemAggregation);
 		menuItemOperations.add(menuItemGroup);
 		menuItemOperations.add(menuItemRename);
+		menuItemOperations.add(menuItemIndexer);
 		menuItemOperations.addSeparator();
 		menuItemOperations.add(menuItemJoin);
 		menuItemOperations.add(menuItemLeftJoin);

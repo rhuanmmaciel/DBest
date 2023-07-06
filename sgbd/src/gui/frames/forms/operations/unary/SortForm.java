@@ -2,6 +2,7 @@ package gui.frames.forms.operations.unary;
 
 import com.mxgraph.model.mxCell;
 import entities.Column;
+import gui.frames.forms.IFormCondition;
 import gui.frames.forms.operations.OperationForm;
 import gui.frames.forms.operations.IOperationForm;
 import util.Utils;
@@ -15,7 +16,7 @@ import java.awt.event.WindowEvent;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SortForm extends OperationForm implements ActionListener, IOperationForm {
+public class SortForm extends OperationForm implements ActionListener, IOperationForm, IFormCondition {
 
     private final ButtonGroup buttonGroup = new ButtonGroup();
     private final JRadioButton ascendingRadioButton = new JRadioButton("Ascendente");
@@ -48,7 +49,7 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
         btnReady.addActionListener(this);
 
         setPreviousArgs();
-        verifyConditions();
+        checkBtnReady();
 
         pack();
         setLocationRelativeTo(null);
@@ -76,7 +77,10 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
 
     }
 
-    private void verifyConditions() {
+    private boolean noneSelection;
+
+    @Override
+    public void checkBtnReady() {
 
         AtomicBoolean anySelected = new AtomicBoolean(false);
 
@@ -86,11 +90,14 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
 
         btnReady.setEnabled(anySelected.get());
 
-        updateToolTipText(anySelected.get());
+        noneSelection = anySelected.get();
+
+        updateToolTipTxt();
 
     }
 
-    private void updateToolTipText(boolean noneSelection) {
+    @Override
+    public void updateToolTipTxt() {
 
         String btnReadyToolTipText = "";
 
@@ -106,7 +113,7 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
-        verifyConditions();
+        checkBtnReady();
 
         if (actionEvent.getSource() == btnReady) {
 

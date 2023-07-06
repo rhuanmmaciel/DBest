@@ -274,6 +274,11 @@ public class MainController extends MainFrame {
 			opAction = OperationType.SORT.getAction();
 			style = OperationType.SORT.DISPLAY_NAME;
 
+		}else if(menuItemIndexer == e.getSource()){
+
+			opAction = OperationType.INDEXER.getAction();
+			style = OperationType.INDEXER.DISPLAY_NAME;
+
 		}
 
 		if (opAction != null) {

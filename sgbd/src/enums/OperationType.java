@@ -31,6 +31,7 @@ public enum OperationType {
 			    NO_ONE_ARGUMENT, PARENT_WITHOUT_COLUMN, NO_PREFIX),
 	SORT("Ordenação", "↕", "sort", "sort[args](relation)", OperationArity.UNARY, SortForm.class, Sort.class,
 			    PARENT_WITHOUT_COLUMN),
+	INDEXER("Indexação", "❶", "indexer", "indexer[args](source)", OperationArity.UNARY, IndexerForm.class, Indexer.class),
 
 	JOIN("Junção", "|X|", "join", "join[args](source1,source2)", OperationArity.BINARY, JoinsForm.class, Join.class,
 			 NO_TWO_ARGUMENTS,  PARENT_WITHOUT_COLUMN),

@@ -110,7 +110,7 @@ public class Selection implements IOperator {
 
 		});
 
-		Operation.operationSetter(cell, "σ  " + expression, arguments, operator);
+		Operation.operationSetter(cell, cell.getType().SYMBOL + "  " + expression, arguments, operator);
 
 	}
 

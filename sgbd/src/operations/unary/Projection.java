@@ -63,7 +63,7 @@ public class Projection implements IOperator {
 
 		Operator readyOperator = new SelectColumnsOperator(operator, argumentsFixed);
 
-		Operation.operationSetter(cell, "π  " + argumentsFixed, argumentsFixed, readyOperator);
+		Operation.operationSetter(cell, cell.getType().SYMBOL + "  " + argumentsFixed, argumentsFixed, readyOperator);
 
 	}
 

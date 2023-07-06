@@ -157,6 +157,16 @@ public interface RelAlgebraListener extends ParseTreeListener {
 	 */
 	void exitAggregation(RelAlgebraParser.AggregationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#indexer}.
+	 * @param ctx the parse tree
+	 */
+	void enterIndexer(RelAlgebraParser.IndexerContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#indexer}.
+	 * @param ctx the parse tree
+	 */
+	void exitIndexer(RelAlgebraParser.IndexerContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RelAlgebraParser#join}.
 	 * @param ctx the parse tree
 	 */
