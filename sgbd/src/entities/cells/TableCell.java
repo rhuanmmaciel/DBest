@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mxgraph.model.mxCell;
 
+import controller.ConstantController;
 import entities.Column;
 import enums.ColumnDataType;
 import sgbd.prototype.Prototype;
@@ -12,14 +13,14 @@ import sgbd.query.sourceop.TableScan;
 import sgbd.table.Table;
 import sgbd.util.global.Util;
 
-public final class TableCell extends Cell{
+public abstract sealed class TableCell extends Cell permits CsvTableCell, FyiTableCell {
 
 	private Table table;
 	private Prototype prototype;
 	
 	public TableCell(mxCell jCell, String name, String style, List<Column> columns, Table table, Prototype prototype) {
 		
-		super(name, style, jCell, 80, 50);
+		super(name, style, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
 		setColumns(columns);
 		setTable(table);
 		setPrototype(prototype);
@@ -28,7 +29,7 @@ public final class TableCell extends Cell{
 	
 	public TableCell(mxCell jCell, String name, String style, Table table) {
 		
-		super(name, style, jCell, 80, 50);
+		super(name, style, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
 		setTable(table);
 		setPrototype(table.getHeader().getPrototype());
 		setColumns();
@@ -43,7 +44,6 @@ public final class TableCell extends Cell{
 	}
 	
 	public Table getTable() {
-
 		return table;
 	}
 	
@@ -77,7 +77,10 @@ public final class TableCell extends Cell{
 	
 	public void setColumns() {
 		
-		List<sgbd.prototype.column.Column> prototypeColumns = table.getHeader().getPrototype().getColumns();
+		List<sgbd.prototype.column.Column> prototypeColumns = table.getHeader().getPrototype().getColumns()
+				.stream()
+				.filter(x -> this instanceof CsvTableCell && !x.getName().equals(ConstantController.PK_CSV_TABLE_NAME))
+				.toList();
 
 		List<Column> columns = new ArrayList<>();
 		

@@ -10,9 +10,8 @@ import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.view.mxGraph;
 
 import controller.MainController;
-import entities.cells.Cell;
-import entities.cells.OperationCell;
-import entities.cells.TableCell;
+import entities.cells.*;
+import enums.FileType;
 import gui.frames.DataFrame;
 import sgbd.table.Table;
 
@@ -139,9 +138,11 @@ public class CellUtils extends MainController {
 				if (!Cell.getCells().containsKey(jCell))
 					cell = (mxCell) jCell;
 
+			if(cell.getStyle().equals(FileType.FYI.ID))
+				new FyiTableCell(cell, (String) cell.getValue(), "fyi", table);
 
-
-			new TableCell(cell, (String) cell.getValue(), "table", table);
+			if(cell.getStyle().equals(FileType.CSV.ID))
+				new CsvTableCell(cell, (String) cell.getValue(), "csv", table);
 
 		}
 

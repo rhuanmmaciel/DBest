@@ -38,7 +38,9 @@ public class ClickController {
 	private Cell cell;
     private CurrentAction.ActionType actionType;
 
-    public ClickController(AtomicReference<CurrentAction> currentActionRef, AtomicReference<mxCell> jCellRef, AtomicReference<Edge> edgeRef, MouseEvent mouseEvent, AtomicReference<mxCell> ghostJCellRef, AtomicReference<mxCell> invisibleJCellRef) {
+    public ClickController(AtomicReference<CurrentAction> currentActionRef, AtomicReference<mxCell> jCellRef,
+						   AtomicReference<Edge> edgeRef, MouseEvent mouseEvent, AtomicReference<mxCell> ghostJCellRef,
+						   AtomicReference<mxCell> invisibleJCellRef) {
 
 		this.currentActionRef = currentActionRef;
 		this.jCellRef = jCellRef;
@@ -103,7 +105,7 @@ public class ClickController {
 			}
 
 			edgeRef.get().reset();
-			currentActionRef.set(MainController.NONE_ACTION);
+			currentActionRef.set(ConstantController.NONE_ACTION);
 
 		}
 
@@ -220,7 +222,7 @@ public class ClickController {
     }
 
     private void resetCurrentAction(){
-        currentActionRef.set(MainController.NONE_ACTION);
+        currentActionRef.set(ConstantController.NONE_ACTION);
     }
 
 	private void addMovableEdge(MouseEvent mouseEvent, AtomicReference<mxCell> invisibleJCellRef, mxCell jCell){

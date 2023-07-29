@@ -12,7 +12,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import controller.MainController;
+import controller.ConstantController;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
@@ -186,9 +186,9 @@ public class DataFrame extends JDialog implements ActionListener {
 
 	private void resize(){
 		pack();
-		if (getWidth() > MainController.WIDTH) {
+		if (getWidth() > ConstantController.UI_WIDTH) {
 			int height = getHeight();
-			setSize((int) (MainController.WIDTH*0.95), height);
+			setSize((int) (ConstantController.UI_WIDTH *0.95), height);
 		}
 	}
 

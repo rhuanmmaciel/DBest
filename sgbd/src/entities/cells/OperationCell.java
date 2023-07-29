@@ -3,6 +3,7 @@ package entities.cells;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxStyleUtils;
+import controller.ConstantController;
 import controller.MainController;
 import entities.Column;
 import enums.ColumnDataType;
@@ -34,14 +35,16 @@ public final class OperationCell extends Cell {
 
 	public OperationCell(mxCell jCell, OperationType type) {
 
-		super(type.getDisplayNameAndSymbol(), type.DISPLAY_NAME, jCell, 80, 30);
+		super(type.getDisplayNameAndSymbol(), type.DISPLAY_NAME, jCell, ConstantController.OPERATION_CELL_WIDTH,
+				ConstantController.OPERATION_CELL_HEIGHT);
 		initializeInfos(type);
 
 	}
 
 	public OperationCell(mxCell jCell, OperationType type, List<Cell> parents, List<String> arguments) {
 
-		super(type.getDisplayNameAndSymbol(), type.DISPLAY_NAME, jCell, 80, 30);
+		super(type.getDisplayNameAndSymbol(), type.DISPLAY_NAME, jCell, ConstantController.OPERATION_CELL_WIDTH,
+				ConstantController.OPERATION_CELL_HEIGHT);
 		initializeInfos(type);
 
 		this.arguments = arguments;
@@ -57,8 +60,6 @@ public final class OperationCell extends Cell {
 				MainFrame.getGraph().insertEdge(parent.getJGraphCell(), null, "", parent.getJGraphCell(), jCell);
 
 			});
-			this.form = type.FORM;
-			this.operatorClass = type.OPERATOR_CLASS;
 			updateOperation();
 
 		}
@@ -67,7 +68,7 @@ public final class OperationCell extends Cell {
 	private void initializeInfos(OperationType type) {
 
 		this.type = type;
-		arity = type.ARITY;
+		this.arity = type.ARITY;
 		this.form = type.FORM;
 		this.operatorClass = type.OPERATOR_CLASS;
 

@@ -28,7 +28,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
-import database.TableCreator;
 import entities.Column;
 import entities.cells.TableCell;
 

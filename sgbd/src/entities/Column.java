@@ -9,7 +9,7 @@ public class Column{
 
 	private final String name;
 	private final String source;
-	private ColumnDataType type;
+	private final ColumnDataType type;
 	private final Boolean pk;
 	
 	public Column(String name, String tableName, ColumnDataType type, boolean pk) {
@@ -21,11 +21,15 @@ public class Column{
 		
 	}
 
+	public Column(String name, String tableName, ColumnDataType type) {
+
+		this(name, tableName, type, false);
+
+	}
+
 	public Column(String name, String tableName){
 
-		this.pk = false;
-		this.name = name;
-		this.source = tableName;
+		this(name, tableName, ColumnDataType.NONE, false);
 
 	}
 	

@@ -49,8 +49,8 @@ public class ExportFile extends JPanel {
 
 		switch (type){
 			case CSV -> exportToCsv(cell, fileChooser);
-			case DAT -> exportToDat(cell, fileChooser);
-			case MYSQL -> exportToMySQLScript(cell, fileChooser);
+			case FYI -> exportToDat(cell, fileChooser);
+			case SQL -> exportToMySQLScript(cell, fileChooser);
 		}
 
 	}
@@ -247,7 +247,7 @@ public class ExportFile extends JPanel {
 
 			AtomicReference<Boolean> exitReference = new AtomicReference<>(false);
 
-			TableCreator tableCreator = new TableCreator(fileName, cell.getColumns(), rows, exitReference, true);
+			TableCreator tableCreator = new TableCreator(fileName, cell.getColumns(), rows, true);
 
 			if(exitReference.get())
 				return;

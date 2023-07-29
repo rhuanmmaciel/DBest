@@ -69,7 +69,7 @@ public class ImportAsForm extends ImportExportAsForm {
 		}else if(e.getSource() == btnHead) {
 
 			dispose();
-			this.tableCell = new ImportFile(FileType.DAT, deleteCellReference).getResult();
+			this.tableCell = new ImportFile(FileType.FYI, deleteCellReference).getResult();
 			
 		}
 		

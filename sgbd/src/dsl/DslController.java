@@ -13,6 +13,7 @@ import dsl.entities.OperationExpression;
 import dsl.entities.Relation;
 import dsl.entities.VariableDeclaration;
 import dsl.utils.DslUtils;
+import entities.cells.FyiTableCell;
 import files.FileUtils;
 import gui.frames.dsl.TextEditor;
 import sgbd.table.Table;
@@ -108,8 +109,8 @@ public class DslController {
 					+ DslUtils.clearTableName(tableName) + ".dat' não encontrado");
 
 		else
-			MainController.saveTable(DslUtils.clearTableName(tableName),
-					Table.loadFromHeader(DslUtils.clearTableName(tableName) + ".head"));
+			MainController.saveTable(new FyiTableCell(null, DslUtils.clearTableName(tableName), "fyi",
+					Table.loadFromHeader(DslUtils.clearTableName(tableName) + ".head")));
 
 	}
 

@@ -13,7 +13,6 @@ import entities.Coordinates;
 import entities.Tree;
 import entities.utils.FindRoots;
 import entities.utils.TreeUtils;
-import enums.ColumnDataType;
 import sgbd.query.Operator;
 
 public abstract sealed class Cell permits TableCell, OperationCell {
@@ -24,19 +23,19 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 	private String name;
 	private final mxCell jCell;
 	private OperationCell child;
-	private final int length;
+	private final int height;
 	private final int width;
 	private Tree tree;
 	protected static Map<mxCell, Cell> cells = new HashMap<>();
 
-	public Cell(String name, String style, mxCell jCell, int length, int width) {
+	public Cell(String name, String style, mxCell jCell, int width, int height) {
 
 		this.columns = new ArrayList<>();
 		this.style = style;
 		this.name = name;
 		this.jCell = jCell;
 		this.child = null;
-		this.length = length;
+		this.height = height;
 		this.width = width;
 		this.operator = null;
 		this.tree = new Tree();
@@ -77,17 +76,9 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 		return jCell;
 	}
 
-	public void setOperator(Operator operatorClass) {
-
-		this.operator = operatorClass;
-
-	}
+	public abstract void setOperator(Operator operator);
 
 	public Operator getOperator() {
-
-		if (operator == null)
-			return null;
-
 		return operator;
 
 	}
@@ -179,8 +170,8 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 		return style;
 	}
 
-	public int getLength() {
-		return length;
+	public int getHeight() {
+		return height;
 	}
 
 	public int getWidth() {

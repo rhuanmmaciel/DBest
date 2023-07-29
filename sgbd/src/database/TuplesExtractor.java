@@ -2,6 +2,7 @@ package database;
 
 import java.util.*;
 
+import controller.ConstantController;
 import controller.MainController;
 import entities.Column;
 import sgbd.prototype.BData;
@@ -56,11 +57,11 @@ public class TuplesExtractor {
 					String columnName = sourceAndName ? Column.putSource(data.getKey(), line.getKey()) : data.getKey();
 
 					switch (Utils.getType(t, line.getKey(), data.getKey())) {
-						case INTEGER -> row.put(columnName, Objects.toString(line.getValue().getInt(data.getKey()), MainController.NULL));
-						case LONG -> row.put(columnName, Objects.toString(line.getValue().getLong(data.getKey()), MainController.NULL));
-						case DOUBLE -> row.put(columnName, Objects.toString(line.getValue().getDouble(data.getKey()), MainController.NULL));
-						case FLOAT -> row.put(columnName, Objects.toString(line.getValue().getFloat(data.getKey()), MainController.NULL));
-						default -> row.put(columnName, Objects.toString(line.getValue().getString(data.getKey()), MainController.NULL));
+						case INTEGER -> row.put(columnName, Objects.toString(line.getValue().getInt(data.getKey()), ConstantController.NULL));
+						case LONG -> row.put(columnName, Objects.toString(line.getValue().getLong(data.getKey()), ConstantController.NULL));
+						case DOUBLE -> row.put(columnName, Objects.toString(line.getValue().getDouble(data.getKey()), ConstantController.NULL));
+						case FLOAT -> row.put(columnName, Objects.toString(line.getValue().getFloat(data.getKey()), ConstantController.NULL));
+						default -> row.put(columnName, Objects.toString(line.getValue().getString(data.getKey()), ConstantController.NULL));
 					}
 				}
 	    }else{
@@ -71,7 +72,7 @@ public class TuplesExtractor {
 
 		for (String key : possibleKeys)
 			if (!row.containsKey(key))
-				row.put(key, MainController.NULL);
+				row.put(key, ConstantController.NULL);
 
 		return row;
 	

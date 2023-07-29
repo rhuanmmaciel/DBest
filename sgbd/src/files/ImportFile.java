@@ -1,6 +1,7 @@
  package files;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,8 +17,10 @@ import com.mxgraph.model.mxCell;
 import controller.MainController;
 import database.TableCreator;
 import entities.Column;
+import entities.cells.FyiTableCell;
 import entities.cells.TableCell;
 import enums.FileType;
+import files.csv.CsvInfo;
 import gui.frames.forms.importexport.CsvRecognizerForm;
 import gui.frames.main.MainFrame;
 import sgbd.table.Table;
@@ -61,7 +64,7 @@ public class ImportFile {
 	
 		case CSV -> filter = new FileNameExtensionFilter("CSV files", "csv");
 		case EXCEL -> filter = new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
-		case DAT -> filter = new FileNameExtensionFilter("Headers files", "head");
+		case FYI -> filter = new FileNameExtensionFilter("Headers files", "head");
 		case SQL -> throw new UnsupportedOperationException("Unimplemented case: " + fileType);
 		default -> throw new IllegalArgumentException("Unexpected value: " + fileType);
 
@@ -75,9 +78,13 @@ public class ImportFile {
 			
 			switch(fileType) {
 			
-			case CSV -> csv();
+			case CSV -> {
+				CsvInfo info = csv();
+				TableCreator tableCreator = new TableCreator(tableName.toString(), columns, info, false);
+				tableCell = tableCreator.getTableCell();
+			}
 			case EXCEL -> excel();
-			case DAT -> {
+			case FYI -> {
 
 				AtomicReference<Table> table = new AtomicReference<>();
 				header(table);
@@ -89,9 +96,9 @@ public class ImportFile {
 							fileUpload.getSelectedFile().getName();
 
 					mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(MainFrame.getGraph().getDefaultParent(), null,
-							fileName, 0, 0, 80, 30, "table");
+							fileName, 0, 0, 80, 30, "fyi");
 					table.get().open();
-					tableCell = new TableCell(jCell, fileName, "table", table.get());
+					tableCell = new FyiTableCell(jCell, fileName, "fyi", table.get());
 					
 				}
 			}
@@ -100,8 +107,8 @@ public class ImportFile {
 			
 			}
 
-			if (!exitReference.get() && FileType.DAT != fileType) {
-				TableCreator tableCreator = new TableCreator(tableName.toString(), columns, content, exitReference, false);
+			if (!exitReference.get() && FileType.FYI != fileType && FileType.CSV != fileType) {
+				TableCreator tableCreator = new TableCreator(tableName.toString(), columns, content, false);
 				tableCell = tableCreator.getTableCell();
 			}
 			return;
@@ -134,7 +141,7 @@ public class ImportFile {
 		AtomicReference<Table> table = new AtomicReference<>();
 		table.set(Table.loadFromHeader(fileName));
 
-		tableCell = new TableCell(jTableCell, fileName.substring(0, fileName.indexOf(".")), "tabela", table.get());
+		tableCell = new FyiTableCell(jTableCell, fileName.substring(0, fileName.indexOf(".")), "tabela", table.get());
 		
 	}
 
@@ -219,18 +226,21 @@ public class ImportFile {
 
 	}
 
-	private void csv() {
+	private CsvInfo csv() {
 
 		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(".csv")) {
 
 			JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo CSV.");
 			exitReference.set(true);
-			return;
+			return null;
 
 		}
-		
-		new CsvRecognizerForm(fileUpload.getSelectedFile().getAbsolutePath(), tableName, columns, content, exitReference);
-		
+
+		return new CsvRecognizerForm(Path.of(fileUpload.getSelectedFile().getAbsolutePath()), tableName, columns,
+				content, exitReference).getCsvInfo();
+
+
+
 	}
 	
 	public TableCell getResult() {

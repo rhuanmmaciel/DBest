@@ -2,6 +2,7 @@ package database;
 
 import java.util.*;
 
+import controller.ConstantController;
 import controller.MainController;
 import enums.ColumnDataType;
 
@@ -9,7 +10,7 @@ public class TableUtils {
 
 	public static boolean hasNull(List<String> columnData){
 
-		for(String data : columnData) if(data.equals(MainController.NULL)) return true;
+		for(String data : columnData) if(data.equals(ConstantController.NULL)) return true;
 
 		return false;
 
@@ -24,7 +25,7 @@ public class TableUtils {
 
 		for (String inf : columnData) {
 
-			if (!inf.equals(MainController.NULL)) {
+			if (!inf.equals(ConstantController.NULL)) {
 
 				if (inf.length() > 1)
 					types.remove(ColumnDataType.CHARACTER);
@@ -95,7 +96,7 @@ public class TableUtils {
 
 		for(List<String> columnData : columns) {
 
-			if (columnData.contains("") || columnData.contains(null) || columnData.contains(MainController.NULL))
+			if (columnData.contains("") || columnData.contains(null) || columnData.contains(ConstantController.NULL))
 				return false;
 
 			int i = 0;

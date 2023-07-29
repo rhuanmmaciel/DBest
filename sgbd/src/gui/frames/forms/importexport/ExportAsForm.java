@@ -77,13 +77,13 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener{
 			
 			closeWindow();
 			if(!cancelService.get())
-				new ExportFile(cell, FileType.DAT);
+				new ExportFile(cell, FileType.FYI);
 			
 		}else if(e.getSource() == btnMySQLScript){
 
 			closeWindow();
 			if(!cancelService.get())
-				new ExportFile(cell, FileType.MYSQL);
+				new ExportFile(cell, FileType.SQL);
 
 		}
 		

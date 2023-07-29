@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import controller.ConstantController;
 import controller.MainController;
 import exceptions.InvalidCsvException;
 
-public class Recognizer {
+public class CsvRecognizer {
 
 	public static CsvData importCsv(Path path, char separator, char stringDelimiter, int beginIndex)
 			throws InvalidCsvException {
@@ -50,7 +51,7 @@ public class Recognizer {
 						tuple.remove(tuple.size() - 1);
 
 					while (tuple.size() < size)
-						tuple.add(MainController.NULL);
+						tuple.add(ConstantController.NULL);
 
 					dataList.add(tuple);
 

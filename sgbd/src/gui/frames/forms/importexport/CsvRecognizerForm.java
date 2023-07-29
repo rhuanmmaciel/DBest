@@ -20,7 +20,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -38,13 +37,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import controller.ConstantController;
 import controller.MainController;
 import database.TableUtils;
 import entities.Column;
 import enums.ColumnDataType;
 import exceptions.InvalidCsvException;
-import files.csv.Recognizer;
-import files.csv.Recognizer.CsvData;
+import files.csv.CsvInfo;
+import files.csv.CsvRecognizer;
+import files.csv.CsvRecognizer.CsvData;
 import gui.frames.ErrorFrame;
 import gui.utils.JTableUtils;
 import gui.utils.JTableUtils.CustomTableModel;
@@ -70,7 +71,6 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 	private final JRadioButton radioSpace = new JRadioButton("Espaço");
 	private final JRadioButton radioOther = new JRadioButton("Outro: ");
 
-	private final Map<String, JCheckBox> pkCheckBoxes = new HashMap<>();
 	private final Map<String, JComboBox<?>> typeComboBoxes = new HashMap<>();
 	private final List<String> columnsName = new ArrayList<>();
 
@@ -84,18 +84,20 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 	private final char defaultSeparator = ',';
 	private final char defaultStringDelimiter = '"';
+	private final int defaultBeginIndex = 1;
 
 	private char separator = defaultSeparator;
 	private char stringDelimiter = defaultStringDelimiter;
+	private int beginIndex = defaultBeginIndex;
 
-	public CsvRecognizerForm(String path, StringBuilder tableName, List<Column> columns,
+	public CsvRecognizerForm(Path path, StringBuilder tableName, List<Column> columns,
 							 Map<Integer, Map<String, String>> content, AtomicReference<Boolean> exitReference) {
 
 		super((Window) null, "Tabela csv");
 		setModal(true);
 
 		this.exitReference = exitReference;
-		this.path = Path.of(path);
+		this.path = path;
 		this.columns = columns;
 		this.content = content;
 		this.tableName = tableName;
@@ -116,14 +118,14 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 	private void initializeGUI() {
 
-		setBounds(0, 0, MainController.WIDTH, MainController.HEIGHT);
+		setBounds(0, 0, ConstantController.UI_WIDTH, ConstantController.UI_HEIGHT);
 		setLocationRelativeTo(null);
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
 		try {
 
-			csvData = Recognizer.importCsv(path, defaultSeparator, defaultStringDelimiter, 1);
+			csvData = CsvRecognizer.importCsv(path, defaultSeparator, defaultStringDelimiter, 1);
 
 		} catch (InvalidCsvException e) {
 
@@ -318,25 +320,8 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 	private void verifyReadyButton() {
 
 		boolean tableNameAlreadyExist = MainController.getTables().containsKey(txtFieldTableName.getText().strip());
-		boolean hasPK = pkCheckBoxes.values().stream().anyMatch(JCheckBox::isSelected);
 
-		List<List<String>> columnsSelected = new ArrayList<>();
-		for(Map.Entry<String, JCheckBox> checkBox : pkCheckBoxes.entrySet())
-			if(checkBox.getValue().isSelected()) {
-
-				List<String> columnData = new ArrayList<>();
-				int index = csvData.columnsNameList().indexOf(checkBox.getKey());
-
-				for (List<String> column : csvData.dataList())
-					columnData.add(column.get(index));
-
-				columnsSelected.add(columnData);
-
-			}
-
-		boolean canBePK = TableUtils.canBePrimaryKey(columnsSelected);
-
-		btnDone.setEnabled(!tableNameAlreadyExist && hasPK && canBePK);
+		btnDone.setEnabled(!tableNameAlreadyExist);
 
 	}
 
@@ -356,12 +341,11 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 			else
 				type = ColumnDataType.NONE;
 
-			columns.add(new Column(columnName, txtFieldTableName.getText().strip(), type,
-					pkCheckBoxes.get(columnName).isSelected()));
+			columns.add(new Column(columnName, txtFieldTableName.getText().strip(), type));
 
 		}
 
-		for (int i = 2; i < jTable.getRowCount(); i++) {
+		for (int i = 1; i < jTable.getRowCount(); i++) {
 
 			Map<String, String> column = new HashMap<>();
 			for (int j = 1; j < jTable.getColumnCount(); j++)
@@ -384,14 +368,14 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 		else if (radioOther.isSelected())
 			separator = txtFieldOtherSeparator.getText().isEmpty() ? ' ' : txtFieldOtherSeparator.getText().charAt(0);
 
-		int beginIndex = (int) spinnerFromRow.getValue();
+		beginIndex = (int) spinnerFromRow.getValue();
 
 		stringDelimiter = txtFieldStringDelimiter.getText().isEmpty() ? '\0'
 				: txtFieldStringDelimiter.getText().charAt(0);
 
 		try {
 
-			csvData = Recognizer.importCsv(path, separator, stringDelimiter, beginIndex);
+			csvData = CsvRecognizer.importCsv(path, separator, stringDelimiter, beginIndex);
 
 		} catch (InvalidCsvException e) {
 
@@ -408,7 +392,6 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 	private void loadJTable() {
 
-		pkCheckBoxes.clear();
 		typeComboBoxes.clear();
 		columnsName.clear();
 
@@ -416,10 +399,8 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 		model = new CustomTableModel(csvData.dataArray(), csvData.columnsNameArray());
 		model.insertRow(0, new Object[] {});
-		model.insertRow(0, new Object[] {});
 
 		List<JComboBox<?>> comboboxes = new ArrayList<>();
-		List<JCheckBox> checkboxes = new ArrayList<>();
 
 		for (int i = 0; i < columnsName.size(); i++) {
 
@@ -431,13 +412,9 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 					.map(ColumnDataType::toString).toArray(String[]::new);
 
 			JComboBox<String> comboBox = new JComboBox<>(types);
-			JCheckBox checkBox = new JCheckBox();
 			comboBox.addActionListener(this);
-			checkBox.addActionListener(this);
 
 			comboboxes.add(comboBox);
-			checkboxes.add(checkBox);
-			pkCheckBoxes.put(columnsName.get(i), checkBox);
 			typeComboBoxes.put(columnsName.get(i), comboBox);
 
 		}
@@ -449,19 +426,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 			@Override
 			public TableCellRenderer getCellRenderer(int row, int column) {
 
-				if (row == 0 && column != 0) {
-					return new DefaultTableCellRenderer() {
-
-						@Override
-						public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-								boolean hasFocus, int row, int column) {
-
-							return checkboxes.get(column - 1);
-						}
-					};
-				}
-
-				if (row == 1 && column != 0) {
+				if (row == 0 && column != 0)
 					return new DefaultTableCellRenderer() {
 
 						@Override
@@ -471,7 +436,6 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 							return comboboxes.get(column - 1);
 						}
 					};
-				}
 
 				return super.getCellRenderer(row, column);
 			}
@@ -480,12 +444,9 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 			public TableCellEditor getCellEditor(int row, int column) {
 
 				if (row == 0 && column != 0)
-					return new DefaultCellEditor(checkboxes.get(column - 1));
-
-				if (row == 1 && column != 0)
 					return new DefaultCellEditor(comboboxes.get(column - 1));
-				else
-					return super.getCellEditor(row, column);
+
+				return super.getCellEditor(row, column);
 			}
 		};
 
@@ -501,7 +462,6 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 		JTableUtils.setNullInRed(jTable);
 		scrollPane.setViewportView(jTable);
 		((CustomTableModel) model).setRowEnabled(0, true);
-		((CustomTableModel) model).setRowEnabled(1, true);
 
 	}
 
@@ -509,12 +469,17 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 		model.addColumn("Nome:");
 
-		model.setValueAt("Chave Primária:", 0, model.getColumnCount() - 1);
-		model.setValueAt("Tipo:", 1, model.getColumnCount() - 1);
+		model.setValueAt("Tipo:", 0, model.getColumnCount() - 1);
 
 		for (int row = 2; row < model.getRowCount(); row++) {
 			model.setValueAt(row - 1, row, model.getColumnCount() - 1);
 		}
+
+	}
+
+	public CsvInfo getCsvInfo(){
+
+		return new CsvInfo(separator, stringDelimiter, beginIndex, path);
 
 	}
 

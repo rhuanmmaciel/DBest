@@ -2,7 +2,6 @@ package gui.frames.main;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -25,6 +24,7 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 
+import controller.ConstantController;
 import entities.Action.CurrentAction;
 import entities.buttons.Button;
 import entities.buttons.OperationButton;
@@ -35,9 +35,6 @@ public abstract class MainFrame extends JFrame
 		implements ActionListener, MouseListener, KeyListener, MouseMotionListener {
 
 	private static Container mainContainer;
-
-	public static final int WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.65);
-	public static final int HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.7);
 
 	protected static mxGraph graph = new mxGraph();
 	protected static mxGraphComponent graphComponent = new mxGraphComponent(graph);
@@ -86,7 +83,7 @@ public abstract class MainFrame extends JFrame
 
 	private void initGUI() {
 
-		setSize(WIDTH, HEIGHT);
+		setSize(ConstantController.UI_WIDTH, ConstantController.UI_HEIGHT);
 		setLocationRelativeTo(null);
 
 		operationButtonsPane.setLayout(new BoxLayout(operationButtonsPane, BoxLayout.Y_AXIS));

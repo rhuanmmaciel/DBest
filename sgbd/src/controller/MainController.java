@@ -51,8 +51,6 @@ import files.ExportFile;
 
 public class MainController extends MainFrame {
 
-	public static String NULL = "null";
-
 	private static final Map<Integer, Tree> trees = new HashMap<>();
 	private static File lastDirectory = new File("");
 
@@ -62,8 +60,7 @@ public class MainController extends MainFrame {
 	private mxCell ghostJCell = null;
 	private final AtomicReference<mxCell> invisibleJCellRef = new AtomicReference<>(null);
 
-	private final AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>(NONE_ACTION);
-	public static final CurrentAction NONE_ACTION = new CurrentAction(ActionType.NONE);
+	private final AtomicReference<CurrentAction> currentActionRef = new AtomicReference<>(ConstantController.NONE_ACTION);
 	private final AtomicReference<Edge> edgeRef = new AtomicReference<>(new Edge());
 
 	private static int yTables = 0;
@@ -316,7 +313,7 @@ public class MainController extends MainFrame {
 
 		if (!cancelServiceReference.get()) {
 
-			saveTable(tableCell.getName(), tableCell.getTable());
+			saveTable(tableCell);
 			CellUtils.deleteCell(tableCell.getJGraphCell());
 
 		} else {
@@ -332,7 +329,7 @@ public class MainController extends MainFrame {
 
 	private void setNoneAction(){
 
-		currentActionRef.set(NONE_ACTION);
+		currentActionRef.set(ConstantController.NONE_ACTION);
 
 	}
 
@@ -344,15 +341,16 @@ public class MainController extends MainFrame {
 
 	}
 
-	public static void saveTable(String tableName, Table table) {
+	public static void saveTable(TableCell table) {
 
-		boolean create = tables.keySet().stream().noneMatch(x -> x.equals(tableName));
+		boolean create = tables.keySet().stream().noneMatch(x -> x.equals(table.getName()));
 
 		if (create) {
-			tablesGraph.insertVertex(tablesGraph.getDefaultParent(), null, tableName, 0, yTables, 80, 30,
-					"table");
 
-			tables.put(tableName, table);
+			tablesGraph.insertVertex(tablesGraph.getDefaultParent(), null, table.getName(), 0, yTables,
+					table.getWidth(), table.getHeight(), table.getStyle());
+
+			tables.put(table.getName(), table.getTable());
 
 			tablesPane.revalidate();
 
@@ -515,7 +513,7 @@ public class MainController extends MainFrame {
 
 		relation.getCell().getTable().open();
 
-		saveTable(relation.getName(), relation.getCell().getTable());
+		saveTable(relation.getCell());
 
 	}
 
