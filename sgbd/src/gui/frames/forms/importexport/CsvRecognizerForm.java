@@ -471,8 +471,8 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 		model.setValueAt("Tipo:", 0, model.getColumnCount() - 1);
 
-		for (int row = 2; row < model.getRowCount(); row++) {
-			model.setValueAt(row - 1, row, model.getColumnCount() - 1);
+		for (int row = 1; row < model.getRowCount(); row++) {
+			model.setValueAt(row , row, model.getColumnCount() - 1);
 		}
 
 	}

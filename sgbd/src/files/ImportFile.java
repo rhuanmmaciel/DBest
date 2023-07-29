@@ -80,8 +80,14 @@ public class ImportFile {
 			
 			case CSV -> {
 				CsvInfo info = csv();
-				TableCreator tableCreator = new TableCreator(tableName.toString(), columns, info, false);
-				tableCell = tableCreator.getTableCell();
+
+				if(!exitReference.get()) {
+
+					TableCreator tableCreator = new TableCreator(tableName.toString(), columns, info, false);
+					tableCell = tableCreator.getTableCell();
+
+				}
+
 			}
 			case EXCEL -> excel();
 			case FYI -> {
