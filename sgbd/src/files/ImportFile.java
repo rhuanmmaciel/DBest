@@ -14,6 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.mxgraph.model.mxCell;
 
+import controller.ConstantController;
 import controller.MainController;
 import database.TableCreator;
 import entities.Column;
@@ -97,14 +98,14 @@ public class ImportFile {
 
 				if (!exitReference.get()) {
 
-					String fileName = fileUpload.getSelectedFile().getName().endsWith(".head")  ?
+					String fileName = fileUpload.getSelectedFile().getName().endsWith(ConstantController.HEADER_FILE_EXTENSION)  ?
 							fileUpload.getSelectedFile().getName().substring(0,fileUpload.getSelectedFile().getName().indexOf(".")):
 							fileUpload.getSelectedFile().getName();
 
 					mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(MainFrame.getGraph().getDefaultParent(), null,
-							fileName, 0, 0, 80, 30, "fyi");
+							fileName, 0, 0, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.FYI.ID);
 					table.get().open();
-					tableCell = new FyiTableCell(jCell, fileName, "fyi", table.get());
+					tableCell = new FyiTableCell(jCell, fileName, FileType.FYI.ID, table.get());
 					
 				}
 			}
@@ -128,7 +129,7 @@ public class ImportFile {
 
 	private void header(AtomicReference<Table> table) {
 
-		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(".head")) {
+		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(ConstantController.HEADER_FILE_EXTENSION)) {
 
 			JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo .head");
 			exitReference.set(true);
@@ -234,7 +235,7 @@ public class ImportFile {
 
 	private CsvInfo csv() {
 
-		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(".csv")) {
+		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(FileType.CSV.EXTENSION)) {
 
 			JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo CSV.");
 			exitReference.set(true);

@@ -1,6 +1,8 @@
 package enums;
 
 import entities.Action.CreateOperationAction;
+import gui.frames.forms.operations.AtomicExpressionForm;
+import gui.frames.forms.operations.BooleanExpressionForm;
 import gui.frames.forms.operations.IOperationForm;
 import gui.frames.forms.operations.unary.*;
 import operations.IOperator;
@@ -19,7 +21,7 @@ import static enums.OperationErrorType.*;
 
 public enum OperationType {
 
-	SELECTION("Seleção", "σ", "selection", "selection[args](source)", OperationArity.UNARY, SelectionForm.class, Selection.class,
+	SELECTION("Seleção", "σ", "selection", "selection[args](source)", OperationArity.UNARY, BooleanExpressionForm.class, Selection.class,
 			   NO_ONE_ARGUMENT),
 	PROJECTION("Projeção", "π", "projection", "projection[args](source)",OperationArity.UNARY, ProjectionForm.class, Projection.class,
 			   PARENT_WITHOUT_COLUMN),

@@ -160,7 +160,7 @@ public final class OperationCell extends Cell {
 	}
 
 	public boolean hasParents() {
-		return parents.size() != 0;
+		return !parents.isEmpty();
 	}
 
 	public Boolean hasTree() {

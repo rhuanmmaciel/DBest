@@ -6,6 +6,9 @@ import java.awt.*;
 
 public class ConstantController {
 
+    public static final String NOT_EQUAL_SYMBOL = "≠";
+    public static final String GREATER_THAN_OR_EQUAL_SYMBOL = "≥";
+    public static final String LESS_THAN_OR_EQUAL_SYMBOL = "≤";
     public static final String HEADER_FILE_EXTENSION = ".head";
     public static final int TABLE_CELL_HEIGHT = 30;
     public static final int TABLE_CELL_WIDTH = 80;

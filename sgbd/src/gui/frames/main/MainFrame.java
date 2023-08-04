@@ -8,6 +8,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BoxLayout;
@@ -21,8 +23,10 @@ import javax.swing.JToolBar;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
+import enums.FileType;
 
 import controller.ConstantController;
 import entities.Action.CurrentAction;
@@ -112,7 +116,22 @@ public abstract class MainFrame extends JFrame
 
 		mainContainer = getContentPane();
 
+		setJCellStyles();
+
 		setVisible(true);
+
+	}
+
+	private void setJCellStyles(){
+
+		String customStyle = FileType.CSV.ID;
+
+		Map<String, Object> style = new HashMap<>();
+
+		style.put(mxConstants.STYLE_FILLCOLOR, "#6EFAEC");
+
+		graph.getStylesheet().putCellStyle(customStyle, style);
+		tablesGraph.getStylesheet().putCellStyle(customStyle, style);
 
 	}
 
