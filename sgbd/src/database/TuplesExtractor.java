@@ -6,8 +6,9 @@ import controller.ConstantController;
 import controller.MainController;
 import entities.Column;
 import sgbd.prototype.BData;
-import sgbd.prototype.ComplexRowData;
+import sgbd.prototype.RowData;
 import sgbd.prototype.query.Tuple;
+import sgbd.prototype.query.fields.*;
 import sgbd.query.Operator;
 import util.Utils;
 
@@ -51,18 +52,16 @@ public class TuplesExtractor {
 
 	    	Tuple t = operator.next();
 
-	        for (Map.Entry<String, ComplexRowData> line : t)
-				for (Map.Entry<String, BData> data : line.getValue()) {
+	        for (Map.Entry<String, RowData> line : t)
+				for (Map.Entry<String, Field> data : line.getValue()) {
 
 					String columnName = sourceAndName ? Column.putSource(data.getKey(), line.getKey()) : data.getKey();
 
-					switch (Utils.getType(t, line.getKey(), data.getKey())) {
-						case INTEGER -> row.put(columnName, Objects.toString(line.getValue().getInt(data.getKey()), ConstantController.NULL));
-						case LONG -> row.put(columnName, Objects.toString(line.getValue().getLong(data.getKey()), ConstantController.NULL));
-						case DOUBLE -> row.put(columnName, Objects.toString(line.getValue().getDouble(data.getKey()), ConstantController.NULL));
-						case FLOAT -> row.put(columnName, Objects.toString(line.getValue().getFloat(data.getKey()), ConstantController.NULL));
-						default -> row.put(columnName, Objects.toString(line.getValue().getString(data.getKey()), ConstantController.NULL));
-					}
+					if(data.getValue() instanceof IntegerField) row.put(columnName, Objects.toString(line.getValue().getInt(data.getKey()), ConstantController.NULL));
+					else if(data.getValue() instanceof LongField) row.put(columnName, Objects.toString(line.getValue().getLong(data.getKey()), ConstantController.NULL));
+					else if(data.getValue() instanceof DoubleField) row.put(columnName, Objects.toString(line.getValue().getDouble(data.getKey()), ConstantController.NULL));
+					else if(data.getValue() instanceof FloatField) row.put(columnName, Objects.toString(line.getValue().getFloat(data.getKey()), ConstantController.NULL));
+					else row.put(columnName, Objects.toString(line.getValue().getString(data.getKey()), ConstantController.NULL));
 				}
 	    }else{
 

@@ -5,24 +5,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
 
 import com.mxgraph.model.mxCell;
 
-import controller.ConstantController;
-import controller.MainController;
 import entities.Column;
-import entities.cells.CsvTableCell;
-import entities.cells.OperationCell;
-import enums.OperationType;
 import lib.booleanexpression.entities.elements.Element;
 import lib.booleanexpression.entities.elements.Value;
 import lib.booleanexpression.entities.elements.Variable;
 import lib.booleanexpression.entities.expressions.AtomicExpression;
 import lib.booleanexpression.enums.RelationalOperator;
-import sgbd.table.Table;
 
 public class AtomicExpressionForm extends OperationForm implements ActionListener, IOperationForm {
 
@@ -31,7 +26,8 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 	private ValueType valueType2 = ValueType.NONE;
 
 	private final JTextField txtFieldValue1 = new JTextField();
-	private final JComboBox<String> comboBoxOperator = new JComboBox<>(new String[]{"=", "≠", ">", "<", "≥", "≤", "is", "is not"});
+	private final JComboBox<String> comboBoxOperator = new JComboBox<>(Arrays.stream(RelationalOperator
+					.values()).map(x -> x.symbols[0]).toArray(String[]::new));
 	private final JTextField txtFieldValue2 = new JTextField();
 
 	private final JComboBox<String> comboBoxSource2 = new JComboBox<>();
@@ -202,31 +198,20 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 		}else if (e.getSource() == btnReady) {
 
 			Element firstElement = switch (valueType1){
-				case COLUMN -> new Variable(Column.removeName(txtFieldValue1.getText()), Column.removeSource(txtFieldValue1.getText()));
+				case COLUMN -> new Variable(txtFieldValue1.getText());
 				case NUMBER -> new Value(Float.parseFloat(txtFieldValue1.getText()));
 				case STRING -> new Value(txtFieldValue1.getText());
 				case NULL, NONE -> null;
 			};
 
 			Element secondElement = switch (valueType2){
-				case COLUMN -> new Variable(Column.removeName(txtFieldValue2.getText()), Column.removeSource(txtFieldValue2.getText()));
+				case COLUMN -> new Variable(txtFieldValue2.getText());
 				case NUMBER -> new Value(Float.parseFloat(txtFieldValue2.getText()));
 				case STRING -> new Value(txtFieldValue2.getText());
 				case NULL, NONE -> null;
 			};
 
-			RelationalOperator relationalOperator = switch ((String)comboBoxOperator.getSelectedItem()){
-				case "=" -> RelationalOperator.EQUAL;
-				case ConstantController.NOT_EQUAL_SYMBOL -> RelationalOperator.NOT_EQUAL;
-				case ConstantController.GREATER_THAN_OR_EQUAL_SYMBOL -> RelationalOperator.GREATER_THAN_OR_EQUAL;
-				case ConstantController.LESS_THAN_OR_EQUAL_SYMBOL -> RelationalOperator.LESS_THAN_OR_EQUAL;
-				case ">" -> RelationalOperator.GREATER_THAN;
-				case "<" -> RelationalOperator.LESS_THAN;
-				case "is" -> RelationalOperator.IS;
-				case "is not" -> RelationalOperator.IS_NOT;
-				default ->
-						throw new IllegalStateException("Unexpected value: " + (String) comboBoxOperator.getSelectedItem());
-			};
+			RelationalOperator relationalOperator = RelationalOperator.getOperator((String)comboBoxOperator.getSelectedItem());
 
 			atomicExpression = new AtomicExpression(firstElement, secondElement, relationalOperator);
 			btnReady();

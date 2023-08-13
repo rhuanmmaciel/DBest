@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class AtomicPane extends ExpressionPane implements ActionListener {
 
@@ -38,7 +39,7 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
 
         if(actionEvent.getSource() == btnEdit){
 
-            expression.setText(new AtomicExpressionForm(jCell).getResult().toString());
+            expression.setText(Objects.toString(new AtomicExpressionForm(jCell).getResult()));
 
             updateRootSize();
 

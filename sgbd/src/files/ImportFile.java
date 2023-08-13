@@ -98,7 +98,7 @@ public class ImportFile {
 
 				if (!exitReference.get()) {
 
-					String fileName = fileUpload.getSelectedFile().getName().endsWith(ConstantController.HEADER_FILE_EXTENSION)  ?
+					String fileName = fileUpload.getSelectedFile().getName().endsWith(FileType.HEADER.EXTENSION)  ?
 							fileUpload.getSelectedFile().getName().substring(0,fileUpload.getSelectedFile().getName().indexOf(".")):
 							fileUpload.getSelectedFile().getName();
 
@@ -129,7 +129,7 @@ public class ImportFile {
 
 	private void header(AtomicReference<Table> table) {
 
-		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(ConstantController.HEADER_FILE_EXTENSION)) {
+		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(FileType.HEADER.EXTENSION)) {
 
 			JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo .head");
 			exitReference.set(true);

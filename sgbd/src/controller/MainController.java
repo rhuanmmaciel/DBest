@@ -36,6 +36,7 @@ import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import entities.utils.CellUtils;
 import entities.utils.TreeUtils;
+import enums.FileType;
 import enums.OperationType;
 import files.FileUtils;
 import files.ImportFile;
@@ -509,7 +510,7 @@ public class MainController extends MainFrame {
 		mxCell jTableCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
 				relation.getName(), x, y, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, "table");
 
-		relation.setCell(new ImportFile(relation.getName() + ConstantController.HEADER_FILE_EXTENSION, jTableCell).getResult());
+		relation.setCell(new ImportFile(relation.getName() + FileType.HEADER.EXTENSION, jTableCell).getResult());
 
 		relation.getCell().getTable().open();
 

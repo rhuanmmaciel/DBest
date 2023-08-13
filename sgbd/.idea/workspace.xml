@@ -42,7 +42,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
     &quot;last.edited.regexp&quot;: &quot;(test.ada)&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/rhuan/Documents/fy/FyiDatabase-Java&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/rhuan/Documents/temp/sgbd&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
@@ -64,13 +64,26 @@
       <command value="clear" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.sgbd">
+  <component name="RunManager" selected="Application.BooleanExpressionRecognizer">
     <configuration name="BooleanExpressionForm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="gui.frames.forms.operations.BooleanExpressionForm" />
       <module name="sgbd" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="gui.frames.forms.operations.panelstruct.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BooleanExpressionRecognizer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="booleanexpression.BooleanExpressionRecognizer" />
+      <module name="sgbd" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="booleanexpression.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -87,6 +100,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.BooleanExpressionRecognizer" />
         <item itemvalue="Application.BooleanExpressionForm" />
       </list>
     </recent_temporary>

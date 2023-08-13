@@ -74,9 +74,9 @@ public class ExportFile extends JPanel {
 			File fileToSave = fileChooser.getSelectedFile();
 			String filePath = fileToSave.getAbsolutePath();
 
-			if (!filePath.endsWith(".sql")) {
+			if (!filePath.endsWith(FileType.SQL.EXTENSION)) {
 
-				filePath += ".sql";
+				filePath += FileType.SQL.EXTENSION;
 				fileToSave = new File(filePath);
 
 			}
@@ -171,7 +171,7 @@ public class ExportFile extends JPanel {
 
 						String data = Objects.toString(row.get(i)).replaceAll("'", "\\\\'");
 
-						if(isString && !data.equals("null")) data = "'" + data + "'";
+						if(isString && !data.equals(ConstantController.NULL)) data = "'" + data + "'";
 
 						sql.write(data);
 
@@ -204,7 +204,7 @@ public class ExportFile extends JPanel {
 
 	private void exportToDat(Cell cell, JFileChooser fileChooser) {
 
-		fileChooser.setSelectedFile(new File("tabela"+ConstantController.HEADER_FILE_EXTENSION));
+		fileChooser.setSelectedFile(new File("tabela"+FileType.HEADER.EXTENSION));
 
 		int userSelection = fileChooser.showSaveDialog(null);
 
@@ -214,15 +214,15 @@ public class ExportFile extends JPanel {
 			File fileToSave = fileChooser.getSelectedFile();
 			String filePath = fileToSave.getAbsolutePath();
 
-			if (!filePath.endsWith(ConstantController.HEADER_FILE_EXTENSION)) {
+			if (!filePath.endsWith(FileType.HEADER.EXTENSION)) {
 
-				filePath += ConstantController.HEADER_FILE_EXTENSION;
+				filePath += FileType.HEADER.EXTENSION;
 				fileToSave = new File(filePath);
 
 			}
 
-			String headFileName = fileChooser.getSelectedFile().getName() + ConstantController.HEADER_FILE_EXTENSION;
-			String fileName = headFileName.endsWith(ConstantController.HEADER_FILE_EXTENSION) ?
+			String headFileName = fileChooser.getSelectedFile().getName() + FileType.HEADER.EXTENSION;
+			String fileName = headFileName.endsWith(FileType.HEADER.EXTENSION) ?
 					headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
 
 			if (fileToSave.exists()) {
@@ -436,7 +436,7 @@ public class ExportFile extends JPanel {
 			final String finalPath = path.substring(0, path.lastIndexOf("/") + 1);
 
 			tree.getLeaves().forEach(table -> FileUtils.copyDatFilesWithHead(
-					table.getName()+ConstantController.HEADER_FILE_EXTENSION, table.getName(), Path.of(finalPath)));
+					table.getName()+FileType.HEADER.EXTENSION, table.getName(), Path.of(finalPath)));
 		
 		}
 		

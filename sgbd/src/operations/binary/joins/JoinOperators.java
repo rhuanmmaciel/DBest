@@ -10,7 +10,7 @@ import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import sgbd.prototype.ComplexRowData;
+import sgbd.prototype.RowData;
 import sgbd.prototype.query.Tuple;
 import sgbd.query.Operator;
 import util.Utils;
@@ -89,8 +89,8 @@ public abstract class JoinOperators implements IOperator {
         ColumnDataType type1 = Utils.getType(t1, source1, item1);
         ColumnDataType type2 = Utils.getType(t2, source2, item2);
 
-        ComplexRowData row1 = t1.getContent(source1);
-        ComplexRowData row2 = t2.getContent(source2);
+        RowData row1 = t1.getContent(source1);
+        RowData row2 = t2.getContent(source2);
 
         switch (type1){
             case INTEGER -> {
