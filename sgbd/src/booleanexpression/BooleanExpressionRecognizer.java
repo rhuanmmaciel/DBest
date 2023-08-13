@@ -24,11 +24,46 @@ public class BooleanExpressionRecognizer {
 
     public static void main(String[] args){
 
-        System.out.println((new BooleanExpressionRecognizer().recognizer("(a == 5 aND b is not null Or(teste == 'a' AND(b == c)AND b!=u)OR i == 'a')")));
+        System.out.println((new BooleanExpressionRecognizer().recognizer(new BooleanExpressionRecognizer()
+                .recognizer("(a == 5 aND b is not null Or(teste == 'a' AND(b == c)AND b!=u)OR i == 'a')"))));
 
     }
 
     public BooleanExpressionRecognizer(){
+    }
+
+    public String recognizer(BooleanExpression booleanExpression){
+
+        if (booleanExpression instanceof AtomicExpression atomicExpression) return recognizeAtomic(atomicExpression);
+
+        LogicalExpression logicalExpression = (LogicalExpression) booleanExpression;
+
+        StringBuilder logicalExpressionSB = new StringBuilder();
+        int amountOfExpressions = logicalExpression.getExpressions().size();
+        LogicalOperator operator = logicalExpression.getLogicalOperator();
+
+        logicalExpressionSB.append(" ( ");
+
+        for (int i = 0; i < logicalExpression.getExpressions().size(); i++){
+
+            logicalExpressionSB.append(recognizer(logicalExpression.getExpressions().get(i)));
+            if(i != amountOfExpressions - 1) logicalExpressionSB.append(operator);
+
+        }
+
+        logicalExpressionSB.append(" ) ");
+
+        return logicalExpressionSB.toString();
+
+    }
+
+    private String recognizeAtomic(AtomicExpression atomicExpression){
+
+        return " ( "+atomicExpression.getFirstElement() + " " +
+                atomicExpression.getRelationalOperator().symbols[0] + " " +
+                atomicExpression.getSecondElement() +
+                " ) ";
+
     }
 
     public BooleanExpression recognizer(String txt){
