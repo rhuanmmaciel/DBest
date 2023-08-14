@@ -17,6 +17,7 @@ import javax.swing.*;
 
 import com.mxgraph.swing.mxGraphComponent;
 
+import controller.ConstantController;
 import controller.MainController;
 import database.TableCreator;
 import dsl.utils.DslUtils;
@@ -73,9 +74,9 @@ public class ExportFile extends JPanel {
 			File fileToSave = fileChooser.getSelectedFile();
 			String filePath = fileToSave.getAbsolutePath();
 
-			if (!filePath.endsWith(".sql")) {
+			if (!filePath.endsWith(FileType.SQL.EXTENSION)) {
 
-				filePath += ".sql";
+				filePath += FileType.SQL.EXTENSION;
 				fileToSave = new File(filePath);
 
 			}
@@ -170,7 +171,7 @@ public class ExportFile extends JPanel {
 
 						String data = Objects.toString(row.get(i)).replaceAll("'", "\\\\'");
 
-						if(isString && !data.equals("null")) data = "'" + data + "'";
+						if(isString && !data.equals(ConstantController.NULL)) data = "'" + data + "'";
 
 						sql.write(data);
 
@@ -203,7 +204,7 @@ public class ExportFile extends JPanel {
 
 	private void exportToDat(Cell cell, JFileChooser fileChooser) {
 
-		fileChooser.setSelectedFile(new File("tabela.head"));
+		fileChooser.setSelectedFile(new File("tabela"+FileType.HEADER.EXTENSION));
 
 		int userSelection = fileChooser.showSaveDialog(null);
 
@@ -213,15 +214,16 @@ public class ExportFile extends JPanel {
 			File fileToSave = fileChooser.getSelectedFile();
 			String filePath = fileToSave.getAbsolutePath();
 
-			if (!filePath.endsWith(".head")) {
+			if (!filePath.endsWith(FileType.HEADER.EXTENSION)) {
 
-				filePath += ".head";
+				filePath += FileType.HEADER.EXTENSION;
 				fileToSave = new File(filePath);
 
 			}
 
-			String headFileName = fileChooser.getSelectedFile().getName() + ".head";
-			String fileName = headFileName.endsWith(".head") ? headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
+			String headFileName = fileChooser.getSelectedFile().getName() + FileType.HEADER.EXTENSION;
+			String fileName = headFileName.endsWith(FileType.HEADER.EXTENSION) ?
+					headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
 
 			if (fileToSave.exists()) {
 				int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
@@ -259,7 +261,7 @@ public class ExportFile extends JPanel {
 			createdCell.getTable().close();
 
 			Path source = Paths.get(headFileName);
-			String datFileName = fileName + ".dat";
+			String datFileName = fileName + FileType.FYI.EXTENSION;
 			Path source1 = Paths.get(datFileName);
 
 
@@ -285,7 +287,7 @@ public class ExportFile extends JPanel {
 		
 		try {
 
-			String defaultFileName = cell.getAllSourceTables().stream().findFirst().orElse(null).getName() + ".csv";
+			String defaultFileName = cell.getAllSourceTables().stream().findFirst().orElse(null).getName() + FileType.CSV.EXTENSION;
 			fileChooser.setSelectedFile(new File(defaultFileName));
 
 			int userSelection = fileChooser.showSaveDialog(null);
@@ -296,8 +298,8 @@ public class ExportFile extends JPanel {
 				
 				File fileToSave = fileChooser.getSelectedFile();
 				String filePath = fileToSave.getAbsolutePath();
-				if (!filePath.endsWith(".csv")) {
-					filePath += ".csv";
+				if (!filePath.endsWith(FileType.CSV.EXTENSION)) {
+					filePath += FileType.CSV.EXTENSION;
 					fileToSave = new File(filePath);
 				}
 
@@ -433,7 +435,8 @@ public class ExportFile extends JPanel {
 			
 			final String finalPath = path.substring(0, path.lastIndexOf("/") + 1);
 
-			tree.getLeaves().forEach(table -> FileUtils.copyDatFilesWithHead(table.getName()+".head", table.getName(), Path.of(finalPath)));
+			tree.getLeaves().forEach(table -> FileUtils.copyDatFilesWithHead(
+					table.getName()+FileType.HEADER.EXTENSION, table.getName(), Path.of(finalPath)));
 		
 		}
 		

@@ -14,6 +14,7 @@ import dsl.entities.Relation;
 import dsl.entities.VariableDeclaration;
 import dsl.utils.DslUtils;
 import entities.cells.FyiTableCell;
+import enums.FileType;
 import files.FileUtils;
 import gui.frames.dsl.TextEditor;
 import sgbd.table.Table;
@@ -77,26 +78,26 @@ public class DslController {
 
 	private static void importTable(String importStatement) {
 
-		String path = importStatement.substring(6, importStatement.indexOf(".head") + 5);
+		String path = importStatement.substring(6, importStatement.indexOf(FileType.HEADER.EXTENSION) + 5);
 
 		String tableName;
 
 		if (path.startsWith("this.")) {
 
-			tableName = path.substring(path.indexOf("this.") + 5, path.indexOf(".head"));
+			tableName = path.substring(path.indexOf("this.") + 5, path.indexOf(FileType.HEADER.EXTENSION));
 			path = TextEditor.getLastPath() + "/" + path.substring(path.indexOf("this.") + 5);
 
 		} else {
 
-			tableName = path.substring(path.lastIndexOf("/") + 1, path.indexOf(".head"));
+			tableName = path.substring(path.lastIndexOf("/") + 1, path.indexOf(FileType.HEADER.EXTENSION));
 
 		}
 
-		String unnamedImport = importStatement.substring(0, importStatement.indexOf(".head") + 5);
+		String unnamedImport = importStatement.substring(0, importStatement.indexOf(FileType.HEADER.EXTENSION) + 5);
 
 		if (!unnamedImport.equals(importStatement)) {
 
-			tableName = importStatement.substring(importStatement.indexOf(".head") + 7);
+			tableName = importStatement.substring(importStatement.indexOf(FileType.HEADER.EXTENSION) + 7);
 
 		}
 
@@ -105,12 +106,12 @@ public class DslController {
 					.addErrors("Já existe uma tabela com o mesmo nome: '" + DslUtils.clearTableName(tableName) + "'");
 
 		else if (!FileUtils.copyDatFilesWithHead(path, tableName, Path.of("")))
-			DslErrorListener.addErrors("Arquivo '" + DslUtils.clearTableName(tableName) + ".head" + "' ou '"
+			DslErrorListener.addErrors("Arquivo '" + DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION + "' ou '"
 					+ DslUtils.clearTableName(tableName) + ".dat' não encontrado");
 
 		else
 			MainController.saveTable(new FyiTableCell(null, DslUtils.clearTableName(tableName), "fyi",
-					Table.loadFromHeader(DslUtils.clearTableName(tableName) + ".head")));
+					Table.loadFromHeader(DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION)));
 
 	}
 

@@ -62,7 +62,7 @@ public class TableCreator {
 		header.set(Header.FILE_PATH, path.toString());
 		CSVTable table = new CSVTable(header, separator, stringDelimiter, beginIndex);
 		table.open();
-		table.saveHeader(tableName+".head");
+		table.saveHeader(tableName+FileType.HEADER.EXTENSION);
 
 		if(mustExport){
 
@@ -91,7 +91,7 @@ public class TableCreator {
 
 		table.insert(rows);
 
-		table.saveHeader(tableName+".head");
+		table.saveHeader(tableName+FileType.HEADER.EXTENSION);
 
 		if(mustExport){
 

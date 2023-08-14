@@ -2,9 +2,9 @@ package enums;
 
 import entities.Action.CreateOperationAction;
 import gui.frames.forms.operations.IOperationForm;
+import gui.frames.forms.operations.binary.JoinsForm;
 import gui.frames.forms.operations.unary.*;
 import operations.IOperator;
-import gui.frames.forms.operations.binary.JoinsForm;
 import operations.binary.CartesianProduct;
 import operations.binary.set.Intersection;
 import operations.binary.joins.Join;

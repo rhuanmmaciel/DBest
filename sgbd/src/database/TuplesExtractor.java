@@ -40,18 +40,18 @@ public class TuplesExtractor {
 		if(operator == null) return null;
 
 		Set<String> possibleKeys = new HashSet<>();
-	    Map<String, String> row = new TreeMap<>();
+		Map<String, String> row = new TreeMap<>();
 
-        for(Map.Entry<String, List<String>> content: operator.getContentInfo().entrySet())
+		for(Map.Entry<String, List<String>> content: operator.getContentInfo().entrySet())
 			possibleKeys.addAll(content.getValue().stream()
 					.map(x-> sourceAndName ? entities.Column.putSource(x, content.getKey()) : x)
 					.toList());
 
-	    if (operator.hasNext()) {
+		if (operator.hasNext()) {
 
-	    	Tuple t = operator.next();
+			Tuple t = operator.next();
 
-	        for (Map.Entry<String, ComplexRowData> line : t)
+			for (Map.Entry<String, ComplexRowData> line : t)
 				for (Map.Entry<String, BData> data : line.getValue()) {
 
 					String columnName = sourceAndName ? Column.putSource(data.getKey(), line.getKey()) : data.getKey();
@@ -64,7 +64,7 @@ public class TuplesExtractor {
 						default -> row.put(columnName, Objects.toString(line.getValue().getString(data.getKey()), ConstantController.NULL));
 					}
 				}
-	    }else{
+		}else{
 
 			return null;
 
@@ -75,7 +75,7 @@ public class TuplesExtractor {
 				row.put(key, ConstantController.NULL);
 
 		return row;
-	
+
 	}
 
 }

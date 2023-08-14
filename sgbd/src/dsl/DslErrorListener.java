@@ -16,7 +16,7 @@ import org.antlr.v4.runtime.Recognizer;
 
 public class DslErrorListener extends BaseErrorListener {
 
-	private static List<String> errors = new ArrayList<>();
+	private static final List<String> errors = new ArrayList<>();
 
 	@Override
 	public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,

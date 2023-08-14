@@ -160,7 +160,7 @@ public final class OperationCell extends Cell {
 	}
 
 	public boolean hasParents() {
-		return parents.size() != 0;
+		return !parents.isEmpty();
 	}
 
 	public Boolean hasTree() {
@@ -185,7 +185,7 @@ public final class OperationCell extends Cell {
 		case PARENT_ERROR -> "Erro(s) em células anteriores";
 		case PARENT_WITHOUT_COLUMN -> "Alguma coluna fornecida não existe na célula pai";
 		case NO_TWO_PARENTS -> "A operação não possui 2 células pais";
-		case NO_TWO_ARGUMENTS -> "Alguma coluna fornecida não existe na respectiva célula pai";
+		case NO_TWO_ARGUMENTS -> "São necessários 2 argumentos";
 		case EMPTY_ARGUMENT -> "Não foi passado parâmetro";
 		case NO_PREFIX -> "Algum parâmetro não possui prefixo";
 		case SAME_SOURCE -> "Existem colunas com a mesma fonte. É necessário a renomeação.";

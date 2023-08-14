@@ -36,6 +36,7 @@ import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import entities.utils.CellUtils;
 import entities.utils.TreeUtils;
+import enums.FileType;
 import enums.OperationType;
 import files.FileUtils;
 import files.ImportFile;
@@ -507,9 +508,9 @@ public class MainController extends MainFrame {
 		}
 
 		mxCell jTableCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
-				relation.getName(), x, y, 80, 30, "table");
+				relation.getName(), x, y, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, "table");
 
-		relation.setCell(new ImportFile(relation.getName() + ".head", jTableCell).getResult());
+		relation.setCell(new ImportFile(relation.getName() + FileType.HEADER.EXTENSION, jTableCell).getResult());
 
 		relation.getCell().getTable().open();
 
@@ -535,7 +536,7 @@ public class MainController extends MainFrame {
 		OperationType type = operationExpression.getType();
 
 		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
-				type.getDisplayNameAndSymbol(), x, y, 80, 30, type.DISPLAY_NAME);
+				type.getDisplayNameAndSymbol(), x, y, ConstantController.OPERATION_CELL_WIDTH, ConstantController.OPERATION_CELL_HEIGHT, type.DISPLAY_NAME);
 
 		List<Cell> parents = new ArrayList<>();
 		parents.add(operationExpression.getSource().getCell());

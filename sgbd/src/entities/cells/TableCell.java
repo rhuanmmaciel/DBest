@@ -79,7 +79,7 @@ public abstract sealed class TableCell extends Cell permits CsvTableCell, FyiTab
 		
 		List<sgbd.prototype.column.Column> prototypeColumns = table.getHeader().getPrototype().getColumns()
 				.stream()
-				.filter(x -> this instanceof CsvTableCell && !x.getName().equals(ConstantController.PK_CSV_TABLE_NAME))
+				.filter(x -> this instanceof FyiTableCell || !x.getName().equals(ConstantController.PK_CSV_TABLE_NAME))
 				.toList();
 
 		List<Column> columns = new ArrayList<>();
@@ -97,7 +97,7 @@ public abstract sealed class TableCell extends Cell permits CsvTableCell, FyiTab
 
 			columns.add(new Column(pColumn.getName(), getName(), type, pColumn.isPrimaryKey()));
 		}
-		
+
 		setColumns(columns);
 		
 	}
