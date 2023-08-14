@@ -373,7 +373,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
     }
 
     @Override
-    public void updateToolTipTxt() {
+    public void updateToolTipTxt(boolean ...conditions) {
 
     }
 

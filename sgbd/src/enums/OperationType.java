@@ -1,12 +1,10 @@
 package enums;
 
 import entities.Action.CreateOperationAction;
-import gui.frames.forms.operations.AtomicExpressionForm;
 import gui.frames.forms.operations.BooleanExpressionForm;
 import gui.frames.forms.operations.IOperationForm;
 import gui.frames.forms.operations.unary.*;
 import operations.IOperator;
-import gui.frames.forms.operations.binary.JoinsForm;
 import operations.binary.CartesianProduct;
 import operations.binary.set.Intersection;
 import operations.binary.joins.Join;
@@ -35,11 +33,11 @@ public enum OperationType {
 			    PARENT_WITHOUT_COLUMN),
 	INDEXER("Indexação", "❶", "indexer", "indexer[args](source)", OperationArity.UNARY, IndexerForm.class, Indexer.class),
 
-	JOIN("Junção", "|X|", "join", "join[args](source1,source2)", OperationArity.BINARY, JoinsForm.class, Join.class,
+	JOIN("Junção", "|X|", "join", "join[args](source1,source2)", OperationArity.BINARY, BooleanExpressionForm.class, Join.class,
 			 NO_TWO_ARGUMENTS,  PARENT_WITHOUT_COLUMN),
-	LEFT_JOIN("Junção à esquerda", "⟕", "leftJoin", "leftJoin[args](source1,source2)", OperationArity.BINARY, JoinsForm.class, LeftJoin.class,
+	LEFT_JOIN("Junção à esquerda", "⟕", "leftJoin", "leftJoin[args](source1,source2)", OperationArity.BINARY, BooleanExpressionForm.class, LeftJoin.class,
 			 NO_TWO_ARGUMENTS,  PARENT_WITHOUT_COLUMN),
-	RIGHT_JOIN("Junção à direita", "⟖", "rightJoin", "rightJoin[args](source1,source2)", OperationArity.BINARY, JoinsForm.class, RightJoin.class,
+	RIGHT_JOIN("Junção à direita", "⟖", "rightJoin", "rightJoin[args](source1,source2)", OperationArity.BINARY, BooleanExpressionForm.class, RightJoin.class,
 			 NO_TWO_ARGUMENTS, PARENT_WITHOUT_COLUMN),
 	CARTESIAN_PRODUCT("Produto Cartesiano", "✕", "cartesianProduct", "cartesianProduct(source1,source2)", OperationArity.BINARY, null, CartesianProduct.class,
 			SAME_SOURCE),

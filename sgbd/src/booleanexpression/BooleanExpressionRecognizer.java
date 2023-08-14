@@ -5,6 +5,7 @@ import booleanexpression.antlr.BooleanExpressionDSLLexer;
 import booleanexpression.antlr.BooleanExpressionDSLParser;
 import controller.ConstantController;
 import lib.booleanexpression.entities.elements.Element;
+import lib.booleanexpression.entities.elements.Null;
 import lib.booleanexpression.entities.elements.Value;
 import lib.booleanexpression.entities.elements.Variable;
 import lib.booleanexpression.entities.expressions.AtomicExpression;
@@ -15,10 +16,13 @@ import lib.booleanexpression.enums.RelationalOperator;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import sgbd.prototype.query.fields.*;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static booleanexpression.Utils.getElement;
 
 public class BooleanExpressionRecognizer {
 
@@ -59,10 +63,30 @@ public class BooleanExpressionRecognizer {
 
     private String recognizeAtomic(AtomicExpression atomicExpression){
 
-        return " ( "+atomicExpression.getFirstElement() + " " +
+        return " ( "+getString(atomicExpression.getFirstElement()) + " " +
                 atomicExpression.getRelationalOperator().symbols[0] + " " +
-                atomicExpression.getSecondElement() +
+                getString(atomicExpression.getSecondElement()) +
                 " ) ";
+
+    }
+
+    private String getString(Element element){
+
+        if(element instanceof Value value){
+
+            if(value.getField() instanceof IntegerField) return String.valueOf(value.getField().getInt());
+            if(value.getField() instanceof FloatField) return String.valueOf(value.getField().getFloat());
+            if(value.getField() instanceof LongField) return String.valueOf(value.getField().getLong());
+            if(value.getField() instanceof DoubleField) return String.valueOf(value.getField().getDouble());
+            if(value.getField() instanceof StringField) return "'"+value.getField().getString()+"'";
+
+            throw new UnsupportedOperationException("This type of Field is not supported");
+
+        }
+
+        if(element instanceof Null) return ConstantController.NULL;
+
+        return ((Variable)element).toString();
 
     }
 
@@ -85,7 +109,7 @@ public class BooleanExpressionRecognizer {
 
     }
 
-    public BooleanExpression recognize(String txt) {
+    private BooleanExpression recognize(String txt) {
 
         boolean isAtomic = !hasAnyLogicalOperator(txt);
 
@@ -280,6 +304,8 @@ public class BooleanExpressionRecognizer {
         if (lastEnd < input.length())
             tokens.add(input.substring(lastEnd).strip());
 
+        tokens.removeIf(String::isEmpty);
+
         return tokens;
     }
 
@@ -304,41 +330,7 @@ public class BooleanExpressionRecognizer {
 
     private Element recognizeElement(String txt){
 
-        if(txt.contains("'")) return new Value(txt.substring(txt.indexOf("'")+1, txt.lastIndexOf("'")));
-
-        try {
-
-            return new Value(Integer.parseInt(txt.strip()));
-
-        }catch (NumberFormatException ignored){
-
-        }
-
-        try {
-
-            return new Value(Long.parseLong(txt.strip()));
-
-        }catch (NumberFormatException ignored){
-
-        }
-
-        try {
-
-            return new Value(Float.parseFloat(txt.strip()));
-
-        }catch (NumberFormatException ignored){
-
-        }
-
-        try {
-
-            return new Value(Double.parseDouble(txt.strip()));
-
-        }catch (NumberFormatException ignored){
-
-        }
-
-        return new Variable(txt.strip());
+        return getElement(txt.strip());
 
     }
 

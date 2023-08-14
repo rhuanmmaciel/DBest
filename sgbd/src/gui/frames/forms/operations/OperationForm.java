@@ -121,7 +121,6 @@ public abstract class OperationForm extends FormBase {
     protected void setColumns(JComboBox<String> comboBox, JComboBox<String> comboBoxS, Cell parent){
 
         comboBox.removeAllItems();
-
         parent.getColumns().stream().filter(x -> x.getSource().
                         equals(Objects.requireNonNull(comboBoxS.getSelectedItem()).toString())).
                         map(Column::getSourceAndName).filter(x -> !restrictedColumns.contains(x)).

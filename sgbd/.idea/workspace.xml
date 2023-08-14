@@ -64,7 +64,7 @@
       <command value="clear" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.BooleanExpressionRecognizer">
+  <component name="RunManager" selected="Application.sgbd">
     <configuration name="BooleanExpressionForm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="gui.frames.forms.operations.BooleanExpressionForm" />
       <module name="sgbd" />

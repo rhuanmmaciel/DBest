@@ -2,6 +2,7 @@ package gui.frames.forms.operations.panelstruct;
 
 import com.mxgraph.model.mxCell;
 import gui.frames.forms.operations.BooleanExpressionForm;
+import lib.booleanexpression.entities.expressions.BooleanExpression;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +11,8 @@ public abstract class ExpressionPane extends JPanel {
 
     protected final JButton btnDeleteExpression = new JButton(" X ");
     protected final mxCell jCell;
+
+    public BooleanExpression booleanExpression;
 
     protected final BooleanExpressionForm root;
 

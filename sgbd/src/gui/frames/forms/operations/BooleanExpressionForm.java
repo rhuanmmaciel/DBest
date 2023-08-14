@@ -1,47 +1,31 @@
 package gui.frames.forms.operations;
 
+import booleanexpression.BooleanExpressionRecognizer;
 import com.mxgraph.model.mxCell;
 import controller.ConstantController;
-import controller.MainController;
-import entities.cells.CsvTableCell;
-import entities.cells.OperationCell;
-import enums.OperationType;
+import gui.frames.forms.IFormCondition;
 import gui.frames.forms.operations.panelstruct.AtomicPane;
 import gui.frames.forms.operations.panelstruct.ExpressionPane;
 import gui.frames.forms.operations.panelstruct.LogicalPane;
-import sgbd.table.Table;
+import lib.booleanexpression.entities.expressions.BooleanExpression;
+import lib.booleanexpression.entities.expressions.LogicalExpression;
+import lib.booleanexpression.enums.LogicalOperator;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
-public class BooleanExpressionForm extends OperationForm implements ActionListener, IOperationForm{
+public class BooleanExpressionForm extends OperationForm implements ActionListener, IOperationForm, IFormCondition {
 
     private final JButton btnAnd = new JButton("AND");
     private final JButton btnOr = new JButton("OR");
     private final JButton btnAtomic = new JButton("Atomic Expression");
 
     private ExpressionPane root = null;
-
-    public static void main(String [] args){
-
-        mxCell op = (mxCell) MainController.getGraph().insertVertex(
-                MainController.getGraph().getDefaultParent(), null, "a", 0, 0, 80, 30,
-                "op");
-
-        mxCell table = (mxCell) MainController.getGraph().insertVertex(
-                MainController.getGraph().getDefaultParent(), null, "t", 0, 0, 80, 30,
-                "table");
-
-        OperationCell cell = new OperationCell(op, OperationType.SELECTION);
-
-        cell.addParent(new CsvTableCell(table, "a", "b", Table.loadFromHeader("/home/rhuan/Documents/rep/dbest/tabelas-fbd/ator.head")));
-
-        new BooleanExpressionForm(op);
-
-    }
 
     public BooleanExpressionForm(mxCell jCell) {
         super(jCell);
@@ -70,9 +54,24 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
         parent.remove(centerPanel);
         parent.add(centerPanel, BorderLayout.NORTH);
 
+        btnReady.addActionListener(this);
         btnAnd.addActionListener(this);
         btnOr.addActionListener(this);
         btnAtomic.addActionListener(this);
+
+        initButtons();
+
+        addExtraComponent(new JLabel(" "), 0, 1, 1, 1);
+
+        setPreviousArgs();
+        checkBtnReady();
+
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void initButtons(){
 
         addExtraComponent(btnAnd, 0, 0, 1, 1);
         addExtraComponent(new JLabel(" "), 1, 0, 1, 1);
@@ -80,28 +79,25 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
         addExtraComponent(new JLabel(" "), 3, 0, 1, 1);
         addExtraComponent(btnAtomic, 4, 0, 1, 1);
 
-        addExtraComponent(new JLabel(" "), 0, 1, 1, 1);
-
-        setPreviousArgs();
-
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     public void removeLayer(ExpressionPane pane) {
+
         if (root != null) {
+
             if (root == pane) {
-                centerPanel.remove(pane);
+
+                centerPanel.removeAll();
+                initButtons();
                 root = null;
                 setButtonsEnabled(true);
 
-            } else {
+            } else
                 removeExpressionPane(root, pane);
-            }
 
             revalidate();
             pack();
+
         }
     }
 
@@ -133,15 +129,16 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
+        checkBtnReady();
         if(root == null && (actionEvent.getSource() == btnAnd || actionEvent.getSource() == btnOr
                 || actionEvent.getSource() == btnAtomic)) {
 
             ExpressionPane expressionPane;
 
             if (actionEvent.getSource() == btnAnd)
-                expressionPane = new LogicalPane(this, jCell, LogicalPane.LogicalOperator.AND);
+                expressionPane = new LogicalPane(this, jCell, LogicalOperator.AND);
             else if (actionEvent.getSource() == btnOr)
-                expressionPane = new LogicalPane(this, jCell, LogicalPane.LogicalOperator.OR);
+                expressionPane = new LogicalPane(this, jCell, LogicalOperator.OR);
             else
                 expressionPane = new AtomicPane(this, jCell);
 
@@ -152,8 +149,41 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
         }
 
+        if(root != null && actionEvent.getSource() == btnReady){
+
+            if(root instanceof AtomicPane atomicPane){
+
+                arguments.add(atomicPane.getAtomicExpression());
+
+            }
+
+            else {
+
+                arguments.add(new BooleanExpressionRecognizer().recognizer(getBooleanExpression((LogicalPane) root)));
+
+            }
+
+            btnReady();
+
+        }
+        checkBtnReady();
+
         revalidate();
         pack();
+
+    }
+
+    private BooleanExpression getBooleanExpression(ExpressionPane expressionPane){
+
+        if(expressionPane instanceof AtomicPane atomicPane) return atomicPane.booleanExpression;
+
+        List<BooleanExpression> arguments = new ArrayList<>();
+        for (ExpressionPane exp : ((LogicalPane) expressionPane).getChildren())
+            arguments.add(getBooleanExpression(exp));
+
+        LogicalOperator logicalOperator = ((LogicalPane) expressionPane).logicalOperator;
+
+        return new LogicalExpression( logicalOperator, arguments);
 
     }
 
@@ -161,4 +191,71 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
         dispose();
     }
 
+    @Override
+    public void checkBtnReady() {
+
+        boolean noArgument = root == null;
+        boolean leafNotAnAtomic = false;
+        boolean anyAtomicIncomplete = false;
+
+        if(!noArgument && root instanceof LogicalPane logicalPane){
+
+            List<ExpressionPane> children = new ArrayList<>(logicalPane.getChildren());
+
+            if(logicalPane.getChildren().isEmpty()) leafNotAnAtomic = true;
+
+            do{
+
+                List<ExpressionPane> childrenAux = new ArrayList<>(children);
+                children.clear();
+                for(ExpressionPane exp : childrenAux){
+
+                    if(exp instanceof LogicalPane log){
+
+                        if(log.getChildren().isEmpty()) leafNotAnAtomic = true;
+                        children.addAll(log.getChildren());
+
+                    }
+                    if(exp instanceof AtomicPane atomicPane &&
+                            (atomicPane.getAtomicExpression() == null || atomicPane.getAtomicExpression().isEmpty() ||
+                            atomicPane.getAtomicExpression().isBlank()))
+                        anyAtomicIncomplete = true;
+
+                }
+
+            }while (!leafNotAnAtomic && !anyAtomicIncomplete && !children.isEmpty());
+
+        }else if(!noArgument && root instanceof AtomicPane atomicPane &&
+                (atomicPane.getAtomicExpression() == null || atomicPane.getAtomicExpression().isEmpty() ||
+                atomicPane.getAtomicExpression().isBlank()))
+            anyAtomicIncomplete = true;
+
+
+        btnReady.setEnabled(!noArgument && !leafNotAnAtomic && !anyAtomicIncomplete);
+
+        updateToolTipTxt(noArgument, leafNotAnAtomic, anyAtomicIncomplete);
+
+    }
+
+    @Override
+    public void updateToolTipTxt(boolean ...conditions) {
+
+        boolean noArgument = conditions[0];
+        boolean leafNotAnAtomic = conditions[1];
+        boolean anyAtomicIncomplete = conditions[2];
+
+        String btnReadyToolTipText = "";
+
+        if (noArgument)
+            btnReadyToolTipText = "- Selecione pelo menos uma opção";
+        else if(leafNotAnAtomic)
+            btnReadyToolTipText = "- A expressão mais interna deve sempre ser atômica";
+        else if(anyAtomicIncomplete)
+            btnReadyToolTipText = "- Existe alguma expressão atômica incompleta";
+
+        UIManager.put("ToolTip.foreground", Color.RED);
+
+        btnReady.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
+
+    }
 }

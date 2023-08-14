@@ -1,5 +1,6 @@
 package gui.frames.forms.operations.panelstruct;
 
+import booleanexpression.BooleanExpressionRecognizer;
 import com.mxgraph.model.mxCell;
 import gui.frames.forms.operations.AtomicExpressionForm;
 import gui.frames.forms.operations.BooleanExpressionForm;
@@ -10,7 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Objects;
 
 public class AtomicPane extends ExpressionPane implements ActionListener {
 
@@ -29,6 +29,7 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
         add(btnEdit, BorderLayout.SOUTH);
 
         btnEdit.addActionListener(this);
+        btnEdit.addActionListener(root);
 
         setVisible(true);
 
@@ -39,11 +40,21 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
 
         if(actionEvent.getSource() == btnEdit){
 
-            expression.setText(Objects.toString(new AtomicExpressionForm(jCell).getResult()));
-
+            booleanExpression = new AtomicExpressionForm(root, jCell).getResult();
+            expression.setText( booleanExpression != null ?
+                    new BooleanExpressionRecognizer().recognizer(booleanExpression) :
+                    "");
             updateRootSize();
 
+            root.checkBtnReady();
+
         }
+
+    }
+
+    public String getAtomicExpression(){
+
+        return expression.getText();
 
     }
 }

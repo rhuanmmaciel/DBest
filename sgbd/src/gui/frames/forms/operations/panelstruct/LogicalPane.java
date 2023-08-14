@@ -2,6 +2,7 @@ package gui.frames.forms.operations.panelstruct;
 
 import com.mxgraph.model.mxCell;
 import gui.frames.forms.operations.BooleanExpressionForm;
+import lib.booleanexpression.enums.LogicalOperator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,15 +17,11 @@ public class LogicalPane extends ExpressionPane implements ActionListener {
     private final JButton btnOr = new JButton("OR");
     private final JButton btnAtomic = new JButton("Atomic Expression");
 
-    private final LogicalOperator logicalOperator;
+    public final LogicalOperator logicalOperator;
 
     private final Box boxChildren = Box.createVerticalBox();
 
     private final List<ExpressionPane> children = new ArrayList<>();
-
-    public enum LogicalOperator{
-        AND, OR;
-    }
 
     public LogicalPane(BooleanExpressionForm root, mxCell jCell, LogicalOperator logicalOperator){
 
@@ -49,6 +46,11 @@ public class LogicalPane extends ExpressionPane implements ActionListener {
         btnAnd.addActionListener(this);
         btnOr.addActionListener(this);
         btnAtomic.addActionListener(this);
+
+        btnAnd.addActionListener(root);
+        btnOr.addActionListener(root);
+        btnAtomic.addActionListener(root);
+        btnDeleteExpression.addActionListener(root);
 
         setVisible(true);
 
