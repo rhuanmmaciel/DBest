@@ -155,6 +155,8 @@ public abstract class MainFrame extends JFrame
 				new CurrentAction(CurrentAction.ActionType.OPEN_CONSOLE)));
 		buttons.add(new ToolBarButton<>(JButton.class, " Editor de texto ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.OPEN_TEXT_EDITOR)));
+		buttons.add(new ToolBarButton<>(JButton.class, " Conectar ao BD", this, toolBar,
+				new CurrentAction(CurrentAction.ActionType.CREATE_DB_CONNECTION)));
 
 	}
 
