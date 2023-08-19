@@ -7,10 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class ConfigureMySQLConnectionForm extends FormBase implements ActionListener {
 
-    private final JTextField hostField = new JTextField();
+    private final JTextField hostField = new JTextField("127.0.0.1");
     private final JTextField portField = new JTextField("3306");
     private final JTextField databaseField = new JTextField();
     private final JTextField userField = new JTextField("root");
@@ -65,6 +66,12 @@ public class ConfigureMySQLConnectionForm extends FormBase implements ActionList
             );
 
             if (connection.isValid()) {
+                try {
+                    connection.saveTables();
+                    dispose();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 // FIXME: A mensagem é exibida mas fica má posicionada */
                 contentPane.add(new JLabel("Dados inválidos!"), BorderLayout.PAGE_START);
