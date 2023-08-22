@@ -115,7 +115,11 @@ public class MySQLConnection {
         while (rs.next()) {
             Map<String, String> rowData = new HashMap<>();
             for (Column column : columns) {
-                rowData.put(column.getName(), rs.getString(column.getName()));
+                String value = rs.getString(column.getName());
+                if (rs.wasNull()) {
+                    value = "null";
+                }
+                rowData.put(column.getName(), value);
             }
             rows.put(rowIndex, rowData);
             rowIndex++;
