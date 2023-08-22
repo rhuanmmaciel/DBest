@@ -67,14 +67,12 @@ public class ConfigureMySQLConnectionForm extends FormBase implements ActionList
 
             if (connection.isValid()) {
                 try {
-                    connection.saveTables();
+                    new SelectTablesForm(connection);
                     dispose();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                } catch (SQLException ignored) {}
             } else {
                 // FIXME: A mensagem é exibida mas fica má posicionada */
-                contentPane.add(new JLabel("Dados inválidos!"), BorderLayout.PAGE_START);
+                contentPane.add(new JLabel("Conexão recusada!"), BorderLayout.PAGE_START);
                 SwingUtilities.updateComponentTreeUI(contentPane);
             }
         }

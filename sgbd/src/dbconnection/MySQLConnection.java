@@ -27,31 +27,39 @@ public class MySQLConnection {
         }
     }
 
-    public boolean isValid()
-    {
+    public boolean isValid() {
         return connection != null;
     }
 
-    public boolean saveTables() throws SQLException {
+    public boolean saveTables(List<String> tables) throws SQLException {
 
-        List<TableCell> tableCells = getTablesCell();
+        List<TableCell> tableCells = getTablesCell(tables);
 
-        for (TableCell tableCell: tableCells) {
+        for (TableCell tableCell : tableCells) {
             MainController.saveTable(tableCell);
         }
 
         return false;
     }
 
-    protected List<TableCell> getTablesCell() throws SQLException {
-        List<TableCell> tableCells = new ArrayList<>();
-        ResultSet tablesCollection = connection.getMetaData().getTables(database, null, null, new String[] {"TABLE"});
+    public ArrayList<String> getTableNames() throws SQLException {
+        ArrayList<String> tableNames = new ArrayList<>();
+        ResultSet tablesCollection = connection.getMetaData().getTables(database, null, null, new String[]{"TABLE"});
 
-        while(tablesCollection.next()) {
-            String tableName = tablesCollection.getString("TABLE_NAME");
+        while (tablesCollection.next()) {
+            tableNames.add(tablesCollection.getString("TABLE_NAME"));
+        }
+
+        return tableNames;
+    }
+
+    protected List<TableCell> getTablesCell(List<String> selectedTables) throws SQLException {
+        List<TableCell> tableCells = new ArrayList<>();
+
+        for (String tableName : selectedTables) {
 
             // FIXME: Vulnerável a SQL Injection, mas talvez nesse caso não tenha risco? A conexão é do próprio usuário.
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM `"+tableName+"`");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM `" + tableName + "`");
             ResultSet rs = stmt.executeQuery();
             List<Column> columns = getColumnsFromTable(rs, tableName);
             Map<Integer, Map<String, String>> rows = getRowsFromTable(rs, columns);
@@ -89,8 +97,7 @@ public class MySQLConnection {
         return pkColumns;
     }
 
-    private ColumnDataType parseColumnTypeName(String columnTypeName)
-    {
+    private ColumnDataType parseColumnTypeName(String columnTypeName) {
         return switch (columnTypeName) {
             case "INT", "INTEGER" -> ColumnDataType.INTEGER;
             case "BIGINT" -> ColumnDataType.LONG;
