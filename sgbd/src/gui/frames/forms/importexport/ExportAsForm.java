@@ -6,11 +6,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.List;
 
 import com.mxgraph.model.mxCell;
 
+import entities.Column;
 import entities.cells.Cell;
-import enums.FileType;
 import files.ExportFile;
 
 import javax.swing.*;
@@ -71,19 +72,22 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener{
 			closeWindow();
 
 			if(!cancelService.get())
-				new ExportFile(cell, FileType.CSV);
+				new ExportFile().exportToCsv(cell);
 			
 		}else if(e.getSource() == btnFyi) {
-			
+
 			closeWindow();
-			if(!cancelService.get())
-				new ExportFile(cell, FileType.FYI);
+
+			List<Column> pkColumns = new PkChooserForm(cell).getSelectedColumns();
+
+			if(!cancelService.get() && !pkColumns.isEmpty())
+				new ExportFile().exportToFyi(cell, pkColumns);
 			
 		}else if(e.getSource() == btnMySQLScript){
 
 			closeWindow();
 			if(!cancelService.get())
-				new ExportFile(cell, FileType.SQL);
+				new ExportFile().exportToMySQLScript(cell);
 
 		}
 		

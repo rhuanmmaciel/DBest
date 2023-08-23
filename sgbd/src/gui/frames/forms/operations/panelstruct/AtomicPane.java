@@ -30,6 +30,7 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
 
         btnEdit.addActionListener(this);
         btnEdit.addActionListener(root);
+        btnDeleteExpression.addActionListener(root);
 
         setVisible(true);
 
@@ -45,7 +46,6 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
                     new BooleanExpressionRecognizer().recognizer(booleanExpression) :
                     "");
             updateRootSize();
-
             root.checkBtnReady();
 
         }

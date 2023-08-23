@@ -26,13 +26,6 @@ import static booleanexpression.Utils.getElement;
 
 public class BooleanExpressionRecognizer {
 
-    public static void main(String[] args){
-
-        System.out.println((new BooleanExpressionRecognizer().recognizer(new BooleanExpressionRecognizer()
-                .recognizer("(a == 5 aND b is not null Or(teste == 'a' AND(b == c)AND b!=u)OR i == 'a')"))));
-
-    }
-
     public BooleanExpressionRecognizer(){
     }
 

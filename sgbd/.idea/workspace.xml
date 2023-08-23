@@ -4,7 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="" />
+    <list default="true" id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/FyDatabase__2_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/FyDatabase.jar" beforeDir="false" afterPath="$PROJECT_DIR$/lib/FyDatabase.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/TableCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableCreator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/TuplesExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TuplesExtractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/Column.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Column.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/files/ExportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ExportFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/AtomicPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/AtomicPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/MainController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controller/MainController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Column.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Column.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,6 +39,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -32,6 +52,9 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2N7Fm22tmVRMhvb4One7H5necsj" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -40,9 +63,11 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;rhuan&quot;,
     &quot;last.edited.regexp&quot;: &quot;(test.ada)&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/rhuan/Documents/temp/sgbd&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/rhuan/Documents/repositories/dbest/sgbd&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
@@ -65,12 +90,12 @@
     </option>
   </component>
   <component name="RunManager" selected="Application.sgbd">
-    <configuration name="BooleanExpressionForm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="gui.frames.forms.operations.BooleanExpressionForm" />
+    <configuration name="BooleanExpressionTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="tests.BooleanExpressionTest" />
       <module name="sgbd" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="gui.frames.forms.operations.panelstruct.*" />
+          <option name="PATTERN" value="tests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -78,12 +103,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BooleanExpressionRecognizer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="booleanexpression.BooleanExpressionRecognizer" />
+    <configuration name="CsvTableTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="tests.CsvTableTest" />
       <module name="sgbd" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="booleanexpression.*" />
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FyiTableTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="tests.FyiTableTest" />
+      <module name="sgbd" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -100,8 +138,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.BooleanExpressionRecognizer" />
-        <item itemvalue="Application.BooleanExpressionForm" />
+        <item itemvalue="Application.FyiTableTest" />
+        <item itemvalue="Application.CsvTableTest" />
+        <item itemvalue="Application.BooleanExpressionTest" />
       </list>
     </recent_temporary>
   </component>
@@ -120,6 +159,19 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.g4" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/entities/utils/CellUtils.java</url>
+          <line>19</line>
+          <properties class="entities.utils.CellUtils" method="deleteCell">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="java.io.RandomAccessFile" memberName="closeLock" />

@@ -26,7 +26,6 @@ public abstract class FormBase extends JDialog {
         contentPane.add(bottomPane, BorderLayout.SOUTH);
         setContentPane(contentPane);
 
-
     }
 
 }

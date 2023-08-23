@@ -216,7 +216,7 @@ public class MainController extends MainFrame {
 			export();
 
 		else if(e.getSource() == menuItemExportTree)
-			new ExportFile(Cell.getCells().get(jCell).getTree());
+			new ExportFile().exportToDsl(Cell.getCells().get(jCell).getTree());
 
 		else if (e.getSource() == menuItemEdit) {
 
@@ -363,7 +363,8 @@ public class MainController extends MainFrame {
 
 	private void printScreen() {
 
-			new ExportFile();
+			new ExportFile().exportToImage();
+
 	}
 
 	private void deleteAction(){

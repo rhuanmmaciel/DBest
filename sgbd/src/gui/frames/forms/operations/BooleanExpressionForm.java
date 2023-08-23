@@ -129,7 +129,6 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
-        checkBtnReady();
         if(root == null && (actionEvent.getSource() == btnAnd || actionEvent.getSource() == btnOr
                 || actionEvent.getSource() == btnAtomic)) {
 
@@ -191,6 +190,7 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
         dispose();
     }
 
+
     @Override
     public void checkBtnReady() {
 
@@ -218,8 +218,10 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
                     }
                     if(exp instanceof AtomicPane atomicPane &&
                             (atomicPane.getAtomicExpression() == null || atomicPane.getAtomicExpression().isEmpty() ||
-                            atomicPane.getAtomicExpression().isBlank()))
+                            atomicPane.getAtomicExpression().isBlank())) {
                         anyAtomicIncomplete = true;
+                        System.out.println(atomicPane.getAtomicExpression());
+                    }
 
                 }
 
@@ -232,6 +234,8 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
 
         btnReady.setEnabled(!noArgument && !leafNotAnAtomic && !anyAtomicIncomplete);
+
+//        System.out.println(!anyAtomicIncomplete);
 
         updateToolTipTxt(noArgument, leafNotAnAtomic, anyAtomicIncomplete);
 

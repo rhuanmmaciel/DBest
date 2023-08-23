@@ -3,14 +3,11 @@ package database;
 import java.util.*;
 
 import controller.ConstantController;
-import controller.MainController;
 import entities.Column;
-import sgbd.prototype.BData;
 import sgbd.prototype.RowData;
 import sgbd.prototype.query.Tuple;
 import sgbd.prototype.query.fields.*;
 import sgbd.query.Operator;
-import util.Utils;
 
 public class TuplesExtractor {
 
@@ -53,7 +50,7 @@ public class TuplesExtractor {
 	    	Tuple t = operator.next();
 
 	        for (Map.Entry<String, RowData> line : t)
-				for (Map.Entry<String, Field> data : line.getValue()) {
+				for (Map.Entry<String, ? extends Field> data : line.getValue()) {
 
 					String columnName = sourceAndName ? Column.putSource(data.getKey(), line.getKey()) : data.getKey();
 
