@@ -3,6 +3,6 @@ package gui.frames.forms;
 public interface IFormCondition {
 
     void checkBtnReady();
-    void updateToolTipTxt();
+    void updateToolTipTxt(boolean ...conditions);
 
 }

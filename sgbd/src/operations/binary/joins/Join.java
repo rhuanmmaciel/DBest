@@ -1,5 +1,7 @@
 package operations.binary.joins;
 
+import booleanexpression.BooleanExpressionRecognizer;
+import lib.booleanexpression.entities.expressions.BooleanExpression;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.BlockNestedLoopJoin;
 
@@ -9,9 +11,10 @@ public class Join extends JoinOperators {
 
 	}
 	@Override
-	public Operator createJoinOperator(Operator op1, Operator op2, String source1, String source2, String item1, String item2){
+	public Operator createJoinOperator(Operator op1, Operator op2, BooleanExpression booleanExpression){
 
-		return new BlockNestedLoopJoin(op1, op2, (t1, t2) -> compare(t1, source1, item1, t2, source2, item2));
+		System.out.println(new BooleanExpressionRecognizer().recognizer(booleanExpression));
+		return new BlockNestedLoopJoin(op1, op2, booleanExpression);
 
 	}
 

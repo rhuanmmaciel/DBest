@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.*;
@@ -35,34 +36,17 @@ import sgbd.query.Operator;
 
 public class ExportFile extends JPanel {
 
+	private final JFileChooser fileChooser = new JFileChooser();
+
 	public ExportFile() {
 
-		exportToImage();
-
-	}
-
-	public ExportFile(Cell cell, FileType type) {
-
-		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Salvar arquivo");
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setCurrentDirectory(MainController.getLastDirectory());
 
-		switch (type){
-			case CSV -> exportToCsv(cell, fileChooser);
-			case FYI -> exportToDat(cell, fileChooser);
-			case SQL -> exportToMySQLScript(cell, fileChooser);
-		}
-
 	}
 
-	public ExportFile(Tree tree) {
-
-		exportToDsl(tree);
-
-	}
-
-	private void exportToMySQLScript(Cell cell, JFileChooser fileChooser){
+	public void exportToMySQLScript(Cell cell){
 
 		fileChooser.setSelectedFile(new File("tabela.sql"));
 
@@ -85,7 +69,7 @@ public class ExportFile extends JPanel {
 				int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
 						"Confirmar substituição", JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.NO_OPTION) {
-					exportToMySQLScript(cell, fileChooser);
+					exportToMySQLScript(cell);
 					return;
 				}
 			}
@@ -202,7 +186,9 @@ public class ExportFile extends JPanel {
 
 	}
 
-	private void exportToDat(Cell cell, JFileChooser fileChooser) {
+	public void exportToFyi(Cell cell, List<Column> pkColumns) {
+
+		assert pkColumns != null && !pkColumns.isEmpty();
 
 		fileChooser.setSelectedFile(new File("tabela"+FileType.HEADER.EXTENSION));
 
@@ -221,7 +207,10 @@ public class ExportFile extends JPanel {
 
 			}
 
-			String headFileName = fileChooser.getSelectedFile().getName() + FileType.HEADER.EXTENSION;
+			String rawFileName = fileChooser.getSelectedFile().getName();
+			String headFileName = rawFileName.endsWith(FileType.HEADER.EXTENSION) ?
+					rawFileName : rawFileName + FileType.HEADER.EXTENSION;
+
 			String fileName = headFileName.endsWith(FileType.HEADER.EXTENSION) ?
 					headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
 
@@ -229,7 +218,7 @@ public class ExportFile extends JPanel {
 				int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
 						"Confirmar substituição", JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.NO_OPTION) {
-					exportToDat(cell, fileChooser);
+					exportToFyi(cell, pkColumns);
 					return;
 				}
 			}
@@ -249,7 +238,17 @@ public class ExportFile extends JPanel {
 
 			AtomicReference<Boolean> exitReference = new AtomicReference<>(false);
 
-			TableCreator tableCreator = new TableCreator(fileName, cell.getColumns(), rows, true);
+			List<Column> columnsWithPk = new ArrayList<>();
+
+			for(Column c : cell.getColumns()){
+
+				Column readyColumn = pkColumns.contains(c) ? new Column(c.getName(), c.getSource(), c.getType(), true)
+				: c;
+				columnsWithPk.add(readyColumn);
+
+			}
+
+			TableCreator tableCreator = new TableCreator(fileName, columnsWithPk, rows, true);
 
 			if(exitReference.get())
 				return;
@@ -263,7 +262,6 @@ public class ExportFile extends JPanel {
 			Path source = Paths.get(headFileName);
 			String datFileName = fileName + FileType.FYI.EXTENSION;
 			Path source1 = Paths.get(datFileName);
-
 
 			Path destination = Paths.get(filePath);
 			Path destination2 = Paths.get(filePath.replace(headFileName, datFileName));
@@ -283,7 +281,7 @@ public class ExportFile extends JPanel {
 
 	}
 
-	private void exportToCsv(Cell cell, JFileChooser fileChooser) {
+	public void exportToCsv(Cell cell) {
 		
 		try {
 
@@ -307,7 +305,7 @@ public class ExportFile extends JPanel {
 					int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
 							"Confirmar substituição", JOptionPane.YES_NO_OPTION);
 					if (result == JOptionPane.NO_OPTION) {
-						exportToCsv(cell, fileChooser);
+						exportToCsv(cell);
 						return;
 					}
 				}
@@ -365,7 +363,7 @@ public class ExportFile extends JPanel {
 
 	}
 
-	private void exportToImage() {
+	public void exportToImage() {
 		
 		try {
 			
@@ -405,7 +403,7 @@ public class ExportFile extends JPanel {
 		
 	}
 
-	private void exportToDsl(Tree tree) {
+	public void exportToDsl(Tree tree) {
 		
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Salvar árvore");

@@ -77,8 +77,6 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
 
     }
 
-    private boolean noneSelection;
-
     @Override
     public void checkBtnReady() {
 
@@ -88,18 +86,20 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
             if(x.isSelected()) anySelected.set(true);
         });
 
-        btnReady.setEnabled(anySelected.get());
+        boolean noneSelection = anySelected.get();
 
-        noneSelection = anySelected.get();
+        btnReady.setEnabled(noneSelection);
 
-        updateToolTipTxt();
+        updateToolTipTxt(noneSelection);
 
     }
 
     @Override
-    public void updateToolTipTxt() {
+    public void updateToolTipTxt(boolean ...conditions) {
 
         String btnReadyToolTipText = "";
+
+        boolean noneSelection = conditions[0];
 
         if (!noneSelection)
             btnReadyToolTipText = "- Selecione pelo menos uma opção";

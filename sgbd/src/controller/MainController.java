@@ -217,8 +217,8 @@ public class MainController extends MainFrame {
         else if (e.getSource() == menuItemExport)
             export();
 
-        else if (e.getSource() == menuItemExportTree)
-            new ExportFile(Cell.getCells().get(jCell).getTree());
+		else if(e.getSource() == menuItemExportTree)
+			new ExportFile().exportToDsl(Cell.getCells().get(jCell).getTree());
 
         else if (e.getSource() == menuItemEdit) {
 
@@ -365,8 +365,9 @@ public class MainController extends MainFrame {
 
     private void printScreen() {
 
-        new ExportFile();
-    }
+			new ExportFile().exportToImage();
+
+	}
 
     private void deleteAction() {
 
@@ -509,10 +510,10 @@ public class MainController extends MainFrame {
 
         }
 
-        mxCell jTableCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
-                relation.getName(), x, y, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, "table");
+		mxCell jTableCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
+				relation.getName(), x, y, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, "table");
 
-        relation.setCell(new ImportFile(relation.getName() + FileType.HEADER.EXTENSION, jTableCell).getResult());
+		relation.setCell(new ImportFile(relation.getName() + FileType.HEADER.EXTENSION, jTableCell).getResult());
 
         relation.getCell().getTable().open();
 
@@ -537,8 +538,8 @@ public class MainController extends MainFrame {
 
         OperationType type = operationExpression.getType();
 
-        mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
-                type.getDisplayNameAndSymbol(), x, y, ConstantController.OPERATION_CELL_WIDTH, ConstantController.OPERATION_CELL_HEIGHT, type.DISPLAY_NAME);
+		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
+				type.getDisplayNameAndSymbol(), x, y, ConstantController.OPERATION_CELL_WIDTH, ConstantController.OPERATION_CELL_HEIGHT, type.DISPLAY_NAME);
 
         List<Cell> parents = new ArrayList<>();
         parents.add(operationExpression.getSource().getCell());

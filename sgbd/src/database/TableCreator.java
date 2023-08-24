@@ -8,6 +8,7 @@ import java.util.Map;
 import com.mxgraph.model.mxCell;
 
 import controller.ConstantController;
+import entities.cells.Cell;
 import entities.cells.CsvTableCell;
 import entities.cells.FyiTableCell;
 import entities.cells.TableCell;
@@ -67,7 +68,7 @@ public class TableCreator {
 		if(mustExport){
 
 			tableCell = new CsvTableCell(null, tableName, FileType.CSV.ID, columns, table, prototype);
-
+			Cell.removeFromCells(null);
 			return;
 
 		}
@@ -96,7 +97,7 @@ public class TableCreator {
 		if(mustExport){
 
 			tableCell = new FyiTableCell(null, tableName, FileType.FYI.ID, columns, table, prototype);
-
+			Cell.removeFromCells(null);
 			return;
 
 		}
@@ -109,7 +110,7 @@ public class TableCreator {
 
 	}
 
-	private Prototype createPrototype(List<entities.Column> columns){
+	public static Prototype createPrototype(List<entities.Column> columns){
 
 		Prototype prototype = new Prototype();
 
@@ -162,6 +163,8 @@ public class TableCreator {
 			RowData rowData = new RowData();
 
 			for (String data : line.keySet()) {
+
+				if(data.equals("__IDX__")) continue;
 
 				entities.Column column = columns.stream().filter(x -> x.getName().equals(data)).findFirst()
 						.orElseThrow();

@@ -4,8 +4,9 @@ import entities.cells.Cell;
 import enums.ColumnDataType;
 
 import java.util.List;
+import java.util.Objects;
 
-public class Column{
+public class Column implements Comparable<Column>{
 
 	private final String name;
 	private final String source;
@@ -30,6 +31,12 @@ public class Column{
 	public Column(String name, String tableName){
 
 		this(name, tableName, ColumnDataType.NONE, false);
+
+	}
+
+	public Column(String name, String tableName, boolean pk){
+
+		this(name, tableName, ColumnDataType.NONE, pk);
 
 	}
 	
@@ -112,4 +119,15 @@ public class Column{
 				"PK:" + isPK();
 	}
 
+	@Override
+	public int compareTo(Column column) {
+
+		if(Objects.equals(column.getName(), name) && Objects.equals(column.getSource(), source))
+			return 0;
+
+		if(Objects.equals(column.getName(), name)) return 1;
+
+		return -1;
+
+	}
 }

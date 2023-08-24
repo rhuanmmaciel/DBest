@@ -3,10 +3,8 @@ package database;
 import java.util.*;
 
 import controller.ConstantController;
-import controller.MainController;
 import entities.Column;
-import sgbd.prototype.BData;
-import sgbd.prototype.ComplexRowData;
+import sgbd.prototype.RowData;
 import sgbd.prototype.query.Tuple;
 import sgbd.query.Operator;
 import util.Utils;
@@ -51,18 +49,23 @@ public class TuplesExtractor {
 
 			Tuple t = operator.next();
 
-			for (Map.Entry<String, ComplexRowData> line : t)
-				for (Map.Entry<String, BData> data : line.getValue()) {
+			for(Map.Entry<String, List<String>> content: operator.getContentInfo().entrySet())
+				for(String col : content.getValue()){
 
-					String columnName = sourceAndName ? Column.putSource(data.getKey(), line.getKey()) : data.getKey();
+					RowData rowData = t.getContent(content.getKey());
+					String columnName = sourceAndName ? Column.putSource(col, content.getKey()) : col;
 
-					switch (Utils.getType(t, line.getKey(), data.getKey())) {
-						case INTEGER -> row.put(columnName, Objects.toString(line.getValue().getInt(data.getKey()), ConstantController.NULL));
-						case LONG -> row.put(columnName, Objects.toString(line.getValue().getLong(data.getKey()), ConstantController.NULL));
-						case DOUBLE -> row.put(columnName, Objects.toString(line.getValue().getDouble(data.getKey()), ConstantController.NULL));
-						case FLOAT -> row.put(columnName, Objects.toString(line.getValue().getFloat(data.getKey()), ConstantController.NULL));
-						default -> row.put(columnName, Objects.toString(line.getValue().getString(data.getKey()), ConstantController.NULL));
+					switch (Utils.getType(t, content.getKey(), col)){
+
+						case INTEGER -> row.put(columnName, Objects.toString(rowData.getInt(col), ConstantController.NULL));
+						case LONG -> row.put(columnName, Objects.toString(rowData.getLong(col), ConstantController.NULL));
+						case FLOAT -> row.put(columnName, Objects.toString(rowData.getFloat(col), ConstantController.NULL));
+						case DOUBLE -> row.put(columnName, Objects.toString(rowData.getDouble(col), ConstantController.NULL));
+						case BOOLEAN -> row.put(columnName, Objects.toString(rowData.getBoolean(col), ConstantController.NULL));
+						case STRING, NONE, CHARACTER -> row.put(columnName, Objects.toString(rowData.getString(col), ConstantController.NULL));
+
 					}
+
 				}
 		}else{
 

@@ -10,6 +10,10 @@ import java.util.List;
 
 public class ConstantController {
 
+    public static final List<String> RELATIONAL_OPERATORS = Arrays.stream(RelationalOperator.values())
+            .map(x -> x.symbols)
+            .flatMap(Arrays::stream)
+            .toList();
     public static final String NOT_EQUAL_SYMBOL = "≠";
     public static final String GREATER_THAN_OR_EQUAL_SYMBOL = "≥";
     public static final String LESS_THAN_OR_EQUAL_SYMBOL = "≤";

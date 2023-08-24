@@ -88,17 +88,18 @@ public class IndexerForm extends OperationForm implements IOperationForm, Action
     @Override
     public void checkBtnReady() {
 
-        btnReady.setEnabled(!txtField.getText().isBlank());
-        updateToolTipTxt();
+        boolean hasName = !txtField.getText().isBlank();
+        btnReady.setEnabled(hasName);
+        updateToolTipTxt(hasName);
 
     }
 
     @Override
-    public void updateToolTipTxt() {
+    public void updateToolTipTxt(boolean ...conditions) {
 
         String btnReadyToolTipText = "";
 
-        if (txtField.getText().isBlank())
+        if (conditions[0])
             btnReadyToolTipText = "- Digite algum nome para a coluna";
 
         UIManager.put("ToolTip.foreground", Color.RED);

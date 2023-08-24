@@ -20,7 +20,7 @@ public class Utils {
 
     public static ColumnDataType getType(Tuple tuple, String sourceName, String columnName){
 
-        return switch (Util.typeOfColumn(tuple.getContent(sourceName).getMeta(columnName))){
+        return switch (Util.typeOfColumn(tuple.getContent(sourceName).getMetadata(columnName))){
 
             case "int" ->  ColumnDataType.INTEGER;
             case "long" ->  ColumnDataType.LONG;
