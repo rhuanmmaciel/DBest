@@ -79,7 +79,7 @@ public class BooleanExpressionRecognizer {
 
         if(element instanceof Null) return ConstantController.NULL;
 
-        return ((Variable)element).toString();
+        return element.toString();
 
     }
 
@@ -279,7 +279,7 @@ public class BooleanExpressionRecognizer {
     private List<String> tokenize(String input) {
         List<String> tokens = new ArrayList<>();
 
-        String regex = "\\s*(?i)AND|OR|\\(|\\)\\s*";
+        String regex = "((?i)(?<=[\\s\\(\\)])+AND(?=[\\s\\(\\)])+)|((?i)(?<=[\\s\\(\\)])+OR(?=[\\s\\(\\)])+)|(\\()|(\\))";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
 
@@ -308,6 +308,7 @@ public class BooleanExpressionRecognizer {
         txt = txt.replace(")", "").replace("(","");
 
         String finalTxt = txt;
+
         String relationalOperator = ConstantController.RELATIONAL_OPERATORS.stream().filter(finalTxt::contains)
                 .findFirst().orElseThrow(IllegalArgumentException::new);
         String[] elements = txt.split(relationalOperator);

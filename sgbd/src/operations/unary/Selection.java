@@ -60,8 +60,6 @@ public class Selection implements IOperator {
 
 		BooleanExpression booleanExpression = new BooleanExpressionRecognizer().recognizer(expression);
 
-		System.out.println(((AtomicExpression)booleanExpression).getSecondElement());
-
 		Operator operator = parentCell.getOperator();
 		operator = new FilterOperator(operator, booleanExpression);
 
