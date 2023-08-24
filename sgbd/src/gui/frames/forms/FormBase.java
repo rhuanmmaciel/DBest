@@ -18,7 +18,7 @@ public abstract class FormBase extends JDialog {
 
     }
 
-    private void initBottomButtons(){
+    protected void initBottomButtons(){
 
         JPanel bottomPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPane.add(btnCancel);

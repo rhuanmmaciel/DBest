@@ -33,7 +33,6 @@ public abstract sealed class TableCell extends Cell permits CsvTableCell, FyiTab
 		setTable(table);
 		setPrototype(table.getHeader().getPrototype());
 		setColumns();
-		
 	}
 	
 	private void setTable(Table table) {
