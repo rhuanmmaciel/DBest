@@ -1,6 +1,6 @@
 package gui.frames.forms.importexport;
 
-import controller.MainController;
+import controller.ConstantController;
 import database.TableUtils;
 import database.TuplesExtractor;
 import entities.Column;
@@ -12,14 +12,13 @@ import gui.utils.JTableUtils;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ExportSQLScriptForm extends FormBase implements ActionListener, IFormCondition {
@@ -29,7 +28,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
     private final JScrollPane scrollPane = new JScrollPane();
 
     private final JTextArea textArea = new JTextArea();
-    private final JButton btnChangeScreen = new JButton("Ver tabela");
+    private final JButton btnChangeScreen = new JButton(ConstantController.getString("exportSQLScript.showTableButton"));
     private final JTextField txtFieldDatabaseName = new JTextField();
     private final JTextField txtFieldTableName = new JTextField();
     private final JCheckBox checkBoxCreateDatabase;
@@ -101,7 +100,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
         contentPane.add(btnChangeScreen, BorderLayout.NORTH);
         contentPane.add(formPane, BorderLayout.CENTER);
 
-        addComponent(new JLabel("Nome do Database: "), 0, 0, 1, 1);
+        addComponent(new JLabel(ConstantController.getString("exportSQLScript.databaseName")+": "), 0, 0, 1, 1);
         addComponent(txtFieldDatabaseName, 1, 0, 1, 1);
         txtFieldDatabaseName.setMaximumSize(new Dimension(3000, 50));
         txtFieldDatabaseName.getDocument().addDocumentListener(new DocumentListener() {
@@ -119,7 +118,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
             }
         });
 
-        addComponent(new JLabel("Nome da tabela: "), 0, 1, 1, 1);
+        addComponent(new JLabel(ConstantController.getString("exportSQLScript.tableName")+": "), 0, 1, 1, 1);
         addComponent(txtFieldTableName, 1, 1, 1, 1);
         txtFieldTableName.setMaximumSize(new Dimension(3000, 50));
         txtFieldTableName.getDocument().addDocumentListener(new DocumentListener() {
@@ -139,10 +138,10 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
         addComponent(checkBoxCreateDatabase, 0, 2, 1, 1);
 
-        addComponent(new JLabel("  Coluna  "), 0, 3, 1, 1);
-        addComponent(new JLabel("  Nome da coluna  "), 1, 3, 1, 1);
-        addComponent(new JLabel("  Chave primária  "), 2, 3, 1, 1);
-        addComponent(new JLabel("  Pode possuir valor null  "), 3, 3, 1, 1);
+        addComponent(new JLabel("  "+ConstantController.getString("exportSQLScript.column")+"  "), 0, 3, 1, 1);
+        addComponent(new JLabel("  " + ConstantController.getString("exportSQLScript.columnName") + "  "), 1, 3, 1, 1);
+        addComponent(new JLabel("  "+ ConstantController.getString("exportSQLScript.primaryKey") +"  "), 2, 3, 1, 1);
+        addComponent(new JLabel("  " + ConstantController.getString("exportSQLScript.canBeNull") + "  "), 3, 3, 1, 1);
 
         int i = 4;
         for(String columnName : columnNames.subList(0, columnNames.size()-1)){
@@ -155,18 +154,18 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
         }
 
-        addComponent(new JScrollPane(textArea), 0, i++, 4, 1);
+        addComponent(new JScrollPane(textArea), 0, i, 4, 1);
 
     }
 
-    protected void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight) {
+    protected void addComponent(Component component, int gridx, int gridY, int gridWidth, int gridHeight) {
 
         GridBagConstraints gbc = ((GridBagLayout) formPane.getLayout()).getConstraints(formPane);
 
         gbc.gridx = gridx;
-        gbc.gridy = gridy;
-        gbc.gridwidth = gridwidth;
-        gbc.gridheight = gridheight;
+        gbc.gridy = gridY;
+        gbc.gridwidth = gridWidth;
+        gbc.gridheight = gridHeight;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         formPane.add(component, gbc);
@@ -298,7 +297,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
     private void addFirstColumn(JTableUtils.CustomTableModel model) {
 
-        model.addColumn("Nome:");
+        model.addColumn(ConstantController.getString("exportSQLScript.firstColumnName"));
 
         for (int row = 0; row < model.getRowCount(); row++) {
             model.setValueAt(row + 1, row, model.getColumnCount() - 1);
@@ -333,14 +332,14 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
             if(isForm){
 
                 isForm = false;
-                btnChangeScreen.setText("Voltar");
+                btnChangeScreen.setText(ConstantController.getString("exportSQLScript.backButton"));
                 loadTable();
                 return;
 
             }
 
             isForm = true;
-            btnChangeScreen.setText("Ver tabela");
+            btnChangeScreen.setText(ConstantController.getString("exportSQLScript.showTableButton"));
             loadForm();
 
         }

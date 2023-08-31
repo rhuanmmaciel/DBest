@@ -1,34 +1,36 @@
 package gui.frames;
 
+import controller.ConstantController;
+import database.TuplesExtractor;
+import entities.Column;
+import entities.cells.Cell;
+import entities.cells.OperationCell;
+import gui.utils.JTableUtils;
+import org.kordamp.ikonli.dashicons.Dashicons;
+import org.kordamp.ikonli.swing.FontIcon;
+import sgbd.query.Operator;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
-import controller.ConstantController;
-import entities.Column;
-import entities.cells.Cell;
-import entities.cells.OperationCell;
-import database.TuplesExtractor;
-import gui.utils.JTableUtils;
-import sgbd.query.Operator;
+import java.util.Map;
 
 public class DataFrame extends JDialog implements ActionListener {
 
 	private final JLabel lblText = new JLabel();
 	private final JLabel lblPages = new JLabel();
 	private final JTable table = new JTable();
-	private final JButton btnLeft = new JButton("<");
-	private final JButton btnRight = new JButton(">");
-	private final JButton btnAllLeft = new JButton("<<");
-	private final JButton btnAllRight = new JButton(">>");
+	private final JButton btnLeft = new JButton();
+	private final JButton btnRight = new JButton();
+	private final JButton btnAllLeft = new JButton();
+	private final JButton btnAllRight = new JButton();
 
 	private final List<Map<String, String>> rows;
 	private final List<String> columnsName;
@@ -39,7 +41,7 @@ public class DataFrame extends JDialog implements ActionListener {
 
 	public DataFrame(Cell cell) {
 
-		super((Window) null, "DataFrame");
+		super((Window) null, ConstantController.getString("dataframe"));
 		setModal(true);
 		
 		if(cell instanceof OperationCell operationCell) lblText.setText(operationCell.getType().DISPLAY_NAME+":");
@@ -65,7 +67,29 @@ public class DataFrame extends JDialog implements ActionListener {
 		initializeGUI();
 
 	}
-	
+
+	private void setIcons() {
+
+		int buttonsSize = 15;
+
+		FontIcon iconLeft = FontIcon.of(Dashicons.CONTROLS_BACK);
+		iconLeft.setIconSize(buttonsSize);
+		btnLeft.setIcon(iconLeft);
+
+		FontIcon iconRight = FontIcon.of(Dashicons.CONTROLS_FORWARD);
+		iconRight.setIconSize(buttonsSize);
+		btnRight.setIcon(iconRight);
+
+		FontIcon iconAllLeft = FontIcon.of(Dashicons.CONTROLS_SKIPBACK);
+		iconAllLeft.setIconSize(buttonsSize);
+		btnAllLeft.setIcon(iconAllLeft);
+
+		FontIcon iconAllRight = FontIcon.of(Dashicons.CONTROLS_SKIPFORWARD);
+		iconAllRight.setIconSize(buttonsSize);
+		btnAllRight.setIcon(iconAllRight);
+
+	}
+
 	private void updateTable(int page) {
 
 		int firstElement = page * 15;
@@ -149,6 +173,7 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		setContentPane(contentPane);
 
+		setIcons();
 		btnLeft.addActionListener(this);
 		btnAllLeft.addActionListener(this);
 		btnRight.addActionListener(this);

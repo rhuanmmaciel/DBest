@@ -55,7 +55,7 @@ public class CartesianProduct implements IOperator {
 		Operator operator1 = parentCell1.getOperator();
 		Operator operator2 = parentCell2.getOperator();
 
-		Operator readyOperator = new NestedLoopJoin(operator1, operator2, (t1, t2) -> true);
+		Operator readyOperator = new NestedLoopJoin(operator1, operator2);
 
 		Operation.operationSetter(cell, "  X  ", List.of(), readyOperator);
 

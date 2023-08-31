@@ -1,6 +1,7 @@
 package gui.frames.forms.operations.unary;
 
 import com.mxgraph.model.mxCell;
+import controller.ConstantController;
 import entities.Column;
 import gui.frames.forms.IFormCondition;
 import gui.frames.forms.operations.OperationForm;
@@ -19,8 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SortForm extends OperationForm implements ActionListener, IOperationForm, IFormCondition {
 
     private final ButtonGroup buttonGroup = new ButtonGroup();
-    private final JRadioButton ascendingRadioButton = new JRadioButton("Ascendente");
-    private final JRadioButton descendingRadioButton = new JRadioButton("Descendente");
+    private final JRadioButton ascendingRadioButton = new JRadioButton(ConstantController.getString("operationForm.ascending"));
+    private final JRadioButton descendingRadioButton = new JRadioButton(ConstantController.getString("operationForm.descending"));
 
     public SortForm(mxCell jCell) {
 
@@ -102,7 +103,7 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
         boolean noneSelection = conditions[0];
 
         if (!noneSelection)
-            btnReadyToolTipText = "- Selecione pelo menos uma opção";
+            btnReadyToolTipText = "- "+ ConstantController.getString("operationForm.toolTip.sort.selectAtLeastOne");
 
         UIManager.put("ToolTip.foreground", Color.RED);
 

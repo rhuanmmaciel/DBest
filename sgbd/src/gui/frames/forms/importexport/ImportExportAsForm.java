@@ -1,24 +1,22 @@
 package gui.frames.forms.importexport;
 
+import controller.ConstantController;
 import gui.frames.forms.FormBase;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 public abstract class ImportExportAsForm extends FormBase implements ActionListener{
 
-	protected JButton btnCsv = new JButton("Arquivo csv");
+	protected JButton btnCsv = new JButton(ConstantController.getString("importExportAs.csvButton"));
 	protected JLabel lblText = new JLabel();
 	protected JPanel centerPane = new JPanel();
 
 
 	public ImportExportAsForm() {
 
-		super((Window) null);
+		super(null);
 
 		initializeGUI();
 		

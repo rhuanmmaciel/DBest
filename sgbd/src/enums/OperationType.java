@@ -1,15 +1,16 @@
 package enums;
 
+import controller.ConstantController;
 import entities.Action.CreateOperationAction;
 import gui.frames.forms.operations.BooleanExpressionForm;
 import gui.frames.forms.operations.IOperationForm;
 import gui.frames.forms.operations.unary.*;
 import operations.IOperator;
 import operations.binary.CartesianProduct;
-import operations.binary.set.Intersection;
 import operations.binary.joins.Join;
 import operations.binary.joins.LeftJoin;
 import operations.binary.joins.RightJoin;
+import operations.binary.set.Intersection;
 import operations.binary.set.Union;
 import operations.unary.*;
 
@@ -19,31 +20,31 @@ import static enums.OperationErrorType.*;
 
 public enum OperationType {
 
-	SELECTION("Seleção", "σ", "selection", "selection[args](source)", OperationArity.UNARY, BooleanExpressionForm.class, Selection.class,
+	SELECTION(ConstantController.getString("operation.selection"), "σ", "selection", "selection[args](source)", OperationArity.UNARY, BooleanExpressionForm.class, Selection.class,
 			   NO_ONE_ARGUMENT),
-	PROJECTION("Projeção", "π", "projection", "projection[args](source)",OperationArity.UNARY, ProjectionForm.class, Projection.class,
+	PROJECTION(ConstantController.getString("operation.projection"), "π", "projection", "projection[args](source)",OperationArity.UNARY, ProjectionForm.class, Projection.class,
 			   PARENT_WITHOUT_COLUMN),
-	RENAME("Renomeação", "ρ", "rename", "rename[args](source)", OperationArity.UNARY, RenameForm.class, Rename.class),
-	GROUP("Agrupamento", "G", "group", "group[args](relation)",OperationArity.UNARY, GroupForm.class, Group.class,
+	RENAME(ConstantController.getString("operation.rename"), "ρ", "rename", "rename[args](source)", OperationArity.UNARY, RenameForm.class, Rename.class),
+	GROUP(ConstantController.getString("operation.group"), "G", "group", "group[args](relation)",OperationArity.UNARY, GroupForm.class, Group.class,
 			   NO_ONE_ARGUMENT, PARENT_WITHOUT_COLUMN, NO_PREFIX),
-	AGGREGATION("Agregação", "G", "aggregation", "aggregation[args](relation)",OperationArity.UNARY,
+	AGGREGATION(ConstantController.getString("operation.aggregation"), "G", "aggregation", "aggregation[args](relation)",OperationArity.UNARY,
 			AggregationForm.class, Aggregation.class,
 			    NO_ONE_ARGUMENT, PARENT_WITHOUT_COLUMN, NO_PREFIX),
-	SORT("Ordenação", "↕", "sort", "sort[args](relation)", OperationArity.UNARY, SortForm.class, Sort.class,
+	SORT(ConstantController.getString("operation.sort"), "↕", "sort", "sort[args](relation)", OperationArity.UNARY, SortForm.class, Sort.class,
 			    PARENT_WITHOUT_COLUMN),
-	INDEXER("Indexação", "❶", "indexer", "indexer[args](source)", OperationArity.UNARY, IndexerForm.class, Indexer.class),
+	INDEXER(ConstantController.getString("operation.indexer"), "❶", "indexer", "indexer[args](source)", OperationArity.UNARY, IndexerForm.class, Indexer.class),
 
-	JOIN("Junção", "|X|", "join", "join[args](source1,source2)", OperationArity.BINARY, BooleanExpressionForm.class, Join.class,
+	JOIN(ConstantController.getString("operation.join"), "|X|", "join", "join[args](source1,source2)", OperationArity.BINARY, BooleanExpressionForm.class, Join.class,
 			 NO_TWO_ARGUMENTS,  PARENT_WITHOUT_COLUMN),
-	LEFT_JOIN("Junção à esquerda", "⟕", "leftJoin", "leftJoin[args](source1,source2)", OperationArity.BINARY, BooleanExpressionForm.class, LeftJoin.class,
+	LEFT_JOIN(ConstantController.getString("operation.leftJoin"), "⟕", "leftJoin", "leftJoin[args](source1,source2)", OperationArity.BINARY, BooleanExpressionForm.class, LeftJoin.class,
 			 NO_TWO_ARGUMENTS,  PARENT_WITHOUT_COLUMN),
-	RIGHT_JOIN("Junção à direita", "⟖", "rightJoin", "rightJoin[args](source1,source2)", OperationArity.BINARY, BooleanExpressionForm.class, RightJoin.class,
+	RIGHT_JOIN(ConstantController.getString("operation.rightJoin"), "⟖", "rightJoin", "rightJoin[args](source1,source2)", OperationArity.BINARY, BooleanExpressionForm.class, RightJoin.class,
 			 NO_TWO_ARGUMENTS, PARENT_WITHOUT_COLUMN),
-	CARTESIAN_PRODUCT("Produto Cartesiano", "✕", "cartesianProduct", "cartesianProduct(source1,source2)", OperationArity.BINARY, null, CartesianProduct.class,
+	CARTESIAN_PRODUCT(ConstantController.getString("operation.cartesianProduct"), "✕", "cartesianProduct", "cartesianProduct(source1,source2)", OperationArity.BINARY, null, CartesianProduct.class,
 			SAME_SOURCE),
-	UNION("União", "∪", "union", "union(source1,source2)", OperationArity.BINARY, null, Union.class),
-	INTERSECTION("Interseção", "∩", "intersection", "intersection(source1,source2)", OperationArity.BINARY, null, Intersection.class),
-	DIFFERENCE("Diferença", "-", "difference", "difference(source1,source2)", OperationArity.BINARY, null, null);
+	UNION(ConstantController.getString("operation.union"), "∪", "union", "union(source1,source2)", OperationArity.BINARY, null, Union.class),
+	INTERSECTION(ConstantController.getString("operation.intersection"), "∩", "intersection", "intersection(source1,source2)", OperationArity.BINARY, null, Intersection.class),
+	DIFFERENCE(ConstantController.getString("operation.difference"), "-", "difference", "difference(source1,source2)", OperationArity.BINARY, null, null);
 
 	public final String DISPLAY_NAME;
 	public final String SYMBOL;

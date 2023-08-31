@@ -1,6 +1,7 @@
 package gui.frames.forms.operations.unary;
 
 import com.mxgraph.model.mxCell;
+import controller.ConstantController;
 import entities.Column;
 import entities.cells.Cell;
 import gui.frames.forms.operations.OperationForm;
@@ -17,12 +18,16 @@ import java.util.Objects;
 
 public class GroupForm extends OperationForm implements ActionListener, IOperationForm {
 
-    private final JButton btnAdd = new JButton("Adicionar");
-    private final JButton btnRemove = new JButton("Remover colunas");
+    private final JButton btnAdd = new JButton(ConstantController.getString("operationForm.add"));
+    private final JButton btnRemove = new JButton(ConstantController.getString("operationForm.removeColumns"));
     private final JTextArea textArea = new JTextArea();
     private final JComboBox<String> comboBoxGroupBySource = new JComboBox<>();
     private final JComboBox<String> comboBoxGroupByColumn = new JComboBox<>();
-    private final JComboBox<String> comboBoxAggregation = new JComboBox<>(new String[]{"Mínimo", "Máximo", "Média", "Contagem"});
+    private final JComboBox<String> comboBoxAggregation = new JComboBox<>(new String[]{
+            ConstantController.getString("operationForm.minimum"),
+            ConstantController.getString("operationForm.maximum"),
+            ConstantController.getString("operationForm.average"),
+            ConstantController.getString("operationForm.count")});
 
     public GroupForm(mxCell jCell) {
 
@@ -51,18 +56,18 @@ public class GroupForm extends OperationForm implements ActionListener, IOperati
         btnAdd.addActionListener(this);
         btnRemove.addActionListener(this);
 
-        addExtraComponent(new JLabel("Fonte:"), 0, 0, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.source")+":"), 0, 0, 1, 1);
         addExtraComponent(comboBoxSource, 1, 0, 1, 1);
-        addExtraComponent(new JLabel("Coluna:"), 0, 1, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.column")+":"), 0, 1, 1, 1);
         addExtraComponent(comboBoxColumn, 1, 1, 1, 1);
-        addExtraComponent(new JLabel("Agregação:"), 0, 2, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operation.aggregation")+":"), 0, 2, 1, 1);
         addExtraComponent(comboBoxAggregation, 1, 2, 1, 1);
         addExtraComponent(btnAdd, 0, 3, 1, 1);
         addExtraComponent(btnRemove, 1, 3, 1, 1);
         addExtraComponent(new JScrollPane(textArea), 0, 4, 2, 2);
-        addExtraComponent(new JLabel("Fonte:"), 0, 6, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.source")+":"), 0, 6, 1, 1);
         addExtraComponent(comboBoxGroupBySource, 1, 6, 1, 1);
-        addExtraComponent(new JLabel("Agrupar por:"), 0, 7, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.groupBy")+":"), 0, 7, 1, 1);
         addExtraComponent(comboBoxGroupByColumn, 1, 7, 1, 1);
 
         parent1.getAllSourceTables().stream()
@@ -133,15 +138,22 @@ public class GroupForm extends OperationForm implements ActionListener, IOperati
 
     private void updateColumns(){
 
-        String aggregation = switch (Objects.requireNonNull(comboBoxAggregation.getSelectedItem()).toString()){
-            case "Máximo" -> "MAX:";
-            case "Mínimo" -> "MIN:";
-            case "Média" -> "AVG:";
-            case "Contagem" -> "COUNT:";
-            default ->
-                    throw new IllegalStateException("Unexpected value: " + comboBoxAggregation.getSelectedItem().toString());
-        };
-        String column = aggregation+
+        String selected = Objects.requireNonNull(comboBoxAggregation.getSelectedItem()).toString();
+
+        String suffix;
+
+        if(selected.equals(ConstantController.getString("operationForm.maximum")))
+            suffix = "MAX:";
+        else  if(selected.equals(ConstantController.getString("operationForm.minimum")))
+            suffix = "MIN:";
+        else  if(selected.equals(ConstantController.getString("operationForm.average")))
+            suffix = "AVG:";
+        else  if(selected.equals(ConstantController.getString("operationForm.count")))
+            suffix = "COUNT:";
+        else
+            throw new IllegalStateException("Unexpected value: " + selected);
+
+        String column = suffix+
                 comboBoxSource.getSelectedItem()+
                 "."+comboBoxColumn.getSelectedItem();
         String textColumnsPicked = textArea.getText() + "\n" + column;

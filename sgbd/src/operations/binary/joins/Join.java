@@ -13,7 +13,6 @@ public class Join extends JoinOperators {
 	@Override
 	public Operator createJoinOperator(Operator op1, Operator op2, BooleanExpression booleanExpression){
 
-		System.out.println(new BooleanExpressionRecognizer().recognizer(booleanExpression));
 		return new BlockNestedLoopJoin(op1, op2, booleanExpression);
 
 	}

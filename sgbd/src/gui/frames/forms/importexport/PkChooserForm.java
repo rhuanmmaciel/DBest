@@ -17,8 +17,8 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class PkChooserForm extends FormBase implements ActionListener, IFormCondition{
 
@@ -133,9 +133,9 @@ public class PkChooserForm extends FormBase implements ActionListener, IFormCond
 
     private void addFirstColumn() {
 
-        model.addColumn("Nome:");
+        model.addColumn(ConstantController.getString("pkChooser.firstColumn.name")+":");
 
-        model.setValueAt("Chave Primária:", 0, model.getColumnCount() - 1);
+        model.setValueAt(ConstantController.getString("pkChooser.firstColumn.primaryKey")+":", 0, model.getColumnCount() - 1);
 
         for (int row = 1; row < model.getRowCount(); row++) {
             model.setValueAt(row - 1, row, model.getColumnCount() - 1);
@@ -187,8 +187,8 @@ public class PkChooserForm extends FormBase implements ActionListener, IFormCond
 
         String btnReadyToolTipText = "";
 
-        if(conditions[0]) btnReadyToolTipText = "- Selecione pelo menos uma coluna válida";
-        if(conditions[1]) btnReadyToolTipText = "- As colunas selecionadas não podem ser chave primária";
+        if(conditions[0]) btnReadyToolTipText = "- "+ ConstantController.getString("pkChooser.toolTip.validColumn");
+        if(conditions[1]) btnReadyToolTipText = "- "+ConstantController.getString("pkChooser.toolTip.pkValid");
 
         UIManager.put("ToolTip.foreground", Color.RED);
 

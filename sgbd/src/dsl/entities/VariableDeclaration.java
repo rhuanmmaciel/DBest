@@ -15,11 +15,8 @@ public final class VariableDeclaration extends Command{
 	private void recognizer(String command) {
 		
 		variable = command.substring(0, command.indexOf("=")).strip();
-		
-		String stringExpression = command.substring(command.indexOf("=") + 1);
-		
-		expression =stringExpression;
-		
+
+        expression = command.substring(command.indexOf("=") + 1);
 		
 	}
 	

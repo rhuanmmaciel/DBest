@@ -1,6 +1,20 @@
 package gui.frames.dsl;
 
-import java.awt.BorderLayout;
+import controller.ConstantController;
+import dsl.AntlrController;
+import dsl.DslController;
+import dsl.DslErrorListener;
+import dsl.antlr4.RelAlgebraLexer;
+import dsl.antlr4.RelAlgebraParser;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyledDocument;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -8,36 +22,14 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyledDocument;
-
-import dsl.antlr4.RelAlgebraLexer;
-import dsl.antlr4.RelAlgebraParser;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
-import dsl.AntlrController;
-import dsl.DslController;
-import dsl.DslErrorListener;
-
-@SuppressWarnings("serial")
 public class Console extends JFrame implements ActionListener, KeyListener {
 
 	private JTextField textField;
 	private JTextPane textArea;
 	private JButton enterButton;
-	private static List<String> history = new ArrayList<>();
+	private static final List<String> history = new ArrayList<>();
 	private boolean historyOn = false;
-	private Integer indice = null;
+	private Integer index = null;
 
 	public Console() {
 
@@ -49,7 +41,7 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 
 		setSize(400, 400);
 		setLocationRelativeTo(null);
-		setTitle("Console");
+		setTitle(ConstantController.getString("console"));
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		setContentPane(mainPanel);
@@ -100,7 +92,7 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 
 			String input = textField.getText().strip();
 
-			if (input.toLowerCase().equals("clear")) {
+			if (input.equalsIgnoreCase("clear")) {
 
 				textArea.setText("");
 
@@ -153,12 +145,12 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 		if (!historyOn) {
 
 			historyOn = true;
-			indice = history.size() - 2;
+			index = history.size() - 2;
 
 		} else {
 
-			if (indice > 0)
-				indice--;
+			if (index > 0)
+				index--;
 
 		}
 
@@ -170,8 +162,8 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 
 		if (historyOn) {
 
-			if (indice < history.size() - 1)
-				indice++;
+			if (index < history.size() - 1)
+				index++;
 
 		}
 
@@ -181,9 +173,9 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 
 	private void setHistory() {
 		
-		if (indice != null && indice >= 0 && indice < history.size()) {
+		if (index != null && index >= 0 && index < history.size()) {
 
-			textField.setText(history.get(indice));
+			textField.setText(history.get(index));
 
 		}
 

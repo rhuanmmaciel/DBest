@@ -27,7 +27,7 @@ public class CsvRecognizer {
 
 			String line = br.readLine();
 
-			isLineNull(line, "O csv não possui nenhuma informação");
+			isLineNull(line, ConstantController.getString("csvRecognizer.error.noInformation"));
 			
 			recognizeItems(line, columnsNameList, stringDelimiter, separator);
 
@@ -35,7 +35,7 @@ public class CsvRecognizer {
 
 			line = br.readLine();
 
-			isLineNull(line, "O csv possui apenas uma linha");
+			isLineNull(line, ConstantController.getString("csvRecognizer.error.justOneLine"));
 
 			int size = columnsNameList.size();
 
@@ -62,7 +62,7 @@ public class CsvRecognizer {
 
 		} catch (IOException ignored) {
 
-			throw new InvalidCsvException("Não foi possível ler o csv");
+			throw new InvalidCsvException(ConstantController.getString("csvRecognizer.error.notPossibleToRead"));
 
 		}
 
@@ -132,7 +132,7 @@ public class CsvRecognizer {
 
 	private static void isColumnEmpty(List<String> columns) throws InvalidCsvException {
 		if (columns.contains("") || columns.contains(null))
-			throw new InvalidCsvException("O csv deve possuir nome para todas as colunas");
+			throw new InvalidCsvException(ConstantController.getString("csvRecognizer.error.columnNames"));
 	}
 
 	public record CsvData(List<List<String>> dataList, List<String> columnsNameList, Vector<Vector<Object>> dataArray,

@@ -38,16 +38,16 @@ public class TuplesExtractor {
 		if(operator == null) return null;
 
 		Set<String> possibleKeys = new HashSet<>();
-	    Map<String, String> row = new TreeMap<>();
+		Map<String, String> row = new TreeMap<>();
 
-        for(Map.Entry<String, List<String>> content: operator.getContentInfo().entrySet())
+		for(Map.Entry<String, List<String>> content: operator.getContentInfo().entrySet())
 			possibleKeys.addAll(content.getValue().stream()
 					.map(x-> sourceAndName ? entities.Column.putSource(x, content.getKey()) : x)
 					.toList());
 
-	    if (operator.hasNext()) {
+		if (operator.hasNext()) {
 
-	    	Tuple t = operator.next();
+			Tuple t = operator.next();
 
 			for(Map.Entry<String, List<String>> content: operator.getContentInfo().entrySet())
 				for(String col : content.getValue()){
@@ -67,7 +67,7 @@ public class TuplesExtractor {
 					}
 
 				}
-	    }else{
+		}else{
 
 			return null;
 
@@ -78,7 +78,7 @@ public class TuplesExtractor {
 				row.put(key, ConstantController.NULL);
 
 		return row;
-	
+
 	}
 
 }

@@ -1,6 +1,7 @@
 package gui.frames.forms.operations.panelstruct;
 
 import com.mxgraph.model.mxCell;
+import controller.ConstantController;
 import gui.frames.forms.operations.BooleanExpressionForm;
 import lib.booleanexpression.enums.LogicalOperator;
 
@@ -15,7 +16,7 @@ public class LogicalPane extends ExpressionPane implements ActionListener {
 
     private final JButton btnAnd = new JButton("AND");
     private final JButton btnOr = new JButton("OR");
-    private final JButton btnAtomic = new JButton("Atomic Expression");
+    private final JButton btnAtomic = new JButton(ConstantController.getString("operationForm.atomicPane.atomicExpression"));
 
     public final LogicalOperator logicalOperator;
 

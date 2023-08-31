@@ -1,13 +1,15 @@
 package gui.frames.forms;
 
+import controller.ConstantController;
+
 import javax.swing.*;
 import java.awt.*;
 
 public abstract class FormBase extends JDialog {
 
     protected final JPanel contentPane = new JPanel(new BorderLayout());
-    protected final JButton btnCancel = new JButton("Cancelar");
-    protected final JButton btnReady = new JButton("Pronto");
+    protected final JButton btnCancel = new JButton(ConstantController.getString("formBase.cancelButton"));
+    protected final JButton btnReady = new JButton(ConstantController.getString("formBase.readyButton"));
 
     public FormBase (Window window){
 
@@ -18,7 +20,7 @@ public abstract class FormBase extends JDialog {
 
     }
 
-    private void initBottomButtons(){
+    protected void initBottomButtons(){
 
         JPanel bottomPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPane.add(btnCancel);

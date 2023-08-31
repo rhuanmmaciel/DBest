@@ -14,6 +14,7 @@ import javax.swing.text.NumberFormatter;
 
 import com.mxgraph.model.mxCell;
 
+import controller.ConstantController;
 import entities.Column;
 import entities.cells.Cell;
 import gui.frames.forms.IFormCondition;
@@ -40,14 +41,14 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 	private final JComboBox<String> comboBoxSource2 = new JComboBox<>();
 	private final JComboBox<String> comboBoxColumn2 = new JComboBox<>();
 
-	private final JButton btnColumnSet1 = new JButton("Inserir");
-	private final JButton btnNumberSet1 = new JButton("Inserir");
-	private final JButton btnStringSet1 = new JButton("Inserir");
-	private final JButton btnNullSet1 = new JButton("Inserir");
-	private final JButton btnColumnSet2 = new JButton("Inserir");
-	private final JButton btnNumberSet2 = new JButton("Inserir");
-	private final JButton btnStringSet2 = new JButton("Inserir");
-	private final JButton btnNullSet2 = new JButton("Inserir");
+	private final JButton btnColumnSet1 = new JButton(ConstantController.getString("operationForm.atomicExpression.insert"));
+	private final JButton btnNumberSet1 = new JButton(ConstantController.getString("operationForm.atomicExpression.insert"));
+	private final JButton btnStringSet1 = new JButton(ConstantController.getString("operationForm.atomicExpression.insert"));
+	private final JButton btnNullSet1 = new JButton(ConstantController.getString("operationForm.atomicExpression.insert"));
+	private final JButton btnColumnSet2 = new JButton(ConstantController.getString("operationForm.atomicExpression.insert"));
+	private final JButton btnNumberSet2 = new JButton(ConstantController.getString("operationForm.atomicExpression.insert"));
+	private final JButton btnStringSet2 = new JButton(ConstantController.getString("operationForm.atomicExpression.insert"));
+	private final JButton btnNullSet2 = new JButton(ConstantController.getString("operationForm.atomicExpression.insert"));
 
 	private final DecimalFormat decimalFormat = new DecimalFormat("#.###");
 	private final NumberFormatter numberFormatter = new NumberFormatter(decimalFormat);
@@ -80,9 +81,9 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 		boolean isTxtField2Empty = conditions[1];
 
 		if (isTxtField1Empty)
-			btnReadyToolTipText = "- 1º elemento está vazio";
+			btnReadyToolTipText = "- " + ConstantController.getString("operationForm.atomicExpression.toolTip.firstElement");
 		else if (isTxtField2Empty)
-			btnReadyToolTipText = "- 2º elemento está vazio";
+			btnReadyToolTipText = "- " + ConstantController.getString("operationForm.atomicExpression.toolTip.secondElement");
 
 		UIManager.put("ToolTip.foreground", Color.RED);
 
@@ -168,31 +169,31 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 		addExtraComponent(comboBoxOperator, 3, 0, 1, 1);
 		addExtraComponent(txtFieldValue2, 4, 0, 3, 1);
 
-		addExtraComponent(new JLabel("  Fonte: "), 0, 1, 1, 1);
+		addExtraComponent(new JLabel("  "+ConstantController.getString("operationForm.atomicExpression.labels.source")+": "), 0, 1, 1, 1);
 		addExtraComponent(comboBoxSource, 1, 1, 1, 1);
-		addExtraComponent(new JLabel("  Coluna: "), 0, 2, 1, 1);
+		addExtraComponent(new JLabel("  "+ConstantController.getString("operationForm.atomicExpression.labels.column")+": "), 0, 2, 1, 1);
 		addExtraComponent(comboBoxColumn, 1, 2, 1, 1);
 		addExtraComponent(btnColumnSet1, 2, 1, 1, 2);
 
-		addExtraComponent(new JLabel("  Fonte: "), 5, 1, 1, 1);
+		addExtraComponent(new JLabel("  "+ConstantController.getString("operationForm.atomicExpression.labels.source")+": "), 5, 1, 1, 1);
 		addExtraComponent(comboBoxSource2, 6, 1, 1, 1);
-		addExtraComponent(new JLabel("  Coluna: "), 5, 2, 1, 1);
+		addExtraComponent(new JLabel("  "+ConstantController.getString("operationForm.atomicExpression.labels.column")+": "), 5, 2, 1, 1);
 		addExtraComponent(comboBoxColumn2, 6, 2, 1, 1);
 		addExtraComponent(btnColumnSet2, 4, 1, 1, 2);
 
-		addExtraComponent(new JLabel("  Número:  "), 0, 3, 1, 1);
+		addExtraComponent(new JLabel("  "+ConstantController.getString("operationForm.atomicExpression.labels.number")+": "), 0, 3, 1, 1);
 		addExtraComponent(textFieldNumber1, 1, 3, 1, 1);
 		addExtraComponent(btnNumberSet1, 2, 3, 1, 1);
 
-		addExtraComponent(new JLabel("  Número:  "), 5, 3, 1, 1);
+		addExtraComponent(new JLabel("  "+ConstantController.getString("operationForm.atomicExpression.labels.number")+": "), 5, 3, 1, 1);
 		addExtraComponent(textFieldNumber2, 6, 3, 1, 1);
 		addExtraComponent(btnNumberSet2, 4, 3, 1, 1);
 
-		addExtraComponent(new JLabel("  String:  "), 0, 4, 1, 1);
+		addExtraComponent(new JLabel("  "+ConstantController.getString("operationForm.atomicExpression.labels.string")+": "), 0, 4, 1, 1);
 		addExtraComponent(textFieldString1, 1, 4, 1, 1);
 		addExtraComponent(btnStringSet1, 2, 4, 1, 1);
 
-		addExtraComponent(new JLabel("  String:  "), 5, 4, 1, 1);
+		addExtraComponent(new JLabel("  "+ConstantController.getString("operationForm.atomicExpression.labels.string")+": "), 5, 4, 1, 1);
 		addExtraComponent(textFieldString2, 6, 4, 1, 1);
 		addExtraComponent(btnStringSet2, 4, 4, 1, 1);
 

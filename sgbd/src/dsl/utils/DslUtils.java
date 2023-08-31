@@ -54,11 +54,11 @@ public class DslUtils {
 		if(DslController.containsVariable(clearTableName(input)))
 			return expressionRecognizer(DslController.getVariableContent(input));
 		
-		if(FileUtils.getDatFilesNames().contains(clearTableName(input)))
+//		if(FileUtils.getDatFilesNames().contains(clearTableName(input)))
 			return new Relation(input);
 		
-		DslErrorListener.addErrors("A fonte de dados: '" + input + "' não encontrado");
-		return null;
+//		DslErrorListener.addErrors("A fonte de dados: '" + input + "' não encontrado");
+//		return null;
 		
 	}
 

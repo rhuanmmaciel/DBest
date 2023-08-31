@@ -1,6 +1,7 @@
 package gui.frames.forms.operations.unary;
 
 import com.mxgraph.model.mxCell;
+import controller.ConstantController;
 import entities.Column;
 import gui.frames.forms.operations.OperationForm;
 import gui.frames.forms.operations.IOperationForm;
@@ -42,11 +43,11 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
         btnReady.addActionListener(this);
         btnCancel.addActionListener(this);
 
-        addExtraComponent(new JLabel("Fonte:"), 0, 0, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.source") +":"), 0, 0, 1, 1);
         addExtraComponent(comboBoxSource, 1, 0, 1, 1);
-        addExtraComponent(new JLabel("Coluna:"), 0, 1, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.column")+":"), 0, 1, 1, 1);
         addExtraComponent(comboBoxColumn, 1, 1, 1, 1);
-        addExtraComponent(new JLabel("Agregação:"), 0, 2, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operation.aggregation")+":"), 0, 2, 1, 1);
         addExtraComponent(comboBoxAggregation, 1, 2, 1, 1);
 
         setPreviousArgs();
@@ -69,10 +70,10 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
                 String prefix = Utils.getStartPrefixIgnoreCase(column, Aggregation.PREFIXES);
                 column = column.substring(Utils.getLastIndexOfPrefix(prefix));
                 comboBoxAggregation.setSelectedItem(switch (prefix){
-                    case "MAX:" -> "Máximo";
-                    case "MIN:" -> "Mínimo";
-                    case "AVG:" -> "Média";
-                    case "COUNT:" -> "Contagem";
+                    case "MAX:" -> ConstantController.getString("operationForm.maximum");
+                    case "MIN:" -> ConstantController.getString("operationForm.minimum");
+                    case "AVG:" -> ConstantController.getString("operationForm.average");
+                    case "COUNT:" -> ConstantController.getString("operationForm.count");
                     default -> throw new IllegalStateException("Unexpected value: " + prefix);
                 });
 
@@ -97,15 +98,22 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
 
         }else if (actionEvent.getSource() == btnReady) {
 
-           String aggregation = switch (Objects.requireNonNull(comboBoxAggregation.getSelectedItem()).toString()){
-               case "Máximo" -> "MAX:";
-               case "Mínimo" -> "MIN:";
-               case "Média" -> "AVG:";
-               case "Contagem" -> "COUNT:";
-               default ->
-                       throw new IllegalStateException("Unexpected value: " + comboBoxAggregation.getSelectedItem().toString());
-           };
-            arguments.add(aggregation+(comboBoxSource.getSelectedItem()+"."+comboBoxColumn.getSelectedItem()));
+           String selected = Objects.requireNonNull(comboBoxAggregation.getSelectedItem()).toString();
+
+           String suffix;
+
+           if(selected.equals(ConstantController.getString("operationForm.maximum")))
+               suffix = "MAX:";
+           else  if(selected.equals(ConstantController.getString("operationForm.minimum")))
+               suffix = "MIN:";
+           else  if(selected.equals(ConstantController.getString("operationForm.average")))
+               suffix = "AVG:";
+           else  if(selected.equals(ConstantController.getString("operationForm.count")))
+               suffix = "COUNT:";
+           else
+               throw new IllegalStateException("Unexpected value: " + selected);
+
+            arguments.add(suffix+(comboBoxSource.getSelectedItem()+"."+comboBoxColumn.getSelectedItem()));
             btnReady();
 
         }

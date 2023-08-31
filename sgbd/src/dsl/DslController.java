@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import controller.ConstantController;
 import controller.MainController;
 import dsl.entities.BinaryExpression;
 import dsl.entities.Expression;
@@ -103,11 +104,12 @@ public class DslController {
 
 		if (MainController.getTables().containsKey(DslUtils.clearTableName(tableName)))
 			DslErrorListener
-					.addErrors("Já existe uma tabela com o mesmo nome: '" + DslUtils.clearTableName(tableName) + "'");
+					.addErrors(ConstantController.getString("dsl.error.sameName") +
+							": '" + DslUtils.clearTableName(tableName) + "'");
 
 		else if (!FileUtils.copyDatFilesWithHead(path, tableName, Path.of("")))
-			DslErrorListener.addErrors("Arquivo '" + DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION + "' ou '"
-					+ DslUtils.clearTableName(tableName) + ".dat' não encontrado");
+			DslErrorListener.addErrors(ConstantController.getString("dsl.error.fileNotFound") +": '" + DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION + "' ou '"
+					+ DslUtils.clearTableName(tableName) + ".dat'");
 
 		else
 			MainController.saveTable(new FyiTableCell(null, DslUtils.clearTableName(tableName), "fyi",

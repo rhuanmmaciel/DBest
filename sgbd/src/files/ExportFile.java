@@ -40,7 +40,7 @@ public class ExportFile extends JPanel {
 
 	public ExportFile() {
 
-		fileChooser.setDialogTitle("Salvar arquivo");
+		fileChooser.setDialogTitle(ConstantController.getString("exportFile.saveFile"));
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setCurrentDirectory(MainController.getLastDirectory());
 
@@ -48,7 +48,7 @@ public class ExportFile extends JPanel {
 
 	public void exportToMySQLScript(Cell cell){
 
-		fileChooser.setSelectedFile(new File("tabela.sql"));
+		fileChooser.setSelectedFile(new File(ConstantController.getString("file.tableFileName")+".sql"));
 
 		int userSelection = fileChooser.showSaveDialog(null);
 
@@ -66,8 +66,8 @@ public class ExportFile extends JPanel {
 			}
 
 			if (fileToSave.exists()) {
-				int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
-						"Confirmar substituição", JOptionPane.YES_NO_OPTION);
+				int result = JOptionPane.showConfirmDialog(null, ConstantController.getString("file.substitution"),
+						ConstantController.getString("file.substitutionConfirmation"), JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.NO_OPTION) {
 					exportToMySQLScript(cell);
 					return;
@@ -77,7 +77,7 @@ public class ExportFile extends JPanel {
 			AtomicReference<Boolean> exitReference = new AtomicReference<>(false);
 
 			ExportSQLScriptForm.SQLScriptInf inf = new ExportSQLScriptForm.SQLScriptInf(new StringBuilder(), new StringBuilder(),
-					new HashMap<>(), new HashMap<>(), new HashMap<>(), new JCheckBox("Criar Database novo: "), new StringBuilder(),
+					new HashMap<>(), new HashMap<>(), new HashMap<>(), new JCheckBox(ConstantController.getString("exportFile.createNewDatabase")+": "), new StringBuilder(),
 					new Vector<>(), new Vector<>());
 
 			new ExportSQLScriptForm(cell, inf, exitReference);
@@ -190,7 +190,7 @@ public class ExportFile extends JPanel {
 
 		assert pkColumns != null && !pkColumns.isEmpty();
 
-		fileChooser.setSelectedFile(new File("tabela"+FileType.HEADER.EXTENSION));
+		fileChooser.setSelectedFile(new File(ConstantController.getString("file.tableFileName")+FileType.HEADER.EXTENSION));
 
 		int userSelection = fileChooser.showSaveDialog(null);
 
@@ -210,12 +210,13 @@ public class ExportFile extends JPanel {
 			String rawFileName = fileChooser.getSelectedFile().getName();
 			String headFileName = rawFileName.endsWith(FileType.HEADER.EXTENSION) ?
 					rawFileName : rawFileName + FileType.HEADER.EXTENSION;
+
 			String fileName = headFileName.endsWith(FileType.HEADER.EXTENSION) ?
 					headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
 
 			if (fileToSave.exists()) {
-				int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
-						"Confirmar substituição", JOptionPane.YES_NO_OPTION);
+				int result = JOptionPane.showConfirmDialog(null, ConstantController.getString("file.substitution"),
+						ConstantController.getString("file.substitutionConfirmation"), JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.NO_OPTION) {
 					exportToFyi(cell, pkColumns);
 					return;
@@ -262,7 +263,6 @@ public class ExportFile extends JPanel {
 			String datFileName = fileName + FileType.FYI.EXTENSION;
 			Path source1 = Paths.get(datFileName);
 
-
 			Path destination = Paths.get(filePath);
 			Path destination2 = Paths.get(filePath.replace(headFileName, datFileName));
 
@@ -302,8 +302,8 @@ public class ExportFile extends JPanel {
 				}
 
 				if (fileToSave.exists()) {
-					int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
-							"Confirmar substituição", JOptionPane.YES_NO_OPTION);
+					int result = JOptionPane.showConfirmDialog(null, ConstantController.getString("file.substitution"),
+							ConstantController.getString("file.substitutionConfirmation"), JOptionPane.YES_NO_OPTION);
 					if (result == JOptionPane.NO_OPTION) {
 						exportToCsv(cell);
 						return;
@@ -369,10 +369,10 @@ public class ExportFile extends JPanel {
 			
 			mxGraphComponent component = MainController.getGraphComponent();
 			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setDialogTitle("Salvar imagem");
+			fileChooser.setDialogTitle(ConstantController.getString("exportFile.saveImage"));
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-			String defaultFileName = "arvore.jpeg";
+			String defaultFileName = ConstantController.getString("file.treeFileName")+".jpeg";
 			fileChooser.setSelectedFile(new File(defaultFileName));
 
 			int userSelection = fileChooser.showSaveDialog(component);
@@ -397,7 +397,7 @@ public class ExportFile extends JPanel {
 			
 		} catch (IOException e) {
 			
-			System.out.println("Error " + e);
+			System.out.println(ConstantController.getString("file.error.toSave") + e);
 			
 		}
 		
@@ -406,10 +406,10 @@ public class ExportFile extends JPanel {
 	public void exportToDsl(Tree tree) {
 		
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Salvar árvore");
+		fileChooser.setDialogTitle(ConstantController.getString("exportFile.saveTree"));
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		
-		String defaultFileName = "arvore.txt";
+		String defaultFileName = ConstantController.getString("file.treeFileName")+".txt";
 		fileChooser.setSelectedFile(new File(defaultFileName));
 		
 		if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -427,7 +427,7 @@ public class ExportFile extends JPanel {
 			    
 			} catch (IOException e) {
 				
-			    System.out.println("Ocorreu um erro ao salvar o arquivo: " + e.getMessage());
+			    System.out.println(ConstantController.getString("file.error.toSave") +": " + e.getMessage());
 			    
 			}
 			

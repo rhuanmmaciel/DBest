@@ -1,26 +1,25 @@
 package gui.frames.forms.importexport;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.List;
-
 import com.mxgraph.model.mxCell;
-
+import controller.ConstantController;
 import entities.Column;
 import entities.cells.Cell;
 import files.ExportFile;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ExportAsForm extends ImportExportAsForm implements ActionListener{
 
 	private final AtomicReference<Boolean> cancelService;
-	private final JButton btnFyi = new JButton("Fyi DataBase");
-	private final JButton btnMySQLScript = new JButton("Script SQL");
+	private final JButton btnFyi = new JButton(ConstantController.getString("exportAs.fyiDatabaseButton"));
+	private final JButton btnMySQLScript = new JButton(ConstantController.getString("exportAs.scriptSQLButton"));
 	private final Cell cell;
 	
 	public ExportAsForm(mxCell jCell, AtomicReference<Boolean> cancelService) {

@@ -12,15 +12,16 @@ import javax.swing.*;
 
 import com.mxgraph.model.mxCell;
 
+import controller.ConstantController;
 import entities.Column;
 import gui.frames.forms.operations.OperationForm;
 import gui.frames.forms.operations.IOperationForm;
 
 public class ProjectionForm extends OperationForm implements ActionListener, IOperationForm {
 
-	private final JButton btnAdd = new JButton("Adicionar");;
-	private final JButton btnRemove = new JButton("Remover colunas");
-	private final JButton btnAddAll = new JButton("Adicionar todas");
+	private final JButton btnAdd = new JButton(ConstantController.getString("operationForm.add"));
+	private final JButton btnRemove = new JButton(ConstantController.getString("operationForm.removeColumns"));
+	private final JButton btnAddAll = new JButton(ConstantController.getString("operationForm.addAllColumns"));
 	private final JTextArea textArea = new JTextArea();
 
 	public ProjectionForm(mxCell jCell) {
@@ -124,9 +125,9 @@ public class ProjectionForm extends OperationForm implements ActionListener, IOp
 
 	private void updateColumns(){
 
-		String column = Objects.requireNonNull(comboBoxSource.getSelectedItem()).toString()+
+		String column = Objects.requireNonNull(comboBoxSource.getSelectedItem())+
 				"."+
-				Objects.requireNonNull(comboBoxColumn.getSelectedItem()).toString();
+				Objects.requireNonNull(comboBoxColumn.getSelectedItem());
 		String textColumnsPicked = textArea.getText() + "\n" + column;
 		restrictedColumns.add(column);
 		comboBoxColumn.removeItemAt(comboBoxColumn.getSelectedIndex());

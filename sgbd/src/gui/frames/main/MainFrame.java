@@ -8,18 +8,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JToolBar;
+import javax.swing.*;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
@@ -53,14 +44,14 @@ public abstract class MainFrame extends JFrame
 	protected Set<Button<?>> buttons;
 
 	protected JPopupMenu popupMenuJCell = new JPopupMenu();
-	protected JMenuItem menuItemShow = new JMenuItem("Mostrar");
-	protected JMenuItem menuItemInformations = new JMenuItem("Informações");
-	protected JMenuItem menuItemExport = new JMenuItem("Exportar tabela");
-	protected JMenuItem menuItemExportTree = new JMenuItem("Exportar árvore");
-	protected JMenuItem menuItemEdit = new JMenuItem("Editar");
-	protected JMenuItem menuItemRemove = new JMenuItem("Remover");
+	protected JMenuItem menuItemShow = new JMenuItem(ConstantController.getString("cell.show"));
+	protected JMenuItem menuItemInformations = new JMenuItem(ConstantController.getString("cell.informations"));
+	protected JMenuItem menuItemExport = new JMenuItem(ConstantController.getString("cell.exportTable"));
+	protected JMenuItem menuItemExportTree = new JMenuItem(ConstantController.getString("cell.exportTree"));
+	protected JMenuItem menuItemEdit = new JMenuItem(ConstantController.getString("cell.edit"));
+	protected JMenuItem menuItemRemove = new JMenuItem(ConstantController.getString("cell.remove"));
 
-	protected JMenu menuItemOperations = new JMenu("Operações");
+	protected JMenu menuItemOperations = new JMenu(ConstantController.getString("cell.operations"));
 	protected JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.DISPLAY_NAME);
 	protected JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.DISPLAY_NAME);
 	protected JMenuItem menuItemSort = new JMenuItem(OperationType.SORT.DISPLAY_NAME);
@@ -76,6 +67,9 @@ public abstract class MainFrame extends JFrame
 	protected JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.DISPLAY_NAME);
 	protected JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.DISPLAY_NAME);
 
+	protected JMenuBar menuBar = new JMenuBar();
+	protected JMenuItem menuItemImportTable = new JMenuItem(ConstantController.getString("menu.file.importTable"));
+	protected JMenuItem menuItemImportTree = new JMenuItem(ConstantController.getString("menu.file.importTree"));
 
 	public MainFrame(Set<Button<?>> buttons) {
 
@@ -92,15 +86,17 @@ public abstract class MainFrame extends JFrame
 
 		operationButtonsPane.setLayout(new BoxLayout(operationButtonsPane, BoxLayout.Y_AXIS));
 		tablesPane.add(tablesComponent, BorderLayout.CENTER);
-		
+
+		getContentPane().add(menuBar, BorderLayout.NORTH);
 		getContentPane().add(graphComponent, BorderLayout.CENTER);
 		getContentPane().add(tablesPane, BorderLayout.WEST);
 		getContentPane().add(operationButtonsPane, BorderLayout.EAST);
-		
+		getContentPane().add(toolBar, BorderLayout.SOUTH);
+
 		addOperationButtons();
 		addBottomButtons();
 
-		getContentPane().add(toolBar, BorderLayout.SOUTH);
+		addMenuBarsItems();
 
 		getContentPane().addKeyListener(this);
 
@@ -119,6 +115,25 @@ public abstract class MainFrame extends JFrame
 		setJCellStyles();
 
 		setVisible(true);
+
+	}
+
+	private void addMenuBarsItems(){
+
+		JMenu fileMenu = new JMenu(ConstantController.getString("menu.file"));
+		JMenu editMenu = new JMenu(ConstantController.getString("menu.edit"));
+		JMenu appearanceMenu = new JMenu(ConstantController.getString("menu.appearance"));
+
+		fileMenu.add(menuItemImportTable);
+		fileMenu.add(menuItemImportTree);
+
+		editMenu.add(new JMenuItem(ConstantController.getString("menu.edit.undo")));
+		editMenu.add(new JMenuItem(ConstantController.getString("menu.edit.redo")));
+
+
+		menuBar.add(fileMenu);
+		menuBar.add(editMenu);
+		menuBar.add(appearanceMenu);
 
 	}
 
@@ -158,22 +173,24 @@ public abstract class MainFrame extends JFrame
 
 	private void addBottomButtons(){
 
-		buttons.add(new ToolBarButton<>(JButton.class, " Importar tabela(i) ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " " + ConstantController.getString("toolBarButtons.importTable") + "(i) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.IMPORT_FILE)));
 //		buttons.add(new ToolBarButton<>(JButton.class, " Criar tabela(c) ", this, toolBar,
 //				new CurrentAction(CurrentAction.ActionType.CREATE_TABLE)));
-		buttons.add(new ToolBarButton<>(JButton.class, " Edge(e) ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " " + ConstantController.getString("toolBarButtons.edge") + "(e) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.EDGE)));
-		buttons.add(new ToolBarButton<>(JButton.class, " Remover(del) ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " " + ConstantController.getString("toolBarButtons.remove") + "(del) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.DELETE_CELL)));
-		buttons.add(new ToolBarButton<>(JButton.class, " Remover tudo ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " " + ConstantController.getString("toolBarButtons.removeAll") + " ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.DELETE_ALL)));
-		buttons.add(new ToolBarButton<>(JButton.class, " Captura de tela ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " " + ConstantController.getString("toolBarButtons.screenshot") + " ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.PRINT_SCREEN)));
-		buttons.add(new ToolBarButton<>(JButton.class, " Console ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " " + ConstantController.getString("toolBarButtons.console") + " ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.OPEN_CONSOLE)));
-		buttons.add(new ToolBarButton<>(JButton.class, " Editor de texto ", this, toolBar,
+		buttons.add(new ToolBarButton<>(JButton.class, " " + ConstantController.getString("toolBarButtons.textEditor") + " ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.OPEN_TEXT_EDITOR)));
+//		buttons.add(new ToolBarButton<>(JButton.class, " Conectar ao BD", this, toolBar,
+//				new CurrentAction(CurrentAction.ActionType.CREATE_DB_CONNECTION)));
 
 	}
 

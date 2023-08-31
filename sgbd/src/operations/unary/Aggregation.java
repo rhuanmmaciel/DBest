@@ -1,6 +1,7 @@
 package operations.unary;
 
 import com.mxgraph.model.mxCell;
+import controller.ConstantController;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
@@ -31,28 +32,28 @@ public class Aggregation implements IOperator {
     public enum Function{
         MAX{
             public String getDisplayName(){
-                return "Máximo";
+                return ConstantController.getString("operationForm.maximum");
             }
             public String getPrefix(){
                 return "MAX:";
             }
         }, MIN{
             public String getDisplayName(){
-                return "Mínimo";
+                return ConstantController.getString("operationForm.minimum");
             }
             public String getPrefix(){
                 return "MIN:";
             }
         }, AVG{
             public String getDisplayName(){
-                return "Média";
+                return ConstantController.getString("operationForm.average");
             }
             public String getPrefix(){
                 return "AVG:";
             }
         }, COUNT{
             public String getDisplayName(){
-                return "Contagem";
+                return ConstantController.getString("operationForm.count");
             }
             public String getPrefix(){
                 return "COUNT:";
@@ -145,7 +146,7 @@ public class Aggregation implements IOperator {
         row.setInt("madeUp", 1);
         table.insert(row);
 
-        Operator readyOperator = new NestedLoopJoin(operator, new TableScan(table), (t1, t2) -> true);
+        Operator readyOperator = new NestedLoopJoin(operator, new TableScan(table));
         readyOperator = new GroupOperator(readyOperator, "Aux", "madeUp", aggregations);
         readyOperator = new FilterColumnsOperator(readyOperator, List.of("Aux.madeUp"));
 

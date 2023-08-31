@@ -1,41 +1,31 @@
 package gui.frames.dsl;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import controller.ConstantController;
+import controller.MainController;
+import dsl.AntlrController;
+import dsl.DslController;
+import dsl.DslErrorListener;
+import dsl.antlr4.RelAlgebraLexer;
+import dsl.antlr4.RelAlgebraParser;
+import enums.OperationType;
+import gui.utils.CustomDocumentFilter;
+import gui.utils.JTextLineNumber;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.kordamp.ikonli.dashicons.Dashicons;
+import org.kordamp.ikonli.swing.FontIcon;
+
+import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.JToolBar;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.BadLocationException;
-
-import dsl.antlr4.RelAlgebraLexer;
-import dsl.antlr4.RelAlgebraParser;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
-import controller.MainController;
-import dsl.AntlrController;
-import dsl.DslController;
-import dsl.DslErrorListener;
-import enums.OperationType;
-import gui.utils.CustomDocumentFilter;
-import gui.utils.JTextLineNumber;
 
 public class TextEditor extends JFrame implements ActionListener {
 
@@ -45,8 +35,8 @@ public class TextEditor extends JFrame implements ActionListener {
 
 	private final JTextPane console = new JTextPane();
 
-	private final JButton btnBack = new JButton("<");
-	private final JButton btnImport = new JButton("Importar");
+	private final JButton btnBack = new JButton();
+	private final JButton btnImport = new JButton();
 	private final JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.DISPLAY_NAME);
 	private final JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.DISPLAY_NAME);
 	private final JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.DISPLAY_NAME);
@@ -57,8 +47,8 @@ public class TextEditor extends JFrame implements ActionListener {
 	private final JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.DISPLAY_NAME);
 	private final JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.DISPLAY_NAME);
 
-	private final JButton btnRun = new JButton("Executar");
-	private final JButton btnRunSelection = new JButton("Executar texto selecionado");
+	private final JButton btnRun = new JButton(ConstantController.getString("textEditor.execute"));
+	private final JButton btnRunSelection = new JButton(ConstantController.getString("textEditor.executeSelectedText"));
 
 	private final MainController main;
 
@@ -85,7 +75,7 @@ public class TextEditor extends JFrame implements ActionListener {
 
 		bottomPane.setPreferredSize(new Dimension(bottomPane.getWidth(), main.getContentPane().getHeight() / 4));
 
-		JLabel lblConsole = new JLabel("Console");
+		JLabel lblConsole = new JLabel(ConstantController.getString("console"));
 		bottomPane.setAlignmentX(Box.LEFT_ALIGNMENT);
 		bottomPane.add(lblConsole);
 
@@ -107,7 +97,7 @@ public class TextEditor extends JFrame implements ActionListener {
 
 		JMenuBar menuBar = new JMenuBar();
 		toolBar.add(menuBar);
-		JMenu mnOperations = new JMenu("Operações");
+		JMenu mnOperations = new JMenu(ConstantController.getString("textEditor.operations"));
 		menuBar.add(mnOperations);
 
 		mnOperations.add(menuItemSelection);
@@ -133,6 +123,8 @@ public class TextEditor extends JFrame implements ActionListener {
 		btnImport.addActionListener(this);
 		btnRun.addActionListener(this);
 		btnRunSelection.addActionListener(this);
+
+		setIcons();
 
 	}
 
@@ -179,6 +171,20 @@ public class TextEditor extends JFrame implements ActionListener {
 
 	}
 
+	private void setIcons() {
+
+		int iconsSize = 20;
+
+		FontIcon iconBack = FontIcon.of(Dashicons.ARROW_LEFT_ALT);
+		iconBack.setIconSize(iconsSize);
+		btnBack.setIcon(iconBack);
+
+		FontIcon iconImport = FontIcon.of(Dashicons.OPEN_FOLDER);
+		iconImport.setIconSize(iconsSize);
+		btnImport.setIcon(iconImport);
+
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -191,31 +197,31 @@ public class TextEditor extends JFrame implements ActionListener {
 			run(textPane.getSelectedText());
 
 		else if (e.getSource() == menuItemSelection)
-			insertOperation("selection[predicado](tabela);");
+			insertOperation(ConstantController.getString("textEditor.operations.example.selection"));
 		
 		else if (e.getSource() == menuItemProjection)
-			insertOperation("projection[colunas](tabela);");
+			insertOperation(ConstantController.getString("textEditor.operations.example.projection"));
 		
 		else if (e.getSource() == menuItemJoin)
-			insertOperation("join[coluna1,coluna2](tabela1,tabela2);");
+			insertOperation(ConstantController.getString("textEditor.operations.example.join"));
 		
 		else if (e.getSource() == menuItemLeftJoin)
-			insertOperation("leftJoin[coluna1,coluna2](tabela1,tabela2);");
+			insertOperation(ConstantController.getString("textEditor.operations.example.leftJoin"));
 		
 		else if (e.getSource() == menuItemRightJoin)
-			insertOperation("rightJoin[coluna1,coluna2](tabela1,tabela2);");
+			insertOperation(ConstantController.getString("textEditor.operations.example.rightJoin"));
 		
 		else if (e.getSource() == menuItemCartesianProduct)
-			insertOperation("cartesianProduct(tabela1,tabela2);");
+			insertOperation(ConstantController.getString("textEditor.operations.example.cartesianProduct"));
 		
 		else if (e.getSource() == menuItemUnion)
-			insertOperation("union(tabela1,tabela2);");
+			insertOperation(ConstantController.getString("textEditor.operations.example.union"));
 
 		else if (e.getSource() == menuItemIntersection)
-			insertOperation("intersection(tabela1,tabela2);");
+			insertOperation(ConstantController.getString("textEditor.operations.example.intersection"));
 
 		else if (e.getSource() == menuItemGroup)
-			insertOperation("group[colunaAgrupada,coluna1Agregação,coluna2Agregação,colunaNAgregação](tabela);");
+			insertOperation(ConstantController.getString("textEditor.operations.example.group"));
 
 		else if(e.getSource() == btnImport)
 			importText();

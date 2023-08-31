@@ -1,6 +1,7 @@
 package gui.frames.forms.operations;
 
 import com.mxgraph.model.mxCell;
+import controller.ConstantController;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
@@ -69,7 +70,7 @@ public abstract class OperationForm extends FormBase {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        centerPanel.add(new JLabel("Fonte:"), gbc);
+        centerPanel.add(new JLabel(ConstantController.getString("operationForm.source") +":"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -81,7 +82,7 @@ public abstract class OperationForm extends FormBase {
         gbc.gridy = 1;
         gbc.weightx = 0.0;
         gbc.fill = GridBagConstraints.NONE;
-        centerPanel.add(new JLabel("Coluna:"), gbc);
+        centerPanel.add(new JLabel(ConstantController.getString("operationForm.column") +":"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;

@@ -1,6 +1,7 @@
 package gui.frames.forms.operations.unary;
 
 import com.mxgraph.model.mxCell;
+import controller.ConstantController;
 import gui.frames.forms.IFormCondition;
 import gui.frames.forms.operations.IOperationForm;
 import gui.frames.forms.operations.OperationForm;
@@ -29,7 +30,7 @@ public class IndexerForm extends OperationForm implements IOperationForm, Action
     private void initGUI(){
 
         centerPanel.removeAll();
-        addExtraComponent(new JLabel("Nome da coluna: "), 0, 0, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.columnName")+": "), 0, 0, 1, 1);
         addExtraComponent(txtField, 1, 0, 2, 1);
         txtField.setMinimumSize(new Dimension(50, txtField.getHeight()));
         txtField.getDocument().addDocumentListener(new DocumentListener() {
@@ -100,7 +101,7 @@ public class IndexerForm extends OperationForm implements IOperationForm, Action
         String btnReadyToolTipText = "";
 
         if (conditions[0])
-            btnReadyToolTipText = "- Digite algum nome para a coluna";
+            btnReadyToolTipText = "- "+ConstantController.getString("operationForm.toolTip.indexer.typeName");
 
         UIManager.put("ToolTip.foreground", Color.RED);
 

@@ -4,160 +4,121 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="">
+    <list default="true" id="20d6c739-08d2-4f86-958c-10072ab4d3ee" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/TuplesExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TuplesExtractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/ConstantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ConstantController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/DslController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/DslErrorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslErrorListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/entities/VariableDeclaration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/VariableDeclaration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/utils/DslUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/utils/DslUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/utils/CellUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/utils/CellUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums/OperationFlags.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums/OperationType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/OperationType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/exceptions/InvalidCsvException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/exceptions/InvalidCsvException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/exceptions/tree/ArgumentsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/exceptions/tree/ArgumentsException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/exceptions/tree/ParentsAmountException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/exceptions/tree/ParentsAmountException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/exceptions/tree/ParentsErrorException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/exceptions/tree/ParentsErrorException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/exceptions/tree/ParentsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/exceptions/tree/ParentsException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/exceptions/tree/TreeException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/exceptions/tree/TreeException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/files/ExportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ExportFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/files/ImportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ImportFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/files/csv/CsvRecognizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/csv/CsvRecognizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/CellInformationFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/CellInformationFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/DataFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/DataFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/ErrorFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/ErrorFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/ProgressFrame.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/dsl/Console.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/dsl/Console.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/dsl/TextEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/dsl/TextEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/CsvRecognizerForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/CsvRecognizerForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportSQLScriptForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportSQLScriptForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportAsForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportExportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportExportAsForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportFromDslForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/PkChooserForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/PkChooserForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/AtomicExpressionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/AtomicExpressionForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/OperationForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/OperationForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/AtomicPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/AtomicPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/LogicalPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/LogicalPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/AggregationForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/AggregationForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/GroupForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/GroupForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/IndexerForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/IndexerForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/ProjectionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/ProjectionForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/RenameForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/RenameForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/SortForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/SortForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/binary/CartesianProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/CartesianProduct.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/binary/joins/Join.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/joins/Join.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExportToHTMLSettings">
-    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/exportToHTML" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Interface" />
-        <option value="Record" />
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="jrt:///usr/lib/jvm/java-17-openjdk-amd64!/java.base/java/util/regex/Matcher.class" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
   <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 4
 }</component>
-  <component name="ProjectId" id="2N7Fm22tmVRMhvb4One7H5necsj" />
+  <component name="ProjectId" id="2US6GSHgEEx0gG76g4b6OQDdpHA" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectViewState">
+    <option name="flattenPackages" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "full.screen.before.presentation.mode": "false",
-    "git-widget-placeholder": "rhuan",
-    "last.edited.regexp": "(test.ada)",
-    "last_opened_file_path": "/home/rhuan/Documents/repositories/dbest/sgbd",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/rhuan/Documents/repositories/dbest/sgbd&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/dsl/antlr4" />
-      <recent name="$PROJECT_DIR$/src/dsl/antlr4/grammar" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="gui.frames.forms.operations" />
+      <recent name="$PROJECT_DIR$/src/main/resources/language" />
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$/src/gui/frames/main/" />
     </key>
   </component>
-  <component name="RunAnythingCache">
-    <option name="myCommands">
-      <command value="clear" />
-    </option>
-  </component>
-  <component name="RunManager" selected="Application.sgbd">
-    <configuration name="BooleanExpressionTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="tests.BooleanExpressionTest" />
-      <module name="sgbd" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CsvTableTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="tests.CsvTableTest" />
-      <module name="sgbd" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="FyiTableTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="tests.FyiTableTest" />
-      <module name="sgbd" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="sgbd" type="Application" factoryName="Application">
+  <component name="RunManager">
+    <configuration name="MainClass" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="application.MainClass" />
       <module name="sgbd" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="application.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.FyiTableTest" />
-        <item itemvalue="Application.CsvTableTest" />
-        <item itemvalue="Application.BooleanExpressionTest" />
+        <item itemvalue="Application.MainClass" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
-  <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="" />
-      <created>1679007371078</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1679007371078</updated>
-    </task>
-    <servers />
-  </component>
-  <component name="UnknownFeatures">
-    <option featureType="com.intellij.fileTypeFactory" implementationName="*.g4" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
       <pinned-members>

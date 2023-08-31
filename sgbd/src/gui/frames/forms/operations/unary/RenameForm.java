@@ -1,6 +1,7 @@
 package gui.frames.forms.operations.unary;
 
 import com.mxgraph.model.mxCell;
+import controller.ConstantController;
 import entities.Column;
 import gui.frames.forms.operations.OperationForm;
 import gui.frames.forms.operations.IOperationForm;
@@ -19,8 +20,8 @@ import java.util.Objects;
 public class RenameForm extends OperationForm implements IOperationForm, ActionListener{
 
     private final JTextField txtFieldNewName = new JTextField();
-    private final JButton btnAdd = new JButton("Adicionar");
-    private final JButton btnRemove = new JButton("Remover sources");
+    private final JButton btnAdd = new JButton(ConstantController.getString("operationForm.add"));
+    private final JButton btnRemove = new JButton(ConstantController.getString("operationForm.removeSources"));
     private final JTextArea textArea = new JTextArea();
 
     public RenameForm(mxCell jCell) {
@@ -65,9 +66,9 @@ public class RenameForm extends OperationForm implements IOperationForm, ActionL
         btnAdd.addActionListener(this);
         btnRemove.addActionListener(this);
 
-        addExtraComponent(new JLabel("Source:"), 0, 0, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.source")+":"), 0, 0, 1, 1);
         addExtraComponent(comboBoxSource, 1, 0, 2, 1);
-        addExtraComponent(new JLabel("Novo nome"), 0, 1, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.newName")), 0, 1, 1, 1);
         addExtraComponent(txtFieldNewName, 1, 1, 2, 1);
         addExtraComponent(btnAdd, 0, 2, 1, 1);
         addExtraComponent(btnRemove, 2, 2, 1, 1);

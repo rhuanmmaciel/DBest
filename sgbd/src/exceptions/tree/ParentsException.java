@@ -6,7 +6,4 @@ public abstract class ParentsException extends TreeException {
 		super(txt);
 	}
 
-	private static final long serialVersionUID = 4664804339235357480L;
-
-		
 }

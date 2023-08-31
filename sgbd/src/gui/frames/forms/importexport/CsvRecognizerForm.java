@@ -1,42 +1,5 @@
 package gui.frames.forms.importexport;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-
 import controller.ConstantController;
 import controller.MainController;
 import database.TableUtils;
@@ -47,29 +10,44 @@ import files.csv.CsvInfo;
 import files.csv.CsvRecognizer;
 import files.csv.CsvRecognizer.CsvData;
 import gui.frames.ErrorFrame;
+import gui.frames.forms.FormBase;
 import gui.utils.JTableUtils;
 import gui.utils.JTableUtils.CustomTableModel;
 
-public class CsvRecognizerForm extends JDialog implements ActionListener {
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
-	private final JPanel contentPane = new JPanel();
+public class CsvRecognizerForm extends FormBase implements ActionListener {
+
 	private final JPanel headerPanel = new JPanel();
-	private final JPanel bottomPanel = new JPanel();
 	private final JPanel mainPanel = new JPanel();
 	private final JScrollPane scrollPane = new JScrollPane();
 	private JTable jTable;
 	private DefaultTableModel model;
-	private final JButton btnCancel = new JButton("Cancelar");
-	private final JButton btnDone = new JButton("Pronto");
 	private final JTextField txtFieldStringDelimiter = new JTextField();
 	private final JTextField txtFieldOtherSeparator = new JTextField();
 	private final JTextField txtFieldTableName = new JTextField();
 	private final JSpinner spinnerFromRow = new JSpinner();
 	private final ButtonGroup separatorGroup = new ButtonGroup();
-	private final JRadioButton radioComma = new JRadioButton("Vírgula");
-	private final JRadioButton radioSemiColon = new JRadioButton("Ponto e vírgula");
-	private final JRadioButton radioSpace = new JRadioButton("Espaço");
-	private final JRadioButton radioOther = new JRadioButton("Outro: ");
+	private final JRadioButton radioComma = new JRadioButton(ConstantController.getString("csvRecognizer.comma"));
+	private final JRadioButton radioSemiColon = new JRadioButton(ConstantController.getString("csvRecognizer.semicolon"));
+	private final JRadioButton radioSpace = new JRadioButton(ConstantController.getString("csvRecognizer.space"));
+	private final JRadioButton radioOther = new JRadioButton(ConstantController.getString("csvRecognizer.other")+": ");
 
 	private final Map<String, JComboBox<?>> typeComboBoxes = new HashMap<>();
 	private final List<String> columnsName = new ArrayList<>();
@@ -93,7 +71,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 	public CsvRecognizerForm(Path path, StringBuilder tableName, List<Column> columns,
 							 Map<Integer, Map<String, String>> content, AtomicReference<Boolean> exitReference) {
 
-		super((Window) null, "Tabela csv");
+		super(null);
 		setModal(true);
 
 		this.exitReference = exitReference;
@@ -120,8 +98,6 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 		setBounds(0, 0, ConstantController.UI_WIDTH, ConstantController.UI_HEIGHT);
 		setLocationRelativeTo(null);
-		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
 
 		try {
 
@@ -137,7 +113,9 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 		loadJTable();
 		initializeHeader();
 		initializeMain();
-		initializeBottom();
+
+		btnCancel.addActionListener(this);
+		btnReady.addActionListener(this);
 
 		verifyReadyButton();
 
@@ -171,7 +149,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 		itemsPadding.add(Box.createHorizontalStrut(10));
 
-		itemTableName.add(new JLabel("Nome: "));
+		itemTableName.add(new JLabel(ConstantController.getString("csvRecognizer.name")+": "));
 		itemTableName.add(txtFieldTableName);
 		txtFieldTableName.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
@@ -195,7 +173,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 		txtFieldTableName.setText(fileName);
 		itemTableName.add(Box.createHorizontalGlue());
 
-		itemFromRow.add(new JLabel("Começa na linha: "));
+		itemFromRow.add(new JLabel(ConstantController.getString("csvRecognizer.beginRow")+": "));
 		SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, jTable.getRowCount()-2, 1);
 		spinnerFromRow.setModel(spinnerModel);
 		spinnerFromRow.setValue(1);
@@ -204,7 +182,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 		itemFromRow.add(spinnerFromRow);
 		itemFromRow.add(Box.createHorizontalGlue());
 
-		itemSeparator.add(new JLabel("Separador de coluna: "));
+		itemSeparator.add(new JLabel(ConstantController.getString("csvRecognizer.columnSeparator")+": "));
 		radioComma.setSelected(true);
 		separatorGroup.add(radioComma);
 		separatorGroup.add(radioSemiColon);
@@ -242,7 +220,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 		itemSeparator.add(txtFieldOtherSeparator);
 		itemSeparator.add(Box.createHorizontalGlue());
 
-		itemStringDelimiter.add(new JLabel("Delimitador de String: "));
+		itemStringDelimiter.add(new JLabel(ConstantController.getString("csvRecognizer.stringDelimiter")+": "));
 		txtFieldStringDelimiter.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -278,18 +256,6 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 	}
 
-	private void initializeBottom() {
-		contentPane.add(bottomPanel, BorderLayout.SOUTH);
-		bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-
-		bottomPanel.add(btnCancel);
-		bottomPanel.add(btnDone);
-
-		btnCancel.addActionListener(this);
-		btnDone.addActionListener(this);
-
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -307,7 +273,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 		}
 
-		if (e.getSource() == btnDone) {
+		if (e.getSource() == btnReady) {
 
 			dispose();
 
@@ -321,7 +287,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 		boolean tableNameAlreadyExist = MainController.getTables().containsKey(txtFieldTableName.getText().strip());
 
-		btnDone.setEnabled(!tableNameAlreadyExist);
+		btnReady.setEnabled(!tableNameAlreadyExist);
 
 	}
 
@@ -400,7 +366,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 		model = new CustomTableModel(csvData.dataArray(), csvData.columnsNameArray());
 		model.insertRow(0, new Object[] {});
 
-		List<JComboBox<?>> comboboxes = new ArrayList<>();
+		List<JComboBox<?>> comboBoxes = new ArrayList<>();
 
 		for (int i = 0; i < columnsName.size(); i++) {
 
@@ -414,7 +380,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 			JComboBox<String> comboBox = new JComboBox<>(types);
 			comboBox.addActionListener(this);
 
-			comboboxes.add(comboBox);
+			comboBoxes.add(comboBox);
 			typeComboBoxes.put(columnsName.get(i), comboBox);
 
 		}
@@ -433,7 +399,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 						public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 								boolean hasFocus, int row, int column) {
 
-							return comboboxes.get(column - 1);
+							return comboBoxes.get(column - 1);
 						}
 					};
 
@@ -444,7 +410,7 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 			public TableCellEditor getCellEditor(int row, int column) {
 
 				if (row == 0 && column != 0)
-					return new DefaultCellEditor(comboboxes.get(column - 1));
+					return new DefaultCellEditor(comboBoxes.get(column - 1));
 
 				return super.getCellEditor(row, column);
 			}
@@ -467,9 +433,9 @@ public class CsvRecognizerForm extends JDialog implements ActionListener {
 
 	private void addFirstColumn() {
 
-		model.addColumn("Nome:");
+		model.addColumn(ConstantController.getString("csvRecognizer.firstColumn.name")+":");
 
-		model.setValueAt("Tipo:", 0, model.getColumnCount() - 1);
+		model.setValueAt(ConstantController.getString("csvRecognizer.firstColumn.type")+":", 0, model.getColumnCount() - 1);
 
 		for (int row = 1; row < model.getRowCount(); row++) {
 			model.setValueAt(row , row, model.getColumnCount() - 1);

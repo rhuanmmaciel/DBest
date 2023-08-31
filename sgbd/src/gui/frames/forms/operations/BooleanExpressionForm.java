@@ -23,7 +23,7 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
     private final JButton btnAnd = new JButton("AND");
     private final JButton btnOr = new JButton("OR");
-    private final JButton btnAtomic = new JButton("Atomic Expression");
+    private final JButton btnAtomic = new JButton(ConstantController.getString("operationForm.booleanExpression.atomicExpressionButton"));
 
     private ExpressionPane root = null;
 
@@ -158,7 +158,7 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
             else {
 
-                arguments.add(new BooleanExpressionRecognizer().recognizer(getBooleanExpression((LogicalPane) root)));
+                arguments.add(new BooleanExpressionRecognizer().recognizer(getBooleanExpression(root)));
 
             }
 
@@ -235,8 +235,6 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
         btnReady.setEnabled(!noArgument && !leafNotAnAtomic && !anyAtomicIncomplete);
 
-//        System.out.println(!anyAtomicIncomplete);
-
         updateToolTipTxt(noArgument, leafNotAnAtomic, anyAtomicIncomplete);
 
     }
@@ -251,11 +249,11 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
         String btnReadyToolTipText = "";
 
         if (noArgument)
-            btnReadyToolTipText = "- Selecione pelo menos uma opção";
+            btnReadyToolTipText = "- " + ConstantController.getString("operationForm.booleanExpression.toolTip.selectOne");
         else if(leafNotAnAtomic)
-            btnReadyToolTipText = "- A expressão mais interna deve sempre ser atômica";
+            btnReadyToolTipText = "- " + ConstantController.getString("operationForm.booleanExpression.toolTip.mostInternal");
         else if(anyAtomicIncomplete)
-            btnReadyToolTipText = "- Existe alguma expressão atômica incompleta";
+            btnReadyToolTipText = "- " + ConstantController.getString("operationForm.booleanExpression.toolTip.incomplete");
 
         UIManager.put("ToolTip.foreground", Color.RED);
 

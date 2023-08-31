@@ -131,7 +131,8 @@ public class ImportFile {
 
 		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(FileType.HEADER.EXTENSION)) {
 
-			JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo .head");
+			JOptionPane.showMessageDialog(null, ConstantController.getString("file.error.selectRightExtension")+" "
+					+FileType.HEADER.EXTENSION);
 			exitReference.set(true);
 			return;
 
@@ -148,7 +149,7 @@ public class ImportFile {
 		AtomicReference<Table> table = new AtomicReference<>();
 		table.set(Table.loadFromHeader(fileName));
 
-		tableCell = new FyiTableCell(jTableCell, fileName.substring(0, fileName.indexOf(".")), "tabela", table.get());
+		tableCell = new FyiTableCell(jTableCell, fileName.substring(0, fileName.indexOf(".")), "fyi", table.get());
 		
 	}
 
@@ -237,7 +238,8 @@ public class ImportFile {
 
 		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(FileType.CSV.EXTENSION)) {
 
-			JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo CSV.");
+			JOptionPane.showMessageDialog(null, ConstantController.getString("file.error.selectRightExtension")+" "
+					+FileType.CSV.EXTENSION);
 			exitReference.set(true);
 			return null;
 

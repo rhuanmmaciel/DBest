@@ -9,6 +9,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.view.mxGraph;
 
+import controller.ConstantController;
 import controller.MainController;
 import entities.cells.*;
 import enums.FileType;
@@ -85,7 +86,8 @@ public class CellUtils extends MainController {
 
 	public static void deleteAllGraph() {
 
-		int answer = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja deletar todas as árvores?", "Confirmação", JOptionPane.YES_NO_OPTION);
+		int answer = JOptionPane.showConfirmDialog(null, ConstantController.getString("cell.deleteAll"),
+				ConstantController.getString("confirmation"), JOptionPane.YES_NO_OPTION);
 
 		if(answer == JOptionPane.YES_OPTION) {
 
@@ -117,7 +119,8 @@ public class CellUtils extends MainController {
 
 			} else {
 
-				JOptionPane.showMessageDialog(null, "A operação possui erros", "Erro", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, ConstantController.getString("cell.operationCell.error"),
+						ConstantController.getString("error"), JOptionPane.ERROR_MESSAGE);
 
 			}
 

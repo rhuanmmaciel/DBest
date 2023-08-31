@@ -6,9 +6,16 @@ import lib.booleanexpression.enums.RelationalOperator;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 public class ConstantController {
+
+    private static final String language = "pt";
+    private static final String country = "BR";
+    private static final Locale currentLocale = new Locale(language, country);
+    private static final ResourceBundle messages = ResourceBundle.getBundle("language.messages", currentLocale);
 
     public static final List<String> RELATIONAL_OPERATORS = Arrays.stream(RelationalOperator.values())
             .map(x -> x.symbols)
@@ -26,5 +33,9 @@ public class ConstantController {
     public static final Action.CurrentAction NONE_ACTION = new Action.CurrentAction(Action.CurrentAction.ActionType.NONE);
     public static final int UI_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.65);
     public static final int UI_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.7);
+
+    public static String getString(String txt){
+        return messages.getString(txt);
+    }
 
 }

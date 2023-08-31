@@ -178,17 +178,17 @@ public final class OperationCell extends Cell {
 
 		errorMessage = switch (message) {
 
-		case NO_ONE_ARGUMENT -> "O parâmetro passado possui erros";
-		case NO_ONE_PARENT -> "A operação não possui apenas 1 célula pai";
-		case NO_PARENT -> "A operação não possui célula pai";
-		case NULL_ARGUMENT -> "Parâmetro passado é nulo";
-		case PARENT_ERROR -> "Erro(s) em células anteriores";
-		case PARENT_WITHOUT_COLUMN -> "Alguma coluna fornecida não existe na célula pai";
-		case NO_TWO_PARENTS -> "A operação não possui 2 células pais";
-		case NO_TWO_ARGUMENTS -> "São necessários 2 argumentos";
-		case EMPTY_ARGUMENT -> "Não foi passado parâmetro";
-		case NO_PREFIX -> "Algum parâmetro não possui prefixo";
-		case SAME_SOURCE -> "Existem colunas com a mesma fonte. É necessário a renomeação.";
+		case NO_ONE_ARGUMENT -> ConstantController.getString("cell.operationCell.error.noOneArgument");
+		case NO_ONE_PARENT -> ConstantController.getString("cell.operationCell.error.noOneParent");
+		case NO_PARENT -> ConstantController.getString("cell.operationCell.error.noParent");
+		case NULL_ARGUMENT -> ConstantController.getString("cell.operationCell.error.nullArgument");
+		case PARENT_ERROR -> ConstantController.getString("cell.operationCell.error.parentError");
+		case PARENT_WITHOUT_COLUMN -> ConstantController.getString("cell.operationCell.error.parentWithoutColumn");
+		case NO_TWO_PARENTS ->  ConstantController.getString("cell.operationCell.error.noTwoParents");
+		case NO_TWO_ARGUMENTS -> ConstantController.getString("cell.operationCell.error.noTwoArguments");
+		case EMPTY_ARGUMENT -> ConstantController.getString("cell.operationCell.error.emptyArgument");
+		case NO_PREFIX -> ConstantController.getString("cell.operationCell.error.noPrefix");
+		case SAME_SOURCE -> ConstantController.getString("cell.operationCell.error.sameSource");
 		};
 		
 	}
@@ -210,7 +210,7 @@ public final class OperationCell extends Cell {
 	public String getErrorMessage() {
 		if (hasError())
 			return errorMessage;
-		return "Sem erros";
+		return ConstantController.getString("cell.operationCell.error.noError");
 	}
 
 	public void setColumns() {
