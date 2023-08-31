@@ -171,7 +171,7 @@ public abstract class MainFrame extends JFrame
 
 	}
 
-	private void addBottomButtons(){
+	private void addBottomButtons() {
 
 		buttons.add(new ToolBarButton<>(JButton.class, " " + ConstantController.getString("toolBarButtons.importTable") + "(i) ", this, toolBar,
 				new CurrentAction(CurrentAction.ActionType.IMPORT_FILE)));

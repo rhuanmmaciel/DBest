@@ -1,19 +1,14 @@
 package entities.cells;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.mxgraph.model.mxCell;
-
 import entities.Column;
 import entities.Coordinates;
 import entities.Tree;
 import entities.utils.FindRoots;
 import entities.utils.TreeUtils;
 import sgbd.query.Operator;
+
+import java.util.*;
 
 public abstract sealed class Cell permits TableCell, OperationCell {
 

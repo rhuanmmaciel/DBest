@@ -12,8 +12,8 @@ import java.util.ResourceBundle;
 
 public class ConstantController {
 
-    private static final String language = "pt";
-    private static final String country = "BR";
+    private static final String language = "en";
+    private static final String country = "US";
     private static final Locale currentLocale = new Locale(language, country);
     private static final ResourceBundle messages = ResourceBundle.getBundle("language.messages", currentLocale);
 
