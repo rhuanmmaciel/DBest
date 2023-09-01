@@ -1,6 +1,7 @@
 package entities.buttons;
 
 import java.awt.event.ActionListener;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.AbstractButton;
@@ -10,45 +11,42 @@ import entities.Action.CurrentAction;
 
 public abstract class Button<T extends AbstractButton> {
 
-	private CurrentAction action;
-	private T button;
-	private String name;
+    private CurrentAction action;
 
-	public Button(Class<T> buttonClass, String name, ActionListener listener, CurrentAction action) {
+    private T button;
 
-		this.name = name;
-		try {
-			
-			button = buttonClass.getDeclaredConstructor(String.class).newInstance(name);
-			
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			
-		}
+    private String name;
 
-		if (button instanceof JToggleButton) {
-			((JToggleButton) button).setSelected(true);
-		}
-		button.addActionListener(listener);
-		this.action = action;
+    public Button(Class<T> buttonClass, String name, ActionListener listener, CurrentAction action) {
+        this.name = name;
 
-	}
+        try {
+            this.button = buttonClass.getDeclaredConstructor(String.class).newInstance(name);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
-	public T getButton() {
-		return button;
-	}
+        if (this.button instanceof JToggleButton) {
+            this.button.setSelected(true);
+        }
 
-	public String getName() {
-		return name;
-	}
+        this.button.addActionListener(listener);
+        this.action = action;
+    }
 
-	public void setCurrentAction(AtomicReference<CurrentAction> currentActionRef) {
-		currentActionRef.set(action);
-	}
+    public T getButton() {
+        return this.button;
+    }
 
-	public boolean hasAction() {
-		return action != null;
-	}
+    public String getName() {
+        return this.name;
+    }
 
+    public void setCurrentAction(AtomicReference<CurrentAction> currentActionRef) {
+        currentActionRef.set(this.action);
+    }
+
+    public boolean hasAction() {
+        return this.action != null;
+    }
 }

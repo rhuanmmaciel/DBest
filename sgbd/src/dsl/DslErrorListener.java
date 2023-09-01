@@ -47,7 +47,7 @@ public class DslErrorListener extends BaseErrorListener {
 
 		DslErrorListener.getErrors().forEach(error -> {
 			try {
-				doc.insertString(doc.getLength(), error + "\n", style);
+				doc.insertString(doc.getLength(), String.format("%s%n", error), style);
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}

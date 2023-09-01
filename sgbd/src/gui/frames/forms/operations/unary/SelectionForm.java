@@ -58,8 +58,8 @@ public class SelectionForm extends OperationForm implements ActionListener, IOpe
 
 		centerPanel.removeAll();
 
-		btnReady.addActionListener(this);
-		btnCancel.addActionListener(this);
+		readyButton.addActionListener(this);
+		cancelButton.addActionListener(this);
 
 		textPane = new JTextPane();
 		textPane.setPreferredSize(new Dimension(300, 75));
@@ -233,14 +233,14 @@ public class SelectionForm extends OperationForm implements ActionListener, IOpe
 		if (e.getSource() == btnRemoveAll && !textPane.getText().isEmpty())
 			textPane.setText("");
 
-		if (e.getSource() == btnReady) {
+		if (e.getSource() == readyButton) {
 
 			arguments.add(textPane.getText());
-			btnReady();
+			onReadyButtonClicked();
 
 		}
 
-		if (e.getSource() == btnCancel)
+		if (e.getSource() == cancelButton)
 			closeWindow();
 
 	}

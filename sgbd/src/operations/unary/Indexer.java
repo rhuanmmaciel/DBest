@@ -1,8 +1,13 @@
 package operations.unary;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.mxgraph.model.mxCell;
+
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import entities.utils.cells.CellUtils;
 import enums.OperationErrorType;
 import exceptions.tree.TreeException;
 import operations.IOperator;
@@ -19,8 +24,6 @@ import sgbd.table.MemoryTable;
 import sgbd.table.Table;
 import sgbd.table.components.Header;
 
-import java.util.List;
-
 public class Indexer implements IOperator {
 
     private static int i = 1;
@@ -31,9 +34,11 @@ public class Indexer implements IOperator {
 
     @Override
     public void executeOperation(mxCell jCell, List<String> arguments) {
+        Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
-        OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
+        if (optionalCell.isEmpty()) return;
 
+        OperationCell cell = (OperationCell) optionalCell.get();
         OperationErrorType error = null;
 
         try {
@@ -118,7 +123,7 @@ public class Indexer implements IOperator {
 
         });
 
-        Operation.operationSetter(cell, cell.getType().SYMBOL + arguments, arguments, readyOperator);
+        Operation.operationSetter(cell, cell.getType().symbol + arguments, arguments, readyOperator);
 
 
     }

@@ -1,12 +1,13 @@
 package exceptions.tree;
 
+import java.io.Serial;
+
 public abstract class ParentsException extends TreeException {
 
-	public ParentsException(String txt) {
-		super(txt);
-	}
+    @Serial
+    private static final long serialVersionUID = 4664804339235357480L;
 
-	private static final long serialVersionUID = 4664804339235357480L;
-
-		
+    public ParentsException(String message) {
+        super(message);
+    }
 }

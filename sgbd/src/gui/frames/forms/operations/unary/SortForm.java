@@ -5,7 +5,7 @@ import entities.Column;
 import gui.frames.forms.IFormCondition;
 import gui.frames.forms.operations.OperationForm;
 import gui.frames.forms.operations.IOperationForm;
-import util.Utils;
+import utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,8 +45,8 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
         buttonGroup.add(ascendingRadioButton);
         buttonGroup.add(descendingRadioButton);
 
-        btnCancel.addActionListener(this);
-        btnReady.addActionListener(this);
+        cancelButton.addActionListener(this);
+        readyButton.addActionListener(this);
 
         setPreviousArgs();
         checkBtnReady();
@@ -88,7 +88,7 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
             if(x.isSelected()) anySelected.set(true);
         });
 
-        btnReady.setEnabled(anySelected.get());
+        readyButton.setEnabled(anySelected.get());
 
         noneSelection = anySelected.get();
 
@@ -106,7 +106,7 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
 
         UIManager.put("ToolTip.foreground", Color.RED);
 
-        btnReady.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
+        readyButton.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
 
     }
 
@@ -115,14 +115,14 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
 
         checkBtnReady();
 
-        if (actionEvent.getSource() == btnReady) {
+        if (actionEvent.getSource() == readyButton) {
 
             String order = ascendingRadioButton.isSelected() ? "ASC:" : "DESC:";
-            arguments.add(order+Column.putSource(Objects.requireNonNull(comboBoxColumn.getSelectedItem()).toString(),
-                     Objects.requireNonNull(comboBoxSource.getSelectedItem()).toString()));
-            btnReady();
+            arguments.add(order+Column.composeSourceAndName(Objects.requireNonNull(comboBoxSource.getSelectedItem()).toString(), Objects.requireNonNull(comboBoxColumn.getSelectedItem()).toString()
+            ));
+            onReadyButtonClicked();
 
-        } else if (actionEvent.getSource() == btnCancel) {
+        } else if (actionEvent.getSource() == cancelButton) {
 
             closeWindow();
 

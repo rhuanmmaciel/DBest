@@ -1,9 +1,16 @@
 package operations.binary.joins;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import com.mxgraph.model.mxCell;
+
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import entities.utils.cells.CellUtils;
 import enums.ColumnDataType;
 import enums.OperationErrorType;
 import exceptions.tree.TreeException;
@@ -13,22 +20,19 @@ import operations.OperationErrorVerifier;
 import sgbd.prototype.ComplexRowData;
 import sgbd.prototype.query.Tuple;
 import sgbd.query.Operator;
-import util.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import utils.Utils;
 
 public abstract class JoinOperators implements IOperator {
 
     public void executeOperation(mxCell jCell, List<String> arguments) {
+        Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
-        OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
+        if (optionalCell.isEmpty()) return;
 
+        OperationCell cell = (OperationCell) optionalCell.get();
         OperationErrorType error = null;
 
         try {
-
             error = OperationErrorType.NULL_ARGUMENT;
             OperationErrorVerifier.noNullArgument(arguments);
 
@@ -45,8 +49,8 @@ public abstract class JoinOperators implements IOperator {
             OperationErrorVerifier.noParentError(cell);
 
             error = OperationErrorType.PARENT_WITHOUT_COLUMN;
-            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(), List.of(arguments.get(0)));
-            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(1).getColumnSourceNames(), List.of(arguments.get(1)));
+            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourcesAndNames(), List.of(arguments.get(0)));
+            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(1).getColumnSourcesAndNames(), List.of(arguments.get(1)));
 
             error = OperationErrorType.SAME_SOURCE;
             OperationErrorVerifier.haveDifferentSources(cell.getParents().get(0), cell.getParents().get(1));
@@ -59,15 +63,15 @@ public abstract class JoinOperators implements IOperator {
 
         }
 
-        if(error != null) return;
+        if (error != null) return;
 
         Cell parentCell1 = cell.getParents().get(0);
         Cell parentCell2 = cell.getParents().get(1);
 
         List<String> argumentsFixed = new ArrayList<>();
 
-        argumentsFixed.add(Column.putSource(arguments.get(0), parentCell1.getSourceTableNameByColumn(arguments.get(0))));
-        argumentsFixed.add(Column.putSource(arguments.get(1), parentCell2.getSourceTableNameByColumn(arguments.get(1))));
+        argumentsFixed.add(Column.composeSourceAndName(parentCell1.getSourceNameByColumnName(arguments.get(0)), arguments.get(0)));
+        argumentsFixed.add(Column.composeSourceAndName(parentCell2.getSourceNameByColumnName(arguments.get(1)), arguments.get(1)));
 
         Operator op1 = parentCell1.getOperator();
         Operator op2 = parentCell2.getOperator();
@@ -78,30 +82,30 @@ public abstract class JoinOperators implements IOperator {
         String item1 = Column.removeSource(argumentsFixed.get(0));
         String item2 = Column.removeSource(argumentsFixed.get(1));
 
-        Operator readyoperator = createJoinOperator(op1, op2, source1, source2, item1, item2);
+        Operator readyoperator = this.createJoinOperator(op1, op2, source1, source2, item1, item2);
 
-        Operation.operationSetter(cell, cell.getType().SYMBOL+"   " + Column.putSource(item1, source1) + " = " + Column.putSource(item2, source2), argumentsFixed, readyoperator);
+        Operation.operationSetter(cell, cell.getType().symbol + "   " + Column.composeSourceAndName(source1, item1) + " = " + Column.composeSourceAndName(source2, item2), argumentsFixed, readyoperator);
 
     }
 
     public boolean compare(Tuple t1, String source1, String item1, Tuple t2, String source2, String item2) {
 
-        ColumnDataType type1 = Utils.getType(t1, source1, item1);
-        ColumnDataType type2 = Utils.getType(t2, source2, item2);
+        ColumnDataType type1 = Utils.getColumnDataType(t1, source1, item1);
+        ColumnDataType type2 = Utils.getColumnDataType(t2, source2, item2);
 
         ComplexRowData row1 = t1.getContent(source1);
         ComplexRowData row2 = t2.getContent(source2);
 
-        switch (type1){
+        switch (type1) {
             case INTEGER -> {
 
                 Number n1 = row1.getInt(item1);
 
                 Object inf2 = type2.equals(ColumnDataType.INTEGER) ? row2.getInt(item2)
-                        : type2.equals(ColumnDataType.FLOAT) ? row2.getFloat(item2)
-                        : row2.getString(item2);
+                    : type2.equals(ColumnDataType.FLOAT) ? row2.getFloat(item2)
+                    : row2.getString(item2);
 
-                return inf2 instanceof Number n2 && Utils.compareNumbers(n1, n2);
+                return inf2 instanceof Number n2 && Utils.areEqual(n1, n2);
 
             }
             case FLOAT -> {
@@ -109,10 +113,10 @@ public abstract class JoinOperators implements IOperator {
                 Number n1 = row1.getFloat(item1);
 
                 Object inf2 = type2.equals(ColumnDataType.INTEGER) ? row2.getInt(item2)
-                        : type2.equals(ColumnDataType.FLOAT) ? row2.getFloat(item2)
-                        : row2.getString(item2);
+                    : type2.equals(ColumnDataType.FLOAT) ? row2.getFloat(item2)
+                    : row2.getString(item2);
 
-                return inf2 instanceof Number n2 && Utils.compareNumbers(n1, n2);
+                return inf2 instanceof Number n2 && Utils.areEqual(n1, n2);
 
             }
             default -> {

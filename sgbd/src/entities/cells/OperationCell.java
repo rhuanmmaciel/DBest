@@ -1,258 +1,280 @@
 package entities.cells;
 
-import com.mxgraph.model.mxCell;
-import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxStyleUtils;
-import controller.ConstantController;
-import controller.MainController;
-import entities.Column;
-import enums.ColumnDataType;
-import enums.OperationArity;
-import enums.OperationErrorType;
-import enums.OperationType;
-import gui.frames.main.MainFrame;
-import gui.frames.forms.operations.IOperationForm;
-import operations.IOperator;
-import sgbd.query.Operator;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import com.mxgraph.model.mxCell;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxStyleUtils;
+
+import controller.ConstantController;
+import entities.Column;
+import entities.Edge;
+import entities.utils.cells.CellUtils;
+import enums.ColumnDataType;
+import enums.OperationArity;
+import enums.OperationErrorType;
+import enums.OperationType;
+import gui.frames.forms.operations.IOperationForm;
+import gui.frames.main.MainFrame;
+import operations.IOperator;
+import sgbd.query.Operator;
 
 public final class OperationCell extends Cell {
 
-	private OperationType type;
-	private List<Cell> parents = new ArrayList<>();
-	private OperationArity arity;
-	private Class<? extends IOperationForm> form = null;
-	private List<String> arguments = new ArrayList<>();
-	private Boolean error = false;
-	private String errorMessage = null;
-	private Class<? extends IOperator> operatorClass = null;
-	private Boolean hasBeenInitialized = false;
+    private final OperationType type;
+
+    private List<Cell> parents;
+
+    private final OperationArity arity;
+
+    private final Class<? extends IOperationForm> form;
+
+    private List<String> arguments;
+
+    private Boolean error;
+
+    private String errorMessage;
+
+    private final Class<? extends IOperator> operatorClass;
+
+    private Boolean hasBeenInitialized;
+
+    public OperationCell(mxCell jCell, OperationType type) {
+        super(
+            type.getFormattedDisplayName(), type.displayName, jCell,
+            ConstantController.OPERATION_CELL_WIDTH, ConstantController.OPERATION_CELL_HEIGHT
+        );
+
+        this.parents = new ArrayList<>();
+        this.arguments = new ArrayList<>();
+        this.error = false;
+        this.errorMessage = null;
+        this.hasBeenInitialized = false;
+        this.type = type;
+        this.arity = type.arity;
+        this.form = type.form;
+        this.operatorClass = type.operatorClass;
+    }
+
+    public OperationCell(mxCell jCell, OperationType type, List<Cell> parents, List<String> arguments) {
+        this(jCell, type);
+
+        this.arguments = arguments;
+
+        if (parents != null && !parents.isEmpty()) {
+            this.hasBeenInitialized = true;
+            this.parents = parents;
+
+            parents.forEach(parent -> {
+                parent.setChild(this);
+                MainFrame.getGraph().insertEdge(parent.getJCell(), null, "", parent.getJCell(), jCell);
+            });
 
-	public OperationCell(mxCell jCell, OperationType type) {
+            this.updateOperation();
+        }
+    }
 
-		super(type.getDisplayNameAndSymbol(), type.DISPLAY_NAME, jCell, ConstantController.OPERATION_CELL_WIDTH,
-				ConstantController.OPERATION_CELL_HEIGHT);
-		initializeInfos(type);
+    public void editOperation(mxCell jCell) {
+        if (!this.hasBeenInitialized) return;
 
-	}
-
-	public OperationCell(mxCell jCell, OperationType type, List<Cell> parents, List<String> arguments) {
-
-		super(type.getDisplayNameAndSymbol(), type.DISPLAY_NAME, jCell, ConstantController.OPERATION_CELL_WIDTH,
-				ConstantController.OPERATION_CELL_HEIGHT);
-		initializeInfos(type);
-
-		this.arguments = arguments;
-
-		if (parents != null && !parents.isEmpty()) {
-
-			hasBeenInitialized = true;
-
-			this.parents = parents;
-			parents.forEach(parent -> {
-
-				parent.setChild(this);
-				MainFrame.getGraph().insertEdge(parent.getJGraphCell(), null, "", parent.getJGraphCell(), jCell);
-
-			});
-			updateOperation();
-
-		}
-	}
-
-	private void initializeInfos(OperationType type) {
-
-		this.type = type;
-		this.arity = type.ARITY;
-		this.form = type.FORM;
-		this.operatorClass = type.OPERATOR_CLASS;
-
-	}
-
-	public void editOperation(mxCell jCell) {
-
-		if (hasBeenInitialized) {
-
-			try {
-
-				Constructor<? extends IOperationForm> constructor = form.getDeclaredConstructor(mxCell.class);
-				constructor.newInstance(jCell);
-
-			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
-					| InvocationTargetException e) {
-
-				e.printStackTrace();
-
-			}
-
-		}
-
-	}
-
-	public boolean hasBeenInitialized() {
-		return hasBeenInitialized;
-	}
-
-	public void updateOperation() {
-
-		if (hasBeenInitialized) {
-			
-			try {
-
-				Constructor<? extends IOperator> constructor = operatorClass.getDeclaredConstructor();
-				IOperator operation = constructor.newInstance();
-				operation.executeOperation(getJGraphCell(), getArguments());
-
-			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException
-					| InvocationTargetException e) {
-				e.printStackTrace();
-			}
-
-		}
-	}
-
-	public void setArguments(List<String> arguments) {
-
-		hasBeenInitialized = true;
-
-		if (arguments != null && this.arguments != null)
-			this.arguments = new ArrayList<>(arguments);
-
-	}
-
-	public List<String> getArguments() {
-		return arguments;
-	}
-
-	public OperationType getType() {
-
-		return type;
-
-	}
-
-	public OperationArity getArity() {
-
-		return arity;
-
-	}
-
-	public List<Cell> getParents() {
-
-		return parents;
-
-	}
-
-	public void addParent(Cell cell) {
-		parents.add(cell);
-	}
-
-	public void removeParent(Cell cell) {
-		parents.remove(cell);
-	}
-
-	public void clearParents() {
-		parents.clear();
-	}
-
-	public boolean hasParents() {
-		return parents.size() != 0;
-	}
-
-	public Boolean hasTree() {
-		return getOperator() != null;
-	}
-
-	public void setError(OperationErrorType message) {
-
-		String style = getJGraphCell().getStyle();
-		style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKECOLOR, "red");
-		style = mxStyleUtils.setStyle(style, mxConstants.STYLE_FONTCOLOR, "red");
-		MainController.getGraph().getModel().setStyle(getJGraphCell(), style);
-
-		error = true;
-
-		errorMessage = switch (message) {
-
-		case NO_ONE_ARGUMENT -> "O parâmetro passado possui erros";
-		case NO_ONE_PARENT -> "A operação não possui apenas 1 célula pai";
-		case NO_PARENT -> "A operação não possui célula pai";
-		case NULL_ARGUMENT -> "Parâmetro passado é nulo";
-		case PARENT_ERROR -> "Erro(s) em células anteriores";
-		case PARENT_WITHOUT_COLUMN -> "Alguma coluna fornecida não existe na célula pai";
-		case NO_TWO_PARENTS -> "A operação não possui 2 células pais";
-		case NO_TWO_ARGUMENTS -> "Alguma coluna fornecida não existe na respectiva célula pai";
-		case EMPTY_ARGUMENT -> "Não foi passado parâmetro";
-		case NO_PREFIX -> "Algum parâmetro não possui prefixo";
-		case SAME_SOURCE -> "Existem colunas com a mesma fonte. É necessário a renomeação.";
-		};
-		
-	}
-
-	public void removeError() {
-		
-		MainController.getGraph().getModel().setStyle(getJGraphCell(), getStyle());
-		MainController.getGraphComponent().clearCellOverlays();
-		errorMessage = null;
-		error = false;
-
-	}
-
-	@Override
-	public boolean hasError() {
-		return error;
-	}
-
-	public String getErrorMessage() {
-		if (hasError())
-			return errorMessage;
-		return "Sem erros";
-	}
-
-	public void setColumns() {
-
-		List<Column> cellColumns = new ArrayList<>();
-
-		for (Map.Entry<String, List<String>> columns : getOperator().getContentInfo().entrySet())
-			for(String column : columns.getValue()) {
-
-				Column c = new Column(column, columns.getKey(), ColumnDataType.NONE, false);
-
-				for(Cell parent : parents) {
-					Column finalC = c;
-					c = parent.getColumns().stream().filter(x -> x.equals(finalC)).findAny().orElse(c);
-				}
-
-				cellColumns.add(c);
-
-			}
-		this.columns = cellColumns;
-
-	}
-
-	@Override
-	public boolean hasParentErrors() {
-
-		boolean error = false;
-
-		for (Cell cell : getParents()) {
-
-			if (cell.hasError())
-				error = true;
-
-		}
-
-		return error;
-	}
-
-	@Override
-	public void setOperator(Operator operator){
-		this.operator = operator;
-		setColumns();
-	}
-
+        try {
+            Constructor<? extends IOperationForm> constructor = this.form.getDeclaredConstructor(mxCell.class);
+            constructor.newInstance(jCell);
+        } catch (
+            InstantiationException | IllegalAccessException |
+            NoSuchMethodException | InvocationTargetException exception
+        ) {
+            exception.printStackTrace();
+        }
+    }
+
+    public boolean hasBeenInitialized() {
+        return this.hasBeenInitialized;
+    }
+
+    public void updateOperation() {
+        if (!this.hasBeenInitialized) return;
+
+        try {
+            Constructor<? extends IOperator> constructor = this.operatorClass.getDeclaredConstructor();
+            IOperator operation = constructor.newInstance();
+            operation.executeOperation(this.getJCell(), this.getArguments());
+        } catch (
+            InstantiationException | IllegalAccessException |
+            NoSuchMethodException | InvocationTargetException exception
+        ) {
+            exception.printStackTrace();
+        }
+    }
+
+    public void setArguments(List<String> arguments) {
+        this.hasBeenInitialized = true;
+
+        if (arguments != null && this.arguments != null) {
+            this.arguments = new ArrayList<>(arguments);
+        }
+    }
+
+    public List<String> getArguments() {
+        return this.arguments;
+    }
+
+    public OperationType getType() {
+        return this.type;
+    }
+
+    public OperationArity getArity() {
+        return this.arity;
+    }
+
+    @Override
+    public List<Cell> getParents() {
+        return this.parents;
+    }
+
+    public void addParent(Cell cell) {
+        this.parents.add(cell);
+    }
+
+    public void removeParent(Cell cell) {
+        this.parents.remove(cell);
+    }
+
+    public void removeParent(mxCell jCell) {
+        Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
+
+        optionalCell.ifPresent(this::removeParent);
+    }
+
+    public void removeParent(Edge edge) {
+        this.removeParent(edge.getParent());
+    }
+
+    public void removeParents() {
+        this.parents.clear();
+    }
+
+    @Override
+    public boolean hasParents() {
+        return !this.parents.isEmpty();
+    }
+
+    public Boolean hasTree() {
+        return this.getOperator() != null;
+    }
+
+    public void setError(OperationErrorType message) {
+        String style = this.getJCell().getStyle();
+
+        style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKECOLOR, "red");
+        style = mxStyleUtils.setStyle(style, mxConstants.STYLE_FONTCOLOR, "red");
+
+        MainFrame.getGraph().getModel().setStyle(this.getJCell(), style);
+
+        this.error = true;
+
+        this.errorMessage = switch (message) {
+            case NO_ONE_ARGUMENT -> "O parâmetro passado possui erros";
+            case NO_ONE_PARENT -> "A operação possui mais de uma célula pai";
+            case NO_PARENT -> "A operação não possui uma célula pai";
+            case NULL_ARGUMENT -> "O parâmetro fornecido é nulo";
+            case PARENT_ERROR -> "Há erro(s) em células anteriores";
+            case PARENT_WITHOUT_COLUMN -> "Alguma coluna fornecida não existe na célula pai";
+            case NO_TWO_PARENTS -> "A operação não possui duas células pais";
+            case NO_TWO_ARGUMENTS -> "Alguma coluna fornecida não existe na respectiva célula pai";
+            case EMPTY_ARGUMENT -> "Não foi fornecido um parâmetro";
+            case NO_PREFIX -> "Algum parâmetro não possui prefixo";
+            case SAME_SOURCE -> "Existem colunas com a mesma fonte. É necessário a renomeação";
+        };
+    }
+
+    public void removeError() {
+        MainFrame.getGraph().getModel().setStyle(this.getJCell(), this.getStyle());
+        MainFrame.getGraphComponent().clearCellOverlays();
+
+        this.error = false;
+        this.errorMessage = null;
+    }
+
+    public void reset() {
+        this.name = this.type.getFormattedDisplayName();
+        this.parents.clear();
+        this.arguments.clear();
+        this.hasBeenInitialized = false;
+
+        this.removeError();
+
+        MainFrame.getGraph().getModel().setValue(this.jCell, this.name);
+    }
+
+    public OperationCell copy() {
+        OperationCell operationCell =  new OperationCell(
+            this.jCell, this.type, new ArrayList<>(this.parents), new ArrayList<>(this.arguments)
+        );
+
+        operationCell.name = this.name;
+
+        return operationCell;
+    }
+
+    public void updateFrom(OperationCell cell) {
+        this.name = cell.name;
+        this.parents = cell.parents;
+        this.arguments = cell.arguments;
+        this.hasBeenInitialized = cell.hasBeenInitialized;
+        this.error = cell.error;
+        this.errorMessage = cell.errorMessage;
+    }
+
+    @Override
+    public boolean hasError() {
+        return this.error;
+    }
+
+    public String getErrorMessage() {
+        return this.hasError() ? this.errorMessage : "Sem erros";
+    }
+
+    public void setColumns() {
+        List<Column> columns = new ArrayList<>();
+
+        for (Map.Entry<String, List<String>> contentInfo : this.getOperator().getContentInfo().entrySet()) {
+            for (String columnName : contentInfo.getValue()) {
+                Column column = new Column(columnName, contentInfo.getKey(), ColumnDataType.NONE, false);
+
+                for (Cell parent : this.parents) {
+                    Column finalColumn = column;
+                    column = parent.getColumns().stream().filter(c -> c.equals(finalColumn)).findAny().orElse(column);
+                }
+
+                columns.add(column);
+            }
+        }
+
+        this.columns = columns;
+    }
+
+    @Override
+    public boolean hasParentErrors() {
+        boolean error = false;
+
+        for (Cell cell : this.parents) {
+            if (cell.hasError()) {
+                error = true;
+            }
+        }
+
+        return error;
+    }
+
+    @Override
+    public void setOperator(Operator operator) {
+        this.operator = operator;
+        this.setColumns();
+    }
 }

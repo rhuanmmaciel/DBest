@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,285 +32,268 @@ import javax.swing.table.DefaultTableModel;
 import entities.Column;
 import entities.cells.TableCell;
 
-@SuppressWarnings("serial")
-public class FormFrameCreateTable extends JDialog implements ActionListener, DocumentListener{
+public class FormFrameCreateTable extends JDialog implements ActionListener, DocumentListener {
 
-	private JPanel contentPane;
-	private JTable table;
-	private DefaultTableModel model;
-	private JButton btnCreateTable;
-	private JButton btnCancel;
-	private JButton btnAddRow;
-	private JButton btnAddColumn;
-	private JButton btnCreateData;
-	private JTextField textFieldTableName;
-	private TableCell tableCell;
-	private AtomicReference<Boolean> exitReference;
-	private List<Column> columns;
-	
-	{
-		columns = new ArrayList<>();
-		tableCell = null;
-	}
-	
-	public FormFrameCreateTable(AtomicReference<Boolean> exitReference) {
-		
-		super((Window)null);
-		setModal(true);
-		
-		this.exitReference = exitReference;
-				
-		initializeGUI();
-		
-	}
+    private JPanel contentPanel;
 
-	private void initializeGUI() {
-		
-		model = new DefaultTableModel(); 
-		table = new JTable(model);
-		
-		btnCreateTable = new JButton("Criar tabela");
-		btnCreateTable.addActionListener(this);
-		
-		btnCancel= new JButton("Cancelar");	
-		btnCancel.addActionListener(this);
-		
-		setBounds(100, 100, 1250, 600);
-		setLocationRelativeTo(null);
-		
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+    private JTable table;
 
-		setContentPane(contentPane);
-	    
-		JScrollPane scrollPane = new JScrollPane(table);
-		
-		JLabel lblNewLabel = new JLabel("Crie sua tabela: ");
-		
-		btnAddColumn = new JButton("Adicionar coluna");
-		btnAddColumn.addActionListener(this);
-		
-		btnAddRow = new JButton("Adicionar linha");
-		btnAddRow.addActionListener(this);
-		
-		textFieldTableName = new JTextField();
-		textFieldTableName.getDocument().addDocumentListener(this);
-		textFieldTableName.setColumns(10);
-		
-		JLabel lblTableName = new JLabel("Nome da tabela:");
-		
-		btnCreateData = new JButton("Gerador de dados");
-		btnCreateData.addActionListener(this);
-		
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(37)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblNewLabel)
-							.addGap(303)
-							.addComponent(lblTableName)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(textFieldTableName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap())
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-							.addGroup(gl_contentPane.createSequentialGroup()
-								.addComponent(btnAddColumn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(btnAddRow)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(btnCreateData)
-								.addGap(981))
-							.addGroup(gl_contentPane.createSequentialGroup()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-									.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1171, GroupLayout.PREFERRED_SIZE)
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(btnCancel)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnCreateTable)))
-								.addContainerGap()))))
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblNewLabel)
-								.addComponent(lblTableName))
-							.addGap(18))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(textFieldTableName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)))
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnAddColumn)
-								.addComponent(btnAddRow)
-								.addComponent(btnCreateData))
-							.addGap(55))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(71)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnCreateTable)
-								.addComponent(btnCancel))
-							.addContainerGap())))
-		);
-		
-		addWindowListener(new WindowAdapter() {
-			
-			public void windowClosing(WindowEvent e) {
-				  
-				exitReference.set(true);
-    
-			}
-			
-		 });
-		 
-		updateButtons();
-		contentPane.setLayout(gl_contentPane);
-		this.setVisible(true);
-	}
+    private DefaultTableModel model;
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		if(e.getSource() == btnCancel) {
-			
-			exitReference.set(true);
-			dispose();
-			
-		}
-		if(e.getSource() == btnCreateTable) {
-			
-			createTable();
-			
-		}
-		if(e.getSource() == btnAddColumn) {
-			
-			new FormFrameAddColumn(this.model, columns);
-			
-		}
-		if(e.getSource() == btnAddRow) {
-			
-			model.insertRow(table.getRowCount(),new Object[]{});
-			
-		}
-		if(e.getSource() == btnCreateData) {
+    private JButton createTableButton;
 
-			new FormFrameCreateData(columns, model, table);
-			
-		}
-		
-		updateButtons();
-		
-	}	
-	
-	@Override
-	public void insertUpdate(DocumentEvent e) {
+    private JButton cancelButton;
 
-		updateButtons();
-		
-	}
+    private JButton addRowButton;
 
-	@Override
-	public void removeUpdate(DocumentEvent e) {
-		
-		updateButtons();
-		
-	}
+    private JButton addColumnButton;
 
-	@Override
-	public void changedUpdate(DocumentEvent e) {
-		
-		updateButtons();
-		
-	}
-	
-	private void updateButtons() {
-		
-		btnCreateTable.setEnabled(table.getRowCount() > 0 && !textFieldTableName.getText().isEmpty());
-		btnAddRow.setEnabled(table.getColumnCount() > 0);
-		btnCreateData.setEnabled(table.getRowCount() > 0);
-		updateToolTipText();	
-		
-	}
-	
-	private void updateToolTipText() {
-		
-		String btnCreateDataToolTipText = new String();
-		String btnAddRowToolTipText = new String();
-		String btnCreateTableToolTipText = new String();
-		
-		if(table.getColumnCount() <= 0) {
-			
-			btnCreateDataToolTipText = btnAddRowToolTipText = btnCreateTableToolTipText = "- Não existem colunas na tabela";
-			
-		}else if(table.getRowCount() <= 0) {
-			
-			btnCreateDataToolTipText = btnCreateTableToolTipText = "- Não existem linhas na tabela";
-			
-		}else if(textFieldTableName.getText().isEmpty()) {
-			
-			btnCreateTableToolTipText = "- A table não possui nome";
-			
-		}
-		
-		UIManager.put("ToolTip.foreground", Color.RED);
-		
-		btnAddRow.setToolTipText(btnAddRowToolTipText.isEmpty() ? null : btnAddRowToolTipText);
-		btnCreateData.setToolTipText(btnCreateDataToolTipText.isEmpty() ? null : btnCreateDataToolTipText);	
-		btnCreateTable.setToolTipText(btnCreateTableToolTipText.isEmpty() ? null : btnCreateTableToolTipText);
-		
-	}
-	
-	private void createTable() {
-		
-		Map<Integer, Map<String, String>> content = new HashMap<>();
-		
-		for(int i = 0; i < table.getRowCount(); i++) {
-				
-			Map<String, String> line = new HashMap<>();
-			for(int j = 0; j < table.getColumnCount(); j++) {
-				
-				if(table.getValueAt(i, j) == null || table.getValueAt(i, j).toString() == null)
-					line.put(table.getColumnName(j), "");
-				
-				else
-					line.put(table.getColumnName(j), table.getValueAt(i, j).toString());
-				
-			}
-			content.put(i, line);
-			
-		}
-		
-		boolean exit = false;		
-		AtomicReference<Boolean> exitReference = new AtomicReference<>(exit);
-		StringBuilder pkName = new StringBuilder();
-		
-		//new PrimaryKey(content, pkName, exitReference);
-		
-		if(!exitReference.get()) {
-			
-			//tableCell = TableCreator.createTable(textFieldTableName.getText(), pkName.toString(), columns, content, false);
-		
-		}else {
-			
-			exitReference.set(true);
-			
-		}
-				
-		dispose();		
-		
-	}
-	
-	public TableCell getResult() {
-		return tableCell;
-	}
+    private JButton createDataButton;
 
+    private JTextField tableNameTextField;
+
+    private final TableCell tableCell;
+
+    private final AtomicReference<Boolean> exitReference;
+
+    private final List<Column> columns;
+
+    {
+        this.columns = new ArrayList<>();
+        this.tableCell = null;
+    }
+
+    public FormFrameCreateTable(AtomicReference<Boolean> exitReference) {
+        super((Window) null);
+
+        this.setModal(true);
+
+        this.exitReference = exitReference;
+
+        this.initializeGUI();
+    }
+
+    private void initializeGUI() {
+        this.model = new DefaultTableModel();
+        this.table = new JTable(this.model);
+
+        this.createTableButton = new JButton("Criar tabela");
+        this.createTableButton.addActionListener(this);
+
+        this.cancelButton = new JButton("Cancelar");
+        this.cancelButton.addActionListener(this);
+
+        this.setBounds(100, 100, 1250, 600);
+        this.setLocationRelativeTo(null);
+
+        this.contentPanel = new JPanel();
+        this.contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+        this.setContentPane(this.contentPanel);
+
+        JScrollPane scrollPane = new JScrollPane(this.table);
+
+        JLabel lblNewLabel = new JLabel("Crie sua tabela: ");
+
+        this.addColumnButton = new JButton("Adicionar coluna");
+        this.addColumnButton.addActionListener(this);
+
+        this.addRowButton = new JButton("Adicionar linha");
+        this.addRowButton.addActionListener(this);
+
+        this.tableNameTextField = new JTextField();
+        this.tableNameTextField.getDocument().addDocumentListener(this);
+        this.tableNameTextField.setColumns(10);
+
+        JLabel tableNameLabel = new JLabel("Nome da tabela:");
+
+        this.createDataButton = new JButton("Gerador de dados");
+        this.createDataButton.addActionListener(this);
+
+        GroupLayout groupLayoutContentPane = new GroupLayout(this.contentPanel);
+        groupLayoutContentPane.setHorizontalGroup(
+            groupLayoutContentPane.createParallelGroup(Alignment.LEADING)
+                .addGroup(groupLayoutContentPane.createSequentialGroup()
+                    .addGap(37)
+                    .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.LEADING)
+                        .addGroup(groupLayoutContentPane.createSequentialGroup()
+                            .addComponent(lblNewLabel)
+                            .addGap(303)
+                            .addComponent(tableNameLabel)
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addComponent(this.tableNameTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap()
+                        )
+                        .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.LEADING)
+                            .addGroup(groupLayoutContentPane.createSequentialGroup()
+                                .addComponent(this.addColumnButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(this.addRowButton)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(this.createDataButton)
+                                .addGap(981)
+                            )
+                            .addGroup(groupLayoutContentPane.createSequentialGroup()
+                                .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.TRAILING)
+                                    .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1171, GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(groupLayoutContentPane.createSequentialGroup()
+                                        .addComponent(this.cancelButton)
+                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                        .addComponent(this.createTableButton)
+                                    )
+                                )
+                                .addContainerGap()
+                            )
+                        )
+                    )
+                )
+        );
+        groupLayoutContentPane.setVerticalGroup(
+            groupLayoutContentPane.createParallelGroup(Alignment.LEADING)
+                .addGroup(groupLayoutContentPane.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.TRAILING)
+                        .addGroup(groupLayoutContentPane.createSequentialGroup()
+                            .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.BASELINE)
+                                .addComponent(lblNewLabel)
+                                .addComponent(tableNameLabel)
+                            )
+                            .addGap(18)
+                        )
+                        .addGroup(groupLayoutContentPane.createSequentialGroup()
+                            .addComponent(this.tableNameTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                        )
+                    )
+                    .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+                    .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.LEADING)
+                        .addGroup(groupLayoutContentPane.createSequentialGroup()
+                            .addPreferredGap(ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                            .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.BASELINE)
+                                .addComponent(this.addColumnButton)
+                                .addComponent(this.addRowButton)
+                                .addComponent(this.createDataButton)
+                            )
+                            .addGap(55)
+                        )
+                        .addGroup(groupLayoutContentPane.createSequentialGroup()
+                            .addGap(71)
+                            .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.BASELINE)
+                                .addComponent(this.createTableButton)
+                                .addComponent(this.cancelButton))
+                            .addContainerGap()
+                        )
+                    )
+                )
+        );
+
+        this.addWindowListener(new WindowAdapter() {
+
+            public void windowClosing(WindowEvent event) {
+                FormFrameCreateTable.this.exitReference.set(true);
+            }
+        });
+
+        this.updateButtons();
+        this.contentPanel.setLayout(groupLayoutContentPane);
+        this.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        if (event.getSource() == this.cancelButton) {
+            this.exitReference.set(true);
+            this.dispose();
+        } else if (event.getSource() == this.createTableButton) {
+            this.createTable();
+        } else if (event.getSource() == this.addColumnButton) {
+            new FormFrameAddColumn(this.model, this.columns);
+        } else if (event.getSource() == this.addRowButton) {
+            this.model.insertRow(this.table.getRowCount(), new Object[]{});
+        } else if (event.getSource() == this.createDataButton) {
+            new FormFrameCreateData(this.columns, this.model, this.table);
+        }
+
+        this.updateButtons();
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent event) {
+        this.updateButtons();
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent event) {
+        this.updateButtons();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent event) {
+        this.updateButtons();
+    }
+
+    private void updateButtons() {
+        this.createTableButton.setEnabled(this.table.getRowCount() > 0 && !this.tableNameTextField.getText().isEmpty());
+        this.addRowButton.setEnabled(this.table.getColumnCount() > 0);
+        this.createDataButton.setEnabled(this.table.getRowCount() > 0);
+
+        this.updateToolTipText();
+    }
+
+    private void updateToolTipText() {
+        String btnCreateDataToolTipText = "";
+        String btnAddRowToolTipText = "";
+        String btnCreateTableToolTipText = "";
+
+        if (this.table.getColumnCount() <= 0) {
+            btnCreateDataToolTipText = btnAddRowToolTipText = btnCreateTableToolTipText = "- A tabela não contém colunas";
+        } else if (this.table.getRowCount() <= 0) {
+            btnCreateDataToolTipText = btnCreateTableToolTipText = "- A tabela não contém linhas";
+        } else if (this.tableNameTextField.getText().isEmpty()) {
+            btnCreateTableToolTipText = "- A tabela não contém nome";
+        }
+
+        UIManager.put("ToolTip.foreground", Color.RED);
+
+        this.addRowButton.setToolTipText(btnAddRowToolTipText.isEmpty() ? null : btnAddRowToolTipText);
+        this.createDataButton.setToolTipText(btnCreateDataToolTipText.isEmpty() ? null : btnCreateDataToolTipText);
+        this.createTableButton.setToolTipText(btnCreateTableToolTipText.isEmpty() ? null : btnCreateTableToolTipText);
+    }
+
+    private void createTable() {
+        Map<Integer, Map<String, String>> content = new HashMap<>();
+
+        for (int i = 0; i < this.table.getRowCount(); i++) {
+            Map<String, String> line = new HashMap<>();
+
+            for (int j = 0; j < this.table.getColumnCount(); j++) {
+				if (this.table.getValueAt(i, j) == null || this.table.getValueAt(i, j).toString() == null) {
+					line.put(this.table.getColumnName(j), "");
+				} else {
+					line.put(this.table.getColumnName(j), this.table.getValueAt(i, j).toString());
+				}
+            }
+
+            content.put(i, line);
+        }
+
+        boolean exit = false;
+
+        AtomicReference<Boolean> exitReference = new AtomicReference<>(exit);
+        StringBuilder primaryKeyName = new StringBuilder();
+
+        //new PrimaryKey(content, primaryKeyName, exitReference);
+
+        if (!exitReference.get()) {
+            //tableCell = TableCreator.createTable(textFieldTableName.getText(), primaryKeyName.toString(), columns, content, false);
+        } else {
+            exitReference.set(true);
+        }
+
+        this.dispose();
+    }
+
+    public TableCell getResult() {
+        return this.tableCell;
+    }
 }

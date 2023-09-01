@@ -6,7 +6,7 @@ import controller.ConstantController;
 
 import enums.ColumnDataType;
 
-public class TableUtil {
+public class TableUtils {
 
     public static boolean hasNull(List<String> columnData) {
 		for (String data : columnData) {
@@ -26,38 +26,38 @@ public class TableUtil {
 			ColumnDataType.FLOAT, ColumnDataType.DOUBLE, ColumnDataType.BOOLEAN
 		));
 
-        for (String inf : columnData) {
-            if (!inf.equals(ConstantController.NULL)) {
+        for (String data : columnData) {
+            if (!data.equals(ConstantController.NULL)) {
 
-				if (inf.length() > 1) {
+				if (data.length() > 1) {
 					types.remove(ColumnDataType.CHARACTER);
 				}
 
                 try {
-                    Integer.parseInt(inf.strip());
+                    Integer.parseInt(data.strip());
                 } catch (NumberFormatException exception) {
                     types.remove(ColumnDataType.INTEGER);
                 }
 
                 try {
-                    Long.parseLong(inf.strip());
+                    Long.parseLong(data.strip());
                 } catch (NumberFormatException exception) {
                     types.remove(ColumnDataType.LONG);
                 }
 
                 try {
-                    Double.parseDouble(inf.strip());
+                    Double.parseDouble(data.strip());
                 } catch (NumberFormatException exception) {
                     types.remove(ColumnDataType.DOUBLE);
                 }
 
                 try {
-                    Float.parseFloat(inf.strip());
+                    Float.parseFloat(data.strip());
                 } catch (NumberFormatException exception) {
                     types.remove(ColumnDataType.FLOAT);
                 }
 
-				if (inf.startsWith(String.valueOf(stringDelimiter)) && inf.endsWith(String.valueOf(stringDelimiter))) {
+				if (data.startsWith(String.valueOf(stringDelimiter)) && data.endsWith(String.valueOf(stringDelimiter))) {
 					types.removeIf(x -> x != ColumnDataType.STRING && x != ColumnDataType.NONE);
 				}
             }
@@ -106,15 +106,15 @@ public class TableUtil {
 
 		for (int i = 0; i < size; i++) {
 			for (int j = i + 1; j < size; j++) {
-				boolean found = true;
+				boolean foundDuplicate = true;
 
 				for (int k = 0; k < uniqueData.get(i).size(); k++) {
 					if (!uniqueData.get(i).get(k).strip().equals(uniqueData.get(j).get(k).strip())) {
-						found = false;
+						foundDuplicate = false;
 					}
 				}
 
-				if (found) {
+				if (foundDuplicate) {
 					return false;
 				}
 			}

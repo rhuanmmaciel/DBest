@@ -3,11 +3,10 @@ package operations;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import enums.OperationErrorType;
 import exceptions.tree.ArgumentsException;
 import exceptions.tree.ParentsAmountException;
 import exceptions.tree.ParentsErrorException;
-import util.Utils;
+import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashSet;

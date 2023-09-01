@@ -5,7 +5,7 @@ import entities.Column;
 import gui.frames.forms.operations.OperationForm;
 import gui.frames.forms.operations.IOperationForm;
 import operations.unary.Aggregation;
-import util.Utils;
+import utils.Utils;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -39,8 +39,8 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
 
         centerPanel.removeAll();
 
-        btnReady.addActionListener(this);
-        btnCancel.addActionListener(this);
+        readyButton.addActionListener(this);
+        cancelButton.addActionListener(this);
 
         addExtraComponent(new JLabel("Fonte:"), 0, 0, 1, 1);
         addExtraComponent(comboBoxSource, 1, 0, 1, 1);
@@ -66,8 +66,8 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
 
             if(Utils.startsWithIgnoreCase(column, Aggregation.PREFIXES)){
 
-                String prefix = Utils.getStartPrefixIgnoreCase(column, Aggregation.PREFIXES);
-                column = column.substring(Utils.getLastIndexOfPrefix(prefix));
+                String prefix = Utils.getFirstMatchingPrefixIgnoreCase(column, Aggregation.PREFIXES);
+                column = column.substring(prefix.length());
                 comboBoxAggregation.setSelectedItem(switch (prefix){
                     case "MAX:" -> "Máximo";
                     case "MIN:" -> "Mínimo";
@@ -91,11 +91,11 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
-       if(actionEvent.getSource() == btnCancel){
+       if(actionEvent.getSource() == cancelButton){
 
             closeWindow();
 
-        }else if (actionEvent.getSource() == btnReady) {
+        }else if (actionEvent.getSource() == readyButton) {
 
            String aggregation = switch (Objects.requireNonNull(comboBoxAggregation.getSelectedItem()).toString()){
                case "Máximo" -> "MAX:";
@@ -106,7 +106,7 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
                        throw new IllegalStateException("Unexpected value: " + comboBoxAggregation.getSelectedItem().toString());
            };
             arguments.add(aggregation+(comboBoxSource.getSelectedItem()+"."+comboBoxColumn.getSelectedItem()));
-            btnReady();
+            onReadyButtonClicked();
 
         }
 

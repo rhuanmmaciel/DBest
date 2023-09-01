@@ -1,25 +1,33 @@
 package operations.binary.set;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.mxgraph.model.mxCell;
+
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import entities.utils.cells.CellUtils;
+
 import enums.OperationErrorType;
+
 import exceptions.tree.TreeException;
+
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import sgbd.query.Operator;
 
-import java.util.ArrayList;
-import java.util.List;
+import sgbd.query.Operator;
 
 public abstract class SetOperators implements IOperator {
 
-
     public void executeOperation(mxCell jCell, List<String> arguments) {
+        Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
-        OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
+        if (optionalCell.isEmpty()) return;
 
+        OperationCell cell = (OperationCell) optionalCell.get();
         OperationErrorType error = null;
 
         try {
@@ -41,7 +49,7 @@ public abstract class SetOperators implements IOperator {
 
         }
 
-        if(error != null) return;
+        if (error != null) return;
 
         Cell parentCell1 = cell.getParents().get(0);
         Cell parentCell2 = cell.getParents().get(1);
@@ -51,15 +59,14 @@ public abstract class SetOperators implements IOperator {
 
         int numberOfColumns = Math.min(parentCell1.getColumns().size(), parentCell2.getColumns().size());
 
-        List<String> selectedColumns1 = new ArrayList<>(parentCell1.getColumnSourceNames().stream().limit(numberOfColumns).toList());
-        List<String> selectedColumns2 = new ArrayList<>(parentCell2.getColumnSourceNames().stream().limit(numberOfColumns).toList());
+        List<String> selectedColumns1 = new ArrayList<>(parentCell1.getColumnSourcesAndNames().stream().limit(numberOfColumns).toList());
+        List<String> selectedColumns2 = new ArrayList<>(parentCell2.getColumnSourcesAndNames().stream().limit(numberOfColumns).toList());
 
-        Operator readyOperator = createSetOperator(operator1, operator2, selectedColumns1, selectedColumns2);
+        Operator readyOperator = this.createSetOperator(operator1, operator2, selectedColumns1, selectedColumns2);
 
-        Operation.operationSetter(cell, "   "+cell.getType().SYMBOL+"   ", arguments, readyOperator);
+        Operation.operationSetter(cell, "   " + cell.getType().symbol + "   ", arguments, readyOperator);
 
     }
 
     abstract Operator createSetOperator(Operator op1, Operator op2, List<String> columns1, List<String> columns2);
-
 }

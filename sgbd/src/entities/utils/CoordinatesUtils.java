@@ -3,54 +3,47 @@ package entities.utils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import entities.Area;
 import entities.Coordinates;
 import entities.Tree;
 import entities.cells.Cell;
+import entities.utils.cells.CellUtils;
 
 public class CoordinatesUtils {
 
-	public static Coordinates searchForCleanArea() {
+    public static Coordinates searchForCleanArea() {
+        Set<Tree> trees = CellUtils.getActiveCellsTrees();
 
-		Set<Tree> trees = Cell.getCells().values().stream().map(Cell::getTree).collect(Collectors.toSet());
+        Map<Tree, Area> areas = new HashMap<>();
 
-		Map<Tree, Area> areas = new HashMap<>();
+        trees.forEach(tree -> areas.put(tree, getTreeArea(tree)));
 
-		trees.forEach(tree -> areas.put(tree, getTreeArea(tree)));
-		
+        return null;
+    }
 
-		return null;
-	}
-	
-	public static Area getTreeArea(Tree tree) {
-		
-		int minX = Integer.MAX_VALUE;
-		int minY = Integer.MAX_VALUE;
-		int maxX = 0;
-		int maxY = 0;
+    public static Area getTreeArea(Tree tree) {
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int maxX = 0;
+        int maxY = 0;
 
-		for(Cell cell : tree.getCells()) {
-		
-			minX = Math.min(cell.getUpperLeftPosition().x(), minX);
-			minX = Math.min(cell.getLowerRightPosition().x(), minX);
-			
-			maxX = Math.max(cell.getUpperLeftPosition().x(), maxX);
-			maxX = Math.max(cell.getLowerRightPosition().x(), maxX);
-			
-			
-			minY = Math.min(cell.getUpperLeftPosition().y(), minY);
-			minY = Math.min(cell.getLowerRightPosition().y(), minY);
-			
-			maxY = Math.max(cell.getUpperLeftPosition().y(), maxY);
-			maxY = Math.max(cell.getLowerRightPosition().y(), maxY);
-			
-		}
-		
-		return new Area(new Coordinates(minX, minY), new Coordinates(maxX, maxY));
-		
-	}
+        for (Cell cell : tree.getCells()) {
+            minX = Math.min(cell.getUpperLeftPosition().x(), minX);
+            minX = Math.min(cell.getLowerRightPosition().x(), minX);
+
+            maxX = Math.max(cell.getUpperLeftPosition().x(), maxX);
+            maxX = Math.max(cell.getLowerRightPosition().x(), maxX);
+
+            minY = Math.min(cell.getUpperLeftPosition().y(), minY);
+            minY = Math.min(cell.getLowerRightPosition().y(), minY);
+
+            maxY = Math.max(cell.getUpperLeftPosition().y(), maxY);
+            maxY = Math.max(cell.getLowerRightPosition().y(), maxY);
+        }
+
+        return new Area(new Coordinates(minX, minY), new Coordinates(maxX, maxY));
+    }
 	/*
 	private class Area {
 

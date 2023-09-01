@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.util.*;
 import java.util.List;
 
@@ -13,230 +14,244 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controller.ConstantController;
+
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+
 import database.TuplesExtractor;
+
 import gui.utils.JTableUtils;
+
 import sgbd.query.Operator;
 
 public class DataFrame extends JDialog implements ActionListener {
 
-	private final JLabel lblText = new JLabel();
-	private final JLabel lblPages = new JLabel();
-	private final JTable table = new JTable();
-	private final JButton btnLeft = new JButton("<");
-	private final JButton btnRight = new JButton(">");
-	private final JButton btnAllLeft = new JButton("<<");
-	private final JButton btnAllRight = new JButton(">>");
+    private final JLabel lblText;
 
-	private final List<Map<String, String>> rows;
-	private final List<String> columnsName;
-	private int currentIndex;
-	private final Operator operator;
-	private Integer lastPage = null;
-	private int currentLastPage = -1;
+    private final JLabel lblPages;
 
-	public DataFrame(Cell cell) {
+    private final JTable table;
 
-		super((Window) null, "DataFrame");
-		setModal(true);
-		
-		if(cell instanceof OperationCell operationCell) lblText.setText(operationCell.getType().DISPLAY_NAME+":");
-		else lblText.setText(cell.getName()+":");
+    private final JButton btnLeft;
 
+    private final JButton btnRight;
 
-		this.operator = cell.getOperator();
-		operator.open();
+    private final JButton btnAllLeft;
 
-		columnsName = cell.getColumnSourceNames();
+    private final JButton btnAllRight;
 
-		rows = new ArrayList<>();
+    private final List<Map<String, String>> rows;
 
-		updateTable(0);
-		currentIndex = 0;
+    private final List<String> columnsName;
 
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				closeWindow();
-			}
-		});
+    private int currentIndex;
 
-		initializeGUI();
+    private final Operator operator;
 
-	}
-	
-	private void updateTable(int page) {
+    private Integer lastPage;
 
-		int firstElement = page * 15;
-		int lastElement = page * 15 + 14;
-		int currentElement = firstElement;
+    private int currentLastPage;
 
-		DefaultTableModel model = new DefaultTableModel();
+    public DataFrame(Cell cell) {
+        super((Window) null, "DataFrame");
 
-		model.addColumn("");
+        this.lblText = new JLabel();
+        this.lblPages = new JLabel();
+        this.table = new JTable();
+        this.btnLeft = new JButton("<");
+        this.btnRight = new JButton(">");
+        this.btnAllLeft = new JButton("<<");
+        this.btnAllRight = new JButton(">>");
+        this.currentIndex = 0;
+        this.currentLastPage = -1;
 
-		if(page > currentLastPage) {
+        this.setModal(true);
 
-			Map<String, String> row = TuplesExtractor.getRow(operator, true);
+        if (cell instanceof OperationCell operationCell) {
+            this.lblText.setText(String.format("%s:", operationCell.getType().displayName));
+        } else {
+            this.lblText.setText(String.format("%s:", cell.getName()));
+        }
 
-			while (row != null && currentElement < lastElement) {
+        this.operator = cell.getOperator();
+        this.operator.open();
+        this.columnsName = cell.getColumnSourcesAndNames();
+        this.rows = new ArrayList<>();
+        this.updateTable(0);
+        this.currentIndex = 0;
 
-				rows.add(row);
-				row = TuplesExtractor.getRow(operator, true);
-				if (row != null) currentElement++;
-				if (currentElement >= lastElement) {
-					rows.add(row);
-				}
+        this.addWindowListener(new WindowAdapter() {
 
-			}
+            @Override
+            public void windowClosing(WindowEvent event) {
+                DataFrame.this.closeWindow();
+            }
+        });
 
-			if (row == null && lastPage == null)
-				lastPage = currentElement / 15;
+        this.initializeGUI();
+    }
 
-		}
+    private void updateTable(int page) {
+        int firstElement = page * 15;
+        int lastElement = page * 15 + 14;
+        int currentElement = firstElement;
 
-		currentLastPage = Math.max(currentLastPage, page);
+        DefaultTableModel model = new DefaultTableModel();
 
-		if (!rows.isEmpty()) {
+        model.addColumn("");
 
-			for (Map.Entry<String, List<String>> columns : operator.getContentInfo().entrySet())
-				for(String columnName : columns.getValue())
-					model.addColumn(Column.putSource(columnName, columns.getKey()));
+        if (page > this.currentLastPage) {
+            Map<String, String> row = TuplesExtractor.getRow(this.operator, true);
 
-			int i = page * 15 + 1;
-			int endOfList = Math.min(lastElement+1, rows.size());
-			for (Map<String, String> currentRow : rows.subList(firstElement, endOfList)) {
+            while (row != null && currentElement < lastElement) {
+                this.rows.add(row);
+                row = TuplesExtractor.getRow(this.operator, true);
 
-				Object[] line = new Object[rows.get(firstElement).size() + 1];
-				line[0] = i++;
+                if (row != null) {
+                    currentElement++;
+                }
 
-				for (int j = 0; j < currentRow.size(); j++)
-					line[j+1] = currentRow.get(model.getColumnName(j+1));
+                if (currentElement >= lastElement) {
+                    this.rows.add(row);
+                }
+            }
 
-				model.addRow(line);
+            if (row == null && this.lastPage == null) {
+                this.lastPage = currentElement / 15;
+            }
+        }
 
-			}
+        this.currentLastPage = Math.max(this.currentLastPage, page);
 
-		} else {
-
-			model.setColumnIdentifiers(columnsName.toArray());
-
-		}
-
-		table.setModel(model);
-
-		JTableUtils.preferredColumnWidthByValues(table, 0);
-
-		for(int i = 1; i < table.getColumnCount(); i++)
-			JTableUtils.preferredColumnWidthByColumnName(table, i);
-
-		table.getColumnModel().getColumn(0).setResizable(false);
-		
-		JTableUtils.setColumnBold(table, 0);
-		JTableUtils.setNullInRed(table);
-
-		table.setEnabled(false);
-		table.setFillsViewportHeight(true);
-		table.repaint();
-
-	}
-
-	private void initializeGUI() {
-
-		JPanel contentPane = new JPanel(new BorderLayout());
-		contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-		setContentPane(contentPane);
-
-		btnLeft.addActionListener(this);
-		btnAllLeft.addActionListener(this);
-		btnRight.addActionListener(this);
-		btnAllRight.addActionListener(this);
-
-		JPanel northPane = new JPanel(new FlowLayout());
-		northPane.add(lblText);
-		northPane.add(lblPages);
-
-		JPanel tablePanel = new JPanel(new BorderLayout());
-		tablePanel.add(table.getTableHeader(), BorderLayout.NORTH);
-		tablePanel.add(table, BorderLayout.CENTER);
-		JScrollPane scrollPane = new JScrollPane(tablePanel);
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-		JPanel southPane = new JPanel(new FlowLayout());
-		southPane.add(btnAllLeft);
-		southPane.add(btnLeft);
-		southPane.add(btnRight);
-		southPane.add(btnAllRight);
-
-		contentPane.add(northPane, BorderLayout.NORTH);
-		contentPane.add(scrollPane, BorderLayout.CENTER);
-		contentPane.add(southPane, BorderLayout.SOUTH);
-
-		verifyButtons();
-
-		if(table.getRowCount() == 0) lblPages.setText("0/0");
-
-		resize();
-		setLocationRelativeTo(null);
-		this.setVisible(true);
-	}
-
-	private void resize(){
-		pack();
-		if (getWidth() > ConstantController.UI_WIDTH) {
-			int height = getHeight();
-			setSize((int) (ConstantController.UI_WIDTH *0.95), height);
-		}
-	}
-
-	private void verifyButtons() {
-
-		btnLeft.setEnabled(currentIndex != 0);
-		btnAllLeft.setEnabled(currentIndex != 0);
-		btnRight.setEnabled(lastPage == null || lastPage != currentIndex);
-		btnAllRight.setEnabled(lastPage == null || lastPage != currentIndex);
-
-		lblPages.setText(currentIndex + 1 + "/" + (lastPage == null ? " ???" : lastPage + 1));
-
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == btnRight) {
-
-			currentIndex++;
-
-		} else if (e.getSource() == btnLeft) {
-
-			currentIndex--;
-
-		}if(e.getSource() == btnAllLeft){
-
-			currentIndex = Math.max(currentIndex - 100, 0);
-
-		}else if(e.getSource() == btnAllRight){
-
-			if(lastPage == null)
-				for(int i = 0; lastPage == null && i < 100; i++) updateTable(++currentIndex);
-			else currentIndex = lastPage;
-
-		}
-
-		updateTable(currentIndex);
-		verifyButtons();
-
-	}
-
-	private void closeWindow(){
-
-		operator.close();
-		operator.freeResources();
-		dispose();
-
-	}
-
+        if (!this.rows.isEmpty()) {
+            for (Map.Entry<String, List<String>> columns : this.operator.getContentInfo().entrySet()) {
+                for (String columnName : columns.getValue()) {
+                    model.addColumn(Column.composeSourceAndName(columns.getKey(), columnName));
+                }
+            }
+
+            int i = page * 15 + 1;
+            int endOfList = Math.min(lastElement + 1, this.rows.size());
+
+            for (Map<String, String> currentRow : this.rows.subList(firstElement, endOfList)) {
+                Object[] line = new Object[this.rows.get(firstElement).size() + 1];
+                line[0] = i++;
+
+                for (int j = 0; j < currentRow.size(); j++) {
+                    line[j + 1] = currentRow.get(model.getColumnName(j + 1));
+                }
+
+                model.addRow(line);
+            }
+        } else {
+            model.setColumnIdentifiers(this.columnsName.toArray());
+        }
+
+        this.table.setModel(model);
+
+        JTableUtils.preferredColumnWidthByValues(this.table, 0);
+
+        for (int i = 1; i < this.table.getColumnCount(); i++) {
+            JTableUtils.preferredColumnWidthByColumnName(this.table, i);
+        }
+
+        this.table.getColumnModel().getColumn(0).setResizable(false);
+
+        JTableUtils.setColumnBold(this.table, 0);
+        JTableUtils.setNullInRed(this.table);
+
+        this.table.setEnabled(false);
+        this.table.setFillsViewportHeight(true);
+        this.table.repaint();
+    }
+
+    private void initializeGUI() {
+        JPanel contentPane = new JPanel(new BorderLayout());
+        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        this.setContentPane(contentPane);
+
+        this.btnLeft.addActionListener(this);
+        this.btnAllLeft.addActionListener(this);
+        this.btnRight.addActionListener(this);
+        this.btnAllRight.addActionListener(this);
+
+        JPanel northPane = new JPanel(new FlowLayout());
+        northPane.add(this.lblText);
+        northPane.add(this.lblPages);
+
+        JPanel tablePanel = new JPanel(new BorderLayout());
+        tablePanel.add(this.table.getTableHeader(), BorderLayout.NORTH);
+        tablePanel.add(this.table, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(tablePanel);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        JPanel southPane = new JPanel(new FlowLayout());
+        southPane.add(this.btnAllLeft);
+        southPane.add(this.btnLeft);
+        southPane.add(this.btnRight);
+        southPane.add(this.btnAllRight);
+
+        contentPane.add(northPane, BorderLayout.NORTH);
+        contentPane.add(scrollPane, BorderLayout.CENTER);
+        contentPane.add(southPane, BorderLayout.SOUTH);
+
+        this.verifyButtons();
+
+        if (this.table.getRowCount() == 0) {
+            this.lblPages.setText("0/0");
+        }
+
+        this.resize();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
+    }
+
+    private void resize() {
+        this.pack();
+
+        if (this.getWidth() > ConstantController.UI_SCREEN_WIDTH) {
+            this.setSize((int) (ConstantController.UI_SCREEN_WIDTH * 0.95), this.getHeight());
+        }
+    }
+
+    private void verifyButtons() {
+        this.btnLeft.setEnabled(this.currentIndex != 0);
+        this.btnAllLeft.setEnabled(this.currentIndex != 0);
+        this.btnRight.setEnabled(this.lastPage == null || this.lastPage != this.currentIndex);
+        this.btnAllRight.setEnabled(this.lastPage == null || this.lastPage != this.currentIndex);
+        this.lblPages.setText(String.format("%s/%s", this.currentIndex + 1, this.lastPage == null ? "???" : this.lastPage + 1));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        if (event.getSource() == this.btnRight) {
+            this.currentIndex++;
+        } else if (event.getSource() == this.btnLeft) {
+            this.currentIndex--;
+        }
+
+        if (event.getSource() == this.btnAllLeft) {
+            this.currentIndex = Math.max(this.currentIndex - 100, 0);
+        } else if (event.getSource() == this.btnAllRight) {
+            if (this.lastPage == null) {
+                for (int i = 0; this.lastPage == null && i < 100; i++) {
+                    this.updateTable(++this.currentIndex);
+                }
+            } else {
+                this.currentIndex = this.lastPage;
+            }
+        }
+
+        this.updateTable(this.currentIndex);
+        this.verifyButtons();
+    }
+
+    private void closeWindow() {
+        this.operator.close();
+        this.operator.freeResources();
+        this.dispose();
+    }
 }

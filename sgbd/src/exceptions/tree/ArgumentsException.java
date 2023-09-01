@@ -1,16 +1,18 @@
 package exceptions.tree;
 
-public class ArgumentsException extends TreeException{
+import java.io.Serial;
 
-	private static final long serialVersionUID = 6944760171982147427L;
+public class ArgumentsException extends TreeException {
 
-	public ArgumentsException(String txt) {
-		super(txt);
-	}
+    @Serial
+    private static final long serialVersionUID = 6944760171982147427L;
 
-	@Override
-	public ExceptionType type() {
-		return ExceptionType.ARGUMENTS;
-	}
-	
+    public ArgumentsException(String message) {
+        super(message);
+    }
+
+    @Override
+    public ExceptionType type() {
+        return ExceptionType.ARGUMENTS;
+    }
 }

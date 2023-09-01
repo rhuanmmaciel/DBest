@@ -42,8 +42,8 @@ public class GroupForm extends OperationForm implements ActionListener, IOperati
 
         centerPanel.removeAll();
 
-        btnReady.addActionListener(this);
-        btnCancel.addActionListener(this);
+        readyButton.addActionListener(this);
+        cancelButton.addActionListener(this);
 
         textArea.setPreferredSize(new Dimension(300,300));
         textArea.setEditable(false);
@@ -65,7 +65,7 @@ public class GroupForm extends OperationForm implements ActionListener, IOperati
         addExtraComponent(new JLabel("Agrupar por:"), 0, 7, 1, 1);
         addExtraComponent(comboBoxGroupByColumn, 1, 7, 1, 1);
 
-        parent1.getAllSourceTables().stream()
+        parent1.getSources().stream()
                 .map(Cell::getName)
                 .forEach(comboBoxGroupBySource::addItem);
 
@@ -115,17 +115,17 @@ public class GroupForm extends OperationForm implements ActionListener, IOperati
 
             textArea.setText("");
 
-        } else if(actionEvent.getSource() == btnCancel){
+        } else if(actionEvent.getSource() == cancelButton){
 
             closeWindow();
 
-        }else if (actionEvent.getSource() == btnReady) {
+        }else if (actionEvent.getSource() == readyButton) {
 
             arguments.addAll(List.of(textArea.getText().split("\n")));
             arguments.remove(0);
-            arguments.add(0, Column.putSource(Objects.requireNonNull(comboBoxGroupByColumn.getSelectedItem()).toString(),
-                    Objects.requireNonNull(comboBoxGroupBySource.getSelectedItem()).toString()));
-            btnReady();
+            arguments.add(0, Column.composeSourceAndName(Objects.requireNonNull(comboBoxGroupBySource.getSelectedItem()).toString(), Objects.requireNonNull(comboBoxGroupByColumn.getSelectedItem()).toString()
+            ));
+            onReadyButtonClicked();
 
         }
 

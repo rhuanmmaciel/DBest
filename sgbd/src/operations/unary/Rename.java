@@ -1,8 +1,13 @@
 package operations.unary;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.mxgraph.model.mxCell;
+
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import entities.utils.cells.CellUtils;
 import enums.OperationErrorType;
 import exceptions.tree.TreeException;
 import operations.IOperator;
@@ -11,23 +16,22 @@ import operations.OperationErrorVerifier;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.RenameSourceOperator;
 
-import java.util.List;
-
 public class Rename implements IOperator {
 
-    public Rename(){
+    public Rename() {
 
     }
 
     @Override
     public void executeOperation(mxCell jCell, List<String> arguments) {
+        Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
-        OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
+        if (optionalCell.isEmpty()) return;
 
+        OperationCell cell = (OperationCell) optionalCell.get();
         OperationErrorType error = null;
 
         try {
-
             error = OperationErrorType.NO_PARENT;
             OperationErrorVerifier.hasParent(cell);
 
@@ -45,23 +49,20 @@ public class Rename implements IOperator {
 
             error = null;
 
-        } catch (TreeException e) {
-
+        } catch (TreeException exception) {
             cell.setError(error);
-
         }
 
-        if(error != null) return;
+        if (error != null) return;
 
         Cell parentCell = cell.getParents().get(0);
 
         Operator operator = parentCell.getOperator();
 
-        for(String name : arguments)
+        for (String name : arguments) {
             operator = new RenameSourceOperator(operator, name.substring(0, name.indexOf(":")), name.substring(name.indexOf(":") + 1));
+        }
 
-        Operation.operationSetter(cell, cell.getType().SYMBOL+" " + arguments, arguments, operator);
-
+        Operation.operationSetter(cell, cell.getType().symbol + " " + arguments, arguments, operator);
     }
-
 }

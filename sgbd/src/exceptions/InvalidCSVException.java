@@ -1,15 +1,13 @@
 package exceptions;
 
-public class InvalidCsvException extends Exception{
+import java.io.Serial;
 
-	private static final long serialVersionUID = 9057235844324768504L;
+public class InvalidCSVException extends Exception {
 
-	public InvalidCsvException() {
-		
-	}
-	
-	public InvalidCsvException(String txt) {
-		super(txt);
-	}
-	
+    @Serial
+    private static final long serialVersionUID = 9057235844324768504L;
+
+    public InvalidCSVException(String message) {
+        super(message);
+    }
 }

@@ -1,0 +1,17 @@
+
+œ
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(††ô¸ÿÿÿÿÿ
+d
+java:S5361€"HReplace this call to "replaceAll()" by a call to the "replace()" method.(…ãîòýÿÿÿÿ
+c
+java:S5361"HReplace this call to "replaceAll()" by a call to the "replace()" method.(œ¾Ù¼ùÿÿÿÿ
+ƒ
+java:S5854~"gUse the CANON_EQ flag with "Pattern.compile(pattern, CANON_EQ).matcher(input).replaceAll(replacement)".(ìò„{8±çÌöŸ1
+]
+java:S5361~"HReplace this call to "replaceAll()" by a call to the "replace()" method.(ìò„{
+^
+java:S5361}"HReplace this call to "replaceAll()" by a call to the "replace()" method.(§ìÃ 
+o
+java:S5998„"LRefactor this repetition that can lead to a stack overflow for large inputs.(Ç®œ×ÿÿÿÿÿ8½çÌöŸ1
+w
+java:S5843„"TSimplify this regular expression to reduce its complexity from 21 to the 20 allowed.(Ç®œ×ÿÿÿÿÿ8ÙçÌöŸ1

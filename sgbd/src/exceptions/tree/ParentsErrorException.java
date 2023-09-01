@@ -1,16 +1,18 @@
 package exceptions.tree;
 
-public class ParentsErrorException extends ParentsException{
+import java.io.Serial;
 
-	private static final long serialVersionUID = 7046253632577090944L;
+public class ParentsErrorException extends ParentsException {
 
-	public ParentsErrorException(String txt) {
-		super(txt);
-	}
+    @Serial
+    private static final long serialVersionUID = 7046253632577090944L;
 
-	@Override
-	public ExceptionType type() {
-		return ExceptionType.PARENTS_ERROR;
-	}
+    public ParentsErrorException(String message) {
+        super(message);
+    }
 
+    @Override
+    public ExceptionType type() {
+        return ExceptionType.PARENTS_ERROR;
+    }
 }

@@ -1,25 +1,23 @@
 package enums;
 
-public enum ColumnDataType{
-	
-	INTEGER("integer"),
-	LONG("long"),
-	FLOAT("float"),
-	DOUBLE("double"),
-	CHARACTER("char"),
-	STRING("string"),
-	BOOLEAN("bool"),
-	NONE("none");
+public enum ColumnDataType {
 
-	private final String typeName;
+    INTEGER   ("integer"),
+    LONG      ("long"),
+    FLOAT     ("float"),
+    DOUBLE    ("double"),
+    CHARACTER ("char"),
+    STRING    ("string"),
+    BOOLEAN   ("bool"),
+    NONE      ("none");
 
-	ColumnDataType(String typeName){
+    private final String name;
 
-		this.typeName = typeName;
+    ColumnDataType(String name) {
+        this.name = name;
+    }
 
-	}
-
-	public String getTypeName() {
-		return typeName;
-	}
+    public String getName() {
+        return this.name;
+    }
 }

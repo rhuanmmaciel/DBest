@@ -1,9 +1,9 @@
 package gui.utils;
 
 import controller.ConstantController;
-import controller.MainController;
 
 import java.awt.*;
+
 import java.util.Vector;
 
 import javax.swing.JTable;
@@ -11,101 +11,112 @@ import javax.swing.table.*;
 
 public class JTableUtils {
 
-	public static void preferredColumnWidthByColumnName(JTable jTable, int columnIndex) {
+    public static void preferredColumnWidthByColumnName(JTable jTable, int columnIndex) {
+        TableColumn column = jTable.getColumnModel().getColumn(columnIndex);
+        TableCellRenderer headerRenderer = jTable.getTableHeader().getDefaultRenderer();
+        Component headerComponent = headerRenderer.getTableCellRendererComponent(jTable, column.getHeaderValue(), false, false, -1, columnIndex);
+        FontMetrics fontMetrics = headerComponent.getFontMetrics(headerComponent.getFont());
 
-		TableColumn column = jTable.getColumnModel().getColumn(columnIndex);
-		TableCellRenderer headerRenderer = jTable.getTableHeader().getDefaultRenderer();
-		Component headerComponent = headerRenderer.getTableCellRendererComponent(jTable, column.getHeaderValue(), false, false, -1, columnIndex);
-		FontMetrics fontMetrics = headerComponent.getFontMetrics(headerComponent.getFont());
+        int minWidth = fontMetrics.stringWidth(column.getHeaderValue().toString());
+        int extraWidth = fontMetrics.charWidth('0') * 2;
 
-		int minWidth = fontMetrics.stringWidth(column.getHeaderValue().toString());
-		int extraWidth = fontMetrics.charWidth('0') * 2;
-		minWidth += extraWidth;
+        minWidth += extraWidth;
 
-		column.setPreferredWidth(minWidth);
+        column.setPreferredWidth(minWidth);
+    }
 
-	}
+    public static void preferredColumnWidthByValues(JTable jTable, int columnIndex) {
+        TableColumn column = jTable.getColumnModel().getColumn(columnIndex);
+        TableCellRenderer cellRenderer = jTable.getCellRenderer(0, columnIndex);
+        Component cellComponent = cellRenderer.getTableCellRendererComponent(jTable, column.getHeaderValue(), false, false, 0, columnIndex);
+        FontMetrics fontMetrics = cellComponent.getFontMetrics(cellComponent.getFont());
 
-	public static void preferredColumnWidthByValues(JTable jTable, int columnIndex) {
-		int minWidth = 0;
-		TableColumn column = jTable.getColumnModel().getColumn(columnIndex);
-		TableCellRenderer cellRenderer = jTable.getCellRenderer(0, columnIndex);
-		Component cellComponent = cellRenderer.getTableCellRendererComponent(jTable, column.getHeaderValue(), false, false, 0, columnIndex);
-		FontMetrics fontMetrics = cellComponent.getFontMetrics(cellComponent.getFont());
+        int minWidth = 0;
 
-		for (int row = 0; row < jTable.getRowCount(); row++) {
-			Object value = jTable.getValueAt(row, columnIndex);
-			String text = (value != null) ? value.toString() : "";
-			int width = fontMetrics.stringWidth(text);
-			minWidth = Math.max(minWidth, width);
-		}
+        for (int row = 0; row < jTable.getRowCount(); row++) {
+            Object value = jTable.getValueAt(row, columnIndex);
+            String text = (value != null) ? value.toString() : "";
 
-		int extraWidth = fontMetrics.charWidth('0') * 2;
-		minWidth += extraWidth;
-		column.setPreferredWidth(minWidth);
-	}
+            int width = fontMetrics.stringWidth(text);
 
-	public static void setNullInRed(JTable table) {
+            minWidth = Math.max(minWidth, width);
+        }
 
-		table.setDefaultRenderer(Object.class, new TableCellRenderer() {
-			private final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        int extraWidth = fontMetrics.charWidth('0') * 2;
 
-			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-					boolean hasFocus, int row, int column) {
+        minWidth += extraWidth;
 
-				Component c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        column.setPreferredWidth(minWidth);
+    }
 
-				if (value instanceof String text) {
-					if (text.equals(ConstantController.NULL)) {
-						c.setForeground(Color.RED);
-					} else {
-						c.setForeground(Color.BLACK);
-					}
-				}
+    public static void setNullInRed(JTable table) {
+        table.setDefaultRenderer(
+            Object.class, (table1, value, isSelected, hasFocus, row, column) -> {
+                Component component = new DefaultTableCellRenderer()
+                    .getTableCellRendererComponent(table1, value, isSelected, hasFocus, row, column);
 
-				return c;
+                if (value instanceof String text) {
+                    if (text.equals(ConstantController.NULL)) {
+                        component.setForeground(Color.RED);
+                    } else {
+                        component.setForeground(Color.BLACK);
+                    }
+                }
+
+                return component;
+            }
+        );
+    }
+
+    public static void setColumnBold(JTable table, int columnIndex) {
+        table
+            .getColumnModel()
+            .getColumn(columnIndex)
+            .setCellRenderer(new DefaultTableCellRenderer() {
+                public Component getTableCellRendererComponent(
+                    JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column
+                ) {
+                    Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                    component.setFont(new Font(component.getFont().getName(), Font.BOLD, component.getFont().getSize()));
+
+                    return component;
+                }
+            }
+        );
+    }
+
+    public static class CustomTableModel extends DefaultTableModel {
+
+        private final boolean[] enabledRows;
+
+        public CustomTableModel(Vector<Vector<Object>> vector1, Vector<String> vector2) {
+            super(vector1, vector2);
+
+            this.enabledRows = new boolean[vector1.size()];
+
+            for (int i = 0; i < vector1.size(); i++) {
+                this.enabledRows[i] = false;
+            }
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+			if (row >= this.enabledRows.length) {
+				return false;
 			}
-		});
 
-	}
+            return this.enabledRows[row];
+        }
 
-	public static void setColumnBold(JTable table, int i) {
-
-		table.getColumnModel().getColumn(i).setCellRenderer(new DefaultTableCellRenderer() {
-			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-					boolean hasFocus, int row, int column) {
-				Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				c.setFont(new Font(c.getFont().getName(), Font.BOLD, c.getFont().getSize()));
-				return c;
+        public void setRowEnabled(int row, boolean enabled) {
+			if (row >= this.enabledRows.length) {
+				return;
 			}
-		});
 
-	}
+            this.enabledRows[row] = enabled;
 
-	public static class CustomTableModel extends DefaultTableModel {
-	    private final boolean[] enabledRows;
-
-	    public CustomTableModel(Vector<Vector<Object>> vector, Vector<String> vector2) {
-	        super(vector, vector2);
-	        enabledRows = new boolean[vector.size()];
-	        for (int i = 0; i < vector.size(); i++) {
-	            enabledRows[i] = false;
-	        }
-	    }
-
-	    @Override
-	    public boolean isCellEditable(int row, int column) {
-	    	if(row >= enabledRows.length)
-	    		return false;
-	        return enabledRows[row];
-	    }
-
-	    public void setRowEnabled(int row, boolean enabled) {
-	    	if(row >= enabledRows.length)
-	    		return;
-	        enabledRows[row] = enabled;
-	        fireTableRowsUpdated(row, row);
-	    }
-	}
-
+            this.fireTableRowsUpdated(row, row);
+        }
+    }
 }

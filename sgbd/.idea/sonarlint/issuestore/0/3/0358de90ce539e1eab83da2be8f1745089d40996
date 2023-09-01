@@ -1,0 +1,19 @@
+
+c
+java:S1192"GDefine a constant instead of duplicating this literal "madeUp" 3 times.(τότιώÿÿÿÿ
+o
+java:S1104N"TMake PREFIXES a static final constant or non-public and provide accessors if needed.(φ¥Μξύÿÿÿÿ
+I
+java:S1444N".Make this "public static PREFIXES" field final(φ¥Μξύÿÿÿÿ
+n
+java:S3008N"SRename this field "PREFIXES" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(φ¥Μξύÿÿÿÿ
+—
+java:S1186P"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(βτΰ
+8
+java:S2386N"Make this member "protected".(φ¥Μξύÿÿÿÿ
+p
+java:S3252"TUse static access with "sgbd.prototype.column.Metadata" for "SIGNED_INTEGER_COLUMN".(τότιώÿÿÿÿ
+f
+java:S3252"JUse static access with "sgbd.prototype.column.Metadata" for "PRIMARY_KEY".(τότιώÿÿÿÿ
+Q
+java:S3252":Use static access with "sgbd.table.Table" for "openTable".(΅ÿβώ

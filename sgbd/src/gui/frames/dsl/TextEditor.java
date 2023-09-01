@@ -47,15 +47,15 @@ public class TextEditor extends JFrame implements ActionListener {
 
 	private final JButton btnBack = new JButton("<");
 	private final JButton btnImport = new JButton("Importar");
-	private final JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.DISPLAY_NAME);
-	private final JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.DISPLAY_NAME);
-	private final JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.DISPLAY_NAME);
-	private final JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.DISPLAY_NAME);
-	private final JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.DISPLAY_NAME);
-	private final JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.DISPLAY_NAME);
-	private final JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.DISPLAY_NAME);
-	private final JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.DISPLAY_NAME);
-	private final JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.DISPLAY_NAME);
+	private final JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.displayName);
+	private final JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.displayName);
+	private final JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.displayName);
+	private final JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.displayName);
+	private final JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.displayName);
+	private final JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.displayName);
+	private final JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.displayName);
+	private final JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.displayName);
+	private final JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.displayName);
 
 	private final JButton btnRun = new JButton("Executar");
 	private final JButton btnRunSelection = new JButton("Executar texto selecionado");
@@ -183,7 +183,7 @@ public class TextEditor extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnBack)
-			main.getBackToMain();
+			main.goBackToMain();
 
 		else if (e.getSource() == btnRun)
 			run();

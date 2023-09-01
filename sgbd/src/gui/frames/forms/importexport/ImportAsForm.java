@@ -1,84 +1,70 @@
 package gui.frames.forms.importexport;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.concurrent.atomic.AtomicReference;
-
 import entities.cells.TableCell;
 import enums.FileType;
 import files.ImportFile;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ImportAsForm extends ImportExportAsForm {
 
-	private final AtomicReference<Boolean> deleteCellReference;
-	private TableCell tableCell;
-	private final JButton btnHead = new JButton("Arquivo head");
+    private final AtomicReference<Boolean> deleteCellReference;
 
-	{
-		this.tableCell = null;
-	}
-	
-	public ImportAsForm(AtomicReference<Boolean> deleteCellReference) {
+    private TableCell tableCell;
 
-		setModal(true);
-		this.deleteCellReference = deleteCellReference;
+    private final JButton headFileButton;
 
-		initGUI();
+    public ImportAsForm(AtomicReference<Boolean> deleteCellReference) {
+        this.setModal(true);
 
-	}
+        this.deleteCellReference = deleteCellReference;
+        this.tableCell = null;
+        this.headFileButton = new JButton("Arquivo head");
 
-	private void initGUI(){
+        this.initializeGUI();
+    }
 
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				closeWindow();
-			}
-		});
+    private void initializeGUI() {
+        this.addWindowListener(new WindowAdapter() {
 
-		btnHead.addActionListener(this);
+            public void windowClosing(WindowEvent event) {
+                ImportAsForm.this.closeWindow();
+            }
+        });
 
-		setTitle("Importar");
+        this.headFileButton.addActionListener(this);
 
-		centerPane.add(btnHead);
+        this.setTitle("Importar");
 
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
-		revalidate();
+        this.centerPanel.add(this.headFileButton);
 
-	}
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
+        this.revalidate();
+    }
 
-	public TableCell getResult() {
-		
-		return tableCell;
-		
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		if(e.getSource() == btnCsv) {
-			
-			dispose();
-			this.tableCell = new ImportFile(FileType.CSV, deleteCellReference).getResult();
+    public TableCell getResult() {
+        return this.tableCell;
+    }
 
-			
-		}else if(e.getSource() == btnHead) {
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        if (event.getSource() == this.csvButton) {
+            this.dispose();
+            this.tableCell = new ImportFile(FileType.CSV, this.deleteCellReference).getResult();
+        } else if (event.getSource() == this.headFileButton) {
+            this.dispose();
+            this.tableCell = new ImportFile(FileType.FYI, this.deleteCellReference).getResult();
+        }
+    }
 
-			dispose();
-			this.tableCell = new ImportFile(FileType.FYI, deleteCellReference).getResult();
-			
-		}
-		
-	}
-
-	protected void closeWindow() {
-
-		deleteCellReference.set(true);
-		dispose();
-
-	}
+    protected void closeWindow() {
+        this.deleteCellReference.set(true);
+        this.dispose();
+    }
 }

@@ -1,0 +1,13 @@
+
+a
+java:S1192"FDefine a constant instead of duplicating this literal "DESC:" 3 times.(õŽæôúÿÿÿÿ
+o
+java:S1104"TMake PREFIXES a static final constant or non-public and provide accessors if needed.(õŽæôúÿÿÿÿ
+I
+java:S1444".Make this "public static PREFIXES" field final(õŽæôúÿÿÿÿ
+n
+java:S3008"SRename this field "PREFIXES" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(õŽæôúÿÿÿÿ
+–
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(×öø6
+h
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 23 to the 15 allowed.(äØñ¥

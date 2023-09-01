@@ -343,7 +343,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 
 		int columnIndex = table.getColumnModel().getColumnIndex(Objects.requireNonNull(comboBox.getSelectedItem()).toString());
 		
-		ColumnDataType selectedColumnType = columns.get(columnIndex).getType();
+		ColumnDataType selectedColumnType = columns.get(columnIndex).getDataType();
 		
 		lblColumnType.setText("Tipo: " + selectedColumnType.toString());
 		setAllowedTabs(selectedColumnType);
@@ -419,7 +419,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 		
 		int columnIndex = table.getColumnModel().getColumnIndex(Objects.requireNonNull(comboBox.getSelectedItem()).toString());
 		
-		ColumnDataType selectedColumnType = columns.get(columnIndex).getType();
+		ColumnDataType selectedColumnType = columns.get(columnIndex).getDataType();
 		
 		if(e.getSource() == btnCancel) {
 			

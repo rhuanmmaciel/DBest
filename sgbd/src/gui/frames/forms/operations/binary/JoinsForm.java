@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Optional;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
@@ -11,103 +13,106 @@ import com.mxgraph.model.mxCell;
 
 import entities.Column;
 import entities.cells.Cell;
-import gui.frames.forms.operations.OperationForm;
+import entities.utils.cells.CellUtils;
 import gui.frames.forms.operations.IOperationForm;
+import gui.frames.forms.operations.OperationForm;
 
 public class JoinsForm extends OperationForm implements ActionListener, IOperationForm {
 
-	private final JComboBox<String> comboBoxSource2 = new JComboBox<>();
-	private final JComboBox<String> comboBoxColumn2 = new JComboBox<>();
+    private final JComboBox<String> comboBoxSource2 = new JComboBox<>();
 
-	private final Cell parent2;
+    private final JComboBox<String> comboBoxColumn2 = new JComboBox<>();
 
-	public JoinsForm(mxCell jCell) {
+    private final Cell parent2;
 
-		super(jCell);
+    public JoinsForm(mxCell jCell) {
+        super(jCell);
 
-		this.parent2 = Cell.getCells().get(jCell).getParents().get(1);
+		Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
-		initializeGUI();
+		this.parent2 = optionalCell.map(cell -> cell.getParents().get(1)).orElse(null);
 
-	}
+        this.initializeGUI();
+    }
 
-	private void initializeGUI() {
+    private void initializeGUI() {
 
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				closeWindow();
-			}
-		});
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                JoinsForm.this.closeWindow();
+            }
+        });
 
-		centerPanel.removeAll();
+        this.centerPanel.removeAll();
 
-		btnReady.addActionListener(this);
-		btnCancel.addActionListener(this);
+        this.readyButton.addActionListener(this);
+        this.cancelButton.addActionListener(this);
 
-		addExtraComponent(new JLabel("Fonte 1"), 0, 0, 1, 1);
-		addExtraComponent(new JLabel("Coluna 1"), 1, 0, 1, 1);
-		addExtraComponent(comboBoxSource, 0, 1, 1, 1);
-		addExtraComponent(comboBoxColumn, 1, 1, 1, 1);
-		addExtraComponent(new JLabel(" "), 0, 2, 1, 1);
-		addExtraComponent(new JLabel("Fonte 2"), 0, 3, 1, 1);
-		addExtraComponent(new JLabel("Coluna 2"), 1, 3, 1, 1);
-		addExtraComponent(comboBoxSource2, 0, 4, 1, 1);
-		addExtraComponent(comboBoxColumn2, 1, 4, 1, 1);
-		addExtraComponent(new JLabel(" "), 0, 5, 1, 1);
+        this.addExtraComponent(new JLabel("Fonte 1"), 0, 0, 1, 1);
+        this.addExtraComponent(new JLabel("Coluna 1"), 1, 0, 1, 1);
+        this.addExtraComponent(this.comboBoxSource, 0, 1, 1, 1);
+        this.addExtraComponent(this.comboBoxColumn, 1, 1, 1, 1);
+        this.addExtraComponent(new JLabel(" "), 0, 2, 1, 1);
+        this.addExtraComponent(new JLabel("Fonte 2"), 0, 3, 1, 1);
+        this.addExtraComponent(new JLabel("Coluna 2"), 1, 3, 1, 1);
+        this.addExtraComponent(this.comboBoxSource2, 0, 4, 1, 1);
+        this.addExtraComponent(this.comboBoxColumn2, 1, 4, 1, 1);
+        this.addExtraComponent(new JLabel(" "), 0, 5, 1, 1);
 
-		parent2.getColumns().stream()
-				.map(Column::getSource).distinct()
-				.forEach(comboBoxSource2::addItem);
+        this.parent2.getColumns().stream()
+            .map(Column::getSource).distinct()
+            .forEach(this.comboBoxSource2::addItem);
 
-		comboBoxSource2.addActionListener(actionEvent -> setColumns(comboBoxColumn2, comboBoxSource2, parent2));
+        this.comboBoxSource2.addActionListener(actionEvent -> this.setColumns(this.comboBoxColumn2, this.comboBoxSource2, this.parent2));
 
-		setColumns(comboBoxColumn2, comboBoxSource2, parent2);
-		setPreviousArgs();
+        this.setColumns(this.comboBoxColumn2, this.comboBoxSource2, this.parent2);
+        this.setPreviousArgs();
 
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
 
-	}
+    }
 
-	@Override
-	protected void setPreviousArgs() {
+    @Override
+    protected void setPreviousArgs() {
 
-		if(!previousArguments.isEmpty()){
+        if (!this.previousArguments.isEmpty()) {
 
-			String column1 = previousArguments.get(0);
-			String column2 = previousArguments.get(1);
+            String column1 = this.previousArguments.get(0);
+            String column2 = this.previousArguments.get(1);
 
-			String column1Name = Column.removeSource(column1);
-			String column1Source = Column.removeName(column1);
+            String column1Name = Column.removeSource(column1);
+            String column1Source = Column.removeName(column1);
 
-			String column2Name = Column.removeSource(column2);
-			String column2Source = Column.removeName(column2);
+            String column2Name = Column.removeSource(column2);
+            String column2Source = Column.removeName(column2);
 
-			comboBoxSource.setSelectedItem(column1Source);
-			comboBoxColumn.setSelectedItem(column1Name);
-			comboBoxSource2.setSelectedItem(column2Source);
-			comboBoxColumn2.setSelectedItem(column2Name);
+            this.comboBoxSource.setSelectedItem(column1Source);
+            this.comboBoxColumn.setSelectedItem(column1Name);
+            this.comboBoxSource2.setSelectedItem(column2Source);
+            this.comboBoxColumn2.setSelectedItem(column2Name);
 
+        }
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+
+        if (event.getSource() == this.readyButton) {
+
+            this.arguments.add(this.comboBoxSource.getSelectedItem() + "." + this.comboBoxColumn.getSelectedItem());
+            this.arguments.add(this.comboBoxSource2.getSelectedItem() + "." + this.comboBoxColumn2.getSelectedItem());
+            this.onReadyButtonClicked();
+
+        } else if (event.getSource() == this.cancelButton) {
+            this.closeWindow();
 		}
 
-	}
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == btnReady) {
-
-			arguments.add(comboBoxSource.getSelectedItem()+"."+comboBoxColumn.getSelectedItem());
-			arguments.add(comboBoxSource2.getSelectedItem()+"."+comboBoxColumn2.getSelectedItem());
-			btnReady();
-
-		} else if (e.getSource() == btnCancel)
-			closeWindow();
-
-	}
-
-	protected void closeWindow() {
-		dispose();
-	}
+    protected void closeWindow() {
+        this.dispose();
+    }
 }

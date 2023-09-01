@@ -1,8 +1,13 @@
 package operations.binary;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.mxgraph.model.mxCell;
+
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import entities.utils.cells.CellUtils;
 import enums.OperationErrorType;
 import exceptions.tree.TreeException;
 import operations.IOperator;
@@ -11,53 +16,50 @@ import operations.OperationErrorVerifier;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.NestedLoopJoin;
 
-import java.util.List;
-
 public class CartesianProduct implements IOperator {
 
-	public CartesianProduct() {
+    public CartesianProduct() {
 
-	}
+    }
 
-	public void executeOperation(mxCell jCell, List<String> arguments) {
+    public void executeOperation(mxCell jCell, List<String> arguments) {
+		Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
-		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
+		if (optionalCell.isEmpty()) return;
 
-		OperationErrorType error = null;
+		OperationCell cell = (OperationCell) optionalCell.get();
+        OperationErrorType error = null;
 
-		try {
+        try {
+            error = OperationErrorType.NO_PARENT;
+            OperationErrorVerifier.hasParent(cell);
 
-			error = OperationErrorType.NO_PARENT;
-			OperationErrorVerifier.hasParent(cell);
-			
-			error = OperationErrorType.NO_TWO_PARENTS;
-			OperationErrorVerifier.twoParents(cell);
-			
-			error = OperationErrorType.PARENT_ERROR;
-			OperationErrorVerifier.noParentError(cell);
+            error = OperationErrorType.NO_TWO_PARENTS;
+            OperationErrorVerifier.twoParents(cell);
 
-			error = OperationErrorType.SAME_SOURCE;
-			OperationErrorVerifier.haveDifferentSources(cell.getParents().get(0), cell.getParents().get(1));
+            error = OperationErrorType.PARENT_ERROR;
+            OperationErrorVerifier.noParentError(cell);
 
-			error = null;
-			
-		} catch (TreeException e) {
+            error = OperationErrorType.SAME_SOURCE;
+            OperationErrorVerifier.haveDifferentSources(cell.getParents().get(0), cell.getParents().get(1));
 
-			cell.setError(error);
+            error = null;
 
-		}
-		
-		if(error != null) return;
-		
-		Cell parentCell1 = cell.getParents().get(0);
-		Cell parentCell2 = cell.getParents().get(1);
+        } catch (TreeException exception) {
+            cell.setError(error);
+        }
 
-		Operator operator1 = parentCell1.getOperator();
-		Operator operator2 = parentCell2.getOperator();
+        if (error != null) return;
 
-		Operator readyOperator = new NestedLoopJoin(operator1, operator2, (t1, t2) -> true);
+        Cell parentCell1 = cell.getParents().get(0);
+        Cell parentCell2 = cell.getParents().get(1);
 
-		Operation.operationSetter(cell, "  X  ", List.of(), readyOperator);
+        Operator operator1 = parentCell1.getOperator();
+        Operator operator2 = parentCell2.getOperator();
 
-	}
+        Operator readyOperator = new NestedLoopJoin(operator1, operator2, (t1, t2) -> true);
+
+        Operation.operationSetter(cell, "  X  ", List.of(), readyOperator);
+
+    }
 }

@@ -1,115 +1,122 @@
 package entities;
 
 import entities.cells.Cell;
+
 import enums.ColumnDataType;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Column{
+public class Column {
 
-	private final String name;
-	private final String source;
-	private final ColumnDataType type;
-	private final Boolean pk;
-	
-	public Column(String name, String tableName, ColumnDataType type, boolean pk) {
-		
-		this.name = name;
-		this.source = tableName;
-		this.type = type;
-		this.pk = pk;
-		
-	}
+    private final String name;
 
-	public Column(String name, String tableName, ColumnDataType type) {
+    private final String source;
 
-		this(name, tableName, type, false);
+    private final ColumnDataType dataType;
 
-	}
+    private final Boolean isPrimaryKey;
 
-	public Column(String name, String tableName){
+    public Column(String name, String source, ColumnDataType dataType, boolean isPrimaryKey) {
+        this.name = name;
+        this.source = source;
+        this.dataType = dataType;
+        this.isPrimaryKey = isPrimaryKey;
+    }
 
-		this(name, tableName, ColumnDataType.NONE, false);
+    public Column(String name, String source, ColumnDataType dataType) {
+        this(name, source, dataType, false);
+    }
 
-	}
-	
-	public String getSource() {
-		return source;
-	}
-	
-	public String getName() {
-		return name;
-	}
+    public Column(String name, String source) {
+        this(name, source, ColumnDataType.NONE, false);
+    }
 
-	public String getSourceAndName(){
-		return source+"."+name;
-	}
-	
-	public ColumnDataType getType() {
-		return type;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public Boolean isPK() {
-		return pk;
-	}
+    public String getSource() {
+        return this.source;
+    }
 
-	public static String removeSource(String txt){
-		if(!hasSource(txt)) return txt;
-		return txt.substring(txt.indexOf(".")+1);
-	}
+    public String getSourceAndName() {
+        return String.format("%s.%s", this.source, this.name);
+    }
 
-	public static String removeName(String txt){
-		if(!hasSource(txt)) return txt;
-		return txt.substring(0, txt.indexOf("."));
-	}
+    public ColumnDataType getDataType() {
+        return this.dataType;
+    }
 
-	public static List<String> sourceAndNameTogether(List<Column> columns){
-		return columns.stream().map(Column::getSourceAndName).toList();
-	}
+    public Boolean getIsPrimaryKey() {
+        return this.isPrimaryKey;
+    }
 
-	public static boolean columnEquals(String columnAndSource, String column, String source){
+    public static String removeName(String sourceAndName) {
+        if (!hasSource(sourceAndName)) return sourceAndName;
 
-		return removeName(columnAndSource).equals(source) && removeSource(columnAndSource).equals(column);
+        return sourceAndName.substring(0, sourceAndName.indexOf("."));
+    }
 
-	}
+    public static String removeSource(String sourceAndName) {
+        if (!hasSource(sourceAndName)) return sourceAndName;
 
-	public static boolean columnEquals(Column c, String column, String source){
+        return sourceAndName.substring(sourceAndName.indexOf(".") + 1);
+    }
 
-		return c.getSource().equals(source) && c.getName().equals(column);
+    public static List<String> getSourcesAndNames(List<Column> columns) {
+        if (columns == null) return new ArrayList<>();
 
-	}
+        return columns.stream().map(Column::getSourceAndName).toList();
+    }
 
-	public static String putSource(String columnName, String sourceName){
-		if(hasSource(columnName))
-			return columnName;
-		return sourceName+"."+columnName;
-	}
+    public static boolean equals(String sourceAndName, String source, String name) {
+        if (sourceAndName == null || source == null || name == null) return false;
 
-	public static List<String> putSource(List<String> args, Cell parentCell){
+        return removeName(sourceAndName).equals(source) && removeSource(sourceAndName).equals(name);
+    }
 
-		return args.stream().map(x -> Column.putSource(x, parentCell.getSourceTableNameByColumn(x))).toList();
+    public static boolean equals(Column column, String source, String name) {
+        if (column == null || source == null || name == null) return false;
 
-	}
+        return column.getSource().equals(source) && column.getName().equals(name);
+    }
 
-	public static boolean hasSource(String txt){
-		return txt.contains(".") && txt.indexOf(".") > 0 && txt.indexOf(".") < txt.length() - 1;
-	}
+    public static String composeSourceAndName(String source, String name) {
+        if (hasSource(name)) return name;
 
-	@Override
-	public boolean equals(Object obj) {
+        return String.format("%s.%s", source, name);
+    }
 
-		if(obj instanceof Column columnObj)
-			return getSource().equals(columnObj.getSource()) && getName().equals(columnObj.getName());
+    public static List<String> composeSourceAndName(List<String> names, Cell parent) {
+        return names
+            .stream()
+            .map(name -> composeSourceAndName(parent.getSourceNameByColumnName(name), name))
+            .toList();
+    }
 
-		return super.equals(obj);
-	}
+    public static boolean hasSource(String sourceAndName) {
+        return
+            sourceAndName != null &&
+            sourceAndName.contains(".") &&
+            sourceAndName.indexOf(".") > 0 &&
+            sourceAndName.indexOf(".") < sourceAndName.length() - 1;
+    }
 
-	@Override
-	public String toString(){
-		return "Nome:" + getName() + "--" +
-				"Source:" + getSource() + "--" +
-				"Tipo:" + getType() + "--" +
-				"PK:" + isPK();
-	}
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Column column) {
+            return this.getSource().equals(column.getSource()) && this.getName().equals(column.getName());
+        }
 
+        return super.equals(object);
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "Source: %s -- Nome: %s -- Tipo: %s -- Primary key: %s",
+            this.name, this.source, this.dataType, this.isPrimaryKey
+        );
+    }
 }

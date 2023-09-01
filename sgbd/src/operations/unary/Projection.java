@@ -1,70 +1,72 @@
 package operations.unary;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.mxgraph.model.mxCell;
+
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import entities.utils.cells.CellUtils;
+
 import enums.OperationErrorType;
+
 import exceptions.tree.TreeException;
+
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
+
 import sgbd.query.Operator;
 import sgbd.query.unaryop.SelectColumnsOperator;
 
-import java.util.List;
-
 public class Projection implements IOperator {
 
-	public Projection() {
+    public void executeOperation(mxCell jCell, List<String> arguments) {
+        Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
-	}
+        if (optionalCell.isEmpty()) return;
 
-	public void executeOperation(mxCell jCell, List<String> arguments) {
+        OperationCell cell = (OperationCell) optionalCell.get();
+        OperationErrorType errorType = null;
 
-		OperationCell cell = (OperationCell) Cell.getCells().get(jCell);
+        try {
+            errorType = OperationErrorType.NO_PARENT;
+            OperationErrorVerifier.hasParent(cell);
 
-		OperationErrorType error = null;
+            errorType = OperationErrorType.NO_ONE_PARENT;
+            OperationErrorVerifier.oneParent(cell);
 
-		try {
+            errorType = OperationErrorType.PARENT_ERROR;
+            OperationErrorVerifier.noParentError(cell);
 
-			error = OperationErrorType.NO_PARENT;
-			OperationErrorVerifier.hasParent(cell);
-			
-			error = OperationErrorType.NO_ONE_PARENT;
-			OperationErrorVerifier.oneParent(cell);
-			
-			error = OperationErrorType.PARENT_ERROR;
-			OperationErrorVerifier.noParentError(cell);
-			
-			error = OperationErrorType.NULL_ARGUMENT;
-			OperationErrorVerifier.noNullArgument(arguments);
+            errorType = OperationErrorType.NULL_ARGUMENT;
+            OperationErrorVerifier.noNullArgument(arguments);
 
-			error = OperationErrorType.EMPTY_ARGUMENT;
-			OperationErrorVerifier.noEmptyArgument(arguments);
+            errorType = OperationErrorType.EMPTY_ARGUMENT;
+            OperationErrorVerifier.noEmptyArgument(arguments);
 
-			error = OperationErrorType.PARENT_WITHOUT_COLUMN;
-			OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourceNames(), arguments);
-			error = null;
+            errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
+            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourcesAndNames(), arguments);
 
-		} catch (TreeException e) {
+            errorType = null;
+        } catch (TreeException exception) {
+            cell.setError(errorType);
+        }
 
-			cell.setError(error);
+		if (errorType != null) return;
 
-		}
-		
-		if(error != null) return;
+        Cell parentCell = cell.getParents().get(0);
 
-		Cell parentCell = cell.getParents().get(0);
+        List<String> fixedArguments = Column.composeSourceAndName(arguments, parentCell);
 
-		List<String> argumentsFixed = Column.putSource(arguments, parentCell);
+        Operator operator = parentCell.getOperator();
 
-		Operator operator = parentCell.getOperator();
+        Operator readyOperator = new SelectColumnsOperator(operator, fixedArguments);
 
-		Operator readyOperator = new SelectColumnsOperator(operator, argumentsFixed);
+        String operationName = String.format("%s %s", cell.getType().symbol, fixedArguments);
 
-		Operation.operationSetter(cell, cell.getType().SYMBOL + "  " + argumentsFixed, argumentsFixed, readyOperator);
-
-	}
-
+        Operation.operationSetter(cell, operationName, fixedArguments, readyOperator);
+    }
 }

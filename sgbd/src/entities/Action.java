@@ -3,72 +3,78 @@ package entities;
 import com.mxgraph.model.mxCell;
 
 import entities.cells.TableCell;
+
 import enums.OperationType;
 
-public class Action {
+import java.io.Serializable;
 
-	public static class CurrentAction {
+public class Action implements Serializable {
+
+	public static class CurrentAction implements Serializable {
 
 		public enum ActionType {
-			EDGE, CREATE_OPERATOR_CELL, DELETE_CELL, DELETE_ALL, PRINT_SCREEN, SHOW_CELL, IMPORT_FILE, CREATE_TABLE,
-			OPEN_CONSOLE, OPEN_TEXT_EDITOR, NONE
+			CREATE_EDGE, CREATE_OPERATOR_CELL, DELETE_CELL, DELETE_ALL, PRINT_SCREEN, SHOW_CELL,
+			IMPORT_FILE, CREATE_TABLE_CELL, OPEN_CONSOLE, OPEN_TEXT_EDITOR, NONE
 		}
 
-		private final ActionType action;
+		private final ActionType type;
 
-		public CurrentAction(ActionType action) {
-			this.action = action;
+		public CurrentAction(ActionType type) {
+			this.type = type;
 		}
 
 		public ActionType getType() {
-			return action;
+			return this.type;
 		}
-
 	}
 
 	public static class CreateCellAction extends CurrentAction {
 
 		private final String name;
+
 		private final String style;
 
-		public CreateCellAction(ActionType action, String name, String style) {
+		public CreateCellAction(ActionType actionType, String name, String style) {
+			super(actionType);
 
-			super(action);
-
-			if (action != ActionType.CREATE_OPERATOR_CELL && action != ActionType.CREATE_TABLE
-					&& action != ActionType.IMPORT_FILE)
-				throw new IllegalArgumentException("ActionType:" + action + " inválido para um CreateCellAction");
+			if (
+				actionType != ActionType.CREATE_OPERATOR_CELL &&
+				actionType != ActionType.CREATE_TABLE_CELL &&
+				actionType != ActionType.IMPORT_FILE
+			) {
+				throw new IllegalArgumentException(
+					String.format("ActionType: %s inválido para um CreateCellAction", actionType)
+				);
+			}
 
 			this.name = name;
 			this.style = style;
-
 		}
 
 		public String getName() {
-			return name;
+			return this.name;
 		}
 
 		public String getStyle() {
-			return style;
+			return this.style;
 		}
-
 	}
 
-	public static class CreateOperationAction extends CreateCellAction {
+	public static class CreateOperationCellAction extends CreateCellAction {
 
-		private final OperationType type;
+		private final OperationType operationType;
+
 		private mxCell parent;
 
-		public CreateOperationAction(OperationType type) {
+		public CreateOperationCellAction(OperationType operationType) {
+			super(ActionType.CREATE_OPERATOR_CELL, operationType.getFormattedDisplayName(), operationType.displayName);
 
-			super(ActionType.CREATE_OPERATOR_CELL, type.getDisplayNameAndSymbol(), type.DISPLAY_NAME);
-			this.type = type;
-			parent = null;
-
+			this.operationType = operationType;
+			this.parent = null;
 		}
 
 		public OperationType getOperationType() {
-			return type;
+			return this.operationType;
 		}
 
 		public void setParent(mxCell parent) {
@@ -76,33 +82,26 @@ public class Action {
 		}
 
 		public mxCell getParent() {
-
-			if (hasParent())
-				return parent;
-			return null;
+			return this.parent;
 		}
 
 		public boolean hasParent() {
-			return parent != null;
+			return this.parent != null;
 		}
-
 	}
 
-	public static class CreateTableAction extends CreateCellAction {
+	public static class CreateTableCellAction extends CreateCellAction {
 
 		private final TableCell tableCell;
 
-		public CreateTableAction(ActionType action, String name, String style, TableCell tableCell) {
+		public CreateTableCellAction(ActionType actionType, String name, String style, TableCell tableCell) {
+			super(actionType, name, style);
 
-			super(action, name, style);
 			this.tableCell = tableCell;
-
 		}
 
 		public TableCell getTableCell() {
-			return tableCell;
+			return this.tableCell;
 		}
-
 	}
-
 }

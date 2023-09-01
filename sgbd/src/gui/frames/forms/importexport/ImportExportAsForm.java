@@ -9,32 +9,31 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public abstract class ImportExportAsForm extends FormBase implements ActionListener{
+public abstract class ImportExportAsForm extends FormBase implements ActionListener {
 
-	protected JButton btnCsv = new JButton("Arquivo csv");
-	protected JLabel lblText = new JLabel();
-	protected JPanel centerPane = new JPanel();
+    protected JButton csvButton;
 
+    protected JLabel textLabel;
 
-	public ImportExportAsForm() {
+    protected JPanel centerPanel;
 
-		super((Window) null);
+    public ImportExportAsForm() {
+        super(null);
 
-		initializeGUI();
-		
-	}
+        this.csvButton = new JButton("Arquivo CSV");
+        this.textLabel = new JLabel();
+        this.centerPanel = new JPanel();
 
-	private void initializeGUI() {
-		
-		contentPane.removeAll();
+        this.initializeGUI();
+    }
 
-		contentPane.add(centerPane, BorderLayout.CENTER);
+    private void initializeGUI() {
+        this.contentPanel.removeAll();
+        this.contentPanel.add(this.centerPanel, BorderLayout.CENTER);
 
-		btnCsv.addActionListener(this);
-		
-		centerPane.add(lblText);
-		centerPane.add(btnCsv);
+        this.csvButton.addActionListener(this);
 
-	}
-
+        this.centerPanel.add(this.textLabel);
+        this.centerPanel.add(this.csvButton);
+    }
 }

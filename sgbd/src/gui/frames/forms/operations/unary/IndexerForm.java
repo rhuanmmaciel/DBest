@@ -46,8 +46,8 @@ public class IndexerForm extends OperationForm implements IOperationForm, Action
                 checkBtnReady();
             }
         });
-        btnCancel.addActionListener(this);
-        btnReady.addActionListener(this);
+        cancelButton.addActionListener(this);
+        readyButton.addActionListener(this);
 
         setPreviousArgs();
 
@@ -69,13 +69,13 @@ public class IndexerForm extends OperationForm implements IOperationForm, Action
 
         checkBtnReady();
 
-        if(actionEvent.getSource() == btnReady){
+        if(actionEvent.getSource() == readyButton){
             arguments.add(txtField.getText());
-            btnReady();
+            onReadyButtonClicked();
 
         }
 
-        if(btnCancel == actionEvent.getSource()){
+        if(cancelButton == actionEvent.getSource()){
             closeWindow();
         }
 
@@ -88,7 +88,7 @@ public class IndexerForm extends OperationForm implements IOperationForm, Action
     @Override
     public void checkBtnReady() {
 
-        btnReady.setEnabled(!txtField.getText().isBlank());
+        readyButton.setEnabled(!txtField.getText().isBlank());
         updateToolTipTxt();
 
     }
@@ -103,7 +103,7 @@ public class IndexerForm extends OperationForm implements IOperationForm, Action
 
         UIManager.put("ToolTip.foreground", Color.RED);
 
-        btnReady.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
+        readyButton.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
 
     }
 

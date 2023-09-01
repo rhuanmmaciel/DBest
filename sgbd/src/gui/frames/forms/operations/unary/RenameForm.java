@@ -41,8 +41,8 @@ public class RenameForm extends OperationForm implements IOperationForm, ActionL
 
         centerPanel.removeAll();
 
-        btnReady.addActionListener(this);
-        btnCancel.addActionListener(this);
+        readyButton.addActionListener(this);
+        cancelButton.addActionListener(this);
 
         textArea.setPreferredSize(new Dimension(300,300));
         textArea.setEditable(false);
@@ -84,7 +84,7 @@ public class RenameForm extends OperationForm implements IOperationForm, ActionL
 
     private void verifyConditions(){
         btnAdd.setEnabled(!txtFieldNewName.getText().isBlank() && !txtFieldNewName.getText().isEmpty());
-        btnReady.setEnabled(!textArea.getText().isEmpty());
+        readyButton.setEnabled(!textArea.getText().isEmpty());
     }
 
     @Override
@@ -121,15 +121,15 @@ public class RenameForm extends OperationForm implements IOperationForm, ActionL
 
             textArea.setText("");
 
-        } else if(e.getSource() == btnCancel){
+        } else if(e.getSource() == cancelButton){
 
             closeWindow();
 
-        }else if (e.getSource() == btnReady) {
+        }else if (e.getSource() == readyButton) {
 
             arguments.addAll(List.of(textArea.getText().split("\n")));
             arguments.remove(0);
-            btnReady();
+            onReadyButtonClicked();
 
         }
 

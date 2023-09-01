@@ -5,188 +5,147 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxICell;
 
 import controller.MainController;
+
 import entities.Tree;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import entities.utils.cells.CellUtils;
 
 public class TreeUtils {
-	
-	public static Map<mxCell, Cell> cells = Cell.getCells();
-	public static Map<Integer, Tree> trees = MainController.getTrees();
-	
-	public static void updateTreesAboveAndBelow(List<Cell> parents, OperationCell child) {
 
-		if(child == null && (parents == null || parents.isEmpty())) return;
+    private TreeUtils() {
 
-		Tree previousTree = null;
-		
-		if(child != null) {
-			
-			previousTree = child.getTree();
-			
-			Tree childTree = new Tree();
-			
-			setTreeFromLeavesToRoot(child.getAllSourceTables(), childTree);
+    }
 
-			recalculateContent(child);
-			
-		}
+    private static final Map<mxICell, Cell> cells = CellUtils.getActiveCells();
 
-		deleteTree(previousTree);
+    private static final Map<Integer, Tree> trees = MainController.getTrees();
 
-		if(parents != null && !parents.isEmpty()) {
-			
-			for(Cell parent : parents) {
-				
-				previousTree = parent.getTree();
-				Tree parentTree = new Tree();
-				setTreeFromLeavesToRoot(parent.getAllSourceTables(), parentTree);
-				deleteTree(previousTree);
+    public static void updateTreesAboveAndBelow(List<Cell> parents, OperationCell child) {
+        if (child == null && (parents == null || parents.isEmpty())) return;
 
-			}
-			
-		}
-		
+        Tree previousTree = null;
 
-	}
-	
-	private static void setTreeFromLeavesToRoot(List<Cell> level, Tree tree) {
-		
-		while(!level.isEmpty()) {
-			
-			Set<Cell> children = new HashSet<>();
+        if (child != null) {
+            previousTree = child.getTree();
 
-			for (Cell cellAux : level) {
+            Tree childTree = new Tree();
 
-				cellAux.setNewTree(tree);
-				
-				if (cellAux.hasChild()) {
+            setTreeFromLeavesToRoot(child.getSources(), childTree);
 
-					children.add(cellAux.getChild());
+            recalculateContent(child);
+        }
 
-				}
+        deleteTree(previousTree);
 
-			}
+        if (parents != null && !parents.isEmpty()) {
+            for (Cell parent : parents) {
+                previousTree = parent.getTree();
+                Tree parentTree = new Tree();
+                setTreeFromLeavesToRoot(parent.getSources(), parentTree);
+                deleteTree(previousTree);
+            }
+        }
+    }
 
-			level.clear();
-			level.addAll(children);
-			
-		}
-		
-	}
-	
-	public static void updateTree(Cell cell) {
-		
-		Set<Tree> trees = new HashSet<>();
-		
-		Tree tree = cell.getTree();
-		
-		List<Cell> level = cell.getAllSourceTables();
-		
-		while (!level.isEmpty()) {
-			
-			Set<Cell> children = new HashSet<>();
+    private static void setTreeFromLeavesToRoot(List<Cell> level, Tree tree) {
+        while (!level.isEmpty()) {
+            Set<Cell> children = new HashSet<>();
 
-			for (Cell cellAux : level) {
+            for (Cell cell : level) {
+                cell.setTree(tree);
 
-				trees.add(cellAux.getTree());
+                if (cell.hasChild()) {
+                    children.add(cell.getChild());
+                }
+            }
 
-				cellAux.setNewTree(tree);
-				
-				if (cellAux.hasChild()) {
+            level.clear();
+            level.addAll(children);
+        }
+    }
 
-					children.add(cellAux.getChild());
+    public static void updateTree(Cell cell) {
+        Set<Tree> trees = new HashSet<>();
+        Tree tree = cell.getTree();
+        List<Cell> level = cell.getSources();
 
-				}
+        while (!level.isEmpty()) {
+            Set<Cell> children = new HashSet<>();
 
-			}
+            for (Cell auxCell : level) {
+                trees.add(auxCell.getTree());
 
-			level.clear();
-			level.addAll(children);
+                auxCell.setTree(tree);
 
-		}
+                if (auxCell.hasChild()) {
+                    children.add(auxCell.getChild());
+                }
+            }
 
-		for(Tree treeAux : trees) updateTree(treeAux);
-		
-	}
+            level.clear();
+            level.addAll(children);
+        }
 
-	private static void updateTree(Tree tree) {
-		
-//		System.out.println("update tree" + tree);
-		
-		int counter = 0;
-		
-		for (Cell cellAux : cells.values()) {
-			if (cellAux.getTree() != null && cellAux.getTree().equals(tree))
-				counter++;
-		}
+        for (Tree auxTree : trees) {
+            updateTree(auxTree);
+        }
+    }
 
-		if (counter <= 0)
-			trees.remove(tree.getIndex());
+    private static void updateTree(Tree tree) {
+        int counter = 0;
 
-	}
-	
-	public static void deleteTree(Tree tree) {
-		
-		if(tree == null) return;
-	
-		trees.remove(tree.getIndex());
-	
-	}
+        for (Cell cell : cells.values()) {
+            if (cell.getTree() != null && cell.getTree().equals(tree)) {
+                counter++;
+            }
+        }
 
-	public static void recalculateContent(Tree tree) {
+        if (counter <= 0) {
+            trees.remove(tree.getIndex());
+        }
+    }
 
-		if(tree != null) {
-			
-			List<Cell> level = tree.getLeaves();
-	
-			while (!level.isEmpty()) {
-	
-				Set<Cell> children = new HashSet<>();
-	
-				for (Cell cell : level) {
-	
-					if (cell instanceof OperationCell operationCell) {
-	
-						operationCell.updateOperation();
-	
-					}
-	
-					if (cell.hasChild()) {
-	
-						children.add(cell.getChild());
-	
-					}
-	
-				}
-	
-				level.clear();
-				level.addAll(children);
-	
-			}
-			
-		}
-		
-	}
-	
-	public static void recalculateContent(OperationCell cell) {
+    public static void deleteTree(Tree tree) {
+        if (tree == null) return;
 
-		if(cell != null) {
-			
-			OperationCell currentCell = cell;
-			
-			while(currentCell != null){
+        trees.remove(tree.getIndex());
+    }
 
-				currentCell.updateOperation();
-				currentCell = currentCell.getChild();
+    public static void recalculateContent(Tree tree) {
+        if (tree == null) return;
 
-			}
-			
-		}
-		
-	}
+        List<Cell> level = tree.getLeaves();
 
+        while (!level.isEmpty()) {
+            Set<Cell> children = new HashSet<>();
+
+            for (Cell cell : level) {
+                if (cell instanceof OperationCell operationCell) {
+                    operationCell.updateOperation();
+                }
+
+                if (cell.hasChild()) {
+                    children.add(cell.getChild());
+                }
+            }
+
+            level.clear();
+            level.addAll(children);
+        }
+    }
+
+    public static void recalculateContent(OperationCell cell) {
+        if (cell == null) return;
+
+        OperationCell currentCell = cell;
+
+        while (currentCell != null) {
+            currentCell.updateOperation();
+            currentCell = currentCell.getChild();
+        }
+    }
 }

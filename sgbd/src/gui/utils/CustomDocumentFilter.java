@@ -19,7 +19,7 @@ public class CustomDocumentFilter extends DocumentFilter {
 
 	private final StyledDocument styledDocument;
 	private final String[] tokens = { "import", "as", "this" };
-	private final String[] operations = Arrays.stream(OperationType.values()).map(x -> x.NAME).toArray(String[]::new);
+	private final String[] operations = Arrays.stream(OperationType.values()).map(x -> x.name).toArray(String[]::new);
 	private final JTextPane textPane;
 
 	private final StyleContext styleContext = StyleContext.getDefaultStyleContext();

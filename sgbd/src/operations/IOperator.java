@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface IOperator {
 
-		void executeOperation(mxCell jCell, List<String> arguments);
-	
+	void executeOperation(mxCell jCell, List<String> arguments);
 }

@@ -2,19 +2,17 @@ package enums;
 
 public enum FileType {
 
-	CSV("csv", ".csv"),
-	EXCEL("excel", ".xlsx"),
-	SQL("sql", ".sql"),
-	FYI("fyi", ".dat");
+    CSV   ("csv", ".csv"),
+    EXCEL ("excel", ".xlsx"),
+    SQL   ("sql", ".sql"),
+    FYI   ("fyi", ".dat");
 
-	FileType(String id, String extension){
+    public final String id;
 
-		this.ID = id;
-		this.EXTENSION = extension;
+    public final String extension;
 
-	}
-
-	public final String EXTENSION;
-	public final String ID;
-
+    FileType(String id, String extension) {
+        this.id = id;
+        this.extension = extension;
+    }
 }

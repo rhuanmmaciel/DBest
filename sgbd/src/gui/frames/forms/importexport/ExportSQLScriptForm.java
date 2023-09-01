@@ -1,6 +1,5 @@
 package gui.frames.forms.importexport;
 
-import controller.MainController;
 import database.TableUtils;
 import database.TuplesExtractor;
 import entities.Column;
@@ -12,7 +11,6 @@ import gui.utils.JTableUtils;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,7 +44,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
     private final Cell cell;
     private boolean isForm = true;
 
-    public ExportSQLScriptForm(Cell cell, SQLScriptInf inf, AtomicReference<Boolean> exitReference){
+    public ExportSQLScriptForm(Cell cell, SQLScriptInf inf, AtomicReference<Boolean> exitReference) {
 
         super(null);
         setModal(true);
@@ -69,7 +67,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
     }
 
-    private void initGUI(){
+    private void initGUI() {
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -96,10 +94,10 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
     }
 
-    private void initForm(){
+    private void initForm() {
 
-        contentPane.add(btnChangeScreen, BorderLayout.NORTH);
-        contentPane.add(formPane, BorderLayout.CENTER);
+        contentPanel.add(btnChangeScreen, BorderLayout.NORTH);
+        contentPanel.add(formPane, BorderLayout.CENTER);
 
         addComponent(new JLabel("Nome do Database: "), 0, 0, 1, 1);
         addComponent(txtFieldDatabaseName, 1, 0, 1, 1);
@@ -109,10 +107,12 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
             public void insertUpdate(DocumentEvent documentEvent) {
                 checkBtnReady();
             }
+
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
                 checkBtnReady();
             }
+
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
                 checkBtnReady();
@@ -127,10 +127,12 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
             public void insertUpdate(DocumentEvent documentEvent) {
                 checkBtnReady();
             }
+
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
                 checkBtnReady();
             }
+
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
                 checkBtnReady();
@@ -145,7 +147,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
         addComponent(new JLabel("  Pode possuir valor null  "), 3, 3, 1, 1);
 
         int i = 4;
-        for(String columnName : columnNames.subList(0, columnNames.size()-1)){
+        for (String columnName : columnNames.subList(0, columnNames.size() - 1)) {
 
             addComponent(new JLabel(columnName), 0, i, 1, 1);
             addComponent(newColumnNameTxtFields.get(columnName), 1, i, 1, 1);
@@ -178,8 +180,8 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
     private void loadTable() {
 
-        contentPane.remove(formPane);
-        contentPane.add(tablePane, BorderLayout.CENTER);
+        contentPanel.remove(formPane);
+        contentPanel.add(tablePane, BorderLayout.CENTER);
 
         pack();
         revalidate();
@@ -187,10 +189,10 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
     }
 
-    private void loadForm(){
+    private void loadForm() {
 
-        contentPane.remove(tablePane);
-        contentPane.add(formPane, BorderLayout.CENTER);
+        contentPanel.remove(tablePane);
+        contentPanel.add(formPane, BorderLayout.CENTER);
 
         pack();
         revalidate();
@@ -198,20 +200,20 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
     }
 
-    private void initBottom(){
+    private void initBottom() {
 
-        btnCancel.addActionListener(this);
-        btnReady.addActionListener(this);
+        cancelButton.addActionListener(this);
+        readyButton.addActionListener(this);
 
     }
 
-    private void loadJTable(){
+    private void loadJTable() {
 
         boolean columnsPut = false;
 
-        for(Map<String, String> row : TuplesExtractor.getAllRows(cell.getOperator(), true)){
+        for (Map<String, String> row : TuplesExtractor.getAllRows(cell.getOperator(), true)) {
 
-            if(!columnsPut){
+            if (!columnsPut) {
 
                 for (String inf : row.keySet()) {
 
@@ -226,10 +228,12 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
                         public void insertUpdate(DocumentEvent documentEvent) {
                             checkBtnReady();
                         }
+
                         @Override
                         public void removeUpdate(DocumentEvent documentEvent) {
                             checkBtnReady();
                         }
+
                         @Override
                         public void changedUpdate(DocumentEvent documentEvent) {
                             checkBtnReady();
@@ -260,7 +264,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
         setCheckBoxesEnabled();
 
         JTableUtils.preferredColumnWidthByValues(table, 0);
-        for(int i = 1; i < table.getColumnCount(); i++)
+        for (int i = 1; i < table.getColumnCount(); i++)
             JTableUtils.preferredColumnWidthByColumnName(table, i);
 
         table.getColumnModel().moveColumn(model.getColumnCount() - 1, 0);
@@ -278,19 +282,19 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
     }
 
-    private void setCheckBoxesEnabled(){
+    private void setCheckBoxesEnabled() {
 
-        for(Map.Entry<String, JCheckBox> checkBox : nullCheckBoxes.entrySet()){
+        for (Map.Entry<String, JCheckBox> checkBox : nullCheckBoxes.entrySet()) {
 
-                List<String> columnData = new ArrayList<>();
-                int index = columnNames.indexOf(checkBox.getKey());
+            List<String> columnData = new ArrayList<>();
+            int index = columnNames.indexOf(checkBox.getKey());
 
-                for (Vector<Object> column : content)
-                    columnData.add(Objects.toString(column.get(index)));
+            for (Vector<Object> column : content)
+                columnData.add(Objects.toString(column.get(index)));
 
-                boolean canBeNotNull = !TableUtils.hasNull(columnData.subList(3, columnData.size()));
-                checkBox.getValue().setEnabled(canBeNotNull);
-                checkBox.getValue().setSelected(!canBeNotNull);
+            boolean canBeNotNull = !TableUtils.hasNull(columnData.subList(3, columnData.size()));
+            checkBox.getValue().setEnabled(canBeNotNull);
+            checkBox.getValue().setSelected(!canBeNotNull);
 
         }
 
@@ -314,12 +318,12 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
     public void actionPerformed(ActionEvent actionEvent) {
         checkBtnReady();
 
-        if(btnCancel == actionEvent.getSource()){
+        if (cancelButton == actionEvent.getSource()) {
             exitReference.set(true);
             closeWindow();
         }
 
-        if(btnReady == actionEvent.getSource()){
+        if (readyButton == actionEvent.getSource()) {
 
             databaseName.append(txtFieldDatabaseName.getText());
             tableName.append(txtFieldTableName.getText());
@@ -328,9 +332,9 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
         }
 
-        if(btnChangeScreen == actionEvent.getSource()){
+        if (btnChangeScreen == actionEvent.getSource()) {
 
-            if(isForm){
+            if (isForm) {
 
                 isForm = false;
                 btnChangeScreen.setText("Voltar");
@@ -351,8 +355,8 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
     public void checkBtnReady() {
 
         List<List<String>> columnsSelected = new ArrayList<>();
-        for(Map.Entry<String, JCheckBox> checkBox : pkCheckBoxes.entrySet())
-            if(checkBox.getValue().isSelected()) {
+        for (Map.Entry<String, JCheckBox> checkBox : pkCheckBoxes.entrySet())
+            if (checkBox.getValue().isSelected()) {
 
                 List<String> columnData = new ArrayList<>();
                 int index = columnNames.indexOf(checkBox.getKey());
@@ -367,7 +371,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
         boolean everyColumnHasName = newColumnNameTxtFields.values().stream().noneMatch(x -> x.getText().isBlank());
         boolean canBePK = columnsSelected.isEmpty() || TableUtils.canBePrimaryKey(columnsSelected);
 
-        btnReady.setEnabled(canBePK && !txtFieldDatabaseName.getText().isBlank() &&
+        readyButton.setEnabled(canBePK && !txtFieldDatabaseName.getText().isBlank() &&
                 !txtFieldTableName.getText().isBlank() && everyColumnHasName);
 
     }
@@ -377,12 +381,17 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
     }
 
-    public record SQLScriptInf(StringBuilder databaseName, StringBuilder tableName,
-                               Map<String, JTextField> newColumnNameTxtFields, Map<String, JCheckBox> pkCheckBoxes,
-                               Map<String, JCheckBox> nullCheckBoxes, JCheckBox checkBoxCreateDatabase,
-                               StringBuilder additionalCommand, Vector<String> columnNames,
-                               Vector<Vector<Object>> content){
+    public record SQLScriptInf(
+        StringBuilder databaseName,
+        StringBuilder tableName,
+        Map<String, JTextField> newColumnNameTxtFields,
+        Map<String, JCheckBox> pkCheckBoxes,
+        Map<String, JCheckBox> nullCheckBoxes,
+        JCheckBox checkBoxCreateDatabase,
+        StringBuilder additionalCommand,
+        Vector<String> columnNames,
+        Vector<Vector<Object>> content
+    ) {
 
     }
-
 }

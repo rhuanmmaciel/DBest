@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
@@ -54,7 +51,7 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
 
 		setLocationRelativeTo(null);
 		
-		setContentPane(contentPane);
+		setContentPane(contentPanel);
 
 		lblColumnName = new JLabel("Nome da coluna");
 		

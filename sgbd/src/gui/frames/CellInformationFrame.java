@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Window;
 
+import java.util.Optional;
+
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -16,178 +18,179 @@ import com.mxgraph.model.mxCell;
 
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import entities.utils.cells.CellUtils;
 
-@SuppressWarnings("serial")
 public class CellInformationFrame extends JDialog {
 
-	private mxCell jCell;
+    private mxCell jCell;
 
-	public CellInformationFrame(mxCell jCell) {
+    public CellInformationFrame(mxCell jCell) {
+        super((Window) null);
+        setModal(true);
 
-		super((Window) null);
-		setModal(true);
+        this.jCell = jCell;
 
-		this.jCell = jCell;
+        initGUI();
+    }
 
-		initGUI();
+    private void initGUI() {
+        setModal(true);
 
-	}
+        JPanel mainPane = new JPanel();
+        mainPane.setLayout(new GridBagLayout());
 
-	private void initGUI() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
 
-		setModal(true);
+        JPanel cellGroupPanel = new JPanel();
+        cellGroupPanel.setLayout(new GridBagLayout());
+        cellGroupPanel.setBackground(Color.WHITE);
+        cellGroupPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-	    JPanel mainPane = new JPanel();
-	    mainPane.setLayout(new GridBagLayout());
+        JLabel lblCellGroupTitle = new JLabel("Célula:");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        cellGroupPanel.add(lblCellGroupTitle, gbc);
 
-	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.anchor = GridBagConstraints.WEST;
-	    gbc.insets = new Insets(5, 5, 5, 5);
+        JLabel lblCellId = new JLabel("Id: ");
+        JLabel lblCellIdInf = new JLabel(jCell.getId());
 
-	    JPanel cellGroupPanel = new JPanel();
-	    cellGroupPanel.setLayout(new GridBagLayout());
-	    cellGroupPanel.setBackground(Color.WHITE);
-	    cellGroupPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        cellGroupPanel.add(lblCellId, gbc);
 
-	    JLabel lblCellGroupTitle = new JLabel("Célula:");
-	    gbc.gridx = 0;
-	    gbc.gridy = 0;
-	    cellGroupPanel.add(lblCellGroupTitle, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        cellGroupPanel.add(lblCellIdInf, gbc);
 
-	    JLabel lblCellId = new JLabel("Id: ");
-	    JLabel lblCellIdInf = new JLabel(jCell.getId());
+        Optional<Cell> optionalCell = CellUtils.getActiveCell(this.jCell);
 
-	    gbc.gridx = 0;
-	    gbc.gridy = 1;
-	    cellGroupPanel.add(lblCellId, gbc);
+        if (optionalCell.isEmpty()) return;
 
-	    gbc.gridx = 1;
-	    gbc.gridy = 1;
-	    cellGroupPanel.add(lblCellIdInf, gbc);
-	    
-	    Cell cell = Cell.getCells().get(jCell);
-	    
-	    JLabel lblCellName = new JLabel("Nome: ");
-	    JLabel lblCellNameInf = new JLabel(cell.getName());
+        Cell cell = optionalCell.get();
 
-	    gbc.gridx = 0;
-	    gbc.gridy = 2;
-	    cellGroupPanel.add(lblCellName, gbc);
+        JLabel lblCellName = new JLabel("Nome: ");
+        JLabel lblCellNameInf = new JLabel(cell.getName());
 
-	    gbc.gridx = 1;
-	    gbc.gridy = 2;
-	    cellGroupPanel.add(lblCellNameInf, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        cellGroupPanel.add(lblCellName, gbc);
 
-	    gbc.gridx = 0;
-	    gbc.gridy = 0;
-	    mainPane.add(cellGroupPanel, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        cellGroupPanel.add(lblCellNameInf, gbc);
 
-	    if (cell.hasParents()) {
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        mainPane.add(cellGroupPanel, gbc);
 
-	    	JPanel parentGroupPanel = new JPanel();
-	        parentGroupPanel.setLayout(new GridBagLayout());
-	        parentGroupPanel.setBackground(Color.WHITE);
-	        parentGroupPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        if (cell.hasParents()) {
 
-	        JLabel lblParentGroupTitle = new JLabel("Pai:");
-	        gbc.gridx = 0;
-	        gbc.gridy = 0;
-	        parentGroupPanel.add(lblParentGroupTitle, gbc);
+            JPanel parentGroupPanel = new JPanel();
+            parentGroupPanel.setLayout(new GridBagLayout());
+            parentGroupPanel.setBackground(Color.WHITE);
+            parentGroupPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-	        JLabel lblParent = new JLabel("Nome: ");
-	        JLabel lblParentInf = new JLabel(cell.getParents().get(0).getName());
+            JLabel lblParentGroupTitle = new JLabel("Pai:");
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            parentGroupPanel.add(lblParentGroupTitle, gbc);
 
-	        gbc.gridx = 0;
-	        gbc.gridy = 1;
-	        parentGroupPanel.add(lblParent, gbc);
+            JLabel lblParent = new JLabel("Nome: ");
+            JLabel lblParentInf = new JLabel(cell.getParents().get(0).getName());
 
-	        gbc.gridx = 1;
-	        gbc.gridy = 1;
-	        parentGroupPanel.add(lblParentInf, gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            parentGroupPanel.add(lblParent, gbc);
 
-	        JLabel lblParentId = new JLabel("ID: " + cell.getParents().get(0).getJGraphCell().getId());
+            gbc.gridx = 1;
+            gbc.gridy = 1;
+            parentGroupPanel.add(lblParentInf, gbc);
 
-	        gbc.gridx = 0;
-	        gbc.gridy = 2;
-	        parentGroupPanel.add(lblParentId, gbc);
+            JLabel lblParentId = new JLabel("ID: " + cell.getParents().get(0).getJCell().getId());
 
-	        gbc.gridx = 0;
-	        gbc.gridy = 1;
-	        mainPane.add(parentGroupPanel, gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            parentGroupPanel.add(lblParentId, gbc);
 
-	        if (cell.getParents().size() == 2) {
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            mainPane.add(parentGroupPanel, gbc);
 
-	            JPanel otherParentGroupPanel = new JPanel();
-	            otherParentGroupPanel.setLayout(new GridBagLayout());
-	            otherParentGroupPanel.setBackground(Color.WHITE);
-	            otherParentGroupPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            if (cell.getParents().size() == 2) {
 
-	            JLabel lblOtherParentGroupTitle = new JLabel("2º Pai:");
-	            lblParentGroupTitle.setText("1º Pai"); 
-	            gbc.gridx = 0;
-	            gbc.gridy = 0;
-	            otherParentGroupPanel.add(lblOtherParentGroupTitle, gbc);
+                JPanel otherParentGroupPanel = new JPanel();
+                otherParentGroupPanel.setLayout(new GridBagLayout());
+                otherParentGroupPanel.setBackground(Color.WHITE);
+                otherParentGroupPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-	            JLabel lblOtherParent = new JLabel("Nome: ");
-	            JLabel lblOtherParentInf = new JLabel(cell.getParents().get(1).getName());
+                JLabel lblOtherParentGroupTitle = new JLabel("2º Pai:");
+                lblParentGroupTitle.setText("1º Pai");
+                gbc.gridx = 0;
+                gbc.gridy = 0;
+                otherParentGroupPanel.add(lblOtherParentGroupTitle, gbc);
 
-	            gbc.gridx = 0;
-	            gbc.gridy = 1;
-	            otherParentGroupPanel.add(lblOtherParent, gbc);
+                JLabel lblOtherParent = new JLabel("Nome: ");
+                JLabel lblOtherParentInf = new JLabel(cell.getParents().get(1).getName());
 
-	            gbc.gridx = 1;
-	            gbc.gridy = 1;
-	            otherParentGroupPanel.add(lblOtherParentInf, gbc);
+                gbc.gridx = 0;
+                gbc.gridy = 1;
+                otherParentGroupPanel.add(lblOtherParent, gbc);
 
-	            JLabel lblOtherParentId = new JLabel("ID: " + cell.getParents().get(1).getJGraphCell().getId());
+                gbc.gridx = 1;
+                gbc.gridy = 1;
+                otherParentGroupPanel.add(lblOtherParentInf, gbc);
 
-	            gbc.gridx = 0;
-	            gbc.gridy = 2;
-	            otherParentGroupPanel.add(lblOtherParentId, gbc);
+                JLabel lblOtherParentId = new JLabel("ID: " + cell.getParents().get(1).getJCell().getId());
 
-	            gbc.gridx = 0;
-	            gbc.gridy = 2;
-	            mainPane.add(otherParentGroupPanel, gbc);
-	        }
-	    }
-	    
-	    if (cell.hasChild()) {
+                gbc.gridx = 0;
+                gbc.gridy = 2;
+                otherParentGroupPanel.add(lblOtherParentId, gbc);
 
-	    	JPanel childGroupPanel = new JPanel();
-	        childGroupPanel.setLayout(new GridBagLayout());
-	        childGroupPanel.setBackground(Color.WHITE);
-	        childGroupPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                gbc.gridx = 0;
+                gbc.gridy = 2;
+                mainPane.add(otherParentGroupPanel, gbc);
+            }
+        }
 
-	        JLabel lblChildGroupTitle = new JLabel("Filho:");
-	        gbc.gridx = 0;
-	        gbc.gridy = 0;
-	        childGroupPanel.add(lblChildGroupTitle, gbc);
+        if (cell.hasChild()) {
 
-	        JLabel lblChild = new JLabel("Nome: ");
-	        JLabel lblChildInf = new JLabel(cell.getChild().getName());
+            JPanel childGroupPanel = new JPanel();
+            childGroupPanel.setLayout(new GridBagLayout());
+            childGroupPanel.setBackground(Color.WHITE);
+            childGroupPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-	        gbc.gridx = 0;
-	        gbc.gridy = 1;
-	        childGroupPanel.add(lblChild, gbc);
+            JLabel lblChildGroupTitle = new JLabel("Filho:");
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            childGroupPanel.add(lblChildGroupTitle, gbc);
 
-	        gbc.gridx = 1;
-	        gbc.gridy = 1;
-	        childGroupPanel.add(lblChildInf, gbc);
+            JLabel lblChild = new JLabel("Nome: ");
+            JLabel lblChildInf = new JLabel(cell.getChild().getName());
 
-	        JLabel lblChildId = new JLabel("ID: " + cell.getChild().getJGraphCell().getId());
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            childGroupPanel.add(lblChild, gbc);
 
-	        gbc.gridx = 0;
-	        gbc.gridy = 2;
-	        childGroupPanel.add(lblChildId, gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 1;
+            childGroupPanel.add(lblChildInf, gbc);
 
-	        gbc.gridx = 0;
-	        gbc.gridy = 3;
-	        mainPane.add(childGroupPanel, gbc);
-	    }
-	    
-	    if(cell.hasError()) {
-	    	
-	    	JPanel errorPanel = new JPanel();
+            JLabel lblChildId = new JLabel("ID: " + cell.getChild().getJCell().getId());
+
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            childGroupPanel.add(lblChildId, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            mainPane.add(childGroupPanel, gbc);
+        }
+
+        if (cell.hasError()) {
+
+            JPanel errorPanel = new JPanel();
             errorPanel.setLayout(new GridBagLayout());
             errorPanel.setBackground(Color.WHITE);
             errorPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -202,15 +205,14 @@ public class CellInformationFrame extends JDialog {
             gbc.gridx = 0;
             gbc.gridy = 4;
             mainPane.add(errorPanel, gbc);
-	    	
-	    }
 
-	    getContentPane().add(mainPane, BorderLayout.CENTER);
-	    pack();
+        }
 
-		setLocationRelativeTo(null);
+        getContentPane().add(mainPane, BorderLayout.CENTER);
+        pack();
 
-	    setVisible(true);
-	}
+        setLocationRelativeTo(null);
 
+        setVisible(true);
+    }
 }

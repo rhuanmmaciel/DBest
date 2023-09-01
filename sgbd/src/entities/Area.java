@@ -1,5 +1,5 @@
 package entities;
 
-public record Area(Coordinates c1, Coordinates c2) {
+public record Area(Coordinates coordinates1, Coordinates coordinates2) {
 
 }

@@ -1,0 +1,8 @@
+
+9
+java:S30665"#Lower the visibility of this field.(¾¥—
+Š
+java:S1845+"tRename field "name" to prevent any misunderstanding/clash with method "name" defined in superclass "java.lang.Enum".(³Êøü
+:
+java:S23867"Make this member "protected".(¦Æª—8¼ÛÀ¹œ1
+[	java:S107="AConstructor has 8 parameters, which is greater than 7 authorized.(ù£ÕÙúÿÿÿÿ

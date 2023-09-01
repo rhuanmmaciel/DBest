@@ -1,4 +1,4 @@
-package entities.utils;
+package entities.utils.cells;
 
 import java.awt.event.MouseEvent;
 
@@ -27,6 +27,8 @@ import entities.cells.FyiTableCell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
 
+import entities.utils.TreeUtils;
+
 import enums.FileType;
 
 import gui.frames.DataFrame;
@@ -36,11 +38,119 @@ import sgbd.table.Table;
 
 public class CellUtils extends MainController {
 
+    public static void activateInactiveJCell(mxCell inactiveJCell) {
+        if (inactiveJCell == null) return;
+
+        Optional<Cell> optionalInactiveCell = CellRepository.getInactiveCell(inactiveJCell);
+        List<Cell> parents = new ArrayList<>();
+        OperationCell child = null;
+
+        if (optionalInactiveCell.isPresent()) {
+            Cell cell = optionalInactiveCell.get();
+
+            if (cell.hasChild()) {
+                cell.getChild().addParent(cell);
+            }
+
+            if (cell instanceof OperationCell operationCell) {
+                parents.addAll(operationCell.getParents());
+
+                for (Cell parent : operationCell.getParents()) {
+                    parent.setChild(operationCell);
+                }
+            }
+        } else {
+            Optional<Cell> optionalChild = CellRepository.getInactiveCell(inactiveJCell.getTarget());
+
+            if (optionalChild.isPresent()) {
+                child = (OperationCell) optionalChild.get();
+            }
+
+            Optional<Cell> optionalParent = CellRepository.getInactiveCell(inactiveJCell.getSource());
+
+            if (optionalParent.isPresent()) {
+                Cell parent = optionalParent.get();
+
+                parents.add(parent);
+                parent.setChild(child);
+            }
+        }
+
+        TreeUtils.updateTreesAboveAndBelow(parents, child);
+
+        mxGraph graph = MainFrame.getGraph();
+
+        graph.getModel().beginUpdate();
+
+        try {
+            graph.addCell(inactiveJCell);
+            optionalInactiveCell.ifPresent(cell -> CellRepository.addCell(inactiveJCell, cell));
+        } finally {
+            graph.getModel().endUpdate();
+        }
+
+        graph.refresh();
+    }
+
+    public static void desactivateActiveJCell(mxCell activeJCell) {
+        if (activeJCell == null) return;
+
+        Optional<Cell> optionalActiveCell = CellRepository.getActiveCell(activeJCell);
+        List<Cell> parents = new ArrayList<>();
+        OperationCell child = null;
+
+        if (optionalActiveCell.isPresent()) {
+            Cell cell = optionalActiveCell.get();
+
+            if (cell.hasChild()) {
+                child = cell.getChild();
+                child.removeParent(cell);
+            }
+
+            if (cell instanceof OperationCell operationCell) {
+                parents.addAll(operationCell.getParents());
+
+                for (Cell parent : operationCell.getParents()) {
+                    parent.setChild(null);
+                }
+            }
+        } else {
+            Optional<Cell> optionalChild = CellRepository.getActiveCell(activeJCell.getTarget());
+
+            if (optionalChild.isPresent()) {
+                child = (OperationCell) optionalChild.get();
+            }
+
+            Optional<Cell> optionalParent = CellRepository.getActiveCell(activeJCell.getSource());
+
+            if (optionalParent.isPresent()) {
+                Cell parent = optionalParent.get();
+
+                parents.add(parent);
+                parent.setChild(null);
+            }
+        }
+
+        TreeUtils.updateTreesAboveAndBelow(parents, child);
+
+        mxGraph graph = MainFrame.getGraph();
+
+        graph.getModel().beginUpdate();
+
+        try {
+            graph.removeCells(new Object[]{activeJCell}, true);
+            CellRepository.removeCell(activeJCell);
+        } finally {
+            graph.getModel().endUpdate();
+        }
+
+        graph.refresh();
+    }
+
     public static void removeCell(mxCell jCell) {
         if (jCell == null) return;
 
         mxGraph graph = MainFrame.getGraph();
-
         Optional<Cell> optionalCell = CellRepository.getActiveCell(jCell);
         List<Cell> parents = new ArrayList<>();
         OperationCell child = null;
@@ -98,13 +208,12 @@ public class CellUtils extends MainController {
         graph.refresh();
     }
 
-    public static void deleteMovableEdge(AtomicReference<mxCell> invisibleCellReference) {
-        removeCell(invisibleCellReference.get());
-
-        invisibleCellReference.set(null);
+    public static void removeCell(AtomicReference<mxCell> jCell) {
+        removeCell(jCell.get());
+        jCell.set(null);
     }
 
-    public static void addMovableEdge(MouseEvent mouseEvent, AtomicReference<mxCell> invisibleCellReference, mxCell cell) {
+    public static void addMovableEdge(MouseEvent mouseEvent, AtomicReference<mxCell> invisibleCellReference, mxCell jCell) {
         invisibleCellReference
             .set((mxCell) MainFrame
                 .getGraph()
@@ -114,7 +223,7 @@ public class CellUtils extends MainController {
                 )
             );
 
-        MainFrame.getGraph().insertEdge(cell, null, "", cell, invisibleCellReference.get());
+        MainFrame.getGraph().insertEdge(jCell, null, "", jCell, invisibleCellReference.get());
 
         invisibleCellReference.get().setGeometry(new mxGeometry(0, 0, 0, 0));
     }

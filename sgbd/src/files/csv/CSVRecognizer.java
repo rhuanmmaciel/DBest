@@ -3,141 +3,135 @@ package files.csv;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.nio.file.Path;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import controller.ConstantController;
-import controller.MainController;
-import exceptions.InvalidCsvException;
 
-public class CsvRecognizer {
+import exceptions.InvalidCSVException;
 
-	public static CsvData importCsv(Path path, char separator, char stringDelimiter, int beginIndex)
-			throws InvalidCsvException {
+public class CSVRecognizer {
 
-		List<List<String>> dataList = new ArrayList<>();
-		List<String> columnsNameList = new ArrayList<>();
+    public static CSVData importCSV(Path path, char separator, char stringDelimiter, int beginIndex)
+        throws InvalidCSVException {
 
-		try (BufferedReader br = new BufferedReader(new FileReader(path.toFile()))) {
+        List<List<String>> rows = new ArrayList<>();
+        List<String> columnNames = new ArrayList<>();
 
-			for (int i = 1; i < beginIndex; i++)
-				br.readLine();
+        try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
+            for (int i = 1; i < beginIndex; i++) {
+                reader.readLine();
+            }
 
-			String line = br.readLine();
+            String line = reader.readLine();
 
-			isLineNull(line, "O csv não possui nenhuma informação");
-			
-			recognizeItems(line, columnsNameList, stringDelimiter, separator);
+            isLineNull(line, "O arquivo CSV não possui nenhuma informação");
 
-			isColumnEmpty(columnsNameList);
+            recognizeItems(line, columnNames, stringDelimiter, separator);
 
-			line = br.readLine();
+            isColumnEmpty(columnNames);
 
-			isLineNull(line, "O csv possui apenas uma linha");
+            line = reader.readLine();
 
-			int size = columnsNameList.size();
+            isLineNull(line, "O arquivo CSV possui apenas uma linha");
 
-			while (line != null) {
+            int size = columnNames.size();
 
-				if (!line.isBlank() || !line.isEmpty()) {
+            while (line != null) {
+                if (!line.isBlank() || !line.isEmpty()) {
+                    List<String> tuple = new ArrayList<>();
 
-					List<String> tuple = new ArrayList<>();
+                    recognizeItems(line, tuple, stringDelimiter, separator);
 
-					recognizeItems(line, tuple, stringDelimiter, separator);
+                    while (tuple.size() > size) {
+                        tuple.remove(tuple.size() - 1);
+                    }
 
-					while (tuple.size() > size)
-						tuple.remove(tuple.size() - 1);
+                    while (tuple.size() < size) {
+                        tuple.add(ConstantController.NULL);
+                    }
 
-					while (tuple.size() < size)
-						tuple.add(ConstantController.NULL);
+                    rows.add(tuple);
+                }
 
-					dataList.add(tuple);
+                line = reader.readLine();
+            }
+        } catch (IOException exception) {
+            throw new InvalidCSVException("Não foi possível ler o arquivo CSV");
+        }
 
-				}
-				line = br.readLine();
+        Vector<Vector<Object>> dataArray = new Vector<>();
 
-			}
+        for (List<String> row : rows) {
+            Vector<Object> rowVector = new Vector<>(row);
 
-		} catch (IOException ignored) {
+            dataArray.add(rowVector);
+        }
 
-			throw new InvalidCsvException("Não foi possível ler o csv");
+        return new CSVData(rows, columnNames, dataArray, new Vector<>(columnNames));
+    }
 
-		}
+    private static void recognizeItems(String line, List<String> tuple, char stringDelimiter, char separator) {
+        boolean stringDelimiterFound = false;
 
-		Vector<Vector<Object>> dataArray = new Vector<>();
-		
-		for(List<String> row : dataList) {
+        StringBuilder data = new StringBuilder();
 
-			Vector<Object> rowVector = new Vector<>(row);
-			
-			dataArray.add(rowVector);
-			
-		}
+        for (char character : line.toCharArray()) {
+            stringDelimiterFound = (character == stringDelimiter) != stringDelimiterFound;
 
-		return new CsvData(dataList, columnsNameList, dataArray, new Vector<>(columnsNameList));
+            if (character != separator || stringDelimiterFound) {
+                data.append(character);
+            } else {
+                String inf = data.toString().strip();
 
-	}
-	
-	private static void recognizeItems(String line, List<String> tuple, char stringDelimiter, char separator) {
-		
-		boolean stringDelimiterFound = false;
-		
-		StringBuilder data = new StringBuilder();
-		
-		for (char c : line.toCharArray()) {
+                if (isString(inf, stringDelimiter)) {
+                    inf = inf.substring(1, inf.length() - 1);
+                }
 
-			stringDelimiterFound = (c == stringDelimiter) != stringDelimiterFound;
+                tuple.add(inf);
 
-			if (c != separator || stringDelimiterFound)
-				data.append(c);
+                data = new StringBuilder();
+            }
+        }
 
-			else {
+        if (!data.isEmpty()) {
+            String inf = data.toString().strip();
 
-				String inf = data.toString().strip();
+            if (isString(inf, stringDelimiter)) {
+                inf = inf.substring(1, inf.length() - 1);
+            }
 
-				if (isString(inf, stringDelimiter))
-					inf = inf.substring(1, inf.length() - 1);
+            tuple.add(inf);
+        }
+    }
 
-				tuple.add(inf);
-				data = new StringBuilder();
+    private static boolean isString(String data, char stringDelimiter) {
+        return
+            data.startsWith(String.valueOf(stringDelimiter)) &&
+            data.endsWith(String.valueOf(stringDelimiter)) &&
+            data.length() > 1;
+    }
 
-			}
+    private static void isLineNull(String line, String txt) throws InvalidCSVException {
+        if (line == null) {
+            throw new InvalidCSVException(txt);
+        }
+    }
 
-		}
+    private static void isColumnEmpty(List<String> columns) throws InvalidCSVException {
+        if (columns.contains("") || columns.contains(null)) {
+            throw new InvalidCSVException("Toda coluna do arquivo CSV deve possuir um nome");
+        }
+    }
 
-		if (!data.isEmpty()) {
+    public record CSVData(
+        List<List<String>> dataList, List<String> columnNamesList,
+        Vector<Vector<Object>> dataArray, Vector<String> columnNamesArray
+    ) {
 
-			String inf = data.toString().strip();
-
-			if (isString(inf, stringDelimiter))
-				inf = inf.substring(1, inf.length() - 1);
-
-			tuple.add(inf);
-
-		}
-		
-	}
-
-	private static boolean isString(String data, char stringDelimiter) {
-		return data.startsWith(String.valueOf(stringDelimiter)) && data.endsWith(String.valueOf(stringDelimiter))
-				&& data.length() > 1;
-	}
-
-	private static void isLineNull(String line, String txt) throws InvalidCsvException {
-		if (line == null)
-			throw new InvalidCsvException(txt);
-	}
-
-	private static void isColumnEmpty(List<String> columns) throws InvalidCsvException {
-		if (columns.contains("") || columns.contains(null))
-			throw new InvalidCsvException("O csv deve possuir nome para todas as colunas");
-	}
-
-	public record CsvData(List<List<String>> dataList, List<String> columnsNameList, Vector<Vector<Object>> dataArray,
-			Vector<String> columnsNameArray) {
-
-	}
-
+    }
 }

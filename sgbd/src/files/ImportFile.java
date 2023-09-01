@@ -1,5 +1,19 @@
- package files;
+package files;
 
+import com.mxgraph.model.mxCell;
+import controller.MainController;
+import database.TableCreator;
+import entities.Column;
+import entities.cells.FyiTableCell;
+import entities.cells.TableCell;
+import enums.FileType;
+import files.csv.CSVInfo;
+import gui.frames.forms.importexport.CSVRecognizerForm;
+import gui.frames.main.MainFrame;
+import sgbd.table.Table;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -8,249 +22,217 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import com.mxgraph.model.mxCell;
-
-import controller.MainController;
-import database.TableCreator;
-import entities.Column;
-import entities.cells.FyiTableCell;
-import entities.cells.TableCell;
-import enums.FileType;
-import files.csv.CsvInfo;
-import gui.frames.forms.importexport.CsvRecognizerForm;
-import gui.frames.main.MainFrame;
-import sgbd.table.Table;
-
 public class ImportFile {
 
-	private final JFileChooser fileUpload = new JFileChooser();
-	private AtomicReference<Boolean> exitReference;
-	private final StringBuilder tableName = new StringBuilder();
-	private final Map<Integer, Map<String, String>> content = new LinkedHashMap<>();
-	private final List<Column> columns = new ArrayList<>();
-	private FileType fileType;
-	private TableCell tableCell;
+    private final JFileChooser fileUpload = new JFileChooser();
 
-	{
-		this.tableCell = null;
-	}
+    private AtomicReference<Boolean> exitReference;
 
-	public ImportFile(FileType fileType, AtomicReference<Boolean> exitReference) {
+    private final StringBuilder tableName = new StringBuilder();
 
-		this.exitReference = exitReference;
-		this.fileType = fileType;
-		
-		fileUpload.setCurrentDirectory(MainController.getLastDirectory());
+    private final Map<Integer, Map<String, String>> content = new LinkedHashMap<>();
 
-		importFile();
+    private final List<Column> columns = new ArrayList<>();
 
-	}
-	
-	public ImportFile(String fileName, mxCell jCell) {
-		
-		header(fileName, jCell);
-		
-	}
-	
-	private void importFile() {
-		
-		FileNameExtensionFilter filter;
+    private FileType fileType;
 
-		switch (fileType) {
-	
-		case CSV -> filter = new FileNameExtensionFilter("CSV files", "csv");
-		case EXCEL -> filter = new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
-		case FYI -> filter = new FileNameExtensionFilter("Headers files", "head");
-		case SQL -> throw new UnsupportedOperationException("Unimplemented case: " + fileType);
-		default -> throw new IllegalArgumentException("Unexpected value: " + fileType);
+    private TableCell tableCell;
 
-		}
+    {
+        this.tableCell = null;
+    }
 
-		fileUpload.setFileFilter(filter);
+    public ImportFile(FileType fileType, AtomicReference<Boolean> exitReference) {
+        this.exitReference = exitReference;
+        this.fileType = fileType;
+        this.fileUpload.setCurrentDirectory(MainController.getLastDirectory());
 
-		if (fileUpload.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        this.importFile();
+    }
 
-			MainController.setLastDirectory(new File(fileUpload.getCurrentDirectory().getAbsolutePath()));
-			
-			switch(fileType) {
-			
-			case CSV -> {
-				CsvInfo info = csv();
+    public ImportFile(String fileName, mxCell jCell) {
+        this.header(fileName, jCell);
+    }
 
-				if(!exitReference.get()) {
+    private void importFile() {
+        FileNameExtensionFilter filter;
 
-					TableCreator tableCreator = new TableCreator(tableName.toString(), columns, info, false);
-					tableCell = tableCreator.getTableCell();
+        switch (this.fileType) {
+            case CSV -> filter = new FileNameExtensionFilter("CSV files", "csv");
+            case EXCEL -> filter = new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
+            case FYI -> filter = new FileNameExtensionFilter("Headers files", "head");
+            case SQL -> throw new UnsupportedOperationException(String.format("Unimplemented case: %s", this.fileType));
+            default -> throw new IllegalArgumentException(String.format("Unexpected value: %s", this.fileType));
+        }
 
-				}
+        this.fileUpload.setFileFilter(filter);
 
-			}
-			case EXCEL -> excel();
-			case FYI -> {
+        if (this.fileUpload.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            MainController.setLastDirectory(new File(this.fileUpload.getCurrentDirectory().getAbsolutePath()));
 
-				AtomicReference<Table> table = new AtomicReference<>();
-				header(table);
+            switch (this.fileType) {
+                case CSV -> {
+                    CSVInfo info = this.csv();
 
-				if (!exitReference.get()) {
+                    if (!this.exitReference.get()) {
+                        TableCreator tableCreator = new TableCreator(this.tableName.toString(), this.columns, info, false);
+                        this.tableCell = tableCreator.getTableCell();
+                    }
+                }
+                case EXCEL -> this.excel();
+                case FYI -> {
+                    AtomicReference<Table> table = new AtomicReference<>();
+                    this.header(table);
 
-					String fileName = fileUpload.getSelectedFile().getName().endsWith(".head")  ?
-							fileUpload.getSelectedFile().getName().substring(0,fileUpload.getSelectedFile().getName().indexOf(".")):
-							fileUpload.getSelectedFile().getName();
+                    if (!this.exitReference.get()) {
+                        String selectedFileName = this.fileUpload.getSelectedFile().getName();
 
-					mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(MainFrame.getGraph().getDefaultParent(), null,
-							fileName, 0, 0, 80, 30, "fyi");
-					table.get().open();
-					tableCell = new FyiTableCell(jCell, fileName, "fyi", table.get());
-					
-				}
-			}
-			case SQL -> throw new UnsupportedOperationException("Unimplemented case: " + fileType);
-			default -> throw new IllegalArgumentException("Unexpected value: " + fileType);
-			
-			}
+                        String fileName = selectedFileName.endsWith(".head") ?
+                            selectedFileName.substring(0, selectedFileName.indexOf(".")) :
+                            selectedFileName;
 
-			if (!exitReference.get() && FileType.FYI != fileType && FileType.CSV != fileType) {
-				TableCreator tableCreator = new TableCreator(tableName.toString(), columns, content, false);
-				tableCell = tableCreator.getTableCell();
-			}
-			return;
-			
-		}
+                        mxCell jCell = (mxCell) MainFrame
+                            .getGraph()
+                            .insertVertex(
+                                MainFrame.getGraph().getDefaultParent(), null,
+                                fileName, 0, 0, 80, 30, "fyi"
+                            );
 
-		exitReference.set(true);
+                        table.get().open();
 
-		
-	}
+                        this.tableCell = new FyiTableCell(jCell, fileName, FileType.FYI.id, table.get());
+                    }
+                }
+                case SQL -> throw new UnsupportedOperationException(String.format("Unimplemented case: %s", this.fileType));
+                default -> throw new IllegalArgumentException(String.format("Unexpected value: %s", this.fileType));
+            }
 
-	private void header(AtomicReference<Table> table) {
+            if (!this.exitReference.get() && FileType.FYI != this.fileType && FileType.CSV != this.fileType) {
+                TableCreator tableCreator = new TableCreator(this.tableName.toString(), this.columns, this.content, false);
+                this.tableCell = tableCreator.getTableCell();
+            }
+        } else {
+            this.exitReference.set(true);
+        }
+    }
 
-		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(".head")) {
+    private void header(AtomicReference<Table> table) {
+        if (!this.fileUpload.getSelectedFile().getName().toLowerCase().endsWith(".head")) {
+            JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo .head");
+            this.exitReference.set(true);
+            return;
+        }
 
-			JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo .head");
-			exitReference.set(true);
-			return;
+        String file = this.fileUpload.getSelectedFile().getAbsolutePath();
 
-		}
+        table.set(Table.loadFromHeader(file));
+    }
 
-		String file = fileUpload.getSelectedFile().getAbsolutePath();
+    private void header(String fileName, mxCell jTableCell) {
+        AtomicReference<Table> table = new AtomicReference<>();
 
-		table.set(Table.loadFromHeader(file));
+        table.set(Table.loadFromHeader(fileName));
 
-	}
-	
-	private void header(String fileName, mxCell jTableCell) {
-		
-		AtomicReference<Table> table = new AtomicReference<>();
-		table.set(Table.loadFromHeader(fileName));
+        this.tableCell = new FyiTableCell(jTableCell, fileName.substring(0, fileName.indexOf(".")), "tabela", table.get());
+    }
 
-		tableCell = new FyiTableCell(jTableCell, fileName.substring(0, fileName.indexOf(".")), "tabela", table.get());
-		
-	}
+    private void excel() {
+        /*
+         * try {
+         *
+         * FileInputStream file = new
+         * FileInputStream(fileUpload.getSelectedFile().getAbsolutePath());
+         *
+         * tableName.append(fileUpload.getSelectedFile().getName().toUpperCase()
+         * .substring(0, fileUpload.getSelectedFile().getName().indexOf("."))
+         * .replaceAll("[^a-zA-Z0-9_-]", ""));
+         *
+         * XSSFWorkbook workbook = new XSSFWorkbook(file); XSSFSheet sheet =
+         * workbook.getSheetAt(0);
+         *
+         * Iterator<Row> rowIterator = sheet.iterator();
+         *
+         * Row firstRow = rowIterator.next(); Iterator<Cell> firstRowCellIterator =
+         * firstRow.cellIterator();
+         *
+         * while(firstRowCellIterator.hasNext()) {
+         *
+         * Cell cell = firstRowCellIterator.next();
+         * columnsName.add(cell.getStringCellValue().replace("\"", "").replace(" ",
+         * ""));
+         *
+         * }
+         *
+         * while (rowIterator.hasNext()) {
+         *
+         * Row row = rowIterator.next(); Iterator<Cell> cellIterator =
+         * row.cellIterator();
+         *
+         * List<String> line = new ArrayList<>();
+         *
+         * while (cellIterator.hasNext()) {
+         *
+         * Cell cell = cellIterator.next(); switch (cell.getCellType()) {
+         *
+         * case NUMERIC:
+         *
+         * line.add(String.valueOf(cell.getNumericCellValue())); break;
+         *
+         * case STRING:
+         *
+         * line.add(cell.getStringCellValue()); break;
+         *
+         * case BLANK:
+         *
+         * line.add("");
+         *
+         * case BOOLEAN: case ERROR: case FORMULA: case _NONE:
+         *
+         * default:
+         *
+         * break;
+         *
+         * } }
+         *
+         * lines.add(line);
+         *
+         * }
+         *
+         * file.close(); workbook.close();
+         *
+         * List<List<String>> aux = new ArrayList<>(); aux.add(columnsName);
+         * aux.addAll(lines);
+         *
+         * new FormFramePrimaryKey(aux, pkName, exitReference);
+         *
+         * if(!exitReference.get()) new FormFrameColumnType(columns, aux, tableName,
+         * tablesName, exitReference);
+         *
+         * } catch (IOException e) {
+         *
+         * e.printStackTrace();
+         *
+         * }
+         */
 
-	private void excel() {
-		/*
-		 * try {
-		 * 
-		 * FileInputStream file = new
-		 * FileInputStream(fileUpload.getSelectedFile().getAbsolutePath());
-		 * 
-		 * tableName.append(fileUpload.getSelectedFile().getName().toUpperCase()
-		 * .substring(0, fileUpload.getSelectedFile().getName().indexOf("."))
-		 * .replaceAll("[^a-zA-Z0-9_-]", ""));
-		 * 
-		 * XSSFWorkbook workbook = new XSSFWorkbook(file); XSSFSheet sheet =
-		 * workbook.getSheetAt(0);
-		 * 
-		 * Iterator<Row> rowIterator = sheet.iterator();
-		 * 
-		 * Row firstRow = rowIterator.next(); Iterator<Cell> firstRowCellIterator =
-		 * firstRow.cellIterator();
-		 * 
-		 * while(firstRowCellIterator.hasNext()) {
-		 * 
-		 * Cell cell = firstRowCellIterator.next();
-		 * columnsName.add(cell.getStringCellValue().replace("\"", "").replace(" ",
-		 * ""));
-		 * 
-		 * }
-		 * 
-		 * while (rowIterator.hasNext()) {
-		 * 
-		 * Row row = rowIterator.next(); Iterator<Cell> cellIterator =
-		 * row.cellIterator();
-		 * 
-		 * List<String> line = new ArrayList<>();
-		 * 
-		 * while (cellIterator.hasNext()) {
-		 * 
-		 * Cell cell = cellIterator.next(); switch (cell.getCellType()) {
-		 * 
-		 * case NUMERIC:
-		 * 
-		 * line.add(String.valueOf(cell.getNumericCellValue())); break;
-		 * 
-		 * case STRING:
-		 * 
-		 * line.add(cell.getStringCellValue()); break;
-		 * 
-		 * case BLANK:
-		 * 
-		 * line.add("");
-		 * 
-		 * case BOOLEAN: case ERROR: case FORMULA: case _NONE:
-		 * 
-		 * default:
-		 * 
-		 * break;
-		 * 
-		 * } }
-		 * 
-		 * lines.add(line);
-		 * 
-		 * }
-		 * 
-		 * file.close(); workbook.close();
-		 * 
-		 * List<List<String>> aux = new ArrayList<>(); aux.add(columnsName);
-		 * aux.addAll(lines);
-		 * 
-		 * new FormFramePrimaryKey(aux, pkName, exitReference);
-		 * 
-		 * if(!exitReference.get()) new FormFrameColumnType(columns, aux, tableName,
-		 * tablesName, exitReference);
-		 * 
-		 * } catch (IOException e) {
-		 * 
-		 * e.printStackTrace();
-		 * 
-		 * }
-		 */
+    }
 
-	}
+    private CSVInfo csv() {
+        if (!this.fileUpload.getSelectedFile().getName().toLowerCase().endsWith(".csv")) {
+            JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo CSV.");
 
-	private CsvInfo csv() {
+            this.exitReference.set(true);
 
-		if (!fileUpload.getSelectedFile().getName().toLowerCase().endsWith(".csv")) {
+            return null;
+        }
 
-			JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo CSV.");
-			exitReference.set(true);
-			return null;
+        return new CSVRecognizerForm(
+            Path.of(this.fileUpload.getSelectedFile().getAbsolutePath()), this.tableName,
+            this.columns, this.content, this.exitReference
+        ).getCSVInfo();
+    }
 
-		}
-
-		return new CsvRecognizerForm(Path.of(fileUpload.getSelectedFile().getAbsolutePath()), tableName, columns,
-				content, exitReference).getCsvInfo();
-
-
-
-	}
-	
-	public TableCell getResult() {
-		return tableCell;
-	}
-
+    public TableCell getResult() {
+        return this.tableCell;
+    }
 }

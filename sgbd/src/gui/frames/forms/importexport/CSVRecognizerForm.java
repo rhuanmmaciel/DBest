@@ -10,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.nio.file.Path;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
@@ -39,448 +41,472 @@ import javax.swing.table.TableCellRenderer;
 
 import controller.ConstantController;
 import controller.MainController;
+
 import database.TableUtils;
+
 import entities.Column;
+
 import enums.ColumnDataType;
-import exceptions.InvalidCsvException;
-import files.csv.CsvInfo;
-import files.csv.CsvRecognizer;
-import files.csv.CsvRecognizer.CsvData;
+
+import exceptions.InvalidCSVException;
+
+import files.csv.CSVInfo;
+import files.csv.CSVRecognizer;
+import files.csv.CSVRecognizer.CSVData;
+
 import gui.frames.ErrorFrame;
+
 import gui.utils.JTableUtils;
 import gui.utils.JTableUtils.CustomTableModel;
 
-public class CsvRecognizerForm extends JDialog implements ActionListener {
+public class CSVRecognizerForm extends JDialog implements ActionListener {
 
-	private final JPanel contentPane = new JPanel();
-	private final JPanel headerPanel = new JPanel();
-	private final JPanel bottomPanel = new JPanel();
-	private final JPanel mainPanel = new JPanel();
-	private final JScrollPane scrollPane = new JScrollPane();
-	private JTable jTable;
-	private DefaultTableModel model;
-	private final JButton btnCancel = new JButton("Cancelar");
-	private final JButton btnDone = new JButton("Pronto");
-	private final JTextField txtFieldStringDelimiter = new JTextField();
-	private final JTextField txtFieldOtherSeparator = new JTextField();
-	private final JTextField txtFieldTableName = new JTextField();
-	private final JSpinner spinnerFromRow = new JSpinner();
-	private final ButtonGroup separatorGroup = new ButtonGroup();
-	private final JRadioButton radioComma = new JRadioButton("Vírgula");
-	private final JRadioButton radioSemiColon = new JRadioButton("Ponto e vírgula");
-	private final JRadioButton radioSpace = new JRadioButton("Espaço");
-	private final JRadioButton radioOther = new JRadioButton("Outro: ");
+    private final JPanel contentPanel = new JPanel();
 
-	private final Map<String, JComboBox<?>> typeComboBoxes = new HashMap<>();
-	private final List<String> columnsName = new ArrayList<>();
+    private final JPanel headerPanel = new JPanel();
 
-	private CsvData csvData;
+    private final JPanel bottomPanel = new JPanel();
 
-	private final Path path;
-	private final AtomicReference<Boolean> exitReference;
-	private final StringBuilder tableName;
-	private final List<Column> columns;
-	private final Map<Integer, Map<String, String>> content;
+    private final JPanel mainPanel = new JPanel();
 
-	private final char defaultSeparator = ',';
-	private final char defaultStringDelimiter = '"';
-	private final int defaultBeginIndex = 1;
+    private final JScrollPane scrollPane = new JScrollPane();
 
-	private char separator = defaultSeparator;
-	private char stringDelimiter = defaultStringDelimiter;
-	private int beginIndex = defaultBeginIndex;
+    private JTable jTable;
 
-	public CsvRecognizerForm(Path path, StringBuilder tableName, List<Column> columns,
-							 Map<Integer, Map<String, String>> content, AtomicReference<Boolean> exitReference) {
+    private DefaultTableModel model;
 
-		super((Window) null, "Tabela csv");
-		setModal(true);
+    private final JButton cancelButton = new JButton("Cancelar");
 
-		this.exitReference = exitReference;
-		this.path = path;
-		this.columns = columns;
-		this.content = content;
-		this.tableName = tableName;
+    private final JButton doneButton = new JButton("Pronto");
 
-		addWindowListener(new WindowAdapter() {
+    private final JTextField stringDelimiterTextField = new JTextField();
 
-			public void windowClosing(WindowEvent e) {
+    private final JTextField otherSeparatorTextField = new JTextField();
 
-				exitReference.set(true);
+    private final JTextField tableNameTextField = new JTextField();
 
+    private final JSpinner fromRowSpinner = new JSpinner();
+
+    private final ButtonGroup separatorGroup = new ButtonGroup();
+
+    private final JRadioButton commaRadioButton = new JRadioButton("Vírgula");
+
+    private final JRadioButton semicolonRadioButton = new JRadioButton("Ponto e vírgula");
+
+    private final JRadioButton spaceRadioButton = new JRadioButton("Espaço");
+
+    private final JRadioButton otherRadioButton = new JRadioButton("Outro: ");
+
+    private final Map<String, JComboBox<?>> typeComboBoxes = new HashMap<>();
+
+    private final List<String> columnNames = new ArrayList<>();
+
+    private CSVData csvData;
+
+    private final Path path;
+
+    private final AtomicReference<Boolean> exitReference;
+
+    private final StringBuilder tableName;
+
+    private final List<Column> columns;
+
+    private final Map<Integer, Map<String, String>> content;
+
+    private final char defaultSeparator = ',';
+
+    private final char defaultStringDelimiter = '"';
+
+    private final int defaultBeginIndex = 1;
+
+    private char separator = this.defaultSeparator;
+
+    private char stringDelimiter = this.defaultStringDelimiter;
+
+    private int beginIndex = this.defaultBeginIndex;
+
+    public CSVRecognizerForm(
+        Path path, StringBuilder tableName, List<Column> columns,
+        Map<Integer, Map<String, String>> content, AtomicReference<Boolean> exitReference
+    ) {
+        super((Window) null, "Tabela CSV");
+
+        this.setModal(true);
+
+        this.exitReference = exitReference;
+        this.path = path;
+        this.columns = columns;
+        this.content = content;
+        this.tableName = tableName;
+
+        this.addWindowListener(new WindowAdapter() {
+
+            public void windowClosing(WindowEvent event) {
+                exitReference.set(true);
+            }
+        });
+
+        this.initializeGUI();
+    }
+
+    private void initializeGUI() {
+        this.setBounds(0, 0, ConstantController.UI_SCREEN_WIDTH, ConstantController.UI_SCREEN_HEIGHT);
+        this.setLocationRelativeTo(null);
+        this.setContentPane(this.contentPanel);
+        this.contentPanel.setLayout(new BorderLayout(0, 0));
+
+        try {
+            this.csvData = CSVRecognizer.importCSV(this.path, this.defaultSeparator, this.defaultStringDelimiter, 1);
+        } catch (InvalidCSVException exception) {
+            new ErrorFrame(exception.getMessage());
+            this.csvData = new CSVData(List.of(), List.of(), new Vector<>(), new Vector<>());
+        }
+
+        this.loadJTable();
+        this.initializeHeader();
+        this.initializeMain();
+        this.initializeBottom();
+        this.verifyReadyButton();
+        this.setVisible(true);
+    }
+
+    private void initializeHeader() {
+        this.contentPanel.add(this.headerPanel, BorderLayout.NORTH);
+        this.headerPanel.setLayout(new BoxLayout(this.headerPanel, BoxLayout.Y_AXIS));
+
+        Dimension dimension = new Dimension(1000, 50);
+
+        Box mainHeaderBox = Box.createHorizontalBox();
+        Box items = Box.createVerticalBox();
+        Box itemsPadding = Box.createHorizontalBox();
+        Box itemTableName = Box.createHorizontalBox();
+        Box itemFromRow = Box.createHorizontalBox();
+        Box itemSeparator = Box.createHorizontalBox();
+        Box itemStringDelimiter = Box.createHorizontalBox();
+
+        this.headerPanel.add(mainHeaderBox);
+
+        mainHeaderBox.add(itemsPadding);
+        mainHeaderBox.add(items);
+
+        items.add(Box.createVerticalStrut(5));
+        items.add(itemTableName);
+        items.add(itemFromRow);
+        items.add(itemSeparator);
+        items.add(itemStringDelimiter);
+        items.add(Box.createVerticalStrut(5));
+
+        itemsPadding.add(Box.createHorizontalStrut(10));
+
+        itemTableName.add(new JLabel("Nome: "));
+        itemTableName.add(this.tableNameTextField);
+
+        this.tableNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent event) {
+                CSVRecognizerForm.this.verifyReadyButton();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent event) {
+                CSVRecognizerForm.this.verifyReadyButton();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent event) {
+                CSVRecognizerForm.this.verifyReadyButton();
+            }
+        });
+
+        this.tableNameTextField.setMaximumSize(new Dimension(3000, 50));
+
+        String fileName = String.valueOf(this.path.getFileName());
+        fileName = fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf(".")) : fileName;
+
+        this.tableNameTextField.setText(fileName);
+
+        itemTableName.add(Box.createHorizontalGlue());
+        itemFromRow.add(new JLabel("Começa na linha: "));
+
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, this.jTable.getRowCount() - 2, 1);
+
+        this.fromRowSpinner.setModel(spinnerModel);
+        this.fromRowSpinner.setValue(1);
+        this.fromRowSpinner.setMaximumSize(dimension);
+        this.fromRowSpinner.addChangeListener(e -> this.updateTable());
+
+        itemFromRow.add(this.fromRowSpinner);
+        itemFromRow.add(Box.createHorizontalGlue());
+
+        itemSeparator.add(new JLabel("Separador de coluna: "));
+
+        this.commaRadioButton.setSelected(true);
+        this.separatorGroup.add(this.commaRadioButton);
+        this.separatorGroup.add(this.semicolonRadioButton);
+        this.separatorGroup.add(this.spaceRadioButton);
+        this.separatorGroup.add(this.otherRadioButton);
+        this.separatorGroup.getElements().asIterator().forEachRemaining(x -> x.addActionListener(this));
+
+        this.otherSeparatorTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent event) {
+				if (CSVRecognizerForm.this.otherRadioButton.isSelected()) {
+                    CSVRecognizerForm.this.updateTable();
+				}
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent event) {
+				if (CSVRecognizerForm.this.otherRadioButton.isSelected()) {
+                    CSVRecognizerForm.this.updateTable();
+				}
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent event) {
+				if (CSVRecognizerForm.this.otherRadioButton.isSelected()) {
+                    CSVRecognizerForm.this.updateTable();
+				}
+            }
+        });
+
+        this.otherSeparatorTextField.setMaximumSize(dimension);
+
+        itemSeparator.add(Box.createHorizontalStrut(3));
+        itemSeparator.add(this.commaRadioButton);
+        itemSeparator.add(Box.createHorizontalStrut(3));
+        itemSeparator.add(this.semicolonRadioButton);
+        itemSeparator.add(Box.createHorizontalStrut(3));
+        itemSeparator.add(this.spaceRadioButton);
+        itemSeparator.add(Box.createHorizontalStrut(3));
+        itemSeparator.add(this.otherRadioButton);
+        itemSeparator.add(this.otherSeparatorTextField);
+        itemSeparator.add(Box.createHorizontalGlue());
+
+        itemStringDelimiter.add(new JLabel("Delimitador de String: "));
+
+        this.stringDelimiterTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent event) {
+                CSVRecognizerForm.this.updateTable();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent event) {
+                CSVRecognizerForm.this.updateTable();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent event) {
+                CSVRecognizerForm.this.updateTable();
+            }
+        });
+
+        this.stringDelimiterTextField.setMaximumSize(dimension);
+        this.stringDelimiterTextField.setText(String.valueOf(this.defaultStringDelimiter));
+
+        itemStringDelimiter.add(this.stringDelimiterTextField);
+        itemStringDelimiter.add(Box.createHorizontalGlue());
+    }
+
+    private void initializeMain() {
+        this.contentPanel.add(this.mainPanel, BorderLayout.CENTER);
+
+        this.mainPanel.setLayout(new BorderLayout());
+        this.mainPanel.add(this.scrollPane);
+
+        this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        this.scrollPane.getViewport().setBackground(Color.WHITE);
+        this.scrollPane.getViewport().setPreferredSize(this.scrollPane.getPreferredSize());
+    }
+
+    private void initializeBottom() {
+        this.contentPanel.add(this.bottomPanel, BorderLayout.SOUTH);
+
+        this.bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        this.bottomPanel.add(this.cancelButton);
+        this.bottomPanel.add(this.doneButton);
+
+        this.cancelButton.addActionListener(this);
+
+        this.doneButton.addActionListener(this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        this.verifyReadyButton();
+
+        this.separatorGroup.getElements().asIterator().forEachRemaining(element -> {
+			if (event.getSource() == element) {
+                this.updateTable();
 			}
+        });
 
-		});
+        if (event.getSource() == this.cancelButton) {
+            this.dispose();
+            this.exitReference.set(true);
+        }
 
-		initializeGUI();
+        if (event.getSource() == this.doneButton) {
+            this.dispose();
+            this.setItems();
+        }
+    }
 
-	}
+    private void verifyReadyButton() {
+        boolean tableNameAlreadyExists = MainController.getTables().containsKey(this.tableNameTextField.getText().strip());
 
-	private void initializeGUI() {
+        this.doneButton.setEnabled(!tableNameAlreadyExists);
+    }
 
-		setBounds(0, 0, ConstantController.UI_WIDTH, ConstantController.UI_HEIGHT);
-		setLocationRelativeTo(null);
-		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+    private void setItems() {
+        this.tableName.append(this.tableNameTextField.getText().strip());
 
-		try {
+        for (String columnName : this.columnNames) {
+            ColumnDataType type;
 
-			csvData = CsvRecognizer.importCsv(path, defaultSeparator, defaultStringDelimiter, 1);
-
-		} catch (InvalidCsvException e) {
-
-			new ErrorFrame(e.getMessage());
-			csvData = new CsvData(List.of(), List.of(), new Vector<>(), new Vector<>());
-
-		}
-
-		loadJTable();
-		initializeHeader();
-		initializeMain();
-		initializeBottom();
-
-		verifyReadyButton();
-
-		this.setVisible(true);
-
-	}
-
-	private void initializeHeader() {
-
-		contentPane.add(headerPanel, BorderLayout.NORTH);
-		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
-		Dimension dim = new Dimension(1000, 50);
-
-		Box mainHeaderBox = Box.createHorizontalBox();
-		Box items = Box.createVerticalBox();
-		Box itemsPadding = Box.createHorizontalBox();
-		Box itemTableName = Box.createHorizontalBox();
-		Box itemFromRow = Box.createHorizontalBox();
-		Box itemSeparator = Box.createHorizontalBox();
-		Box itemStringDelimiter = Box.createHorizontalBox();
-
-		headerPanel.add(mainHeaderBox);
-		mainHeaderBox.add(itemsPadding);
-		mainHeaderBox.add(items);
-		items.add(Box.createVerticalStrut(5));
-		items.add(itemTableName);
-		items.add(itemFromRow);
-		items.add(itemSeparator);
-		items.add(itemStringDelimiter);
-		items.add(Box.createVerticalStrut(5));
-
-		itemsPadding.add(Box.createHorizontalStrut(10));
-
-		itemTableName.add(new JLabel("Nome: "));
-		itemTableName.add(txtFieldTableName);
-		txtFieldTableName.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				verifyReadyButton();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				verifyReadyButton();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				verifyReadyButton();
-			}
-		});
-		txtFieldTableName.setMaximumSize(new Dimension(3000, 50));
-		String fileName = String.valueOf(path.getFileName());
-		fileName = fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf(".")) : fileName;
-		txtFieldTableName.setText(fileName);
-		itemTableName.add(Box.createHorizontalGlue());
-
-		itemFromRow.add(new JLabel("Começa na linha: "));
-		SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, jTable.getRowCount()-2, 1);
-		spinnerFromRow.setModel(spinnerModel);
-		spinnerFromRow.setValue(1);
-		spinnerFromRow.setMaximumSize(dim);
-		spinnerFromRow.addChangeListener(e -> updateTable());
-		itemFromRow.add(spinnerFromRow);
-		itemFromRow.add(Box.createHorizontalGlue());
-
-		itemSeparator.add(new JLabel("Separador de coluna: "));
-		radioComma.setSelected(true);
-		separatorGroup.add(radioComma);
-		separatorGroup.add(radioSemiColon);
-		separatorGroup.add(radioSpace);
-		separatorGroup.add(radioOther);
-		separatorGroup.getElements().asIterator().forEachRemaining(x -> x.addActionListener(this));
-		txtFieldOtherSeparator.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				if (radioOther.isSelected())
-					updateTable();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				if (radioOther.isSelected())
-					updateTable();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				if (radioOther.isSelected())
-					updateTable();
-			}
-		});
-		txtFieldOtherSeparator.setMaximumSize(dim);
-		itemSeparator.add(Box.createHorizontalStrut(3));
-		itemSeparator.add(radioComma);
-		itemSeparator.add(Box.createHorizontalStrut(3));
-		itemSeparator.add(radioSemiColon);
-		itemSeparator.add(Box.createHorizontalStrut(3));
-		itemSeparator.add(radioSpace);
-		itemSeparator.add(Box.createHorizontalStrut(3));
-		itemSeparator.add(radioOther);
-		itemSeparator.add(txtFieldOtherSeparator);
-		itemSeparator.add(Box.createHorizontalGlue());
-
-		itemStringDelimiter.add(new JLabel("Delimitador de String: "));
-		txtFieldStringDelimiter.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				updateTable();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				updateTable();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				updateTable();
-			}
-		});
-		txtFieldStringDelimiter.setMaximumSize(dim);
-		txtFieldStringDelimiter.setText(String.valueOf(defaultStringDelimiter));
-		itemStringDelimiter.add(txtFieldStringDelimiter);
-		itemStringDelimiter.add(Box.createHorizontalGlue());
-
-	}
-
-	private void initializeMain() {
-
-		contentPane.add(mainPanel, BorderLayout.CENTER);
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.add(scrollPane);
-
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane.getViewport().setBackground(Color.WHITE);
-		scrollPane.getViewport().setPreferredSize(scrollPane.getPreferredSize());
-
-	}
-
-	private void initializeBottom() {
-		contentPane.add(bottomPanel, BorderLayout.SOUTH);
-		bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-
-		bottomPanel.add(btnCancel);
-		bottomPanel.add(btnDone);
-
-		btnCancel.addActionListener(this);
-		btnDone.addActionListener(this);
-
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		verifyReadyButton();
-
-		separatorGroup.getElements().asIterator().forEachRemaining(x -> {
-			if (e.getSource() == x)
-				updateTable();
-		});
-
-		if (e.getSource() == btnCancel) {
-
-			dispose();
-			exitReference.set(true);
-
-		}
-
-		if (e.getSource() == btnDone) {
-
-			dispose();
-
-			setItems();
-
-		}
-
-	}
-
-	private void verifyReadyButton() {
-
-		boolean tableNameAlreadyExist = MainController.getTables().containsKey(txtFieldTableName.getText().strip());
-
-		btnDone.setEnabled(!tableNameAlreadyExist);
-
-	}
-
-	private void setItems() {
-
-		tableName.append(txtFieldTableName.getText().strip());
-
-		for (String columnName : columnsName) {
-
-			ColumnDataType type;
-
-			if (typeComboBoxes.get(columnName).getSelectedItem() != null)
+			if (this.typeComboBoxes.get(columnName).getSelectedItem() != null) {
 				type = Stream.of(ColumnDataType.values())
-						.filter(x -> x.toString().equals(Objects.requireNonNull(typeComboBoxes.get(columnName).getSelectedItem()).toString()))
-						.findFirst().orElseThrow();
-
-			else
+					.filter(x -> x.toString().equals(Objects.requireNonNull(this.typeComboBoxes.get(columnName).getSelectedItem()).toString()))
+					.findFirst().orElseThrow();
+			} else {
 				type = ColumnDataType.NONE;
+			}
 
-			columns.add(new Column(columnName, txtFieldTableName.getText().strip(), type));
+            this.columns.add(new Column(columnName, this.tableNameTextField.getText().strip(), type));
+        }
 
+        for (int i = 1; i < this.jTable.getRowCount(); i++) {
+            Map<String, String> column = new HashMap<>();
+
+			for (int j = 1; j < this.jTable.getColumnCount(); j++) {
+				column.put(this.jTable.getColumnName(j), this.jTable.getValueAt(i, j).toString());
+			}
+
+            this.content.put(i, column);
+        }
+    }
+
+    private void updateTable() {
+		if (this.commaRadioButton.isSelected()) {
+            this.separator = ',';
+		} else if (this.semicolonRadioButton.isSelected()) {
+            this.separator = ';';
+		} else if (this.spaceRadioButton.isSelected()) {
+            this.separator = ' ';
+		} else if (this.otherRadioButton.isSelected()) {
+            this.separator = this.otherSeparatorTextField.getText().isEmpty() ? ' ' : this.otherSeparatorTextField.getText().charAt(0);
 		}
 
-		for (int i = 1; i < jTable.getRowCount(); i++) {
+        this.beginIndex = (int) this.fromRowSpinner.getValue();
 
-			Map<String, String> column = new HashMap<>();
-			for (int j = 1; j < jTable.getColumnCount(); j++)
-				column.put(jTable.getColumnName(j), jTable.getValueAt(i, j).toString());
+        this.stringDelimiter = this.stringDelimiterTextField.getText().isEmpty() ? '\0'
+            : this.stringDelimiterTextField.getText().charAt(0);
 
-			content.put(i, column);
+        try {
+            this.csvData = CSVRecognizer.importCSV(this.path, this.separator, this.stringDelimiter, this.beginIndex);
+        } catch (InvalidCSVException exception) {
+            new ErrorFrame(exception.getMessage());
 
-		}
+            this.csvData = new CSVData(List.of(), List.of(), new Vector<>(), new Vector<>());
+        }
 
-	}
+        this.loadJTable();
+        this.verifyReadyButton();
+        this.revalidate();
+    }
 
-	private void updateTable() {
+    private void loadJTable() {
+        this.typeComboBoxes.clear();
+        this.columnNames.clear();
 
-		if (radioComma.isSelected())
-			separator = ',';
-		else if (radioSemiColon.isSelected())
-			separator = ';';
-		else if (radioSpace.isSelected())
-			separator = ' ';
-		else if (radioOther.isSelected())
-			separator = txtFieldOtherSeparator.getText().isEmpty() ? ' ' : txtFieldOtherSeparator.getText().charAt(0);
+        this.columnNames.addAll(this.csvData.columnNamesList());
 
-		beginIndex = (int) spinnerFromRow.getValue();
+        this.model = new CustomTableModel(this.csvData.dataArray(), this.csvData.columnNamesArray());
+        this.model.insertRow(0, new Object[]{});
 
-		stringDelimiter = txtFieldStringDelimiter.getText().isEmpty() ? '\0'
-				: txtFieldStringDelimiter.getText().charAt(0);
+        List<JComboBox<?>> comboBoxes = new ArrayList<>();
 
-		try {
+        for (int i = 0; i < this.columnNames.size(); i++) {
+            List<String> columnData = new ArrayList<>();
 
-			csvData = CsvRecognizer.importCsv(path, separator, stringDelimiter, beginIndex);
+			for (int j = 0; j < this.csvData.dataArray().size() - 2; j++) {
+				columnData.add(this.csvData.dataList().get(j).get(i));
+			}
 
-		} catch (InvalidCsvException e) {
+            String[] types = TableUtils
+                .getPossiblesDataType(columnData, this.stringDelimiter).stream()
+                .map(ColumnDataType::toString).toArray(String[]::new);
 
-			new ErrorFrame(e.getMessage());
-			csvData = new CsvData(List.of(), List.of(), new Vector<>(), new Vector<>());
+            JComboBox<String> comboBox = new JComboBox<>(types);
 
-		}
+            comboBox.addActionListener(this);
+            comboBoxes.add(comboBox);
 
-		loadJTable();
-		verifyReadyButton();
-		revalidate();
+            this.typeComboBoxes.put(this.columnNames.get(i), comboBox);
+        }
 
-	}
+        this.addFirstColumn();
 
-	private void loadJTable() {
+        this.jTable = new JTable(this.model) {
 
-		typeComboBoxes.clear();
-		columnsName.clear();
-
-		columnsName.addAll(csvData.columnsNameList());
-
-		model = new CustomTableModel(csvData.dataArray(), csvData.columnsNameArray());
-		model.insertRow(0, new Object[] {});
-
-		List<JComboBox<?>> comboboxes = new ArrayList<>();
-
-		for (int i = 0; i < columnsName.size(); i++) {
-
-			List<String> columnData = new ArrayList<>();
-			for (int j = 0; j < csvData.dataArray().size() - 2; j++)
-				columnData.add(csvData.dataList().get(j).get(i));
-
-			String[] types = TableUtils.getPossiblesDataType(columnData, stringDelimiter).stream()
-					.map(ColumnDataType::toString).toArray(String[]::new);
-
-			JComboBox<String> comboBox = new JComboBox<>(types);
-			comboBox.addActionListener(this);
-
-			comboboxes.add(comboBox);
-			typeComboBoxes.put(columnsName.get(i), comboBox);
-
-		}
-
-		addFirstColumn();
-
-		jTable = new JTable(model) {
-
-			@Override
-			public TableCellRenderer getCellRenderer(int row, int column) {
-
-				if (row == 0 && column != 0)
+            @Override
+            public TableCellRenderer getCellRenderer(int row, int column) {
+				if (row == 0 && column != 0) {
 					return new DefaultTableCellRenderer() {
 
 						@Override
-						public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-								boolean hasFocus, int row, int column) {
-
-							return comboboxes.get(column - 1);
+						public Component getTableCellRendererComponent(
+                            JTable table, Object value, boolean isSelected,
+                            boolean hasFocus, int row, int column
+                        ) {
+							return comboBoxes.get(column - 1);
 						}
 					};
+				}
 
-				return super.getCellRenderer(row, column);
-			}
+                return super.getCellRenderer(row, column);
+            }
 
-			@Override
-			public TableCellEditor getCellEditor(int row, int column) {
+            @Override
+            public TableCellEditor getCellEditor(int row, int column) {
+				if (row == 0 && column != 0) {
+					return new DefaultCellEditor(comboBoxes.get(column - 1));
+				}
 
-				if (row == 0 && column != 0)
-					return new DefaultCellEditor(comboboxes.get(column - 1));
+                return super.getCellEditor(row, column);
+            }
+        };
 
-				return super.getCellEditor(row, column);
-			}
-		};
+        this.jTable.getColumnModel().moveColumn(this.model.getColumnCount() - 1, 0);
+        this.jTable.getColumnModel().getColumn(0).setResizable(false);
 
-		jTable.getColumnModel().moveColumn(model.getColumnCount() - 1, 0);
-		jTable.getColumnModel().getColumn(0).setResizable(false);
-		JTableUtils.setColumnBold(jTable, 0);
-		JTableUtils.preferredColumnWidthByValues(jTable, 0);
-		jTable.setShowHorizontalLines(true);
-		jTable.setGridColor(Color.blue);
-		jTable.setColumnSelectionAllowed(false);
-		jTable.setRowSelectionAllowed(false);
-		jTable.setCellSelectionEnabled(false);
-		JTableUtils.setNullInRed(jTable);
-		scrollPane.setViewportView(jTable);
-		((CustomTableModel) model).setRowEnabled(0, true);
+        JTableUtils.setColumnBold(this.jTable, 0);
+        JTableUtils.preferredColumnWidthByValues(this.jTable, 0);
 
-	}
+        this.jTable.setShowHorizontalLines(true);
+        this.jTable.setGridColor(Color.blue);
+        this.jTable.setColumnSelectionAllowed(false);
+        this.jTable.setRowSelectionAllowed(false);
+        this.jTable.setCellSelectionEnabled(false);
 
-	private void addFirstColumn() {
+        JTableUtils.setNullInRed(this.jTable);
 
-		model.addColumn("Nome:");
+        this.scrollPane.setViewportView(this.jTable);
 
-		model.setValueAt("Tipo:", 0, model.getColumnCount() - 1);
+        ((CustomTableModel) this.model).setRowEnabled(0, true);
+    }
 
-		for (int row = 1; row < model.getRowCount(); row++) {
-			model.setValueAt(row , row, model.getColumnCount() - 1);
-		}
+    private void addFirstColumn() {
+        this.model.addColumn("Nome:");
+        this.model.setValueAt("Tipo:", 0, this.model.getColumnCount() - 1);
 
-	}
+        for (int row = 1; row < this.model.getRowCount(); row++) {
+            this.model.setValueAt(row, row, this.model.getColumnCount() - 1);
+        }
+    }
 
-	public CsvInfo getCsvInfo(){
-
-		return new CsvInfo(separator, stringDelimiter, beginIndex, path);
-
-	}
-
+    public CSVInfo getCSVInfo() {
+        return new CSVInfo(this.separator, this.stringDelimiter, this.beginIndex, this.path);
+    }
 }
