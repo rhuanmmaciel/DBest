@@ -32,12 +32,12 @@ Este software existe com a intenção de facilitar o aprendizado das operações
 
 ## Dependências externas
 
-| Nome                                                                | Descrição                                                                        |
-| ------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| For Your Information Database (FYI Database) [:link:][fyi-database] | Utilizado como o banco de dados principal                                        |
-| ANTLR4                                       [:link:][antlr4]       | Utilizado para validar as entradas possíveis da DSL desenvolvida para o software |
-| JGraphX                                      [:link:][jgraphx]      | Utilizado para construir os nós visuais e suas conexões                          |
-| Data Faker                                   [:link:][data-faker]   | Utilizado para gerar dados e popular as tabelas criadas na ferramenta            |
+| Nome                                                         | Descrição                                                                        |
+| :----------------------------------------------------------- | :------------------------------------------------------------------------------- |
+| [For Your Information Database (FYI Database)][fyi-database] | Utilizado como o banco de dados principal                                        |
+| [ANTLR4][antlr4]                                             | Utilizado para validar as entradas possíveis da DSL desenvolvida para o software |
+| [JGraphX][jgraphx]                                           | Utilizado para construir os nós visuais e suas conexões                          |
+| [Data Faker][data-faker]                                     | Utilizado para gerar dados e popular as tabelas criadas na ferramenta            |
 
 ## Contribuições
 
