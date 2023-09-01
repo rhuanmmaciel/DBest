@@ -1,4 +1,4 @@
-<img src="./assets/images/dbest-logo.png" alt="Logo do DBest" width="128">
+<img src="./assets/images/dbest-logo.png" alt="Logo do DBest" width="256">
 
 # Database Basics for Engaging Students and Teachers (DBest)
 
