@@ -130,10 +130,12 @@ public abstract class MainFrame extends JFrame
 		editMenu.add(new JMenuItem(ConstantController.getString("menu.edit.undo")));
 		editMenu.add(new JMenuItem(ConstantController.getString("menu.edit.redo")));
 
-
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
 		menuBar.add(appearanceMenu);
+
+		menuItemImportTable.addActionListener(this);
+		menuItemImportTree.addActionListener(this);
 
 	}
 

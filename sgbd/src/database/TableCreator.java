@@ -1,5 +1,6 @@
 package database;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import entities.cells.CsvTableCell;
 import entities.cells.FyiTableCell;
 import entities.cells.TableCell;
 import enums.FileType;
+import files.FileUtils;
 import files.csv.CsvInfo;
 import gui.frames.main.MainFrame;
 import sgbd.prototype.Prototype;
@@ -61,9 +63,12 @@ public class TableCreator {
 		Header header = new Header(prototype, tableName);
 
 		header.set(Header.FILE_PATH, path.toString());
+
 		CSVTable table = new CSVTable(header, separator, stringDelimiter, beginIndex);
 		table.open();
 		table.saveHeader(tableName+FileType.HEADER.EXTENSION);
+
+		FileUtils.useTempDirectory(FileUtils.getFile(tableName+FileType.HEADER.EXTENSION));
 
 		if(mustExport){
 
@@ -93,6 +98,8 @@ public class TableCreator {
 		table.insert(rows);
 
 		table.saveHeader(tableName+FileType.HEADER.EXTENSION);
+
+		FileUtils.useTempDirectory(FileUtils.getFile(tableName+FileType.HEADER.EXTENSION));
 
 		if(mustExport){
 

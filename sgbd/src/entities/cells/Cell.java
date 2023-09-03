@@ -173,6 +173,22 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 		return width;
 	}
 
+	public boolean isFyiTableCell(){
+		return this instanceof FyiTableCell;
+	}
+
+	public boolean isCsvTableCell(){
+		return this instanceof CsvTableCell;
+	}
+
+	public boolean isTableCell(){
+		return this instanceof TableCell;
+	}
+
+	public boolean isOperationCell(){
+		return this instanceof OperationCell;
+	}
+
 	@Override
 	public String toString() {
 

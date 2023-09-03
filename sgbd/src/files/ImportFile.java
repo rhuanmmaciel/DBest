@@ -109,7 +109,6 @@ public class ImportFile {
 					
 				}
 			}
-			case SQL -> throw new UnsupportedOperationException("Unimplemented case: " + fileType);
 			default -> throw new IllegalArgumentException("Unexpected value: " + fileType);
 			
 			}

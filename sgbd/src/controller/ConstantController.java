@@ -4,6 +4,9 @@ import entities.Action;
 import lib.booleanexpression.enums.RelationalOperator;
 
 import java.awt.*;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -16,7 +19,7 @@ public class ConstantController {
     private static final String country = "US";
     private static final Locale currentLocale = new Locale(language, country);
     private static final ResourceBundle messages = ResourceBundle.getBundle("language.messages", currentLocale);
-
+    public static final Path ROOT_DIRECTORY = Paths.get("").toAbsolutePath();
     public static final List<String> RELATIONAL_OPERATORS = Arrays.stream(RelationalOperator.values())
             .map(x -> x.symbols)
             .flatMap(Arrays::stream)

@@ -108,12 +108,12 @@ public class MainController extends MainFrame {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent actionEvent) {
 
         graph.removeCells(new Object[]{ghostJCell}, true);
         ghostJCell = null;
 
-        Button<?> btnClicked = buttons.stream().filter(x -> x.getButton() == e.getSource()).findAny().orElse(null);
+        Button<?> btnClicked = buttons.stream().filter(x -> x.getButton() == actionEvent.getSource()).findAny().orElse(null);
         String style = "";
 
         if (btnClicked != null) {
@@ -144,7 +144,8 @@ public class MainController extends MainFrame {
 
         }
 
-        menuItemClicked(e, btnClicked, style);
+        menuItemClicked(actionEvent, btnClicked, style);
+        menuBarItemClicked(actionEvent);
 
         edgeRef.get().reset();
 
@@ -203,6 +204,16 @@ public class MainController extends MainFrame {
             CellUtils.showTable(jCell);
 
     }
+
+    private void menuBarItemClicked(ActionEvent actionEvent){
+
+        if(actionEvent.getSource() == menuItemImportTable)
+            newTable(CurrentAction.ActionType.IMPORT_FILE);
+
+
+
+    }
+
 
     public void menuItemClicked(ActionEvent e, Button<?> btnClicked, String style) {
 
