@@ -1,11 +1,15 @@
 package dsl;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Paths;
+import java.util.*;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import controller.ConstantController;
 import controller.MainController;
 import dsl.entities.BinaryExpression;
@@ -107,14 +111,16 @@ public class DslController {
 					.addErrors(ConstantController.getString("dsl.error.sameName") +
 							": '" + DslUtils.clearTableName(tableName) + "'");
 
-		else if (!FileUtils.copyDatFilesWithHead(path, tableName, Path.of("")))
+		else if (!FileUtils.copyToTempDirectory(new File(path)))
 			DslErrorListener.addErrors(ConstantController.getString("dsl.error.fileNotFound") +": '" + DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION + "' ou '"
 					+ DslUtils.clearTableName(tableName) + ".dat'");
 
-		else
-			MainController.saveTable(new FyiTableCell(null, DslUtils.clearTableName(tableName), "fyi",
-					Table.loadFromHeader(DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION)));
+		else {
 
+//			MainController.saveTable(new FyiTableCell(null, DslUtils.clearTableName(tableName), "fyi",
+//					Table.loadFromHeader(tableName+FileType.HEADER.EXTENSION), new File()));
+
+		}
 	}
 
 	private static void solveDeclaration(VariableDeclaration declaration) {

@@ -13,6 +13,7 @@ import controller.ConstantController;
 import controller.MainController;
 import entities.cells.*;
 import enums.FileType;
+import enums.TableType;
 import gui.frames.DataFrame;
 import sgbd.table.Table;
 
@@ -132,7 +133,7 @@ public class CellUtils extends MainController {
 
 		if (!Cell.getCells().containsKey(cell) && cell != ghostCell && cell != null) {
 
-			Table table = MainController.getTables().get(cell.getValue());
+			TableCell tableCell = MainController.getTables().get(cell.getValue());
 
 			Object parent = graph.getDefaultParent();
 			Object[] vertices = mxGraphModel.getChildVertices(graph.getModel(), parent);
@@ -141,11 +142,11 @@ public class CellUtils extends MainController {
 				if (!Cell.getCells().containsKey(jCell))
 					cell = (mxCell) jCell;
 
-			if(cell.getStyle().equals(FileType.FYI.ID))
-				new FyiTableCell(cell, (String) cell.getValue(), "fyi", table);
+			if(cell.getStyle().equals(TableType.FYI_TABLE.ID))
+				new FyiTableCell((FyiTableCell) tableCell, cell);
 
-			if(cell.getStyle().equals(FileType.CSV.ID))
-				new CsvTableCell(cell, (String) cell.getValue(), "csv", table);
+			if(cell.getStyle().equals(TableType.CSV_TABLE.ID))
+				new CsvTableCell((CsvTableCell) tableCell, cell);
 
 		}
 

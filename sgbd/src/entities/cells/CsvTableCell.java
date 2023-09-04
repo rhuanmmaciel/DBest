@@ -12,19 +12,22 @@ import sgbd.query.Operator;
 import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.table.Table;
 
+import java.io.File;
 import java.util.List;
 
 public final class CsvTableCell extends TableCell {
 
-    public CsvTableCell(mxCell jCell, String name, String style, List<Column> columns, Table table, Prototype prototype) {
+    public CsvTableCell(mxCell jCell, String name, String style, List<Column> columns, Table table, Prototype prototype,
+                        File header) {
 
-        super(jCell, name, style, columns, table, prototype);
+        super(jCell, name, style, columns, table, prototype, header);
 
     }
 
-    public CsvTableCell(mxCell jCell, String name, String style, Table table) {
+    public CsvTableCell(CsvTableCell csvTableCell, mxCell jCell) {
 
-        super(jCell, name, style, table);
+        super(jCell, csvTableCell.getName(), csvTableCell.getStyle(), csvTableCell.getTable(),
+                csvTableCell.getHeaderFile());
 
     }
 

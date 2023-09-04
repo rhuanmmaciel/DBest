@@ -248,7 +248,7 @@ public class ExportFile extends JPanel {
 
 			}
 
-			TableCreator tableCreator = new TableCreator(fileName, columnsWithPk, rows, true);
+			TableCreator tableCreator = new TableCreator(fileName, columnsWithPk, rows, fileToSave, true);
 
 			if(exitReference.get())
 				return;
@@ -433,8 +433,8 @@ public class ExportFile extends JPanel {
 			
 			final String finalPath = path.substring(0, path.lastIndexOf("/") + 1);
 
-			tree.getLeaves().forEach(table -> FileUtils.copyDatFilesWithHead(
-					table.getName()+FileType.HEADER.EXTENSION, table.getName(), Path.of(finalPath)));
+//			tree.getLeaves().forEach(table -> FileUtils.copyDatFilesWithHead(
+//					table.getName()+FileType.HEADER.EXTENSION, table.getName(), Path.of(finalPath)));
 		
 		}
 		

@@ -31,24 +31,20 @@ import entities.Edge;
 import entities.Tree;
 import entities.buttons.Button;
 import entities.buttons.OperationButton;
-import entities.cells.Cell;
-import entities.cells.OperationCell;
-import entities.cells.TableCell;
+import entities.cells.*;
 import entities.utils.CellUtils;
 import entities.utils.TreeUtils;
 import enums.FileType;
 import enums.OperationType;
+import enums.TableType;
 import files.FileUtils;
-import files.ImportFile;
 import gui.frames.CellInformationFrame;
 import gui.frames.dsl.Console;
 import gui.frames.dsl.TextEditor;
 import gui.frames.forms.create.FormFrameCreateTable;
-import gui.frames.forms.dbconnection.ConfigureDBConnectionForm;
 import gui.frames.forms.importexport.ExportAsForm;
 import gui.frames.forms.importexport.ImportAsForm;
 import gui.frames.main.MainFrame;
-import sgbd.table.Table;
 import files.ExportFile;
 
 public class MainController extends MainFrame {
@@ -66,7 +62,7 @@ public class MainController extends MainFrame {
     private final AtomicReference<Edge> edgeRef = new AtomicReference<>(new Edge());
 
     private static int yTables = 0;
-    private static final Map<String, Table> tables = new HashMap<>();
+    private static final Map<String, TableCell> tables = new HashMap<>();
     public boolean clicked = false;
 
     private static final Set<Button<?>> buttons = new HashSet<>();
@@ -131,7 +127,6 @@ public class MainController extends MainFrame {
                 case CREATE_TABLE -> newTable(CurrentAction.ActionType.CREATE_TABLE);
                 case OPEN_CONSOLE -> new Console();
                 case OPEN_TEXT_EDITOR -> changeScreen();
-                case CREATE_DB_CONNECTION -> new ConfigureDBConnectionForm();
 
             }
 
@@ -364,7 +359,7 @@ public class MainController extends MainFrame {
             tablesGraph.insertVertex(tablesGraph.getDefaultParent(), null, table.getName(), 0, yTables,
                     table.getWidth(), table.getHeight(), table.getStyle());
 
-            tables.put(table.getName(), table.getTable());
+            tables.put(table.getName(), table);
 
             tablesPane.revalidate();
 
@@ -494,7 +489,7 @@ public class MainController extends MainFrame {
         return trees;
     }
 
-    public static Map<String, Table> getTables() {
+    public static Map<String, TableCell> getTables() {
         return tables;
     }
 
@@ -521,10 +516,16 @@ public class MainController extends MainFrame {
 
         }
 
-		mxCell jTableCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
-				relation.getName(), x, y, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, "table");
+        TableCell tableCell = MainController.getTables().get(relation.getName());
 
-		relation.setCell(new ImportFile(relation.getName() + FileType.HEADER.EXTENSION, jTableCell).getResult());
+        TableType type = TableType.getType(tableCell);
+
+		mxCell jTableCell = (mxCell) MainFrame.getGraph().insertVertex(graph.getDefaultParent(), null,
+				relation.getName(), x, y, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT,
+                type.equals(TableType.FYI_TABLE) ? TableType.FYI_TABLE.ID : TableType.CSV_TABLE.ID);
+
+		relation.setCell(type.equals(TableType.FYI_TABLE) ? new FyiTableCell((FyiTableCell) tableCell, jTableCell)
+                : new CsvTableCell((CsvTableCell) tableCell, jTableCell));
 
         relation.getCell().getTable().open();
 

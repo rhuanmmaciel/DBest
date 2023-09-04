@@ -14,6 +14,7 @@ import entities.cells.CsvTableCell;
 import entities.cells.FyiTableCell;
 import entities.cells.TableCell;
 import enums.FileType;
+import enums.TableType;
 import files.FileUtils;
 import files.csv.CsvInfo;
 import gui.frames.main.MainFrame;
@@ -46,12 +47,12 @@ public class TableCreator {
 	}
 
 	public TableCreator(String tableName, List<entities.Column> columns,
-						Map<Integer, Map<String, String>> data,
+						Map<Integer, Map<String, String>> data, File headerFile,
 						boolean mustExport){
 
 		this(mustExport);
 
-		createFyiTable(tableName, columns, data);
+		createFyiTable(tableName, columns, data, headerFile);
 
 	}
 
@@ -68,52 +69,56 @@ public class TableCreator {
 		table.open();
 		table.saveHeader(tableName+FileType.HEADER.EXTENSION);
 
-		FileUtils.useTempDirectory(FileUtils.getFile(tableName+FileType.HEADER.EXTENSION));
+		File headerFile = FileUtils.getFile(tableName+FileType.HEADER.EXTENSION);
+
+		FileUtils.moveToTempDirectory(headerFile);
+		headerFile = FileUtils.getFileFromTempDirectory(tableName+FileType.HEADER.EXTENSION).get();
 
 		if(mustExport){
 
-			tableCell = new CsvTableCell(null, tableName, FileType.CSV.ID, columns, table, prototype);
+			tableCell = new CsvTableCell(null, tableName, TableType.CSV_TABLE.ID, columns, table, prototype, headerFile);
 			Cell.removeFromCells(null);
 			return;
 
 		}
 
 		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(MainFrame.getGraph().getDefaultParent(), null,
-				tableName, 0, 0, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.CSV.ID);
+				tableName, 0, 0, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT,
+				TableType.CSV_TABLE.ID);
 
-		tableCell = new CsvTableCell(jCell, tableName, FileType.CSV.ID, columns, table, prototype);
+		tableCell = new CsvTableCell(jCell, tableName, TableType.CSV_TABLE.ID, columns, table, prototype, headerFile);
 
 	}
 
 	private void createFyiTable(String tableName, List<entities.Column> columns,
-								Map<Integer, Map<String, String>> data) {
+								Map<Integer, Map<String, String>> data, File headerFile) {
 
 		List<RowData> rows = new ArrayList<>(getRowData(columns, data));
 
 		Prototype prototype = createPrototype(columns);
 
-		Table table = SimpleTable.openTable(new Header(prototype, tableName));
+		Header header = new Header(prototype, tableName);
+
+		Table table = SimpleTable.openTable(header);
 		table.open();
 
 		table.insert(rows);
 
 		table.saveHeader(tableName+FileType.HEADER.EXTENSION);
 
-		FileUtils.useTempDirectory(FileUtils.getFile(tableName+FileType.HEADER.EXTENSION));
-
 		if(mustExport){
 
-			tableCell = new FyiTableCell(null, tableName, FileType.FYI.ID, columns, table, prototype);
+			tableCell = new FyiTableCell(null, tableName, TableType.FYI_TABLE.ID, columns, table, prototype, headerFile);
 			Cell.removeFromCells(null);
 			return;
 
 		}
 
-
 		mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(MainFrame.getGraph().getDefaultParent(), null,
-				tableName, 0, 0, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.FYI.ID);
+				tableName, 0, 0, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT,
+				TableType.FYI_TABLE.ID);
 
-		tableCell = new FyiTableCell(jCell, tableName, FileType.FYI.ID, columns, table, prototype);
+		tableCell = new FyiTableCell(jCell, tableName, TableType.FYI_TABLE.ID, columns, table, prototype, headerFile);
 
 	}
 

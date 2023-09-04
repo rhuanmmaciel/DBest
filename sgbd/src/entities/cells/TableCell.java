@@ -1,5 +1,6 @@
 package entities.cells;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,43 +12,49 @@ import enums.ColumnDataType;
 import sgbd.prototype.Prototype;
 import sgbd.query.sourceop.TableScan;
 import sgbd.table.Table;
+import sgbd.table.components.Header;
 import sgbd.util.global.Util;
 
 public abstract sealed class TableCell extends Cell permits CsvTableCell, FyiTableCell {
 
-	private Table table;
-	private Prototype prototype;
-	
-	public TableCell(mxCell jCell, String name, String style, List<Column> columns, Table table, Prototype prototype) {
-		
-		super(name, style, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
-		setColumns(columns);
-		setTable(table);
-		setPrototype(prototype);
+	private final Table table;
+	private final Prototype prototype;
+	private final File headerFile;
 
-	}
-	
-	public TableCell(mxCell jCell, String name, String style, Table table) {
-		
-		super(name, style, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
-		setTable(table);
-		setPrototype(table.getHeader().getPrototype());
-		setColumns();
-	}
-	
-	private void setTable(Table table) {
+	public TableCell(mxCell jCell, String name, String style, Table table, Prototype prototype, File headerFile){
 
+		super(name, style, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
+
+		this.headerFile = headerFile;
 		this.table = table;
+		this.prototype = prototype;
 		setOperator(new TableScan(table));
 
 	}
-	
-	public Table getTable() {
-		return table;
+
+	public TableCell(mxCell jCell, String name, String style, List<Column> columns, Table table, Prototype prototype,
+					 File headerFile) {
+		
+		this(jCell, name, style, table, prototype, headerFile);
+		System.out.println("1: "+ headerFile);
+		setColumns(columns);
+
 	}
 	
-	private void setPrototype(Prototype prototype) {
-		this.prototype = prototype;
+	public TableCell(mxCell jCell, String name, String style, Table table, File headerFile) {
+
+		this(jCell, name, style, table, table.getHeader().getPrototype(), headerFile);
+		System.out.println("2: "+ headerFile);
+		setColumns();
+
+	}
+
+	public File getHeaderFile(){
+		return headerFile;
+	}
+
+	public Table getTable() {
+		return table;
 	}
 	
 	public Prototype getPrototype() {

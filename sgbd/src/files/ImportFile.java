@@ -21,6 +21,7 @@ import entities.Column;
 import entities.cells.FyiTableCell;
 import entities.cells.TableCell;
 import enums.FileType;
+import enums.TableType;
 import files.csv.CsvInfo;
 import gui.frames.forms.importexport.CsvRecognizerForm;
 import gui.frames.main.MainFrame;
@@ -49,12 +50,6 @@ public class ImportFile {
 
 		importFile();
 
-	}
-	
-	public ImportFile(String fileName, mxCell jCell) {
-		
-		header(fileName, jCell);
-		
 	}
 	
 	private void importFile() {
@@ -103,9 +98,10 @@ public class ImportFile {
 							fileUpload.getSelectedFile().getName();
 
 					mxCell jCell = (mxCell) MainFrame.getGraph().insertVertex(MainFrame.getGraph().getDefaultParent(), null,
-							fileName, 0, 0, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.FYI.ID);
+							fileName, 0, 0, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT,
+							TableType.FYI_TABLE.ID);
 					table.get().open();
-					tableCell = new FyiTableCell(jCell, fileName, FileType.FYI.ID, table.get());
+					tableCell = new FyiTableCell(jCell, fileName, TableType.FYI_TABLE.ID, table.get(), fileUpload.getSelectedFile());
 					
 				}
 			}
@@ -113,10 +109,6 @@ public class ImportFile {
 			
 			}
 
-			if (!exitReference.get() && FileType.FYI != fileType && FileType.CSV != fileType) {
-				TableCreator tableCreator = new TableCreator(tableName.toString(), columns, content, false);
-				tableCell = tableCreator.getTableCell();
-			}
 			return;
 			
 		}
@@ -143,15 +135,6 @@ public class ImportFile {
 
 	}
 	
-	private void header(String fileName, mxCell jTableCell) {
-		
-		AtomicReference<Table> table = new AtomicReference<>();
-		table.set(Table.loadFromHeader(fileName));
-
-		tableCell = new FyiTableCell(jTableCell, fileName.substring(0, fileName.indexOf(".")), "fyi", table.get());
-		
-	}
-
 	private void excel() {
 		/*
 		 * try {

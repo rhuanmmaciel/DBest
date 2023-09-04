@@ -25,6 +25,7 @@ import entities.buttons.Button;
 import entities.buttons.OperationButton;
 import entities.buttons.ToolBarButton;
 import enums.OperationType;
+import enums.TableType;
 
 public abstract class MainFrame extends JFrame
 		implements ActionListener, MouseListener, KeyListener, MouseMotionListener {
@@ -141,7 +142,7 @@ public abstract class MainFrame extends JFrame
 
 	private void setJCellStyles(){
 
-		String customStyle = FileType.CSV.ID;
+		String customStyle = TableType.CSV_TABLE.ID;
 
 		Map<String, Object> style = new HashMap<>();
 
