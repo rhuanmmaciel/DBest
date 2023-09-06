@@ -5,25 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0dee0e35-6e46-4f1c-8cdf-26b078d3568c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/FyDatabase__2_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/FyDatabase__4_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/FyDatabase.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/TableCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableCreator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbconnection/MySQLConnection.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/dsl/DslController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/CsvTableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/CsvTableCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/FyiTableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/FyiTableCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/DslErrorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslErrorListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/entities/BinaryExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/BinaryExpression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/entities/UnaryExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/UnaryExpression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/utils/DslUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/utils/DslUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/cells/TableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/TableCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/utils/CellUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/utils/CellUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/ExportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ExportFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/ImportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ImportFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/dbconnection/ConfigureDBConnectionForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/dbconnection/ConfigureMySQLConnectionForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/dbconnection/SelectTablesForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/dsl/Console.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/dsl/Console.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/dsl/TextEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/dsl/TextEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +26,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -56,16 +49,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "git-widget-placeholder": "rhuan",
-    "last_opened_file_path": "/home/rhuan/Documents/repositories/dbest/sgbd",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "configurable.group.language"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;git-widget-placeholder&quot;: &quot;rhuan&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/rhuan/Documents/repositories/dbest/sgbd&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources/language" />
@@ -86,6 +79,32 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="Babashka" factoryName="BabashkaLocalRepl" activateToolWindowBeforeRun="false">
+      <setting name="displayName" value="" />
+      <setting name="bbPath" value="" />
+      <setting name="parameters" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <setting name="workingDir" value="" />
+      <setting name="focusEditor" value="false" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="ClojureREPL" factoryName="Remote" activateToolWindowBeforeRun="false">
+      <setting name="displayName" value="" />
+      <setting name="host" value="" />
+      <setting name="port" value="0" />
+      <setting name="replType" value="SOCKET" />
+      <setting name="configType" value="SPECIFY" />
+      <setting name="replPortFileType" value="STANDARD" />
+      <setting name="customPortFile" value="" />
+      <setting name="fixLineNumbers" value="false" />
+      <setting name="focusEditor" value="false" />
+      <method v="2" />
     </configuration>
     <recent_temporary>
       <list>

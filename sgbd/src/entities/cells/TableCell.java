@@ -36,7 +36,6 @@ public abstract sealed class TableCell extends Cell permits CsvTableCell, FyiTab
 					 File headerFile) {
 		
 		this(jCell, name, style, table, prototype, headerFile);
-		System.out.println("1: "+ headerFile);
 		setColumns(columns);
 
 	}
@@ -44,7 +43,6 @@ public abstract sealed class TableCell extends Cell permits CsvTableCell, FyiTab
 	public TableCell(mxCell jCell, String name, String style, Table table, File headerFile) {
 
 		this(jCell, name, style, table, table.getHeader().getPrototype(), headerFile);
-		System.out.println("2: "+ headerFile);
 		setColumns();
 
 	}

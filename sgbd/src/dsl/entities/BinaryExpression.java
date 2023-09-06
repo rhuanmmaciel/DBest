@@ -6,19 +6,20 @@ import java.util.regex.Pattern;
 
 import dsl.utils.DslUtils;
 import enums.OperationType;
+import exceptions.dsl.InputException;
 
 public final class BinaryExpression extends OperationExpression {
 
 	private Expression<?> source2;
 	
-	public BinaryExpression(String command) {
+	public BinaryExpression(String command) throws InputException {
 	
 		super(command);
 		binaryRecognizer(command);
 		
 	}
 
-	private void binaryRecognizer(String input) {
+	private void binaryRecognizer(String input) throws InputException {
 
 		int endIndex = input.indexOf('(');
 

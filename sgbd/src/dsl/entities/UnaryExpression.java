@@ -4,17 +4,18 @@ import java.util.List;
 
 import dsl.utils.DslUtils;
 import enums.OperationType;
+import exceptions.dsl.InputException;
 
 public final class UnaryExpression extends OperationExpression {
 
-	public UnaryExpression(String command) {
+	public UnaryExpression(String command) throws InputException {
 
 		super(command);
 		unaryRecognizer(command);
 		
 	}
 
-	private void unaryRecognizer(String input) {
+	private void unaryRecognizer(String input) throws InputException {
 
 		int endIndex = input.indexOf('(');
 

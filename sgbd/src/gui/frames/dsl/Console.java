@@ -6,6 +6,7 @@ import dsl.DslController;
 import dsl.DslErrorListener;
 import dsl.antlr4.RelAlgebraLexer;
 import dsl.antlr4.RelAlgebraParser;
+import exceptions.dsl.InputException;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -124,11 +125,8 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 
 				walker.walk(listener, parser.command());
 
-				if (!DslErrorListener.getErrors().isEmpty())					
-					DslErrorListener.throwError(textArea);
+				execute();
 
-				DslController.parser();
-				
 			}
 
 			textField.setText("");
@@ -137,6 +135,25 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 			history.add("");
 
 		}
+
+	}
+
+	private void execute(){
+
+		if(DslErrorListener.getErrors().isEmpty()) {
+			try {
+
+				DslController.parser();
+
+			} catch (InputException e) {
+
+				DslErrorListener.throwError(textArea);
+
+			}
+			return;
+		}
+
+		DslErrorListener.throwError(textArea);
 
 	}
 

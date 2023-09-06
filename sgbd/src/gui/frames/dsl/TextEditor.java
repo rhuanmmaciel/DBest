@@ -8,6 +8,7 @@ import dsl.DslErrorListener;
 import dsl.antlr4.RelAlgebraLexer;
 import dsl.antlr4.RelAlgebraParser;
 import enums.OperationType;
+import exceptions.dsl.InputException;
 import gui.utils.CustomDocumentFilter;
 import gui.utils.JTextLineNumber;
 import org.antlr.v4.runtime.CharStreams;
@@ -155,19 +156,25 @@ public class TextEditor extends JFrame implements ActionListener {
 
 		walker.walk(listener, parser.command());
 
-		if (!DslErrorListener.getErrors().isEmpty())
-			DslErrorListener.throwError(console);
+		execute();
 
-		else {
+	}
 
-			DslController.parser();
+	private void execute(){
 
-			if (!DslErrorListener.getErrors().isEmpty())
+		if(DslErrorListener.getErrors().isEmpty()) {
+			try {
+
+				DslController.parser();
+
+			} catch (InputException e) {
+
 				DslErrorListener.throwError(console);
 
+			}
+			return;
 		}
-
-		DslErrorListener.clearErrors();
+		DslErrorListener.throwError(console);
 
 	}
 

@@ -1,15 +1,8 @@
 package dsl;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import controller.ConstantController;
 import controller.MainController;
 import dsl.entities.BinaryExpression;
@@ -18,11 +11,10 @@ import dsl.entities.OperationExpression;
 import dsl.entities.Relation;
 import dsl.entities.VariableDeclaration;
 import dsl.utils.DslUtils;
-import entities.cells.FyiTableCell;
 import enums.FileType;
+import exceptions.dsl.InputException;
 import files.FileUtils;
 import gui.frames.dsl.TextEditor;
-import sgbd.table.Table;
 
 public class DslController {
 
@@ -51,17 +43,18 @@ public class DslController {
 
 		commands.clear();
 		declarations.clear();
+		DslErrorListener.clearErrors();
 
 	}
 
-	public static void parser() {
+	public static void parser() throws InputException {
 
 		execute();
 		reset();
 
 	}
 
-	private static void execute() {
+	private static void execute() throws InputException {
 
 		for (String command : commands) {
 
@@ -74,14 +67,11 @@ public class DslController {
 
 			}
 
-			if (!DslErrorListener.getErrors().isEmpty())
-				return;
-
 		}
 
 	}
 
-	private static void importTable(String importStatement) {
+	private static void importTable(String importStatement) throws InputException {
 
 		String path = importStatement.substring(6, importStatement.indexOf(FileType.HEADER.EXTENSION) + 5);
 
@@ -107,12 +97,12 @@ public class DslController {
 		}
 
 		if (MainController.getTables().containsKey(DslUtils.clearTableName(tableName)))
-			DslErrorListener
-					.addErrors(ConstantController.getString("dsl.error.sameName") +
+
+			throw new InputException(ConstantController.getString("dsl.error.sameName") +
 							": '" + DslUtils.clearTableName(tableName) + "'");
 
 		else if (!FileUtils.copyToTempDirectory(new File(path)))
-			DslErrorListener.addErrors(ConstantController.getString("dsl.error.fileNotFound") +": '" + DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION + "' ou '"
+			throw new InputException(ConstantController.getString("dsl.error.fileNotFound") +": '" + DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION + "' ou '"
 					+ DslUtils.clearTableName(tableName) + ".dat'");
 
 		else {
@@ -129,10 +119,7 @@ public class DslController {
 
 	}
 
-	private static void solveExpression(Expression<?> expression) {
-
-		if (!DslErrorListener.getErrors().isEmpty())
-			return;
+	private static void solveExpression(Expression<?> expression) throws InputException {
 
 		if (expression instanceof OperationExpression operationExpression) {
 
@@ -143,8 +130,8 @@ public class DslController {
 
 			if (operationExpression instanceof BinaryExpression binaryExpression)
 
-				if (binaryExpression.getSource2() instanceof Relation relation)
-					createTable(relation);
+				if (binaryExpression.getSource2() instanceof Relation relation2)
+					createTable(relation2);
 				else
 					solveExpression(binaryExpression.getSource2());
 
@@ -153,17 +140,16 @@ public class DslController {
 			createTable(relation);
 			return;
 
-		} else {
+		} else
+			throw new InputException("expression is null");
 
-			throw new RuntimeException("expression is null");
 
-		}
 
 		MainController.putOperationCell(operationExpression);
 
 	}
 
-	private static void createTable(Relation relation) {
+	private static void createTable(Relation relation){
 
 		MainController.putTableCell(relation);
 

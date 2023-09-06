@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import controller.ConstantController;
+import controller.MainController;
 import dsl.DslController;
 import dsl.DslErrorListener;
 import dsl.entities.BinaryExpression;
@@ -18,6 +20,7 @@ import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import enums.OperationArity;
 import enums.OperationType;
+import exceptions.dsl.InputException;
 import files.FileUtils;
 
 public class DslUtils {
@@ -36,7 +39,7 @@ public class DslUtils {
 		
 	}
 	
-	public static Expression<?> expressionRecognizer(String input) {
+	public static Expression<?> expressionRecognizer(String input) throws InputException {
 
 		if (input.contains("(")) {
 
@@ -54,12 +57,11 @@ public class DslUtils {
 		if(DslController.containsVariable(clearTableName(input)))
 			return expressionRecognizer(DslController.getVariableContent(input));
 		
-//		if(FileUtils.getDatFilesNames().contains(clearTableName(input)))
+		if(MainController.getTables().get(input) != null)
 			return new Relation(input);
-		
-//		DslErrorListener.addErrors("A fonte de dados: '" + input + "' não encontrado");
-//		return null;
-		
+
+		throw new InputException(ConstantController.getString("dsl.error.sourceNotFound")+": " + input );
+
 	}
 
 	public static String clearTableName(String tableName) {

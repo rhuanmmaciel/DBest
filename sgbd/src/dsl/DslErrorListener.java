@@ -11,6 +11,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import controller.ConstantController;
+import exceptions.dsl.InputException;
+import gui.frames.ErrorFrame;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
@@ -48,9 +50,13 @@ public class DslErrorListener extends BaseErrorListener {
 
 		DslErrorListener.getErrors().forEach(error -> {
 			try {
+
 				doc.insertString(doc.getLength(), error + "\n", style);
+
 			} catch (BadLocationException e) {
-				e.printStackTrace();
+
+				new ErrorFrame(e.getMessage());
+
 			}
 		});
 
