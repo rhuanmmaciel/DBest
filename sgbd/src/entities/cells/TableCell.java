@@ -21,9 +21,9 @@ public abstract sealed class TableCell extends Cell permits CsvTableCell, FyiTab
 	private final Prototype prototype;
 	private final File headerFile;
 
-	public TableCell(mxCell jCell, String name, String style, Table table, Prototype prototype, File headerFile){
+	public TableCell(mxCell jCell, String name, Table table, Prototype prototype, File headerFile){
 
-		super(name, style, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
+		super(name, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
 
 		this.headerFile = headerFile;
 		this.table = table;
@@ -32,17 +32,17 @@ public abstract sealed class TableCell extends Cell permits CsvTableCell, FyiTab
 
 	}
 
-	public TableCell(mxCell jCell, String name, String style, List<Column> columns, Table table, Prototype prototype,
+	public TableCell(mxCell jCell, String name, List<Column> columns, Table table, Prototype prototype,
 					 File headerFile) {
 		
-		this(jCell, name, style, table, prototype, headerFile);
+		this(jCell, name, table, prototype, headerFile);
 		setColumns(columns);
 
 	}
 	
-	public TableCell(mxCell jCell, String name, String style, Table table, File headerFile) {
+	public TableCell(mxCell jCell, String name, Table table, File headerFile) {
 
-		this(jCell, name, style, table, table.getHeader().getPrototype(), headerFile);
+		this(jCell, name, table, table.getHeader().getPrototype(), headerFile);
 		setColumns();
 
 	}

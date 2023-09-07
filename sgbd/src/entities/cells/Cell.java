@@ -23,10 +23,9 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 	private Tree tree;
 	protected static Map<mxCell, Cell> cells = new HashMap<>();
 
-	public Cell(String name, String style, mxCell jCell, int width, int height) {
+	public Cell(String name, mxCell jCell, int width, int height) {
 
 		this.columns = new ArrayList<>();
-		this.style = style;
 		this.name = name;
 		this.jCell = jCell;
 		this.child = null;
@@ -35,6 +34,12 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 		this.operator = null;
 		this.tree = new Tree();
 		cells.put(jCell, this);
+
+		this.style = jCell != null ? jCell.getStyle()
+				: isCsvTableCell() ? "csv"
+				: isFyiTableCell() ? "fyi"
+				: isOperationCell() ? "operation"
+				: "";
 
 	}
 

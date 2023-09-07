@@ -76,7 +76,7 @@ public class TableCreator {
 
 		if(mustExport){
 
-			tableCell = new CsvTableCell(null, tableName, TableType.CSV_TABLE.ID, columns, table, prototype, headerFile);
+			tableCell = new CsvTableCell(null, tableName, columns, table, prototype, headerFile);
 			Cell.removeFromCells(null);
 			return;
 
@@ -86,7 +86,7 @@ public class TableCreator {
 				tableName, 0, 0, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT,
 				TableType.CSV_TABLE.ID);
 
-		tableCell = new CsvTableCell(jCell, tableName, TableType.CSV_TABLE.ID, columns, table, prototype, headerFile);
+		tableCell = new CsvTableCell(jCell, tableName, columns, table, prototype, headerFile);
 
 	}
 
@@ -108,7 +108,7 @@ public class TableCreator {
 
 		if(mustExport){
 
-			tableCell = new FyiTableCell(null, tableName, TableType.FYI_TABLE.ID, columns, table, prototype, headerFile);
+			tableCell = new FyiTableCell(null, tableName, columns, table, prototype, headerFile);
 			Cell.removeFromCells(null);
 			return;
 
@@ -118,7 +118,7 @@ public class TableCreator {
 				tableName, 0, 0, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT,
 				TableType.FYI_TABLE.ID);
 
-		tableCell = new FyiTableCell(jCell, tableName, TableType.FYI_TABLE.ID, columns, table, prototype, headerFile);
+		tableCell = new FyiTableCell(jCell, tableName, columns, table, prototype, headerFile);
 
 	}
 

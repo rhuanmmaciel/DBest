@@ -47,23 +47,6 @@ public class FileUtils {
 
 	}
 
-	public static boolean copyToTempDirectory(File file){
-
-		createTempIfNotExists();
-
-		try {
-
-			Files.copy(file.toPath(), new File(temp.getAbsolutePath(), file.getName()).toPath());
-			return true;
-
-		}catch (IOException ignored){
-
-			return false;
-
-		}
-
-	}
-
 	public static void moveToTempDirectory(File file){
 
 		createTempIfNotExists();

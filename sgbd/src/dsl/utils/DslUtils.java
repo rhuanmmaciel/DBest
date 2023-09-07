@@ -57,7 +57,7 @@ public class DslUtils {
 		if(DslController.containsVariable(clearTableName(input)))
 			return expressionRecognizer(DslController.getVariableContent(input));
 		
-		if(MainController.getTables().get(input) != null)
+		if(MainController.getTables().get(clearTableName(input)) != null)
 			return new Relation(input);
 
 		throw new InputException(ConstantController.getString("dsl.error.sourceNotFound")+": " + input );

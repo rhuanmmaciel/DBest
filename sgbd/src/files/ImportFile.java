@@ -101,7 +101,7 @@ public class ImportFile {
 							fileName, 0, 0, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT,
 							TableType.FYI_TABLE.ID);
 					table.get().open();
-					tableCell = new FyiTableCell(jCell, fileName, TableType.FYI_TABLE.ID, table.get(), fileUpload.getSelectedFile());
+					tableCell = new FyiTableCell(jCell, fileName, table.get(), fileUpload.getSelectedFile());
 					
 				}
 			}

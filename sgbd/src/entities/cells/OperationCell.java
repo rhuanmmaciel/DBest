@@ -35,7 +35,7 @@ public final class OperationCell extends Cell {
 
 	public OperationCell(mxCell jCell, OperationType type) {
 
-		super(type.getDisplayNameAndSymbol(), type.DISPLAY_NAME, jCell, ConstantController.OPERATION_CELL_WIDTH,
+		super(type.getDisplayNameAndSymbol(), jCell, ConstantController.OPERATION_CELL_WIDTH,
 				ConstantController.OPERATION_CELL_HEIGHT);
 		initializeInfos(type);
 
@@ -43,7 +43,7 @@ public final class OperationCell extends Cell {
 
 	public OperationCell(mxCell jCell, OperationType type, List<Cell> parents, List<String> arguments) {
 
-		super(type.getDisplayNameAndSymbol(), type.DISPLAY_NAME, jCell, ConstantController.OPERATION_CELL_WIDTH,
+		super(type.getDisplayNameAndSymbol(), jCell, ConstantController.OPERATION_CELL_WIDTH,
 				ConstantController.OPERATION_CELL_HEIGHT);
 		initializeInfos(type);
 

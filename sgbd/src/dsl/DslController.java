@@ -1,8 +1,12 @@
 package dsl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import controller.ConstantController;
 import controller.MainController;
 import dsl.entities.BinaryExpression;
@@ -11,10 +15,13 @@ import dsl.entities.OperationExpression;
 import dsl.entities.Relation;
 import dsl.entities.VariableDeclaration;
 import dsl.utils.DslUtils;
+import entities.cells.CsvTableCell;
+import entities.cells.FyiTableCell;
 import enums.FileType;
+import enums.TableType;
 import exceptions.dsl.InputException;
-import files.FileUtils;
 import gui.frames.dsl.TextEditor;
+import sgbd.table.Table;
 
 public class DslController {
 
@@ -97,20 +104,38 @@ public class DslController {
 		}
 
 		if (MainController.getTables().containsKey(DslUtils.clearTableName(tableName)))
-
 			throw new InputException(ConstantController.getString("dsl.error.sameName") +
 							": '" + DslUtils.clearTableName(tableName) + "'");
 
-		else if (!FileUtils.copyToTempDirectory(new File(path)))
-			throw new InputException(ConstantController.getString("dsl.error.fileNotFound") +": '" + DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION + "' ou '"
-					+ DslUtils.clearTableName(tableName) + ".dat'");
+		TableType tableType;
 
-		else {
+		try {
 
-//			MainController.saveTable(new FyiTableCell(null, DslUtils.clearTableName(tableName), "fyi",
-//					Table.loadFromHeader(tableName+FileType.HEADER.EXTENSION), new File()));
+			JsonObject headerFile = new Gson().fromJson(new FileReader(path), JsonObject.class);
+			tableType = headerFile.getAsJsonObject("information").get("file-path").getAsString()
+					.replaceAll("' | \"", "").endsWith(".dat")
+					? TableType.FYI_TABLE : TableType.CSV_TABLE;
+
+		}catch (FileNotFoundException e){
+
+			throw new InputException(ConstantController.getString("dsl.error.fileNotFound") +": '" +
+					DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION);
 
 		}
+
+
+		Table table = Table.loadFromHeader(path);
+		table.open();
+
+		switch (tableType){
+
+			case CSV_TABLE -> MainController.saveTable(new CsvTableCell(DslUtils.clearTableName(tableName),
+					table, new File(path)));
+			case FYI_TABLE -> 		MainController.saveTable(new FyiTableCell(DslUtils.clearTableName(tableName),
+					table, new File(path)));
+
+		}
+
 	}
 
 	private static void solveDeclaration(VariableDeclaration declaration) {

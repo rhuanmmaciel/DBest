@@ -10,20 +10,26 @@ import java.io.File;
 import java.util.List;
 
 public final class FyiTableCell extends TableCell {
-    public FyiTableCell(mxCell jCell, String name, String style, List<Column> columns, Table table, Prototype prototype,
+    public FyiTableCell(mxCell jCell, String name, List<Column> columns, Table table, Prototype prototype,
                         File headerFile ) {
-        super(jCell, name, style, columns, table, prototype, headerFile);
+        super(jCell, name, columns, table, prototype, headerFile);
     }
 
-    public FyiTableCell(mxCell jCell, String name, String style, Table table, File headerFile) {
+    public FyiTableCell(mxCell jCell, String name, Table table, File headerFile) {
 
-        super(jCell, name, style, table, headerFile);
+        super(jCell, name, table, headerFile);
+
+    }
+
+    public FyiTableCell(String name, Table table, File headerFile) {
+
+        super(null, name, table, headerFile);
 
     }
 
     public FyiTableCell(FyiTableCell tableCell, mxCell jCell){
 
-        super(jCell, tableCell.getName(), tableCell.getStyle(), tableCell.getTable(),
+        super(jCell, tableCell.getName(), tableCell.getTable(),
                 tableCell.getHeaderFile());
 
     }
