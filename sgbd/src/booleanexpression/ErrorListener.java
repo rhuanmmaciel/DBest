@@ -14,9 +14,8 @@ public class ErrorListener extends BaseErrorListener {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
                             String msg, RecognitionException e) {
-        System.out.println("ERROOOOOOOOOOOOOOOO");
+
         String error = String.format("line %d:%d %s", line, charPositionInLine, msg);
-        errors.add(error);
 
     }
 

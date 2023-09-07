@@ -1,5 +1,6 @@
 package operations.unary;
 
+import booleanexpression.BooleanExpressionException;
 import booleanexpression.BooleanExpressionRecognizer;
 import com.mxgraph.model.mxCell;
 import entities.cells.Cell;
@@ -58,13 +59,21 @@ public class Selection implements IOperator {
 		Cell parentCell = cell.getParents().get(0);
 		String expression = arguments.get(0);
 
-		BooleanExpression booleanExpression = new BooleanExpressionRecognizer().recognizer(expression);
+		try {
 
-		Operator operator = parentCell.getOperator();
-		operator = new FilterOperator(operator, booleanExpression);
+			BooleanExpression booleanExpression = new BooleanExpressionRecognizer(jCell).recognizer(expression);
 
-		Operation.operationSetter(cell, cell.getType().SYMBOL + "  " + new BooleanExpressionRecognizer().recognizer(booleanExpression),
-				arguments, operator);
+			Operator operator = parentCell.getOperator();
+			operator = new FilterOperator(operator, booleanExpression);
+
+			Operation.operationSetter(cell, cell.getType().SYMBOL + "  " + new BooleanExpressionRecognizer(jCell).recognizer(booleanExpression),
+					arguments, operator);
+
+		}catch (BooleanExpressionException e){
+
+			cell.setError(e.getMessage());
+
+		}
 
 	}
 

@@ -24,11 +24,12 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
     private final JButton btnAnd = new JButton("AND");
     private final JButton btnOr = new JButton("OR");
     private final JButton btnAtomic = new JButton(ConstantController.getString("operationForm.booleanExpression.atomicExpressionButton"));
-
+    private final mxCell jCell;
     private ExpressionPane root = null;
 
     public BooleanExpressionForm(mxCell jCell) {
         super(jCell);
+        this.jCell = jCell;
         initGUI();
     }
 
@@ -158,7 +159,7 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
             else {
 
-                arguments.add(new BooleanExpressionRecognizer().recognizer(getBooleanExpression(root)));
+                arguments.add(new BooleanExpressionRecognizer(jCell).recognizer(getBooleanExpression(root)));
 
             }
 

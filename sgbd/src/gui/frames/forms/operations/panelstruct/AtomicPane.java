@@ -16,13 +16,13 @@ import java.awt.event.ActionListener;
 public class AtomicPane extends ExpressionPane implements ActionListener {
 
     private final JButton btnEdit = new JButton(ConstantController.getString("operationForm.atomicPane.edit"));
-
+    private final mxCell jCell;
     private final JLabel expression = new JLabel();
 
     public AtomicPane(BooleanExpressionForm root, mxCell jCell){
 
         super(root, jCell);
-
+        this.jCell = jCell;
         add(new JLabel(ConstantController.getString("operationForm.atomicPane.atomicExpression")), BorderLayout.NORTH);
 
         add(expression, BorderLayout.CENTER);
@@ -44,7 +44,7 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
 
             booleanExpression = new AtomicExpressionForm(root, jCell).getResult();
             expression.setText( booleanExpression != null ?
-                    new BooleanExpressionRecognizer().recognizer(booleanExpression) :
+                    new BooleanExpressionRecognizer(jCell).recognizer(booleanExpression) :
                     "");
             updateRootSize();
             root.checkBtnReady();

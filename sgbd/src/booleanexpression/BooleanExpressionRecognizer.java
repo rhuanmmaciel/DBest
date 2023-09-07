@@ -3,7 +3,9 @@ package booleanexpression;
 import booleanexpression.antlr.BooleanExpressionDSLController;
 import booleanexpression.antlr.BooleanExpressionDSLLexer;
 import booleanexpression.antlr.BooleanExpressionDSLParser;
+import com.mxgraph.model.mxCell;
 import controller.ConstantController;
+import entities.cells.Cell;
 import lib.booleanexpression.entities.elements.Element;
 import lib.booleanexpression.entities.elements.Null;
 import lib.booleanexpression.entities.elements.Value;
@@ -26,7 +28,10 @@ import static booleanexpression.Utils.getElement;
 
 public class BooleanExpressionRecognizer {
 
-    public BooleanExpressionRecognizer(){
+    private final List<Cell> parents;
+
+    public BooleanExpressionRecognizer(mxCell jCell){
+        this.parents = Cell.getCells().get(jCell).getParents();
     }
 
     public String recognizer(BooleanExpression booleanExpression){
@@ -83,7 +88,7 @@ public class BooleanExpressionRecognizer {
 
     }
 
-    public BooleanExpression recognizer(String txt){
+    public BooleanExpression recognizer(String txt) throws BooleanExpressionException {
 
         BooleanExpressionDSLParser parser = new BooleanExpressionDSLParser(
                 new CommonTokenStream(new BooleanExpressionDSLLexer(CharStreams.fromString(txt))));
@@ -98,11 +103,14 @@ public class BooleanExpressionRecognizer {
 
         walker.walk(listener, parser.command());
 
+        if(!ErrorListener.getErrors().isEmpty())
+            throw new BooleanExpressionException(ConstantController.getString("booleanExpression.error.invalidFormat"));
+
         return recognize(txt);
 
     }
 
-    private BooleanExpression recognize(String txt) {
+    private BooleanExpression recognize(String txt) throws BooleanExpressionException {
 
         boolean isAtomic = !hasAnyLogicalOperator(txt);
 
@@ -114,7 +122,7 @@ public class BooleanExpressionRecognizer {
 
     }
 
-    private BooleanExpression consumeTokens(List<String> tokens){
+    private BooleanExpression consumeTokens(List<String> tokens) throws BooleanExpressionException {
 
         Optional<LogicalOperator> operator = whichLogicalOperator(tokens);
         prioritizeAnds(tokens);
@@ -153,7 +161,7 @@ public class BooleanExpressionRecognizer {
 
     }
 
-    private LogicalExpression recognizeLogical(LogicalOperator logicalOperator, List<String> tokens){
+    private LogicalExpression recognizeLogical(LogicalOperator logicalOperator, List<String> tokens) throws BooleanExpressionException {
 
         List<BooleanExpression> expressions = new ArrayList<>();
 
@@ -303,20 +311,38 @@ public class BooleanExpressionRecognizer {
     }
 
 
-    private AtomicExpression recognizeAtomic(String txt){
+    private AtomicExpression recognizeAtomic(String txt) throws BooleanExpressionException {
 
         txt = txt.replace(")", "").replace("(","");
 
         String finalTxt = txt;
 
         String relationalOperator = ConstantController.RELATIONAL_OPERATORS.stream().filter(finalTxt::contains)
-                .findFirst().orElseThrow(IllegalArgumentException::new);
+                .findFirst().orElseThrow(() -> new BooleanExpressionException(ConstantController.
+                        getString("booleanExpression.error.relationalOperatorUnknown")));
+
         String[] elements = txt.split(relationalOperator);
 
-        if(elements.length != 2) throw new IllegalArgumentException("There are no two elements");
+        if(elements.length != 2)
+            throw new BooleanExpressionException(ConstantController.
+                    getString("booleanExpression.error.notTwoElementsInAtomicExpression"));
 
         Element firstElement = recognizeElement(elements[0]);
         Element secondElement = recognizeElement(elements[1]);
+
+        if(firstElement instanceof Variable)
+            parents.stream().map(Cell::getColumns).flatMap(Collection::stream)
+                    .filter(x -> x.getName().equals(elements[0].strip()) || x.getSourceAndName().equals(elements[0].strip()))
+                    .findAny()
+                    .orElseThrow(() -> new BooleanExpressionException(ConstantController.
+                            getString("booleanExpression.error.elementIsNotAColumn")));
+
+        if(secondElement instanceof Variable)
+            parents.stream().map(Cell::getColumns).flatMap(Collection::stream)
+                    .filter(x -> x.getName().equals(elements[1].strip()) || x.getSourceAndName().equals(elements[1].strip()))
+                    .findAny()
+                    .orElseThrow(() -> new BooleanExpressionException(ConstantController.
+                            getString("booleanExpression.error.elementIsNotAColumn")));
 
         return new AtomicExpression(firstElement, secondElement, RelationalOperator.getOperator(relationalOperator));
 

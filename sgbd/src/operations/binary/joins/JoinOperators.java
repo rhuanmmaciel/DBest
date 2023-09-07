@@ -1,5 +1,6 @@
 package operations.binary.joins;
 
+import booleanexpression.BooleanExpressionException;
 import booleanexpression.BooleanExpressionRecognizer;
 import com.mxgraph.model.mxCell;
 import entities.Column;
@@ -65,13 +66,20 @@ public abstract class JoinOperators implements IOperator {
         Operator op1 = parentCell1.getOperator();
         Operator op2 = parentCell2.getOperator();
 
-        BooleanExpression booleanExpression = new BooleanExpressionRecognizer().recognizer(arguments.get(0));
+        try {
 
-        Operator readyoperator = createJoinOperator(op1, op2, booleanExpression);
+            BooleanExpression booleanExpression = new BooleanExpressionRecognizer(jCell).recognizer(arguments.get(0));
 
-        Operation.operationSetter(cell, cell.getType().SYMBOL+"   " + new BooleanExpressionRecognizer().recognizer(booleanExpression),
-                arguments, readyoperator);
+            Operator readyoperator = createJoinOperator(op1, op2, booleanExpression);
 
+            Operation.operationSetter(cell, cell.getType().SYMBOL + "   " + new BooleanExpressionRecognizer(jCell).recognizer(booleanExpression),
+                    arguments, readyoperator);
+
+        }catch (BooleanExpressionException e){
+
+            cell.setError(e.getMessage());
+
+        }
     }
 
     abstract Operator createJoinOperator(Operator op1, Operator op2, BooleanExpression booleanExpression);

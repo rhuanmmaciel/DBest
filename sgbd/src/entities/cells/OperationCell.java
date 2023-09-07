@@ -167,7 +167,7 @@ public final class OperationCell extends Cell {
 		return getOperator() != null;
 	}
 
-	public void setError(OperationErrorType message) {
+	private void setError(){
 
 		String style = getJGraphCell().getStyle();
 		style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKECOLOR, "red");
@@ -176,21 +176,38 @@ public final class OperationCell extends Cell {
 
 		error = true;
 
+	}
+
+	public void setError(OperationErrorType message) {
+
+		setError();
+
 		errorMessage = switch (message) {
 
-		case NO_ONE_ARGUMENT -> ConstantController.getString("cell.operationCell.error.noOneArgument");
-		case NO_ONE_PARENT -> ConstantController.getString("cell.operationCell.error.noOneParent");
-		case NO_PARENT -> ConstantController.getString("cell.operationCell.error.noParent");
-		case NULL_ARGUMENT -> ConstantController.getString("cell.operationCell.error.nullArgument");
-		case PARENT_ERROR -> ConstantController.getString("cell.operationCell.error.parentError");
-		case PARENT_WITHOUT_COLUMN -> ConstantController.getString("cell.operationCell.error.parentWithoutColumn");
-		case NO_TWO_PARENTS ->  ConstantController.getString("cell.operationCell.error.noTwoParents");
-		case NO_TWO_ARGUMENTS -> ConstantController.getString("cell.operationCell.error.noTwoArguments");
-		case EMPTY_ARGUMENT -> ConstantController.getString("cell.operationCell.error.emptyArgument");
-		case NO_PREFIX -> ConstantController.getString("cell.operationCell.error.noPrefix");
-		case SAME_SOURCE -> ConstantController.getString("cell.operationCell.error.sameSource");
+			case NO_ONE_ARGUMENT -> ConstantController.getString("cell.operationCell.error.noOneArgument");
+			case NO_ONE_PARENT -> ConstantController.getString("cell.operationCell.error.noOneParent");
+			case NO_PARENT -> ConstantController.getString("cell.operationCell.error.noParent");
+			case NULL_ARGUMENT -> ConstantController.getString("cell.operationCell.error.nullArgument");
+			case PARENT_ERROR -> ConstantController.getString("cell.operationCell.error.parentError");
+			case PARENT_WITHOUT_COLUMN -> ConstantController.getString("cell.operationCell.error.parentWithoutColumn");
+			case NO_TWO_PARENTS ->  ConstantController.getString("cell.operationCell.error.noTwoParents");
+			case NO_TWO_ARGUMENTS -> ConstantController.getString("cell.operationCell.error.noTwoArguments");
+			case EMPTY_ARGUMENT -> ConstantController.getString("cell.operationCell.error.emptyArgument");
+			case NO_PREFIX -> ConstantController.getString("cell.operationCell.error.noPrefix");
+			case SAME_SOURCE -> ConstantController.getString("cell.operationCell.error.sameSource");
+			case BOOLEAN_EXPRESSION_WRONG_FORMAT -> ConstantController
+					.getString("cell.operationCell.error.booleanExpressionWrongFormat");
+
 		};
 		
+	}
+
+	public void setError(String message){
+
+		setError();
+
+		errorMessage = message;
+
 	}
 
 	public void removeError() {
