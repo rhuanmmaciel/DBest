@@ -6,16 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="0dee0e35-6e46-4f1c-8cdf-26b078d3568c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/booleanexpression/ErrorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/booleanexpression/ErrorListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/enums/OperationErrorType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/OperationErrorType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/AtomicPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/AtomicPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/joins/JoinOperators.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/joins/JoinOperators.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Selection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Selection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/dsl/Console.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/dsl/Console.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -53,6 +53,7 @@ public class MainController extends MainFrame {
     private static File lastDirectory = new File("");
 
     private final Container textEditor = new TextEditor(this).getContentPane();
+    public static Console console = null;
 
     private mxCell jCell;
     private mxCell ghostJCell = null;
@@ -125,7 +126,7 @@ public class MainController extends MainFrame {
                 case SHOW_CELL -> CellUtils.showTable(jCell);
                 case IMPORT_FILE -> newTable(CurrentAction.ActionType.IMPORT_FILE);
                 case CREATE_TABLE -> newTable(CurrentAction.ActionType.CREATE_TABLE);
-                case OPEN_CONSOLE -> new Console();
+                case OPEN_CONSOLE -> openConsole();
                 case OPEN_TEXT_EDITOR -> changeScreen();
 
             }
@@ -302,6 +303,20 @@ public class MainController extends MainFrame {
                     80, 30, style);
 
         }
+
+    }
+
+    private void openConsole(){
+
+        if(console == null) {
+
+            console = new Console();
+            return;
+
+        }
+
+        console.setLocationRelativeTo(null);
+        console.toFront();
 
     }
 

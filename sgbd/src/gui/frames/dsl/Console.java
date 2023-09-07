@@ -1,12 +1,14 @@
 package gui.frames.dsl;
 
 import controller.ConstantController;
+import controller.MainController;
 import dsl.AntlrController;
 import dsl.DslController;
 import dsl.DslErrorListener;
 import dsl.antlr4.RelAlgebraLexer;
 import dsl.antlr4.RelAlgebraParser;
 import exceptions.dsl.InputException;
+import files.FileUtils;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -16,10 +18,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +34,16 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 	public Console() {
 
 		initGUI();
+
+		addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+
+				MainController.console = null;
+
+			}
+
+		});
 
 	}
 
