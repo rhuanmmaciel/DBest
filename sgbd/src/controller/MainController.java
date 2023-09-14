@@ -34,7 +34,6 @@ import entities.buttons.OperationButton;
 import entities.cells.*;
 import entities.utils.CellUtils;
 import entities.utils.TreeUtils;
-import enums.FileType;
 import enums.OperationType;
 import enums.TableType;
 import files.FileUtils;
@@ -46,6 +45,8 @@ import gui.frames.forms.importexport.ExportAsForm;
 import gui.frames.forms.importexport.ImportAsForm;
 import gui.frames.main.MainFrame;
 import files.ExportFile;
+
+import javax.swing.*;
 
 public class MainController extends MainFrame {
 
@@ -316,6 +317,7 @@ public class MainController extends MainFrame {
         }
 
         console.setLocationRelativeTo(null);
+        console.setExtendedState(JFrame.NORMAL);
         console.toFront();
 
     }

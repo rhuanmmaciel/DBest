@@ -2,12 +2,14 @@ package gui.frames;
 
 import controller.ConstantController;
 import database.TuplesExtractor;
+import engine.info.Parameters;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import gui.utils.JTableUtils;
 import org.kordamp.ikonli.dashicons.Dashicons;
 import org.kordamp.ikonli.swing.FontIcon;
+import sgbd.info.Query;
 import sgbd.query.Operator;
 
 import javax.swing.*;
@@ -31,6 +33,26 @@ public class DataFrame extends JDialog implements ActionListener {
 	private final JButton btnRight = new JButton();
 	private final JButton btnAllLeft = new JButton();
 	private final JButton btnAllRight = new JButton();
+	private final JButton btnStats = new JButton();
+	private final JPanel centerPane = new JPanel();
+	private JScrollPane scrollPane;
+	private final JTextPane textPane = new JTextPane();
+	private FontIcon iconStats;
+
+	private final long INITIAL_PK_SEARCH = Query.PK_SEARCH;
+	private final long INITIAL_SORT_TUPLES = Query.SORT_TUPLES;
+	private final long INITIAL_COMPARE_FILTER = Query.COMPARE_FILTER;
+	private final long INITIAL_COMPARE_JOIN = Query.COMPARE_JOIN;
+	private final long INITIAL_DISTINCT_TUPLE = Query.COMPARE_DISTINCT_TUPLE;
+	private final long INITIAL_IO_SEEK_WRITE_TIME = Parameters.IO_SEEK_WRITE_TIME;
+	private final long INITIAL_IO_WRITE_TIME = Parameters.IO_WRITE_TIME;
+	private final long INITIAL_IO_SEEK_READ_TIME = Parameters.IO_SEEK_READ_TIME;
+	private final long INITIAL_IO_READ_TIME = Parameters.IO_READ_TIME;
+	private final long INITIAL_IO_SYNC_TIME = Parameters.IO_SYNC_TIME;
+	private final long INITIAL_IO_TOTAL_TIME = Parameters.IO_SYNC_TIME+Parameters.IO_SEEK_WRITE_TIME+
+			Parameters.IO_READ_TIME+Parameters.IO_SEEK_READ_TIME+Parameters.IO_WRITE_TIME;
+	private final long INITIAL_BLOCK_LOADED = Parameters.BLOCK_LOADED;
+	private final long INITIAL_BLOCK_SAVED = Parameters.BLOCK_SAVED;
 
 	private final List<Map<String, String>> rows;
 	private final List<String> columnsName;
@@ -87,6 +109,10 @@ public class DataFrame extends JDialog implements ActionListener {
 		FontIcon iconAllRight = FontIcon.of(Dashicons.CONTROLS_SKIPFORWARD);
 		iconAllRight.setIconSize(buttonsSize);
 		btnAllRight.setIcon(iconAllRight);
+
+		iconStats = FontIcon.of(Dashicons.BOOK);
+		iconStats.setIconSize(buttonsSize);
+		btnStats.setIcon(iconStats);
 
 	}
 
@@ -178,17 +204,22 @@ public class DataFrame extends JDialog implements ActionListener {
 		btnAllLeft.addActionListener(this);
 		btnRight.addActionListener(this);
 		btnAllRight.addActionListener(this);
+		btnStats.addActionListener(this);
 
 		JPanel northPane = new JPanel(new FlowLayout());
 		northPane.add(lblText);
 		northPane.add(lblPages);
+		northPane.add(btnStats);
 
 		JPanel tablePanel = new JPanel(new BorderLayout());
 		tablePanel.add(table.getTableHeader(), BorderLayout.NORTH);
 		tablePanel.add(table, BorderLayout.CENTER);
-		JScrollPane scrollPane = new JScrollPane(tablePanel);
+		scrollPane = new JScrollPane(tablePanel);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		centerPane.add(scrollPane);
+
+		textPane.setEditable(false);
 
 		JPanel southPane = new JPanel(new FlowLayout());
 		southPane.add(btnAllLeft);
@@ -197,7 +228,7 @@ public class DataFrame extends JDialog implements ActionListener {
 		southPane.add(btnAllRight);
 
 		contentPane.add(northPane, BorderLayout.NORTH);
-		contentPane.add(scrollPane, BorderLayout.CENTER);
+		contentPane.add(centerPane, BorderLayout.CENTER);
 		contentPane.add(southPane, BorderLayout.SOUTH);
 
 		verifyButtons();
@@ -210,10 +241,13 @@ public class DataFrame extends JDialog implements ActionListener {
 	}
 
 	private void resize(){
+
 		pack();
 		if (getWidth() > ConstantController.UI_WIDTH) {
+
 			int height = getHeight();
 			setSize((int) (ConstantController.UI_WIDTH *0.95), height);
+
 		}
 	}
 
@@ -249,10 +283,77 @@ public class DataFrame extends JDialog implements ActionListener {
 				for(int i = 0; lastPage == null && i < 100; i++) updateTable(++currentIndex);
 			else currentIndex = lastPage;
 
+		}else if(e.getSource() == btnStats){
+
+			alternateScreen();
+
 		}
 
 		updateTable(currentIndex);
+		updateStats();
 		verifyButtons();
+
+	}
+
+	private void updateStats(){
+
+		String stats = ConstantController.getString("dataframe.query") + ":\n" +
+				ConstantController.getString("dataframe.query.pkSearch") + " = " +
+				(Query.PK_SEARCH - INITIAL_PK_SEARCH) + "\n" +
+				ConstantController.getString("dataframe.query.sortedTuples") + " = " +
+				(Query.SORT_TUPLES - INITIAL_SORT_TUPLES) + "\n" +
+				ConstantController.getString("dataframe.query.filterComparison") + " = " +
+				(Query.COMPARE_FILTER - INITIAL_COMPARE_FILTER) + "\n" +
+				ConstantController.getString("dataframe.query.joinComparison") + " = " +
+				(Query.COMPARE_JOIN - INITIAL_COMPARE_JOIN) + "\n" +
+				ConstantController.getString("dataframe.query.distinctTuplesComparison") + " = " +
+				(Query.COMPARE_DISTINCT_TUPLE - INITIAL_DISTINCT_TUPLE) + "\n\n" +
+
+				ConstantController.getString("dataframe.disk") + ":" + "\n" +
+				ConstantController.getString("dataframe.disk.IOSeekWriteTime") + " = " +
+				(Parameters.IO_SEEK_WRITE_TIME - INITIAL_IO_SEEK_WRITE_TIME) / 1000000f + "ms" + "\n" +
+				ConstantController.getString("dataframe.disk.IOWriteTime") + " = " +
+				(Parameters.IO_WRITE_TIME - INITIAL_IO_WRITE_TIME) / 1000000f + "ms" + "\n" +
+				ConstantController.getString("dataframe.disk.IOSeekReadTime") + " = " +
+				(Parameters.IO_SEEK_READ_TIME - INITIAL_IO_SEEK_READ_TIME) / 1000000f + "ms" + "\n" +
+				ConstantController.getString("dataframe.disk.IOReadTime") + " = " +
+				(Parameters.IO_READ_TIME - INITIAL_IO_READ_TIME) / 1000000f + "ms" + "\n" +
+				ConstantController.getString("dataframe.disk.IOSyncTime") + " = " +
+				(Parameters.IO_SYNC_TIME - INITIAL_IO_SYNC_TIME) / 1000000f + "ms" + "\n" +
+				ConstantController.getString("dataframe.disk.IOTime") + " = " + (Parameters.IO_SYNC_TIME
+				+ Parameters.IO_SEEK_WRITE_TIME
+				+ Parameters.IO_READ_TIME
+				+ Parameters.IO_SEEK_READ_TIME
+				+ Parameters.IO_WRITE_TIME - INITIAL_IO_TOTAL_TIME) / 1000000f + "ms" + "\n" +
+				ConstantController.getString("dataframe.block.loaded") + " = " +
+				(Parameters.BLOCK_LOADED - INITIAL_BLOCK_LOADED) + "\n" +
+				ConstantController.getString("dataframe.block.saved") + " = " +
+				(Parameters.BLOCK_SAVED - INITIAL_BLOCK_SAVED);
+
+		textPane.setText(stats);
+
+		revalidate();
+
+	}
+
+	private void alternateScreen(){
+
+		if(centerPane.isAncestorOf(scrollPane)) {
+
+			centerPane.remove(scrollPane);
+			centerPane.add(textPane);
+			iconStats.setIkon(Dashicons.EDITOR_TABLE);
+
+		}else{
+
+			centerPane.remove(textPane);
+			centerPane.add(scrollPane);
+			iconStats.setIkon(Dashicons.BOOK);
+
+		}
+
+		revalidate();
+		repaint();
 
 	}
 
