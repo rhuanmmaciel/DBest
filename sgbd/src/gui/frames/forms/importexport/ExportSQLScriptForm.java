@@ -1,53 +1,92 @@
 package gui.frames.forms.importexport;
 
-import database.TableUtils;
-import database.TuplesExtractor;
-import entities.Column;
-import entities.cells.Cell;
-import gui.frames.forms.FormBase;
-import gui.frames.forms.IFormCondition;
-import gui.utils.JTableUtils;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.*;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import controllers.ConstantController;
+
+import database.TableUtils;
+import database.TuplesExtractor;
+
+import entities.Column;
+import entities.cells.Cell;
+
+import gui.frames.forms.FormBase;
+import gui.frames.forms.IFormCondition;
+
+import gui.utils.JTableUtils;
 
 public class ExportSQLScriptForm extends FormBase implements ActionListener, IFormCondition {
 
     private final JPanel formPane = new JPanel(new GridBagLayout());
+
     private final JPanel tablePane = new JPanel();
+
     private final JScrollPane scrollPane = new JScrollPane();
 
     private final JTextArea textArea = new JTextArea();
-    private final JButton btnChangeScreen = new JButton("Ver tabela");
+
+    private final JButton btnChangeScreen = new JButton(ConstantController.getString("exportSQLScript.showTableButton"));
+
     private final JTextField txtFieldDatabaseName = new JTextField();
+
     private final JTextField txtFieldTableName = new JTextField();
+
     private final JCheckBox checkBoxCreateDatabase;
 
     private final StringBuilder databaseName;
+
     private final StringBuilder tableName;
+
     private final StringBuilder additionalCommand;
+
     private final Map<String, JCheckBox> pkCheckBoxes;
+
     private final Map<String, JCheckBox> nullCheckBoxes;
+
     private final Map<String, JTextField> newColumnNameTxtFields;
+
     private final Vector<String> columnNames;
+
     private final Vector<Vector<Object>> content;
+
     private final AtomicReference<Boolean> exitReference;
+
     private final Cell cell;
+
     private boolean isForm = true;
 
     public ExportSQLScriptForm(Cell cell, SQLScriptInf inf, AtomicReference<Boolean> exitReference) {
-
         super(null);
-        setModal(true);
+
+        this.setModal(true);
 
         this.tableName = inf.tableName;
         this.newColumnNameTxtFields = inf.newColumnNameTxtFields;
@@ -61,336 +100,309 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
         this.checkBoxCreateDatabase = inf.checkBoxCreateDatabase;
         this.additionalCommand = inf.additionalCommand;
 
-        loadJTable();
+        this.loadJTable();
 
-        initGUI();
-
+        this.initGUI();
     }
 
     private void initGUI() {
+        this.addWindowListener(new WindowAdapter() {
 
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                exitReference.set(true);
-                closeWindow();
+            @Override
+            public void windowClosing(WindowEvent event) {
+                ExportSQLScriptForm.this.exitReference.set(true);
+                ExportSQLScriptForm.this.closeWindow();
             }
         });
 
-        tablePane.setLayout(new BorderLayout());
-        tablePane.add(scrollPane);
+        this.tablePane.setLayout(new BorderLayout());
+        this.tablePane.add(this.scrollPane);
 
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        this.scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        this.scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        btnChangeScreen.addActionListener(this);
+        this.btnChangeScreen.addActionListener(this);
 
-        initForm();
-        initBottom();
+        this.initForm();
+        this.initBottom();
 
-        checkBtnReady();
+        this.checkReadyButton();
 
-        setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
-
     }
 
     private void initForm() {
 
-        contentPanel.add(btnChangeScreen, BorderLayout.NORTH);
-        contentPanel.add(formPane, BorderLayout.CENTER);
+        this.contentPanel.add(this.btnChangeScreen, BorderLayout.NORTH);
+        this.contentPanel.add(this.formPane, BorderLayout.CENTER);
 
-        addComponent(new JLabel("Nome do Database: "), 0, 0, 1, 1);
-        addComponent(txtFieldDatabaseName, 1, 0, 1, 1);
-        txtFieldDatabaseName.setMaximumSize(new Dimension(3000, 50));
-        txtFieldDatabaseName.getDocument().addDocumentListener(new DocumentListener() {
+        this.addComponent(new JLabel(String.format("%s:", ConstantController.getString("exportSQLScript.databaseName"))), 0, 0, 1, 1);
+        this.addComponent(this.txtFieldDatabaseName, 1, 0, 1, 1);
+        this.txtFieldDatabaseName.setMaximumSize(new Dimension(3000, 50));
+        this.txtFieldDatabaseName.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent documentEvent) {
-                checkBtnReady();
+                ExportSQLScriptForm.this.checkReadyButton();
             }
 
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
-                checkBtnReady();
+                ExportSQLScriptForm.this.checkReadyButton();
             }
 
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
-                checkBtnReady();
+                ExportSQLScriptForm.this.checkReadyButton();
             }
         });
 
-        addComponent(new JLabel("Nome da tabela: "), 0, 1, 1, 1);
-        addComponent(txtFieldTableName, 1, 1, 1, 1);
-        txtFieldTableName.setMaximumSize(new Dimension(3000, 50));
-        txtFieldTableName.getDocument().addDocumentListener(new DocumentListener() {
+        this.addComponent(new JLabel(String.format("%s:", ConstantController.getString("exportSQLScript.tableName"))), 0, 1, 1, 1);
+        this.addComponent(this.txtFieldTableName, 1, 1, 1, 1);
+        this.txtFieldTableName.setMaximumSize(new Dimension(3000, 50));
+        this.txtFieldTableName.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent documentEvent) {
-                checkBtnReady();
+                ExportSQLScriptForm.this.checkReadyButton();
             }
 
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
-                checkBtnReady();
+                ExportSQLScriptForm.this.checkReadyButton();
             }
 
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
-                checkBtnReady();
+                ExportSQLScriptForm.this.checkReadyButton();
             }
         });
 
-        addComponent(checkBoxCreateDatabase, 0, 2, 1, 1);
+        this.addComponent(this.checkBoxCreateDatabase, 0, 2, 1, 1);
 
-        addComponent(new JLabel("  Coluna  "), 0, 3, 1, 1);
-        addComponent(new JLabel("  Nome da coluna  "), 1, 3, 1, 1);
-        addComponent(new JLabel("  Chave primária  "), 2, 3, 1, 1);
-        addComponent(new JLabel("  Pode possuir valor null  "), 3, 3, 1, 1);
+        this.addComponent(new JLabel(String.format(" %s ", ConstantController.getString("exportSQLScript.column"))), 0, 3, 1, 1);
+        this.addComponent(new JLabel(String.format(" %s ", ConstantController.getString("exportSQLScript.columnName"))), 1, 3, 1, 1);
+        this.addComponent(new JLabel(String.format(" %s ", ConstantController.getString("exportSQLScript.primaryKey"))), 2, 3, 1, 1);
+        this.addComponent(new JLabel(String.format(" %s ", ConstantController.getString("exportSQLScript.canBeNull"))), 3, 3, 1, 1);
 
         int i = 4;
-        for (String columnName : columnNames.subList(0, columnNames.size() - 1)) {
 
-            addComponent(new JLabel(columnName), 0, i, 1, 1);
-            addComponent(newColumnNameTxtFields.get(columnName), 1, i, 1, 1);
-            addComponent(pkCheckBoxes.get(columnName), 2, i, 1, 1);
-            addComponent(nullCheckBoxes.get(columnName), 3, i, 1, 1);
+        for (String columnName : this.columnNames.subList(0, this.columnNames.size() - 1)) {
+            this.addComponent(new JLabel(columnName), 0, i, 1, 1);
+            this.addComponent(this.newColumnNameTxtFields.get(columnName), 1, i, 1, 1);
+            this.addComponent(this.pkCheckBoxes.get(columnName), 2, i, 1, 1);
+            this.addComponent(this.nullCheckBoxes.get(columnName), 3, i, 1, 1);
             i++;
-
         }
 
-        addComponent(new JScrollPane(textArea), 0, i++, 4, 1);
-
+        this.addComponent(new JScrollPane(this.textArea), 0, i, 4, 1);
     }
 
-    protected void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight) {
+    protected void addComponent(Component component, int gridX, int gridY, int gridWidth, int gridHeight) {
+        GridBagConstraints gbc = ((GridBagLayout) this.formPane.getLayout()).getConstraints(this.formPane);
 
-        GridBagConstraints gbc = ((GridBagLayout) formPane.getLayout()).getConstraints(formPane);
-
-        gbc.gridx = gridx;
-        gbc.gridy = gridy;
-        gbc.gridwidth = gridwidth;
-        gbc.gridheight = gridheight;
+        gbc.gridx = gridX;
+        gbc.gridy = gridY;
+        gbc.gridwidth = gridWidth;
+        gbc.gridheight = gridHeight;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        formPane.add(component, gbc);
 
-        pack();
-        revalidate();
-        repaint();
+        this.formPane.add(component, gbc);
+        this.pack();
+        this.revalidate();
+        this.repaint();
     }
 
     private void loadTable() {
+        this.contentPanel.remove(this.formPane);
+        this.contentPanel.add(this.tablePane, BorderLayout.CENTER);
 
-        contentPanel.remove(formPane);
-        contentPanel.add(tablePane, BorderLayout.CENTER);
-
-        pack();
-        revalidate();
-        repaint();
-
+        this.pack();
+        this.revalidate();
+        this.repaint();
     }
 
     private void loadForm() {
+        this.contentPanel.remove(this.tablePane);
+        this.contentPanel.add(this.formPane, BorderLayout.CENTER);
 
-        contentPanel.remove(tablePane);
-        contentPanel.add(formPane, BorderLayout.CENTER);
-
-        pack();
-        revalidate();
-        repaint();
-
+        this.pack();
+        this.revalidate();
+        this.repaint();
     }
 
     private void initBottom() {
-
-        cancelButton.addActionListener(this);
-        readyButton.addActionListener(this);
-
+        this.cancelButton.addActionListener(this);
+        this.readyButton.addActionListener(this);
     }
 
     private void loadJTable() {
-
         boolean columnsPut = false;
 
-        for (Map<String, String> row : TuplesExtractor.getAllRows(cell.getOperator(), true)) {
-
+        for (Map<String, String> row : TuplesExtractor.getAllRows(this.cell.getOperator(), true)) {
             if (!columnsPut) {
-
                 for (String inf : row.keySet()) {
-
-                    columnNames.add(inf);
+                    this.columnNames.add(inf);
 
                     JCheckBox pkCheckBox = new JCheckBox();
                     JCheckBox nullCheckBox = new JCheckBox();
                     JTextField newColumnNameTextField = new JTextField(Column.removeSource(inf));
+
                     pkCheckBox.addActionListener(this);
+
                     newColumnNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+
                         @Override
                         public void insertUpdate(DocumentEvent documentEvent) {
-                            checkBtnReady();
+                            ExportSQLScriptForm.this.checkReadyButton();
                         }
 
                         @Override
                         public void removeUpdate(DocumentEvent documentEvent) {
-                            checkBtnReady();
+                            ExportSQLScriptForm.this.checkReadyButton();
                         }
 
                         @Override
                         public void changedUpdate(DocumentEvent documentEvent) {
-                            checkBtnReady();
+                            ExportSQLScriptForm.this.checkReadyButton();
                         }
                     });
 
-                    pkCheckBoxes.put(inf, pkCheckBox);
-                    nullCheckBoxes.put(inf, nullCheckBox);
-                    newColumnNameTxtFields.put(inf, newColumnNameTextField);
-
+                    this.pkCheckBoxes.put(inf, pkCheckBox);
+                    this.nullCheckBoxes.put(inf, nullCheckBox);
+                    this.newColumnNameTxtFields.put(inf, newColumnNameTextField);
                 }
-                columnsPut = true;
 
+                columnsPut = true;
             }
 
             Vector<Object> line = new Vector<>(row.values());
 
-            content.add(line);
-
+            this.content.add(line);
         }
 
-        JTableUtils.CustomTableModel model = new JTableUtils.CustomTableModel(content, columnNames);
+        JTableUtils.CustomTableModel model = new JTableUtils.CustomTableModel(this.content, this.columnNames);
 
-        addFirstColumn(model);
+        this.addFirstColumn(model);
 
         JTable table = new JTable(model);
 
-        setCheckBoxesEnabled();
+        this.setCheckBoxesEnabled();
 
         JTableUtils.preferredColumnWidthByValues(table, 0);
-        for (int i = 1; i < table.getColumnCount(); i++)
+
+        for (int i = 1; i < table.getColumnCount(); i++) {
             JTableUtils.preferredColumnWidthByColumnName(table, i);
+        }
 
         table.getColumnModel().moveColumn(model.getColumnCount() - 1, 0);
         table.getColumnModel().getColumn(0).setResizable(false);
+
         JTableUtils.setColumnBold(table, 0);
         JTableUtils.preferredColumnWidthByValues(table, 0);
+
         table.setShowHorizontalLines(true);
         table.setGridColor(Color.blue);
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(false);
         table.setCellSelectionEnabled(false);
-        JTableUtils.setNullInRed(table);
-        scrollPane.setViewportView(table);
-        table.setFillsViewportHeight(true);
 
+        JTableUtils.setNullInRed(table);
+
+        this.scrollPane.setViewportView(table);
+        table.setFillsViewportHeight(true);
     }
 
     private void setCheckBoxesEnabled() {
-
-        for (Map.Entry<String, JCheckBox> checkBox : nullCheckBoxes.entrySet()) {
-
+        for (Map.Entry<String, JCheckBox> checkBox : this.nullCheckBoxes.entrySet()) {
             List<String> columnData = new ArrayList<>();
-            int index = columnNames.indexOf(checkBox.getKey());
 
-            for (Vector<Object> column : content)
+            int index = this.columnNames.indexOf(checkBox.getKey());
+
+            for (Vector<Object> column : this.content) {
                 columnData.add(Objects.toString(column.get(index)));
+            }
 
             boolean canBeNotNull = !TableUtils.hasNull(columnData.subList(3, columnData.size()));
+
             checkBox.getValue().setEnabled(canBeNotNull);
             checkBox.getValue().setSelected(!canBeNotNull);
-
         }
-
     }
 
     private void addFirstColumn(JTableUtils.CustomTableModel model) {
-
-        model.addColumn("Nome:");
+        model.addColumn(String.format("%s", ConstantController.getString("exportSQLScript.firstColumnName")));
 
         for (int row = 0; row < model.getRowCount(); row++) {
             model.setValueAt(row + 1, row, model.getColumnCount() - 1);
         }
-
     }
 
     protected void closeWindow() {
-        dispose();
+        this.dispose();
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        checkBtnReady();
+        this.checkReadyButton();
 
-        if (cancelButton == actionEvent.getSource()) {
-            exitReference.set(true);
-            closeWindow();
+        if (this.cancelButton == actionEvent.getSource()) {
+            this.exitReference.set(true);
+            this.closeWindow();
         }
 
-        if (readyButton == actionEvent.getSource()) {
-
-            databaseName.append(txtFieldDatabaseName.getText());
-            tableName.append(txtFieldTableName.getText());
-            additionalCommand.append(textArea.getText());
-            closeWindow();
-
+        if (this.readyButton == actionEvent.getSource()) {
+            this.databaseName.append(this.txtFieldDatabaseName.getText());
+            this.tableName.append(this.txtFieldTableName.getText());
+            this.additionalCommand.append(this.textArea.getText());
+            this.closeWindow();
         }
 
-        if (btnChangeScreen == actionEvent.getSource()) {
-
-            if (isForm) {
-
-                isForm = false;
-                btnChangeScreen.setText("Voltar");
-                loadTable();
-                return;
-
+        if (this.btnChangeScreen == actionEvent.getSource()) {
+            if (this.isForm) {
+                this.isForm = false;
+                this.btnChangeScreen.setText(String.format("%s", ConstantController.getString("exportSQLScript.backButton")));
+                this.loadTable();
+            } else {
+                this.isForm = true;
+                this.btnChangeScreen.setText(String.format("%s", ConstantController.getString("exportSQLScript.showTableButton")));
+                this.loadForm();
             }
-
-            isForm = true;
-            btnChangeScreen.setText("Ver tabela");
-            loadForm();
-
         }
-
     }
 
     @Override
-    public void checkBtnReady() {
-
+    public void checkReadyButton() {
         List<List<String>> columnsSelected = new ArrayList<>();
-        for (Map.Entry<String, JCheckBox> checkBox : pkCheckBoxes.entrySet())
+
+        for (Map.Entry<String, JCheckBox> checkBox : this.pkCheckBoxes.entrySet()) {
             if (checkBox.getValue().isSelected()) {
-
                 List<String> columnData = new ArrayList<>();
-                int index = columnNames.indexOf(checkBox.getKey());
+                int index = this.columnNames.indexOf(checkBox.getKey());
 
-                for (Vector<Object> column : content)
+                for (Vector<Object> column : this.content) {
                     columnData.add(Objects.toString(column.get(index)));
+                }
 
                 columnsSelected.add(columnData.subList(3, columnData.size()));
-
             }
+        }
 
-        boolean everyColumnHasName = newColumnNameTxtFields.values().stream().noneMatch(x -> x.getText().isBlank());
+        boolean everyColumnHasName = this.newColumnNameTxtFields.values().stream().noneMatch(x -> x.getText().isBlank());
         boolean canBePK = columnsSelected.isEmpty() || TableUtils.canBePrimaryKey(columnsSelected);
 
-        readyButton.setEnabled(canBePK && !txtFieldDatabaseName.getText().isBlank() &&
-                !txtFieldTableName.getText().isBlank() && everyColumnHasName);
-
+        this.readyButton.setEnabled(canBePK && !this.txtFieldDatabaseName.getText().isBlank() && !this.txtFieldTableName.getText().isBlank() && everyColumnHasName);
     }
 
     @Override
-    public void updateToolTipTxt() {
+    public void updateToolTipText(boolean... conditions) {
 
     }
 
     public record SQLScriptInf(
-        StringBuilder databaseName,
-        StringBuilder tableName,
-        Map<String, JTextField> newColumnNameTxtFields,
-        Map<String, JCheckBox> pkCheckBoxes,
-        Map<String, JCheckBox> nullCheckBoxes,
-        JCheckBox checkBoxCreateDatabase,
-        StringBuilder additionalCommand,
-        Vector<String> columnNames,
-        Vector<Vector<Object>> content
+        StringBuilder databaseName, StringBuilder tableName, Map<String, JTextField> newColumnNameTxtFields,
+        Map<String, JCheckBox> pkCheckBoxes, Map<String, JCheckBox> nullCheckBoxes, JCheckBox checkBoxCreateDatabase,
+        StringBuilder additionalCommand, Vector<String> columnNames, Vector<Vector<Object>> content
     ) {
 
     }

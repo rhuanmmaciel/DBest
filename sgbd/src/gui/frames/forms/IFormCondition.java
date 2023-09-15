@@ -2,7 +2,7 @@ package gui.frames.forms;
 
 public interface IFormCondition {
 
-    void checkBtnReady();
-    void updateToolTipTxt();
+    void checkReadyButton();
 
+    void updateToolTipText(boolean ...conditions);
 }

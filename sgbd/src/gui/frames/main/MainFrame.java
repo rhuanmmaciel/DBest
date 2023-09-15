@@ -1,20 +1,40 @@
 package gui.frames.main;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JToolBar;
+
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
-import controller.ConstantController;
+
+import controllers.ConstantController;
 import entities.Action.CurrentAction;
 import entities.buttons.Button;
 import entities.buttons.OperationButton;
 import entities.buttons.ToolBarButton;
+import enums.FileType;
 import enums.OperationType;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.Set;
 
 public abstract class MainFrame extends JFrame implements ActionListener, MouseListener, KeyListener, MouseMotionListener {
 
@@ -40,10 +60,12 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
     protected JMenu operationsMenuItem;
 
+    protected JMenuBar menuBar;
+
     protected JMenuItem showMenuItem, informationsMenuItem, exportTableMenuItem, exportTreeMenuItem, editMenuItem,
         removeMenuItem, selectionMenuItem, projectionMenuItem, sortMenuItem, aggregationMenuItem, groupMenuItem,
         renameMenuItem, indexerMenuItem, joinMenuItem, leftJoinMenuItem, rightJoinMenuItem, cartesianProductMenuItem,
-        unionMenuItem, intersectionMenuItem;
+        unionMenuItem, intersectionMenuItem, importTableMenuItem, importTreeMenuItem;
 
     protected MainFrame(Set<Button<?>> buttons) {
         super(ConstantController.APPLICATION_TITLE);
@@ -62,13 +84,14 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.toolBar = new JToolBar();
         this.buttons = buttons;
         this.popupMenuJCell = new JPopupMenu();
-        this.showMenuItem = new JMenuItem("Mostrar");
-        this.informationsMenuItem = new JMenuItem("Informações");
-        this.exportTableMenuItem = new JMenuItem("Exportar tabela");
-        this.exportTreeMenuItem = new JMenuItem("Exportar árvore");
-        this.editMenuItem = new JMenuItem("Editar");
-        this.removeMenuItem = new JMenuItem("Remover");
-        this.operationsMenuItem = new JMenu("Operações");
+        this.menuBar = new JMenuBar();
+        this.showMenuItem = new JMenuItem(ConstantController.getString("cell.show"));
+        this.informationsMenuItem = new JMenuItem(ConstantController.getString("cell.informations"));
+        this.exportTableMenuItem = new JMenuItem(ConstantController.getString("cell.exportTable"));
+        this.exportTreeMenuItem = new JMenuItem(ConstantController.getString("cell.exportTree"));
+        this.editMenuItem = new JMenuItem(ConstantController.getString("cell.edit"));
+        this.removeMenuItem = new JMenuItem(ConstantController.getString("cell.remove"));
+        this.operationsMenuItem = new JMenu(ConstantController.getString("cell.operations"));
         this.selectionMenuItem = new JMenuItem(OperationType.SELECTION.displayName);
         this.projectionMenuItem = new JMenuItem(OperationType.PROJECTION.displayName);
         this.sortMenuItem = new JMenuItem(OperationType.SORT.displayName);
@@ -82,6 +105,8 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.cartesianProductMenuItem = new JMenuItem(OperationType.CARTESIAN_PRODUCT.displayName);
         this.unionMenuItem = new JMenuItem(OperationType.UNION.displayName);
         this.intersectionMenuItem = new JMenuItem(OperationType.INTERSECTION.displayName);
+        this.importTableMenuItem = new JMenuItem(ConstantController.getString("menu.file.importTable"));
+        this.importTreeMenuItem = new JMenuItem(ConstantController.getString("menu.file.importTree"));
     }
 
     private void initializeGUI() {
@@ -117,6 +142,35 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.setVisible(true);
     }
 
+    private void addMenuBarsItems(){
+        JMenu fileMenu = new JMenu(ConstantController.getString("menu.file"));
+        JMenu editMenu = new JMenu(ConstantController.getString("menu.edit"));
+        JMenu appearanceMenu = new JMenu(ConstantController.getString("menu.appearance"));
+
+        fileMenu.add(this.importTableMenuItem);
+        fileMenu.add(this.importTreeMenuItem);
+
+        editMenu.add(new JMenuItem(ConstantController.getString("menu.edit.undo")));
+        editMenu.add(new JMenuItem(ConstantController.getString("menu.edit.redo")));
+
+        this.menuBar.add(fileMenu);
+        this.menuBar.add(editMenu);
+        this.menuBar.add(appearanceMenu);
+
+        this.importTableMenuItem.addActionListener(this);
+        this.importTreeMenuItem.addActionListener(this);
+    }
+
+    private void setJCellStyles(){
+        Map<String, Object> style = new HashMap<>();
+        style.put(mxConstants.STYLE_FILLCOLOR, "#6EFAEC");
+
+        String customStyle = FileType.CSV.id;
+
+        graph.getStylesheet().putCellStyle(customStyle, style);
+        tablesGraph.getStylesheet().putCellStyle(customStyle, style);
+    }
+
     private void addOperationButtons() {
         mxStylesheet stylesheet = graph.getStylesheet();
 
@@ -136,14 +190,15 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
     }
 
     private void addBottomButtons() {
-        this.buttons.add(new ToolBarButton<>(JButton.class, "Importar tabela (i)", this, this.toolBar, new CurrentAction(CurrentAction.ActionType.IMPORT_FILE)));
+        this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s (i)", ConstantController.getString("toolBarButtons.importTable")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.IMPORT_FILE)));
         // buttons.add(new ToolBarButton<>(JButton.class, " Criar tabela(c) ", this, this.toolBar, new CurrentAction(CurrentAction.ActionType.CREATE_TABLE)));
-        this.buttons.add(new ToolBarButton<>(JButton.class, "Edge (e)", this, this.toolBar, new CurrentAction(CurrentAction.ActionType.CREATE_EDGE)));
-        this.buttons.add(new ToolBarButton<>(JButton.class, "Remover (del)", this, this.toolBar, new CurrentAction(CurrentAction.ActionType.DELETE_CELL)));
-        this.buttons.add(new ToolBarButton<>(JButton.class, "Remover tudo", this, this.toolBar, new CurrentAction(CurrentAction.ActionType.DELETE_ALL)));
-        this.buttons.add(new ToolBarButton<>(JButton.class, "Captura de tela", this, this.toolBar, new CurrentAction(CurrentAction.ActionType.PRINT_SCREEN)));
-        this.buttons.add(new ToolBarButton<>(JButton.class, "Console", this, this.toolBar, new CurrentAction(CurrentAction.ActionType.OPEN_CONSOLE)));
-        this.buttons.add(new ToolBarButton<>(JButton.class, "Editor de texto", this, this.toolBar, new CurrentAction(CurrentAction.ActionType.OPEN_TEXT_EDITOR)));
+        this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s (e)", ConstantController.getString("toolBarButtons.edge")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.CREATE_EDGE)));
+        this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s (del)", ConstantController.getString("toolBarButtons.remove")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.DELETE_CELL)));
+        this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s", ConstantController.getString("toolBarButtons.removeAll")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.DELETE_ALL)));
+        this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s", ConstantController.getString("toolBarButtons.screenshot")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.PRINT_SCREEN)));
+        this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s", ConstantController.getString("toolBarButtons.console")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.OPEN_CONSOLE)));
+        this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s", ConstantController.getString("toolBarButtons.textEditor")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.OPEN_TEXT_EDITOR)));
+        // this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s", ConstantController.getString("toolBarButtons.createDatabaseConnection")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.CREATE_DB_CONNECTION)));
     }
 
     private void setTablesSavedConfig() {

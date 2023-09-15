@@ -1,13 +1,17 @@
 package utils;
 
-import enums.ColumnDataType;
-
-import sgbd.prototype.query.Tuple;
-
 import java.util.List;
 import java.util.Objects;
 
+import enums.ColumnDataType;
+import sgbd.prototype.query.Tuple;
+import sgbd.util.global.Util;
+
 public class Utils {
+
+    private Utils() {
+
+    }
 
     public static boolean containsIgnoreCase(List<String> strings, String searchString) {
         if (strings == null) return false;
@@ -22,11 +26,9 @@ public class Utils {
     }
 
     public static ColumnDataType getColumnDataType(Tuple tuple, String sourceName, String columnName) {
-        if (tuple == null || sourceName == null || columnName == null) {
-            return ColumnDataType.NONE;
-        }
+        if (tuple == null || sourceName == null || columnName == null) return ColumnDataType.NONE;
 
-        return switch (sgbd.util.global.Util.typeOfColumn(tuple.getContent(sourceName).getMeta(columnName))) {
+        return switch (Util.typeOfColumn(tuple.getContent(sourceName).getMetadata(columnName))) {
             case "int" -> ColumnDataType.INTEGER;
             case "long" -> ColumnDataType.LONG;
             case "float" -> ColumnDataType.FLOAT;

@@ -51,8 +51,8 @@ public abstract class OperationForm extends FormBase {
     protected final List<String> restrictedColumns = new ArrayList<>();
 
     protected OperationForm(mxCell jCell) {
-
         super(null);
+
         this.setModal(true);
 
         Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
@@ -75,11 +75,9 @@ public abstract class OperationForm extends FormBase {
         this.setTitle(cell.getType().displayName);
 
         this.initializeGUI();
-
     }
 
     private void initializeGUI() {
-
         this.setLocationRelativeTo(null);
 
         this.contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -87,11 +85,9 @@ public abstract class OperationForm extends FormBase {
         this.initializeComboBoxes();
 
         this.pack();
-
     }
 
     private void initializeComboBoxes() {
-
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
@@ -150,7 +146,8 @@ public abstract class OperationForm extends FormBase {
             .stream()
             .filter(column -> column
                 .getSource()
-                .equals(Objects.requireNonNull(comboBoxS.getSelectedItem()).toString()))
+                .equals(Objects.requireNonNull(comboBoxS.getSelectedItem()).toString())
+            )
             .map(Column::getSourceAndName)
             .filter(column -> !this.restrictedColumns.contains(column))
             .map(Column::removeSource)

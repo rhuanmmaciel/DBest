@@ -1,13 +1,7 @@
 
-a
-java:S1192"FDefine a constant instead of duplicating this literal "DESC:" 3 times.(õæôúÿÿÿÿ
+c
+java:S1192"FDefine a constant instead of duplicating this literal "DESC:" 3 times.(Œ‰¹¤8Í¥ ©1
 o
-java:S1104"TMake PREFIXES a static final constant or non-public and provide accessors if needed.(õæôúÿÿÿÿ
-I
-java:S1444".Make this "public static PREFIXES" field final(õæôúÿÿÿÿ
-n
-java:S3008"SRename this field "PREFIXES" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(õæôúÿÿÿÿ
-–
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(×öø6
-h
-java:S3776"RRefactor this method to reduce its Cognitive Complexity from 23 to the 15 allowed.(äØñ¥
+java:S3776 "RRefactor this method to reduce its Cognitive Complexity from 28 to the 15 allowed.(äØñ¥8ş¥ ©1
+Q
+java:S1874T"4Remove this use of "SortOperator"; it is deprecated.(‚µÇã8•Š­©1

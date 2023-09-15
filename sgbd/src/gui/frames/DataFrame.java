@@ -13,7 +13,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import controller.ConstantController;
+import controllers.ConstantController;
 
 import entities.Column;
 import entities.cells.Cell;

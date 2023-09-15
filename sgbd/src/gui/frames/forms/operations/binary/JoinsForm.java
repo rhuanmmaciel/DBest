@@ -38,7 +38,9 @@ public class JoinsForm extends OperationForm implements ActionListener, IOperati
     private void initializeGUI() {
 
         this.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
+
+            @Override
+            public void windowClosing(WindowEvent event) {
                 JoinsForm.this.closeWindow();
             }
         });

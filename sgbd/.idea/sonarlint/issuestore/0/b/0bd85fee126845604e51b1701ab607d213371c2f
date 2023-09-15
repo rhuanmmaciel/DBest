@@ -1,0 +1,6 @@
+
+h	java:S112—"FDefine and throw a dedicated exception instead of using a generic one.(ÌÔ‰Âÿÿÿÿÿ8õòª©1
+h
+java:S1192R"FDefine a constant instead of duplicating this literal "this." 3 times.(Ú›—…ÿÿÿÿÿ8öòª©1
+m
+java:S1301v"KReplace this "switch" statement by "if" statements to increase readability.(¥‚ú‚ÿÿÿÿÿ8âÎ„ª©1

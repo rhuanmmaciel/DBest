@@ -1,28 +1,34 @@
 
-b
-java:S1192ß"FDefine a constant instead of duplicating this literal ".head" 4 times.( Æâ…ÿÿÿÿÿ
+e
+java:S1192«"GDefine a constant instead of duplicating this literal "%s: %s" 3 times.(¢‰¹¤8”©Ó€©1
+{
+java:S1192]"^Define a constant instead of duplicating this literal "file.substitutionConfirmation" 3 times.(¦³¢Ñ8•©Ó€©1
 n
-java:S1192O"YDefine a constant instead of duplicating this literal "Confirmar substituiÃ§Ã£o" 3 times.(ÊÖ‰8
-^
-java:S2095f"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(¼ò€ö
-h
-java:S2095¨"LUse try-with-resources or close this "BufferedWriter" in a "finally" clause.(êòÚøÿÿÿÿ
-d
-java:S2095½"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(ĞŞ®ıøÿÿÿÿ
-|
-java:S1149¥"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(€»¯ä
-|
-java:S1149«"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ùÅ«ó
-n	java:S131."YComplete cases by adding the missing enum constants or add a default case to this switch.(ÜŸ•
-g
-java:S37769"RRefactor this method to reduce its Cognitive Complexity from 35 to the 15 allowed.(ÁßÓ7
-d
-java:S5361·"HReplace this call to "replaceAll()" by a call to the "replace()" method.(äó¤±ûÿÿÿÿ
-i
-java:S3776Ó"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(••¸™
-i
-java:S3776¡"RRefactor this method to reduce its Cognitive Complexity from 44 to the 15 allowed.(¬âÛè
-T	java:S106“"9Replace this use of System.out or System.err by a logger.(× ¼íùÿÿÿÿ
-T	java:S106¬"9Replace this use of System.out or System.err by a logger.(ˆŞñÂÿÿÿÿÿ
-Ü
-java:S65419"ÆA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 112 to 64, Complexity from 28 to 14, Nesting Level from 4 to 2, Number of Variables from 24 to 6.(ÁßÓ7
+java:S1192\"RDefine a constant instead of duplicating this literal "file.substitution" 3 times.(ª†œ^8•©Ó€©1
+p
+java:S1192«"RDefine a constant instead of duplicating this literal "file.error.toSave" 3 times.(¢‰¹¤8•©Ó€©1
+e
+java:S2095t"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(¼ò€ö8»ºÓ€©1
+k
+java:S2095Õ"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(ĞŞ®ıøÿÿÿÿ8»ºÓ€©1
+ƒ
+java:S1149¹"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(€»¯ä8ÆºÓ€©1
+ƒ
+java:S1149¿"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ùÅ«ó8ÆºÓ€©1
+t
+java:S3776F"RRefactor this method to reduce its Cognitive Complexity from 35 to the 15 allowed.(áÖËœşÿÿÿÿ8ÊºÓ€©1
+k
+java:S5361Ë"HReplace this call to "replaceAll()" by a call to the "replace()" method.(äó¤±ûÿÿÿÿ8îºÓ€©1
+u
+java:S3776ç"RRefactor this method to reduce its Cognitive Complexity from 26 to the 15 allowed.(œ±ñùÿÿÿÿ8üºÓ€©1
+p
+java:S3776º"RRefactor this method to reduce its Cognitive Complexity from 44 to the 15 allowed.(½´û8‹»Ó€©1
+H	java:S106«"+Replace this use of System.out by a logger.(¢‰¹¤8»Ó€©1
+H	java:S106Å"+Replace this use of System.out by a logger.(¢‰¹¤8¡»Ó€©1
+H	java:S106Ì"+Replace this use of System.out by a logger.(¢‰¹¤8¢»Ó€©1
+M
+java:S2093Á"*Change this "try" to a try-with-resources.(¡»¢üùÿÿÿÿ8£»Ó€©1
+P
+java:S1144ˆ"2Remove this unused private "exportToImage" method.(ş‡Ü—8¥»Ó€©1
+é
+java:S6541F"ÆA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 118 to 64, Complexity from 28 to 14, Nesting Level from 4 to 2, Number of Variables from 25 to 6.(áÖËœşÿÿÿÿ8§»Ó€©1

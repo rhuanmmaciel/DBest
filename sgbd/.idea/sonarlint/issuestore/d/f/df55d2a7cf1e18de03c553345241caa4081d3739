@@ -1,0 +1,23 @@
+
+{	java:S131"YComplete cases by adding the missing enum constants or add a default case to this switch.(±–°•şÿÿÿÿ8ÍÑÖ©©1
+^	java:S125"<This block of commented-out lines of code should be removed.(Íã†Œşÿÿÿÿ8ÍÑÖ©©1
+^	java:S125£"<This block of commented-out lines of code should be removed.(®˜•ıÿÿÿÿ8ĞÑÖ©©1
+p
+java:S3776§"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(³şİÔ8ÑÑÖ©©1
+o
+java:S3776ÿ"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(à»ßF8ÚÑÖ©©1
+p
+java:S3776Š"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(¸Ïø­8éÑÖ©©1
+H	java:S106"+Replace this use of System.out by a logger.(ú•€Ë8 õ€©1
+H	java:S106Ÿ"+Replace this use of System.out by a logger.(Á÷Ö¿8ëÑÖ©©1
+W
+java:S2864¡"4Iterate over the "entrySet" instead of the "keySet".(åÂÚæúÿÿÿÿ8ëÑÖ©©1
+H	java:S106¢"+Replace this use of System.out by a logger.(©åÿü8ëÑÖ©©1
+M	java:S106¥"+Replace this use of System.out by a logger.(²èõ±ûÿÿÿÿ8ëÑÖ©©1
+H	java:S106¨"+Replace this use of System.out by a logger.(…ïÉñ8ìÑÖ©©1
+k
+java:S3252ª"HUse static access with "java.awt.event.InputEvent" for "CTRL_DOWN_MASK".(›ƒşàøÿÿÿÿ8ìÑÖ©©1
+k
+java:S3252¬"HUse static access with "java.awt.event.InputEvent" for "CTRL_DOWN_MASK".(®ä„…şÿÿÿÿ8ìÑÖ©©1
+Z
+java:S1144ù"7Remove this unused private "menuBarItemClicked" method.(Àœùøÿÿÿÿ8ùÑÖ©©1

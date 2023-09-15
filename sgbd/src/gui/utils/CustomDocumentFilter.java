@@ -1,7 +1,5 @@
 package gui.utils;
 
-import enums.OperationType;
-
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -15,6 +13,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
+import enums.OperationType;
+
 public class CustomDocumentFilter extends DocumentFilter {
 
 	private final StyledDocument styledDocument;
@@ -23,42 +23,44 @@ public class CustomDocumentFilter extends DocumentFilter {
 	private final JTextPane textPane;
 
 	private final StyleContext styleContext = StyleContext.getDefaultStyleContext();
-	private final javax.swing.text.AttributeSet blueAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(),
+	private final javax.swing.text.AttributeSet blueAttributeSet = this.styleContext.addAttribute(this.styleContext.getEmptySet(),
 			StyleConstants.Foreground, Color.BLUE);
-	private final javax.swing.text.AttributeSet orangeAttributeSet = styleContext
-			.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.MAGENTA);
-	private final javax.swing.text.AttributeSet blackAttributeSet = styleContext
-			.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
+	private final javax.swing.text.AttributeSet orangeAttributeSet = this.styleContext
+			.addAttribute(this.styleContext.getEmptySet(), StyleConstants.Foreground, Color.MAGENTA);
+	private final javax.swing.text.AttributeSet blackAttributeSet = this.styleContext
+			.addAttribute(this.styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
 
-	private final Pattern pattern = buildPattern();
-	private final Pattern operationPattern = buildOperationPattern();
+	private final Pattern pattern = this.buildPattern();
+	private final Pattern operationPattern = this.buildOperationPattern();
 
 	public CustomDocumentFilter(JTextPane textPane) {
 
 		this.textPane = textPane;
-		styledDocument = textPane.getStyledDocument();
+        this.styledDocument = textPane.getStyledDocument();
 
 	}
 
+    @Override
 	public void insertString(FilterBypass fb, int offset, String text, javax.swing.text.AttributeSet attributeSet)
 			throws BadLocationException {
 		super.insertString(fb, offset, text, attributeSet);
 
-		handleTextChanged();
+        this.handleTextChanged();
 	}
 
 	@Override
 	public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
 		super.remove(fb, offset, length);
 
-		handleTextChanged();
+        this.handleTextChanged();
 	}
 
+    @Override
 	public void replace(FilterBypass fb, int offset, int length, String text,
 			javax.swing.text.AttributeSet attributeSet) throws BadLocationException {
 		super.replace(fb, offset, length, text, attributeSet);
 
-		handleTextChanged();
+        this.handleTextChanged();
 	}
 
 	private void handleTextChanged() {
@@ -67,12 +69,12 @@ public class CustomDocumentFilter extends DocumentFilter {
 
 	private Pattern buildPattern() {
 		StringBuilder sb = new StringBuilder();
-		for (String token : tokens) {
+		for (String token : this.tokens) {
 			sb.append("\\b"); // Start of word boundary
 			sb.append(token);
 			sb.append("\\b|"); // End of word boundary and an or for the next word
 		}
-		if (sb.length() > 0) {
+		if (!sb.isEmpty()) {
 			sb.deleteCharAt(sb.length() - 1); // Remove the trailing "|"
 		}
 
@@ -82,12 +84,12 @@ public class CustomDocumentFilter extends DocumentFilter {
 
 	private Pattern buildOperationPattern() {
 		StringBuilder sb = new StringBuilder();
-		for (String token : operations) {
+		for (String token : this.operations) {
 			sb.append("\\b"); // Início do limite da palavra
 			sb.append(token);
 			sb.append("\\b|"); // Fim do limite da palavra e "ou" para a próxima palavra
 		}
-		if (sb.length() > 0) {
+		if (!sb.isEmpty()) {
 			sb.deleteCharAt(sb.length() - 1); // Remover o "|" final
 		}
 
@@ -96,16 +98,16 @@ public class CustomDocumentFilter extends DocumentFilter {
 
 	private void updateTextStyles() {
 
-		styledDocument.setCharacterAttributes(0, textPane.getText().length(), blackAttributeSet, true);
+        this.styledDocument.setCharacterAttributes(0, this.textPane.getText().length(), this.blackAttributeSet, true);
 
-		Matcher matcher = pattern.matcher(textPane.getText());
+		Matcher matcher = this.pattern.matcher(this.textPane.getText());
 		while (matcher.find())
-			styledDocument.setCharacterAttributes(matcher.start(), matcher.end() - matcher.start(), blueAttributeSet,
+            this.styledDocument.setCharacterAttributes(matcher.start(), matcher.end() - matcher.start(), this.blueAttributeSet,
 					false);
 
-		matcher = operationPattern.matcher(textPane.getText());
+		matcher = this.operationPattern.matcher(this.textPane.getText());
 		while (matcher.find())
-			styledDocument.setCharacterAttributes(matcher.start(), matcher.end() - matcher.start(), orangeAttributeSet,
+            this.styledDocument.setCharacterAttributes(matcher.start(), matcher.end() - matcher.start(), this.orangeAttributeSet,
 					false);
 
 	}

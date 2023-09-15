@@ -10,6 +10,10 @@ public class RandomUtils {
 
     }
 
+    public static double nextDouble() {
+        return random.nextDouble();
+    }
+
     public static int nextInt(int min, int max) {
         return random.nextInt(min, max + 1);
     }

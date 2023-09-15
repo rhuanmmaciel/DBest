@@ -2,6 +2,7 @@ package entities.cells;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,17 +12,22 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxStyleUtils;
 
-import controller.ConstantController;
+import controllers.ConstantController;
+
 import entities.Column;
 import entities.Edge;
 import entities.utils.cells.CellUtils;
+
 import enums.ColumnDataType;
 import enums.OperationArity;
 import enums.OperationErrorType;
 import enums.OperationType;
+
 import gui.frames.forms.operations.IOperationForm;
 import gui.frames.main.MainFrame;
+
 import operations.IOperator;
+
 import sgbd.query.Operator;
 
 public final class OperationCell extends Cell {
@@ -46,7 +52,7 @@ public final class OperationCell extends Cell {
 
     public OperationCell(mxCell jCell, OperationType type) {
         super(
-            type.getFormattedDisplayName(), type.displayName, jCell,
+            type.getFormattedDisplayName(), jCell,
             ConstantController.OPERATION_CELL_WIDTH, ConstantController.OPERATION_CELL_HEIGHT
         );
 

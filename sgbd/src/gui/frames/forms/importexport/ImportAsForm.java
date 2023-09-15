@@ -1,14 +1,20 @@
 package gui.frames.forms.importexport;
 
-import entities.cells.TableCell;
-import enums.FileType;
-import files.ImportFile;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.util.concurrent.atomic.AtomicReference;
+
+import javax.swing.JButton;
+
+import controllers.ConstantController;
+
+import entities.cells.TableCell;
+
+import enums.FileType;
+
+import files.ImportFile;
 
 public class ImportAsForm extends ImportExportAsForm {
 
@@ -23,7 +29,7 @@ public class ImportAsForm extends ImportExportAsForm {
 
         this.deleteCellReference = deleteCellReference;
         this.tableCell = null;
-        this.headFileButton = new JButton("Arquivo head");
+        this.headFileButton = new JButton(ConstantController.getString("importAs.headerButton"));
 
         this.initializeGUI();
     }
@@ -31,6 +37,7 @@ public class ImportAsForm extends ImportExportAsForm {
     private void initializeGUI() {
         this.addWindowListener(new WindowAdapter() {
 
+            @Override
             public void windowClosing(WindowEvent event) {
                 ImportAsForm.this.closeWindow();
             }
@@ -38,7 +45,7 @@ public class ImportAsForm extends ImportExportAsForm {
 
         this.headFileButton.addActionListener(this);
 
-        this.setTitle("Importar");
+        this.setTitle(ConstantController.getString("importAs.importTitle"));
 
         this.centerPanel.add(this.headFileButton);
 

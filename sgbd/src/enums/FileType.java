@@ -2,10 +2,11 @@ package enums;
 
 public enum FileType {
 
-    CSV   ("csv", ".csv"),
-    EXCEL ("excel", ".xlsx"),
-    SQL   ("sql", ".sql"),
-    FYI   ("fyi", ".dat");
+    CSV    ("csv", ".csv"),
+    EXCEL  ("excel", ".xlsx"),
+    SQL    ("sql", ".sql"),
+    FYI    ("fyi", ".dat"),
+    HEADER ("head", ".head");
 
     public final String id;
 

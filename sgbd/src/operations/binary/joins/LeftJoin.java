@@ -1,17 +1,13 @@
 package operations.binary.joins;
 
+import lib.booleanexpression.entities.expressions.BooleanExpression;
 import sgbd.query.Operator;
 import sgbd.query.binaryop.joins.LeftNestedLoopJoin;
 
 public class LeftJoin extends JoinOperators {
 
-	public LeftJoin() {
-
-	}
-	@Override
-	public Operator createJoinOperator(Operator op1, Operator op2, String source1, String source2, String item1, String item2) {
-
-		return new LeftNestedLoopJoin(op1, op2, (t1, t2) -> compare(t1, source1, item1, t2, source2, item2));
-
-	}
+    @Override
+    public Operator createJoinOperator(Operator operator1, Operator operator2, BooleanExpression booleanExpression) {
+        return new LeftNestedLoopJoin(operator1, operator2, booleanExpression);
+    }
 }

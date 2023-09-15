@@ -18,6 +18,7 @@ import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
 
+import enums.FileType;
 import enums.OperationArity;
 import enums.OperationType;
 
@@ -25,18 +26,20 @@ import files.FileUtils;
 
 public class DslUtils {
 
+    private DslUtils() {
+
+    }
+
     public static CommandType commandRecognizer(String command) {
         command = command.strip();
 
-		if (command.startsWith("import")) {
-			return CommandType.IMPORT_STATEMENT;
-		}
+        if (command.startsWith("import")) {
+            return CommandType.IMPORT_STATEMENT;
+        }
 
-		if (command.contains("=")) {
-			if (!command.contains("[") || command.indexOf("=") < command.indexOf("[")) {
-				return CommandType.VARIABLE_DECLARATION;
-			}
-		}
+        if (command.contains("=") && (!command.contains("[") || command.indexOf("=") < command.indexOf("["))) {
+            return CommandType.VARIABLE_DECLARATION;
+        }
 
         return CommandType.EXPRESSION;
     }
@@ -45,24 +48,24 @@ public class DslUtils {
         if (input.contains("(")) {
             int endIndex = input.indexOf('(');
 
-			if (input.contains("[")) {
-				endIndex = Math.min(input.indexOf('['), endIndex);
-			}
+            if (input.contains("[")) {
+                endIndex = Math.min(input.indexOf('['), endIndex);
+            }
 
-			if (OperationType.fromString(input.substring(0, endIndex).toLowerCase()).arity == OperationArity.UNARY) {
-				return new UnaryExpression(input);
-			}
+            if (OperationType.fromString(input.substring(0, endIndex).toLowerCase()).arity == OperationArity.UNARY) {
+                return new UnaryExpression(input);
+            }
 
             return new BinaryExpression(input);
         }
 
-		if (DslController.containsVariable(clearTableName(input))) {
-			return expressionRecognizer(DslController.getVariableContent(input));
-		}
+        if (DslController.containsVariable(clearTableName(input))) {
+            return expressionRecognizer(DslController.getVariableContent(input));
+        }
 
-		if (FileUtils.getDatFileNames().contains(clearTableName(input))) {
-			return new Relation(input);
-		}
+        if (FileUtils.getDatFileNames().contains(clearTableName(input))) {
+            return new Relation(input);
+        }
 
         DslErrorListener.addErrors(String.format("A fonte de dados '%s' não foi encontrada", input));
 
@@ -86,9 +89,9 @@ public class DslUtils {
     }
 
     public static Optional<Coordinates> getPosition(String input) {
-		if (input == null) {
-			return Optional.empty();
-		}
+        if (input == null) {
+            return Optional.empty();
+        }
 
         if (input.contains("<")) {
             int x = Integer.parseInt(input.substring(input.indexOf("<") + 1, input.indexOf(",")));
@@ -121,25 +124,25 @@ public class DslUtils {
                 case '<' -> openingAngleBracketsAmount++;
                 case '>' -> openingAngleBracketsAmount--;
                 case ',' -> {
-					if (openingParenthesisAmount == 0 && openingSquareBracketsAmount == 0
-						&& openingAngleBracketsAmount == 0) {
-						return i;
-					}
+                    if (openingParenthesisAmount == 0 && openingSquareBracketsAmount == 0
+                        && openingAngleBracketsAmount == 0) {
+                        return i;
+                    }
                 }
             }
         }
 
-        throw new RuntimeException("Didn't find comma");
+        throw new RuntimeException("Didn't find a comma");
     }
 
     public static String generateDslTree(Tree tree) {
-        return generateImports(tree) + "\n" + generateExpression(tree.getRoot()) + ";";
+        return String.format("%s\n%s;", generateImports(tree), generateExpression(tree.getRoot()));
     }
 
     private static String generateImports(Tree tree) {
         Set<String> uniqueLines = new HashSet<>();
 
-        tree.getLeaves().forEach(leaf -> uniqueLines.add("import this." + leaf.getName() + ".head;"));
+        tree.getLeaves().forEach(leaf -> uniqueLines.add(String.format("import this.%s%s;", leaf.getName(), FileType.HEADER.extension)));
 
         StringBuilder importStatement = new StringBuilder();
 
@@ -155,15 +158,15 @@ public class DslUtils {
             raw = operationCell.getType().dslSyntax;
 
             raw = raw.replace(
-				"[args]",
-				OperationType.OPERATIONS_WITHOUT_FORM.contains(operationCell.getType()) ? "" : operationCell.getArguments().toString());
+                "[args]",
+                OperationType.OPERATIONS_WITHOUT_FORM.contains(operationCell.getType()) ? "" : operationCell.getArguments().toString());
 
-			if (operationCell.getArity() == OperationArity.UNARY) {
-				raw = raw.replace("source", generateExpression(cell.getParents().get(0)));
-			} else {
-				raw = raw.replace("source1", generateExpression(cell.getParents().get(0)));
-				raw = raw.replace("source2", generateExpression(cell.getParents().get(1)));
-			}
+            if (operationCell.getArity() == OperationArity.UNARY) {
+                raw = raw.replace("source", generateExpression(cell.getParents().get(0)));
+            } else {
+                raw = raw.replace("source1", generateExpression(cell.getParents().get(0)));
+                raw = raw.replace("source2", generateExpression(cell.getParents().get(1)));
+            }
         } else if (cell instanceof TableCell tableCell) {
             raw = tableCell.getName();
         }

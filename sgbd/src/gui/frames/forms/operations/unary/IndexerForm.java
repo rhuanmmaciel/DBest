@@ -1,110 +1,115 @@
 package gui.frames.forms.operations.unary;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import com.mxgraph.model.mxCell;
+
+import controllers.ConstantController;
+
 import gui.frames.forms.IFormCondition;
 import gui.frames.forms.operations.IOperationForm;
 import gui.frames.forms.operations.OperationForm;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class IndexerForm extends OperationForm implements IOperationForm, ActionListener, IFormCondition {
 
     private final JTextField txtField = new JTextField();
 
     public IndexerForm(mxCell jCell) {
-
         super(jCell);
 
-        initGUI();
-
-        checkBtnReady();
-
+        this.initGUI();
+        this.checkReadyButton();
     }
 
-    private void initGUI(){
+    private void initGUI() {
+        this.centerPanel.removeAll();
 
-        centerPanel.removeAll();
-        addExtraComponent(new JLabel("Nome da coluna: "), 0, 0, 1, 1);
-        addExtraComponent(txtField, 1, 0, 2, 1);
-        txtField.setMinimumSize(new Dimension(50, txtField.getHeight()));
-        txtField.getDocument().addDocumentListener(new DocumentListener() {
+        this.addExtraComponent(
+            new JLabel(String.format("%s: ", ConstantController.getString("operationForm.columnName"))),
+            0, 0, 1, 1
+        );
+
+        this.addExtraComponent(this.txtField, 1, 0, 2, 1);
+        this.txtField.setMinimumSize(new Dimension(50, this.txtField.getHeight()));
+        this.txtField.getDocument().addDocumentListener(new DocumentListener() {
+
             @Override
             public void insertUpdate(DocumentEvent documentEvent) {
-                checkBtnReady();
+                IndexerForm.this.checkReadyButton();
             }
+
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
-                checkBtnReady();
+                IndexerForm.this.checkReadyButton();
             }
+
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
-                checkBtnReady();
+                IndexerForm.this.checkReadyButton();
             }
         });
-        cancelButton.addActionListener(this);
-        readyButton.addActionListener(this);
 
-        setPreviousArgs();
+        this.cancelButton.addActionListener(this);
+        this.readyButton.addActionListener(this);
 
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        this.setPreviousArgs();
 
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 
     @Override
     protected void setPreviousArgs() {
-
-        if(!previousArguments.isEmpty()) txtField.setText(previousArguments.get(0));
-
+        if (!this.previousArguments.isEmpty()) this.txtField.setText(this.previousArguments.get(0));
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
+        this.checkReadyButton();
 
-        checkBtnReady();
-
-        if(actionEvent.getSource() == readyButton){
-            arguments.add(txtField.getText());
-            onReadyButtonClicked();
-
+        if (actionEvent.getSource() == this.readyButton) {
+            this.arguments.add(this.txtField.getText());
+            this.onReadyButtonClicked();
         }
 
-        if(cancelButton == actionEvent.getSource()){
-            closeWindow();
+        if (this.cancelButton == actionEvent.getSource()) {
+            this.closeWindow();
         }
-
     }
 
     protected void closeWindow() {
-        dispose();
+        this.dispose();
     }
 
     @Override
-    public void checkBtnReady() {
-
-        readyButton.setEnabled(!txtField.getText().isBlank());
-        updateToolTipTxt();
-
+    public void checkReadyButton() {
+        this.readyButton.setEnabled(!this.txtField.getText().isBlank());
+        this.updateToolTipText();
     }
 
     @Override
-    public void updateToolTipTxt() {
+    public void updateToolTipText(boolean... conditions) {
+        String readyButtonToolTipText = "";
 
-        String btnReadyToolTipText = "";
-
-        if (txtField.getText().isBlank())
-            btnReadyToolTipText = "- Digite algum nome para a coluna";
+        if (conditions[0]) {
+            readyButtonToolTipText = String.format(
+                "- %s",
+                ConstantController.getString("operationForm.toolTip.indexer.typeName")
+            );
+        }
 
         UIManager.put("ToolTip.foreground", Color.RED);
 
-        readyButton.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
-
+        this.readyButton.setToolTipText(readyButtonToolTipText.isEmpty() ? null : readyButtonToolTipText);
     }
-
 }

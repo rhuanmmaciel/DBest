@@ -7,7 +7,7 @@ import java.util.Set;
 
 import com.mxgraph.model.mxICell;
 
-import controller.MainController;
+import controllers.MainController;
 
 import entities.Tree;
 import entities.cells.Cell;

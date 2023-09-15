@@ -1,19 +1,22 @@
 package gui.frames.forms.operations.unary;
 
-import com.mxgraph.model.mxCell;
-import entities.Column;
-import gui.frames.forms.operations.OperationForm;
-import gui.frames.forms.operations.IOperationForm;
-import operations.unary.Aggregation;
-import utils.Utils;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Objects;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+
+import com.mxgraph.model.mxCell;
+
+import entities.Column;
+import gui.frames.forms.operations.IOperationForm;
+import gui.frames.forms.operations.OperationForm;
+import operations.unary.Aggregation;
+import utils.Utils;
 
 public class AggregationForm extends OperationForm implements ActionListener, IOperationForm {
 
@@ -25,50 +28,52 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
 
         super(jCell);
 
-        initializeGUI();
+        this.initializeGUI();
 
     }
 
     private void initializeGUI() {
 
-        addWindowListener(new WindowAdapter() {
+        this.addWindowListener(new WindowAdapter() {
+
+            @Override
             public void windowClosing(WindowEvent e) {
-                closeWindow();
+                AggregationForm.this.closeWindow();
             }
         });
 
-        centerPanel.removeAll();
+        this.centerPanel.removeAll();
 
-        readyButton.addActionListener(this);
-        cancelButton.addActionListener(this);
+        this.readyButton.addActionListener(this);
+        this.cancelButton.addActionListener(this);
 
-        addExtraComponent(new JLabel("Fonte:"), 0, 0, 1, 1);
-        addExtraComponent(comboBoxSource, 1, 0, 1, 1);
-        addExtraComponent(new JLabel("Coluna:"), 0, 1, 1, 1);
-        addExtraComponent(comboBoxColumn, 1, 1, 1, 1);
-        addExtraComponent(new JLabel("Agregação:"), 0, 2, 1, 1);
-        addExtraComponent(comboBoxAggregation, 1, 2, 1, 1);
+        this.addExtraComponent(new JLabel("Fonte:"), 0, 0, 1, 1);
+        this.addExtraComponent(this.comboBoxSource, 1, 0, 1, 1);
+        this.addExtraComponent(new JLabel("Coluna:"), 0, 1, 1, 1);
+        this.addExtraComponent(this.comboBoxColumn, 1, 1, 1, 1);
+        this.addExtraComponent(new JLabel("Agregação:"), 0, 2, 1, 1);
+        this.addExtraComponent(this.comboBoxAggregation, 1, 2, 1, 1);
 
-        setPreviousArgs();
+        this.setPreviousArgs();
 
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
 
     }
 
     @Override
     protected void setPreviousArgs() {
 
-        if(!previousArguments.isEmpty()){
+        if(!this.previousArguments.isEmpty()){
 
-            String column = previousArguments.get(0);
+            String column = this.previousArguments.get(0);
 
             if(Utils.startsWithIgnoreCase(column, Aggregation.PREFIXES)){
 
                 String prefix = Utils.getFirstMatchingPrefixIgnoreCase(column, Aggregation.PREFIXES);
                 column = column.substring(prefix.length());
-                comboBoxAggregation.setSelectedItem(switch (prefix){
+                this.comboBoxAggregation.setSelectedItem(switch (prefix){
                     case "MAX:" -> "Máximo";
                     case "MIN:" -> "Mínimo";
                     case "AVG:" -> "Média";
@@ -81,8 +86,8 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
             String columnName = Column.removeSource(column);
             String columnSource = Column.removeName(column);
 
-            comboBoxSource.setSelectedItem(columnSource);
-            comboBoxColumn.setSelectedItem(columnName);
+            this.comboBoxSource.setSelectedItem(columnSource);
+            this.comboBoxColumn.setSelectedItem(columnName);
 
         }
 
@@ -91,28 +96,28 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
-       if(actionEvent.getSource() == cancelButton){
+       if(actionEvent.getSource() == this.cancelButton){
 
-            closeWindow();
+           this.closeWindow();
 
-        }else if (actionEvent.getSource() == readyButton) {
+        }else if (actionEvent.getSource() == this.readyButton) {
 
-           String aggregation = switch (Objects.requireNonNull(comboBoxAggregation.getSelectedItem()).toString()){
+           String aggregation = switch (Objects.requireNonNull(this.comboBoxAggregation.getSelectedItem()).toString()){
                case "Máximo" -> "MAX:";
                case "Mínimo" -> "MIN:";
                case "Média" -> "AVG:";
                case "Contagem" -> "COUNT:";
                default ->
-                       throw new IllegalStateException("Unexpected value: " + comboBoxAggregation.getSelectedItem().toString());
+                       throw new IllegalStateException("Unexpected value: " + this.comboBoxAggregation.getSelectedItem().toString());
            };
-            arguments.add(aggregation+(comboBoxSource.getSelectedItem()+"."+comboBoxColumn.getSelectedItem()));
-            onReadyButtonClicked();
+           this.arguments.add(aggregation+(this.comboBoxSource.getSelectedItem()+"."+ this.comboBoxColumn.getSelectedItem()));
+           this.onReadyButtonClicked();
 
         }
 
     }
 
     protected void closeWindow() {
-        dispose();
+        this.dispose();
     }
 }

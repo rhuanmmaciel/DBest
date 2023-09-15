@@ -1,14 +1,6 @@
 package gui.frames.forms.operations.unary;
 
-import com.mxgraph.model.mxCell;
-import entities.Column;
-import gui.frames.forms.operations.OperationForm;
-import gui.frames.forms.operations.IOperationForm;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -16,138 +8,148 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Objects;
 
-public class RenameForm extends OperationForm implements IOperationForm, ActionListener{
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import com.mxgraph.model.mxCell;
+
+import entities.Column;
+import gui.frames.forms.operations.IOperationForm;
+import gui.frames.forms.operations.OperationForm;
+
+public class RenameForm extends OperationForm implements IOperationForm, ActionListener {
 
     private final JTextField txtFieldNewName = new JTextField();
+
     private final JButton btnAdd = new JButton("Adicionar");
+
     private final JButton btnRemove = new JButton("Remover sources");
+
     private final JTextArea textArea = new JTextArea();
 
     public RenameForm(mxCell jCell) {
 
         super(jCell);
 
-        initializeGUI();
-
+        this.initializeGUI();
     }
 
     private void initializeGUI() {
 
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                closeWindow();
+        this.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent event) {
+                RenameForm.this.closeWindow();
             }
         });
 
-        centerPanel.removeAll();
+        this.centerPanel.removeAll();
 
-        readyButton.addActionListener(this);
-        cancelButton.addActionListener(this);
+        this.readyButton.addActionListener(this);
+        this.cancelButton.addActionListener(this);
 
-        textArea.setPreferredSize(new Dimension(300,300));
-        textArea.setEditable(false);
+        this.textArea.setPreferredSize(new Dimension(300, 300));
+        this.textArea.setEditable(false);
 
-        txtFieldNewName.getDocument().addDocumentListener(new DocumentListener() {
+        this.txtFieldNewName.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent documentEvent) {
-                verifyConditions();
+                RenameForm.this.verifyConditions();
             }
+
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
-                verifyConditions();
+                RenameForm.this.verifyConditions();
             }
+
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
-                verifyConditions();
+                RenameForm.this.verifyConditions();
             }
         });
 
-        btnAdd.addActionListener(this);
-        btnRemove.addActionListener(this);
+        this.btnAdd.addActionListener(this);
+        this.btnRemove.addActionListener(this);
 
-        addExtraComponent(new JLabel("Source:"), 0, 0, 1, 1);
-        addExtraComponent(comboBoxSource, 1, 0, 2, 1);
-        addExtraComponent(new JLabel("Novo nome"), 0, 1, 1, 1);
-        addExtraComponent(txtFieldNewName, 1, 1, 2, 1);
-        addExtraComponent(btnAdd, 0, 2, 1, 1);
-        addExtraComponent(btnRemove, 2, 2, 1, 1);
-        addExtraComponent(new JScrollPane(textArea), 0, 3, 3, 3);
+        this.addExtraComponent(new JLabel("Source:"), 0, 0, 1, 1);
+        this.addExtraComponent(this.comboBoxSource, 1, 0, 2, 1);
+        this.addExtraComponent(new JLabel("Novo nome"), 0, 1, 1, 1);
+        this.addExtraComponent(this.txtFieldNewName, 1, 1, 2, 1);
+        this.addExtraComponent(this.btnAdd, 0, 2, 1, 1);
+        this.addExtraComponent(this.btnRemove, 2, 2, 1, 1);
+        this.addExtraComponent(new JScrollPane(this.textArea), 0, 3, 3, 3);
 
-        setPreviousArgs();
-        verifyConditions();
+        this.setPreviousArgs();
+        this.verifyConditions();
 
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 
-    private void verifyConditions(){
-        btnAdd.setEnabled(!txtFieldNewName.getText().isBlank() && !txtFieldNewName.getText().isEmpty());
-        readyButton.setEnabled(!textArea.getText().isEmpty());
+    private void verifyConditions() {
+        this.btnAdd.setEnabled(!this.txtFieldNewName.getText().isBlank() && !this.txtFieldNewName.getText().isEmpty());
+        this.readyButton.setEnabled(!this.textArea.getText().isEmpty());
     }
 
     @Override
     protected void setPreviousArgs() {
 
-        if(!previousArguments.isEmpty()){
+        if (!this.previousArguments.isEmpty()) {
 
-            for(String element : previousArguments){
+            for (String element : this.previousArguments) {
 
                 String groupByColumnName = Column.removeSource(element);
                 String groupByColumnSource = Column.removeName(element);
 
-                comboBoxSource.setSelectedItem(groupByColumnSource);
-                comboBoxColumn.setSelectedItem(groupByColumnName);
+                this.comboBoxSource.setSelectedItem(groupByColumnSource);
+                this.comboBoxColumn.setSelectedItem(groupByColumnName);
 
-                if (comboBoxColumn.getItemCount() > 0)
-                    updateColumns();
-
+                if (this.comboBoxColumn.getItemCount() > 0) {
+                    this.updateColumns();
+                }
             }
-
         }
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getSource() == btnAdd) {
+        if (e.getSource() == this.btnAdd) {
 
-            if (comboBoxSource.getItemCount() > 0)
-                updateColumns();
+            if (this.comboBoxSource.getItemCount() > 0) {
+                this.updateColumns();
+            }
+        } else if (e.getSource() == this.btnRemove) {
 
-        } else if (e.getSource() == btnRemove) {
+            this.textArea.setText("");
+        } else if (e.getSource() == this.cancelButton) {
 
-            textArea.setText("");
+            this.closeWindow();
+        } else if (e.getSource() == this.readyButton) {
 
-        } else if(e.getSource() == cancelButton){
-
-            closeWindow();
-
-        }else if (e.getSource() == readyButton) {
-
-            arguments.addAll(List.of(textArea.getText().split("\n")));
-            arguments.remove(0);
-            onReadyButtonClicked();
-
+            this.arguments.addAll(List.of(this.textArea.getText().split("\n")));
+            this.arguments.remove(0);
+            this.onReadyButtonClicked();
         }
 
-        verifyConditions();
-
+        this.verifyConditions();
     }
 
-    private void updateColumns(){
+    private void updateColumns() {
 
-        String column = Objects.requireNonNull(comboBoxSource.getSelectedItem()).toString()+
-                ":"+txtFieldNewName.getText();
-        String textColumnsPicked = textArea.getText() + "\n" + column;
-        textArea.setText(textColumnsPicked);
-
+        String column = Objects.requireNonNull(this.comboBoxSource.getSelectedItem()) + ":" + this.txtFieldNewName.getText();
+        String textColumnsPicked = this.textArea.getText() + "\n" + column;
+        this.textArea.setText(textColumnsPicked);
     }
 
     protected void closeWindow() {
-        dispose();
+        this.dispose();
     }
-
 }

@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JButton;
@@ -14,10 +15,11 @@ import javax.swing.JPanel;
 
 import com.mxgraph.model.mxCell;
 
+import controllers.ConstantController;
+
+import entities.Column;
 import entities.cells.Cell;
 import entities.utils.cells.CellUtils;
-
-import enums.FileType;
 
 import files.ExportFile;
 
@@ -35,8 +37,8 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
         this.setModal(true);
 
         this.cancelService = cancelService;
-        this.fyiDatabaseButton = new JButton("Fyi Database");
-        this.sqlScriptButton = new JButton("Script SQL");
+        this.fyiDatabaseButton = new JButton(ConstantController.getString("exportAs.fyiDatabaseButton"));
+        this.sqlScriptButton = new JButton(ConstantController.getString("exportAs.scriptSQLButton"));
         this.cell = CellUtils.getActiveCell(jCell).orElse(null);
 
         this.initGUI();
@@ -75,19 +77,21 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
             this.closeWindow();
 
             if (!this.cancelService.get()) {
-                new ExportFile(this.cell, FileType.CSV);
+                new ExportFile().exportToCSV(this.cell);
             }
         } else if (event.getSource() == this.fyiDatabaseButton) {
             this.closeWindow();
 
-            if (!this.cancelService.get()) {
-                new ExportFile(this.cell, FileType.FYI);
+            List<Column> primaryKeyColumns = new PrimaryKeyChooserForm(this.cell).getSelectedColumns();
+
+            if(!this.cancelService.get() && !primaryKeyColumns.isEmpty()) {
+                new ExportFile().exportToFYI(this.cell, primaryKeyColumns);
             }
         } else if (event.getSource() == this.sqlScriptButton) {
             this.closeWindow();
 
             if (!this.cancelService.get()) {
-                new ExportFile(this.cell, FileType.SQL);
+                new ExportFile().exportToMySQLScript(this.cell);
             }
         }
     }

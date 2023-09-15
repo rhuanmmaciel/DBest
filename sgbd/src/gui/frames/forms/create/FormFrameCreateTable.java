@@ -111,84 +111,144 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
         this.createDataButton.addActionListener(this);
 
         GroupLayout groupLayoutContentPane = new GroupLayout(this.contentPanel);
-        groupLayoutContentPane.setHorizontalGroup(
-            groupLayoutContentPane.createParallelGroup(Alignment.LEADING)
-                .addGroup(groupLayoutContentPane.createSequentialGroup()
-                    .addGap(37)
-                    .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.LEADING)
-                        .addGroup(groupLayoutContentPane.createSequentialGroup()
-                            .addComponent(lblNewLabel)
-                            .addGap(303)
-                            .addComponent(tableNameLabel)
-                            .addPreferredGap(ComponentPlacement.UNRELATED)
-                            .addComponent(this.tableNameTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap()
-                        )
-                        .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.LEADING)
-                            .addGroup(groupLayoutContentPane.createSequentialGroup()
-                                .addComponent(this.addColumnButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(ComponentPlacement.RELATED)
-                                .addComponent(this.addRowButton)
-                                .addPreferredGap(ComponentPlacement.RELATED)
-                                .addComponent(this.createDataButton)
-                                .addGap(981)
-                            )
-                            .addGroup(groupLayoutContentPane.createSequentialGroup()
-                                .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.TRAILING)
-                                    .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1171, GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(groupLayoutContentPane.createSequentialGroup()
-                                        .addComponent(this.cancelButton)
-                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                        .addComponent(this.createTableButton)
+
+        groupLayoutContentPane
+            .setHorizontalGroup(
+                groupLayoutContentPane
+                    .createParallelGroup(Alignment.LEADING)
+                    .addGroup(
+                        groupLayoutContentPane
+                            .createSequentialGroup()
+                            .addGap(37)
+                            .addGroup(
+                                groupLayoutContentPane
+                                    .createParallelGroup(Alignment.LEADING)
+                                    .addGroup(
+                                        groupLayoutContentPane
+                                            .createSequentialGroup()
+                                            .addComponent(lblNewLabel)
+                                            .addGap(303)
+                                            .addComponent(tableNameLabel)
+                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                            .addComponent(
+                                                this.tableNameTextField,
+                                                GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.PREFERRED_SIZE
+                                            )
+                                            .addContainerGap()
+                                    ).addGroup(
+                                        groupLayoutContentPane
+                                            .createParallelGroup(Alignment.LEADING)
+                                            .addGroup(
+                                                groupLayoutContentPane
+                                                    .createSequentialGroup()
+                                                    .addComponent(
+                                                        this.addColumnButton,
+                                                        GroupLayout.DEFAULT_SIZE,
+                                                        GroupLayout.DEFAULT_SIZE,
+                                                        Short.MAX_VALUE
+                                                    )
+                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                    .addComponent(this.addRowButton)
+                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                    .addComponent(this.createDataButton)
+                                                    .addGap(981)
+                                            )
+                                            .addGroup(
+                                                groupLayoutContentPane
+                                                    .createSequentialGroup()
+                                                    .addGroup(
+                                                        groupLayoutContentPane
+                                                            .createParallelGroup(Alignment.TRAILING)
+                                                            .addComponent(
+                                                                scrollPane,
+                                                                GroupLayout.PREFERRED_SIZE,
+                                                                1171,
+                                                                GroupLayout.PREFERRED_SIZE
+                                                            )
+                                                            .addGroup(
+                                                                groupLayoutContentPane
+                                                                    .createSequentialGroup()
+                                                                    .addComponent(this.cancelButton)
+                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                    .addComponent(this.createTableButton)
+                                                            )
+                                                    ).addContainerGap()
+                                            )
                                     )
-                                )
-                                .addContainerGap()
                             )
-                        )
                     )
-                )
-        );
-        groupLayoutContentPane.setVerticalGroup(
-            groupLayoutContentPane.createParallelGroup(Alignment.LEADING)
-                .addGroup(groupLayoutContentPane.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.TRAILING)
-                        .addGroup(groupLayoutContentPane.createSequentialGroup()
-                            .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(lblNewLabel)
-                                .addComponent(tableNameLabel)
-                            )
-                            .addGap(18)
-                        )
-                        .addGroup(groupLayoutContentPane.createSequentialGroup()
-                            .addComponent(this.tableNameTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(ComponentPlacement.UNRELATED)
-                        )
-                    )
-                    .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
-                    .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.LEADING)
-                        .addGroup(groupLayoutContentPane.createSequentialGroup()
-                            .addPreferredGap(ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                            .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(this.addColumnButton)
-                                .addComponent(this.addRowButton)
-                                .addComponent(this.createDataButton)
-                            )
-                            .addGap(55)
-                        )
-                        .addGroup(groupLayoutContentPane.createSequentialGroup()
-                            .addGap(71)
-                            .addGroup(groupLayoutContentPane.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(this.createTableButton)
-                                .addComponent(this.cancelButton))
+            );
+
+        groupLayoutContentPane
+            .setVerticalGroup(
+                groupLayoutContentPane
+                    .createParallelGroup(Alignment.LEADING)
+                    .addGroup(
+                        groupLayoutContentPane
+                            .createSequentialGroup()
                             .addContainerGap()
-                        )
+                            .addGroup(
+                                groupLayoutContentPane
+                                    .createParallelGroup(Alignment.TRAILING)
+                                    .addGroup(
+                                        groupLayoutContentPane
+                                            .createSequentialGroup()
+                                            .addGroup(
+                                                groupLayoutContentPane
+                                                    .createParallelGroup(Alignment.BASELINE)
+                                                    .addComponent(lblNewLabel)
+                                                    .addComponent(tableNameLabel)
+                                            )
+                                            .addGap(18)
+                                    )
+                                    .addGroup(
+                                        groupLayoutContentPane
+                                            .createSequentialGroup()
+                                            .addComponent(
+                                                this.tableNameTextField, GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE
+                                            )
+                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                    )
+                            )
+                            .addComponent(
+                                scrollPane, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE
+                            )
+                            .addGroup(
+                                groupLayoutContentPane
+                                    .createParallelGroup(Alignment.LEADING)
+                                    .addGroup(
+                                        groupLayoutContentPane
+                                            .createSequentialGroup()
+                                            .addPreferredGap(ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                                            .addGroup(
+                                                groupLayoutContentPane
+                                                    .createParallelGroup(Alignment.BASELINE)
+                                                    .addComponent(this.addColumnButton)
+                                                    .addComponent(this.addRowButton)
+                                                    .addComponent(this.createDataButton)
+                                            )
+                                            .addGap(55)
+                                    ).addGroup(
+                                        groupLayoutContentPane
+                                            .createSequentialGroup()
+                                            .addGap(71)
+                                            .addGroup(
+                                                groupLayoutContentPane
+                                                    .createParallelGroup(Alignment.BASELINE)
+                                                    .addComponent(this.createTableButton)
+                                                    .addComponent(this.cancelButton)
+                                            ).addContainerGap()
+                                    )
+                            )
                     )
-                )
-        );
+            );
 
         this.addWindowListener(new WindowAdapter() {
 
+            @Override
             public void windowClosing(WindowEvent event) {
                 FormFrameCreateTable.this.exitReference.set(true);
             }
@@ -241,23 +301,23 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
     }
 
     private void updateToolTipText() {
-        String btnCreateDataToolTipText = "";
-        String btnAddRowToolTipText = "";
-        String btnCreateTableToolTipText = "";
+        String createDataButtonToolTipText = "";
+        String addRowButtonToolTipText = "";
+        String createTableToolTipText = "";
 
         if (this.table.getColumnCount() <= 0) {
-            btnCreateDataToolTipText = btnAddRowToolTipText = btnCreateTableToolTipText = "- A tabela não contém colunas";
+            createDataButtonToolTipText = addRowButtonToolTipText = createTableToolTipText = "- A tabela não contém colunas";
         } else if (this.table.getRowCount() <= 0) {
-            btnCreateDataToolTipText = btnCreateTableToolTipText = "- A tabela não contém linhas";
+            createDataButtonToolTipText = createTableToolTipText = "- A tabela não contém linhas";
         } else if (this.tableNameTextField.getText().isEmpty()) {
-            btnCreateTableToolTipText = "- A tabela não contém nome";
+            createTableToolTipText = "- A tabela não contém nome";
         }
 
         UIManager.put("ToolTip.foreground", Color.RED);
 
-        this.addRowButton.setToolTipText(btnAddRowToolTipText.isEmpty() ? null : btnAddRowToolTipText);
-        this.createDataButton.setToolTipText(btnCreateDataToolTipText.isEmpty() ? null : btnCreateDataToolTipText);
-        this.createTableButton.setToolTipText(btnCreateTableToolTipText.isEmpty() ? null : btnCreateTableToolTipText);
+        this.addRowButton.setToolTipText(addRowButtonToolTipText.isEmpty() ? null : addRowButtonToolTipText);
+        this.createDataButton.setToolTipText(createDataButtonToolTipText.isEmpty() ? null : createDataButtonToolTipText);
+        this.createTableButton.setToolTipText(createTableToolTipText.isEmpty() ? null : createTableToolTipText);
     }
 
     private void createTable() {
@@ -267,11 +327,11 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
             Map<String, String> line = new HashMap<>();
 
             for (int j = 0; j < this.table.getColumnCount(); j++) {
-				if (this.table.getValueAt(i, j) == null || this.table.getValueAt(i, j).toString() == null) {
-					line.put(this.table.getColumnName(j), "");
-				} else {
-					line.put(this.table.getColumnName(j), this.table.getValueAt(i, j).toString());
-				}
+                if (this.table.getValueAt(i, j) == null || this.table.getValueAt(i, j).toString() == null) {
+                    line.put(this.table.getColumnName(j), "");
+                } else {
+                    line.put(this.table.getColumnName(j), this.table.getValueAt(i, j).toString());
+                }
             }
 
             content.put(i, line);
@@ -282,10 +342,10 @@ public class FormFrameCreateTable extends JDialog implements ActionListener, Doc
         AtomicReference<Boolean> exitReference = new AtomicReference<>(exit);
         StringBuilder primaryKeyName = new StringBuilder();
 
-        //new PrimaryKey(content, primaryKeyName, exitReference);
+        // new PrimaryKey(content, primaryKeyName, exitReference);
 
         if (!exitReference.get()) {
-            //tableCell = TableCreator.createTable(textFieldTableName.getText(), primaryKeyName.toString(), columns, content, false);
+            // tableCell = TableCreator.createTable(textFieldTableName.getText(), primaryKeyName.toString(), columns, content, false);
         } else {
             exitReference.set(true);
         }

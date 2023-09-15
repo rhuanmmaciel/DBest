@@ -10,11 +10,15 @@ import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
+
 import enums.OperationErrorType;
+
 import exceptions.tree.TreeException;
+
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
+
 import sgbd.query.Operator;
 import sgbd.query.agregation.AgregationOperation;
 import sgbd.query.agregation.AvgAgregation;
@@ -22,15 +26,12 @@ import sgbd.query.agregation.CountAgregation;
 import sgbd.query.agregation.MaxAgregation;
 import sgbd.query.agregation.MinAgregation;
 import sgbd.query.unaryop.GroupOperator;
+
 import utils.Utils;
 
 public class Group implements IOperator {
 
     public static final List<String> PREFIXES = List.of("MIN:", "MAX:", "AVG:", "COUNT:");
-
-    public Group() {
-
-    }
 
     @Override
     public void executeOperation(mxCell jCell, List<String> arguments) {
@@ -39,25 +40,25 @@ public class Group implements IOperator {
         if (optionalCell.isEmpty()) return;
 
         OperationCell cell = (OperationCell) optionalCell.get();
-        OperationErrorType error = null;
+        OperationErrorType errorType = null;
 
         try {
-            error = OperationErrorType.NO_PARENT;
+            errorType = OperationErrorType.NO_PARENT;
             OperationErrorVerifier.hasParent(cell);
 
-            error = OperationErrorType.NO_ONE_PARENT;
+            errorType = OperationErrorType.NO_ONE_PARENT;
             OperationErrorVerifier.oneParent(cell);
 
-            error = OperationErrorType.PARENT_ERROR;
+            errorType = OperationErrorType.PARENT_ERROR;
             OperationErrorVerifier.noParentError(cell);
 
-            error = OperationErrorType.NULL_ARGUMENT;
+            errorType = OperationErrorType.NULL_ARGUMENT;
             OperationErrorVerifier.noNullArgument(arguments);
 
-            error = OperationErrorType.EMPTY_ARGUMENT;
+            errorType = OperationErrorType.EMPTY_ARGUMENT;
             OperationErrorVerifier.noEmptyArgument(arguments);
 
-            error = OperationErrorType.PARENT_WITHOUT_COLUMN;
+            errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
 
             OperationErrorVerifier.parentContainsColumns(
                 cell.getParents().get(0).getColumnSourcesAndNames(), arguments.stream().limit(1).toList()
@@ -72,15 +73,15 @@ public class Group implements IOperator {
                     .subList(1, arguments.size())
             );
 
-            error = OperationErrorType.NO_PREFIX;
+            errorType = OperationErrorType.NO_PREFIX;
             OperationErrorVerifier.everyoneHavePrefix(arguments.subList(1, arguments.size()), PREFIXES);
 
-            error = null;
+            errorType = null;
         } catch (TreeException exception) {
-            cell.setError(error);
+            cell.setError(errorType);
         }
 
-        if (error != null) return;
+        if (errorType != null) return;
 
         Cell parentCell = cell.getParents().get(0);
 
@@ -117,9 +118,10 @@ public class Group implements IOperator {
         }
 
         Operator operator = parentCell.getOperator();
-
         Operator readyOperator = new GroupOperator(operator, Column.removeName(groupBy), Column.removeSource(groupBy), aggregations);
 
-        Operation.operationSetter(cell, cell.getType().symbol + arguments.toString(), arguments, readyOperator);
+        String operationName = String.format("%s %s", cell.getType().symbol, arguments);
+
+        Operation.operationSetter(cell, operationName, arguments, readyOperator);
     }
 }

@@ -44,110 +44,112 @@ public class SelectionForm extends OperationForm implements ActionListener, IOpe
 
 		super(jCell);
 
-		initializeGUI();
+        this.initializeGUI();
 
 	}
 
 	public void initializeGUI() {
 
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				closeWindow();
+        this.addWindowListener(new WindowAdapter() {
+
+            @Override
+			public void windowClosing(WindowEvent exception) {
+                SelectionForm.this.closeWindow();
 			}
 		});
 
-		centerPanel.removeAll();
+        this.centerPanel.removeAll();
 
-		readyButton.addActionListener(this);
-		cancelButton.addActionListener(this);
+        this.readyButton.addActionListener(this);
+        this.cancelButton.addActionListener(this);
 
-		textPane = new JTextPane();
-		textPane.setPreferredSize(new Dimension(300, 75));
-		textPane.setEditable(false);
+        this.textPane = new JTextPane();
+        this.textPane.setPreferredSize(new Dimension(300, 75));
+        this.textPane.setEditable(false);
 
-		btnColumnAdd = new JButton("Add");
-		btnColumnAdd.addActionListener(this);
+        this.btnColumnAdd = new JButton("Add");
+        this.btnColumnAdd.addActionListener(this);
 
-		comboBoxOperator = new JComboBox<>(new String[]{ ">", "<", "=", "≠", "≥", "≤", "(", ")" });
+        this.comboBoxOperator = new JComboBox<>(new String[]{ ">", "<", "=", "≠", "≥", "≤", "(", ")" });
 
-		btnOperatorAdd = new JButton("Add");
-		btnOperatorAdd.addActionListener(this);
+        this.btnOperatorAdd = new JButton("Add");
+        this.btnOperatorAdd.addActionListener(this);
 
-		comboBoxLogicalOperator = new JComboBox<>(new String[]{ "AND", "OR" });
+        this.comboBoxLogicalOperator = new JComboBox<>(new String[]{ "AND", "OR" });
 
-		btnLogicalOperatorAdd = new JButton("Add");
-		btnLogicalOperatorAdd.addActionListener(this);
+        this.btnLogicalOperatorAdd = new JButton("Add");
+        this.btnLogicalOperatorAdd.addActionListener(this);
 
 		DecimalFormat decimalFormat = new DecimalFormat("#.###");
 		decimalFormat.setMaximumFractionDigits(5);
 		NumberFormatter numberFormatter = new NumberFormatter(decimalFormat);
-		formattedTextFieldNumber = new JFormattedTextField(numberFormatter);
+        this.formattedTextFieldNumber = new JFormattedTextField(numberFormatter);
 
-		btnNumberAdd = new JButton("Add");
-		btnNumberAdd.addActionListener(this);
+        this.btnNumberAdd = new JButton("Add");
+        this.btnNumberAdd.addActionListener(this);
 
-		textFieldString = new JTextField();
+        this.textFieldString = new JTextField();
 
-		btnStringAdd = new JButton("Add");
-		btnStringAdd.addActionListener(this);
+        this.btnStringAdd = new JButton("Add");
+        this.btnStringAdd.addActionListener(this);
 
-		btnNull.setForeground(Color.RED);
-		btnNull.addActionListener(this);
+        this.btnNull.setForeground(Color.RED);
+        this.btnNull.addActionListener(this);
 
-		btnIs.addActionListener(this);
-		btnIsNot.addActionListener(this);
+        this.btnIs.addActionListener(this);
+        this.btnIsNot.addActionListener(this);
 
-		btnRemoveLastOne = new JButton("Apagar último inserido");
-		btnRemoveLastOne.addActionListener(this);
+        this.btnRemoveLastOne = new JButton("Apagar último inserido");
+        this.btnRemoveLastOne.addActionListener(this);
 
-		btnRemoveAll = new JButton("Apagar tudo");
-		btnRemoveAll.addActionListener(this);
+        this.btnRemoveAll = new JButton("Apagar tudo");
+        this.btnRemoveAll.addActionListener(this);
 
-		addExtraComponent(new JLabel("Fonte:"), 0, 0, 1, 1);
-		addExtraComponent(comboBoxSource, 1, 0, 1, 1);
-		addExtraComponent(new JLabel("Coluna:"), 0, 1, 1, 1);
-		addExtraComponent(comboBoxColumn, 1, 1, 1, 1);
-		addExtraComponent(btnColumnAdd, 2, 1, 1, 1);
-		addExtraComponent( new JLabel("Operações:"), 0, 2, 1, 1);
-		addExtraComponent(comboBoxOperator, 1, 2, 1, 1);
-		addExtraComponent(btnOperatorAdd, 2, 2, 1, 1);
-		addExtraComponent(new JLabel("Operadores Lógicos: "), 0, 3, 1, 1);
-		addExtraComponent(comboBoxLogicalOperator, 1, 3, 1, 1);
-		addExtraComponent(btnLogicalOperatorAdd, 2, 3, 1, 1);
-		addExtraComponent(new JLabel("Números: "), 0, 4, 1, 1);
-		addExtraComponent(formattedTextFieldNumber, 1, 4, 1, 1);
-		addExtraComponent(btnNumberAdd, 2, 4, 1, 1);
-		addExtraComponent(new JLabel("Strings: "), 0, 5, 1, 1);
-		addExtraComponent(textFieldString, 1, 5, 1, 1);
-		addExtraComponent(btnStringAdd, 2, 5, 1, 1);
-		addExtraComponent(btnNull, 0, 6, 1, 1);
-		addExtraComponent(btnIs, 1, 6, 1, 1);
-		addExtraComponent(btnIsNot, 2, 6, 1, 1);
-		addExtraComponent(btnRemoveLastOne, 0, 7, 1, 1);
-		addExtraComponent(btnRemoveAll, 1, 7, 1, 1);
-		addExtraComponent(new JScrollPane(textPane), 0, 8, 3, 3);
+        this.addExtraComponent(new JLabel("Fonte:"), 0, 0, 1, 1);
+        this.addExtraComponent(this.comboBoxSource, 1, 0, 1, 1);
+        this.addExtraComponent(new JLabel("Coluna:"), 0, 1, 1, 1);
+        this.addExtraComponent(this.comboBoxColumn, 1, 1, 1, 1);
+        this.addExtraComponent(this.btnColumnAdd, 2, 1, 1, 1);
+        this.addExtraComponent( new JLabel("Operações:"), 0, 2, 1, 1);
+        this.addExtraComponent(this.comboBoxOperator, 1, 2, 1, 1);
+        this.addExtraComponent(this.btnOperatorAdd, 2, 2, 1, 1);
+        this.addExtraComponent(new JLabel("Operadores Lógicos: "), 0, 3, 1, 1);
+        this.addExtraComponent(this.comboBoxLogicalOperator, 1, 3, 1, 1);
+        this.addExtraComponent(this.btnLogicalOperatorAdd, 2, 3, 1, 1);
+        this.addExtraComponent(new JLabel("Números: "), 0, 4, 1, 1);
+        this.addExtraComponent(this.formattedTextFieldNumber, 1, 4, 1, 1);
+        this.addExtraComponent(this.btnNumberAdd, 2, 4, 1, 1);
+        this.addExtraComponent(new JLabel("Strings: "), 0, 5, 1, 1);
+        this.addExtraComponent(this.textFieldString, 1, 5, 1, 1);
+        this.addExtraComponent(this.btnStringAdd, 2, 5, 1, 1);
+        this.addExtraComponent(this.btnNull, 0, 6, 1, 1);
+        this.addExtraComponent(this.btnIs, 1, 6, 1, 1);
+        this.addExtraComponent(this.btnIsNot, 2, 6, 1, 1);
+        this.addExtraComponent(this.btnRemoveLastOne, 0, 7, 1, 1);
+        this.addExtraComponent(this.btnRemoveAll, 1, 7, 1, 1);
+        this.addExtraComponent(new JScrollPane(this.textPane), 0, 8, 3, 3);
 
-		setPreviousArgs();
+        this.setPreviousArgs();
 
-		pack();
-		setLocationRelativeTo(null);
+        this.pack();
+        this.setLocationRelativeTo(null);
 
-		setVisible(true);
+        this.setVisible(true);
 
 	}
 
 	@Override
 	protected void setPreviousArgs() {
 
-		if(!previousArguments.isEmpty())
-			insertString(previousArguments.get(0));
+		if(!this.previousArguments.isEmpty())
+            this.insertString(this.previousArguments.get(0));
 
 	}
 
 	private void insertString(String txt){
 
 		try {
-			textPane.getDocument().insertString(textPane.getCaretPosition(), txt, null);
+            this.textPane.getDocument().insertString(this.textPane.getCaretPosition(), txt, null);
 		} catch (BadLocationException error) {
 			error.printStackTrace();
 		}
@@ -157,51 +159,51 @@ public class SelectionForm extends OperationForm implements ActionListener, IOpe
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if (e.getSource() == btnColumnAdd) {
+		if (e.getSource() == this.btnColumnAdd) {
 
-			insertString(" ");
-			insertString(comboBoxSource.getSelectedItem()+"."+comboBoxColumn.getSelectedItem());
-
-		}
-
-		if (e.getSource() == btnOperatorAdd) {
-
-			insertString(" ");
-			insertString((String) comboBoxOperator.getSelectedItem());
+            this.insertString(" ");
+            this.insertString(this.comboBoxSource.getSelectedItem()+"."+ this.comboBoxColumn.getSelectedItem());
 
 		}
 
-		if (e.getSource() == btnLogicalOperatorAdd) {
+		if (e.getSource() == this.btnOperatorAdd) {
 
-			insertString(" ");
-			insertString(Objects.requireNonNull(comboBoxLogicalOperator.getSelectedItem()).toString());
-
-		}
-
-		if (e.getSource() == btnNumberAdd && !formattedTextFieldNumber.getText().isEmpty()) {
-
-			insertString(" ");
-			insertString(formattedTextFieldNumber.getText());
+            this.insertString(" ");
+            this.insertString((String) this.comboBoxOperator.getSelectedItem());
 
 		}
 
-		if (e.getSource() == btnStringAdd && !textFieldString.getText().isEmpty()) {
+		if (e.getSource() == this.btnLogicalOperatorAdd) {
 
-			insertString(" ");
-			insertString("'" + textFieldString.getText() + "'");
+            this.insertString(" ");
+            this.insertString(Objects.requireNonNull(this.comboBoxLogicalOperator.getSelectedItem()).toString());
 
 		}
 
-		if (e.getSource() == btnRemoveLastOne && !textPane.getText().isEmpty()) {
+		if (e.getSource() == this.btnNumberAdd && !this.formattedTextFieldNumber.getText().isEmpty()) {
 
-			String text = textPane.getText();
+            this.insertString(" ");
+            this.insertString(this.formattedTextFieldNumber.getText());
+
+		}
+
+		if (e.getSource() == this.btnStringAdd && !this.textFieldString.getText().isEmpty()) {
+
+            this.insertString(" ");
+            this.insertString("'" + this.textFieldString.getText() + "'");
+
+		}
+
+		if (e.getSource() == this.btnRemoveLastOne && !this.textPane.getText().isEmpty()) {
+
+			String text = this.textPane.getText();
 			Pattern pattern = Pattern.compile("[^']*\\s");
 			Matcher matcher = pattern.matcher(text);
 
 			if (matcher.find()) {
 
 				int lastIndex = matcher.end() - 1;
-				StyledDocument doc = textPane.getStyledDocument();
+				StyledDocument doc = this.textPane.getStyledDocument();
 				int end = text.length();
 				String replacement = "";
 
@@ -215,37 +217,37 @@ public class SelectionForm extends OperationForm implements ActionListener, IOpe
 
 		}
 
-		if(btnNull == e.getSource()) {
-			insertString(" ");
-			insertString("null");
+		if(this.btnNull == e.getSource()) {
+            this.insertString(" ");
+            this.insertString("null");
 		}
 
-		if(btnIs == e.getSource()){
-			insertString(" ");
-			insertString("is");
+		if(this.btnIs == e.getSource()){
+            this.insertString(" ");
+            this.insertString("is");
 		}
 
-		if(btnIsNot == e.getSource()){
-			insertString(" ");
-			insertString("is not");
+		if(this.btnIsNot == e.getSource()){
+            this.insertString(" ");
+            this.insertString("is not");
 		}
 
-		if (e.getSource() == btnRemoveAll && !textPane.getText().isEmpty())
-			textPane.setText("");
+		if (e.getSource() == this.btnRemoveAll && !this.textPane.getText().isEmpty())
+            this.textPane.setText("");
 
-		if (e.getSource() == readyButton) {
+		if (e.getSource() == this.readyButton) {
 
-			arguments.add(textPane.getText());
-			onReadyButtonClicked();
+            this.arguments.add(this.textPane.getText());
+            this.onReadyButtonClicked();
 
 		}
 
-		if (e.getSource() == cancelButton)
-			closeWindow();
+		if (e.getSource() == this.cancelButton)
+            this.closeWindow();
 
 	}
 
 	protected void closeWindow() {
-		dispose();
+        this.dispose();
 	}
 }

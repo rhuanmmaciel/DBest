@@ -26,11 +26,15 @@ class CellRepository {
     }
 
     public static void addCell(mxICell jCell, Cell cell) {
-        ACTIVE_CELLS.put(jCell, cell);
-        INACTIVE_CELLS.remove(jCell);
+        if (jCell != null && cell != null) {
+            ACTIVE_CELLS.put(jCell, cell);
+            INACTIVE_CELLS.remove(jCell);
+        }
     }
 
     public static Optional<Cell> removeCell(mxICell jCell) {
+        if (jCell == null) return Optional.empty();
+
         Cell cell = ACTIVE_CELLS.remove(jCell);
 
         if (cell != null) {
@@ -47,10 +51,14 @@ class CellRepository {
     }
 
     public static boolean activeCellsContainsKey(mxICell jCell) {
+        if (jCell == null) return false;
+
         return ACTIVE_CELLS.containsKey(jCell);
     }
 
     public static Optional<Cell> getActiveCell(mxICell jCell) {
+        if (jCell == null) return Optional.empty();
+
         return Optional.ofNullable(ACTIVE_CELLS.get(jCell));
     }
 
@@ -59,6 +67,8 @@ class CellRepository {
     }
 
     public static Optional<Cell> getInactiveCell(mxICell jCell) {
+        if (jCell == null) return Optional.empty();
+
         return Optional.ofNullable(INACTIVE_CELLS.get(jCell));
     }
 

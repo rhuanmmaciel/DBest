@@ -7,46 +7,44 @@ import enums.OperationType;
 
 public final class UnaryExpression extends OperationExpression {
 
-	public UnaryExpression(String command) {
+    public UnaryExpression(String command) {
+        super(command);
 
-		super(command);
-		unaryRecognizer(command);
-		
-	}
+        this.unaryRecognizer(command);
+    }
 
-	private void unaryRecognizer(String input) {
+    private void unaryRecognizer(String input) {
+        int endIndex = input.indexOf('(');
 
-		int endIndex = input.indexOf('(');
+        if (input.contains("[")) {
+            endIndex = Math.min(input.indexOf('['), endIndex);
+            this.setArguments(List.of(input.substring(input.indexOf("[") + 1, input.indexOf("]")).split(",")));
+        }
 
-		if (input.contains("[")) {
+        this.setType(OperationType.fromString(input.substring(0, endIndex).toLowerCase()));
 
-			endIndex = Math.min(input.indexOf('['), endIndex);
-			setArguments(List.of(input.substring(input.indexOf("[") + 1, input.indexOf("]")).split(",")));
+        int beginSourceIndex = 0;
 
-		}
+        int bracketsAmount = 0;
 
-		setType(OperationType.fromString(input.substring(0, endIndex).toLowerCase()));
+        for (int i = 0; i < input.toCharArray().length; i++) {
+            char c = input.toCharArray()[i];
 
-		int beginSourceIndex = 0;
+            if (c == '[') {
+                bracketsAmount++;
+            } else if (c == ']') {
+                bracketsAmount--;
+            }
 
-		int bracketsAmount = 0;
-		for(int i = 0; i < input.toCharArray().length; i++){
+            if (beginSourceIndex == 0 && bracketsAmount == 0 && c == '(') {
+                beginSourceIndex = i + 1;
+            }
+        }
 
-			char c = input.toCharArray()[i];
+        String source = input.substring(beginSourceIndex, input.lastIndexOf(")"));
 
-			if(c == '[') bracketsAmount++;
-			if(c == ']') bracketsAmount--;
-			if(beginSourceIndex == 0 && bracketsAmount == 0 && c == '(')
-				beginSourceIndex = i + 1;
+        this.setSource(DslUtils.expressionRecognizer(source));
 
-		}
-
-		String source = input.substring(beginSourceIndex, input.lastIndexOf(")"));
-		
-		setSource(DslUtils.expressionRecognizer(source));
-
-		setCoordinates(input.substring(input.lastIndexOf(")") + 1));
-
-	}
-
+        this.setCoordinates(input.substring(input.lastIndexOf(")") + 1));
+    }
 }

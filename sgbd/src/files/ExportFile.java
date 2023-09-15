@@ -1,102 +1,116 @@
 package files;
 
-import com.mxgraph.swing.mxGraphComponent;
-import controller.MainController;
-import database.TableCreator;
-import database.TuplesExtractor;
-import dsl.utils.DslUtils;
-import entities.Column;
-import entities.Tree;
-import entities.cells.Cell;
-import entities.cells.TableCell;
-import enums.ColumnDataType;
-import enums.FileType;
-import gui.frames.ErrorFrame;
-import gui.frames.forms.importexport.ExportSQLScriptForm;
-import gui.frames.main.MainFrame;
-import net.coobird.thumbnailator.Thumbnails;
-import sgbd.query.Operator;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
+
+import javax.swing.AbstractButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import com.mxgraph.swing.mxGraphComponent;
+
+import controllers.ConstantController;
+import controllers.MainController;
+
+import database.TableCreator;
+import database.TuplesExtractor;
+
+import dsl.utils.DslUtils;
+
+import entities.Column;
+import entities.Tree;
+import entities.cells.Cell;
+import entities.cells.TableCell;
+
+import enums.ColumnDataType;
+import enums.FileType;
+
+import gui.frames.ErrorFrame;
+import gui.frames.forms.importexport.ExportSQLScriptForm;
+import gui.frames.main.MainFrame;
+
+import net.coobird.thumbnailator.Thumbnails;
+
+import sgbd.query.Operator;
 
 public class ExportFile extends JPanel {
 
+    private final JFileChooser fileChooser = new JFileChooser();
+
     public ExportFile() {
-        this.exportToImage();
+        this.fileChooser.setDialogTitle(ConstantController.getString("exportFile.saveFile"));
+        this.fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        this.fileChooser.setCurrentDirectory(MainController.getLastDirectory());
     }
 
-    public ExportFile(Cell cell, FileType type) {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Salvar arquivo");
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setCurrentDirectory(MainController.getLastDirectory());
+    public void exportToMySQLScript(Cell cell) {
+        String pathname = String.format("%s.sql", ConstantController.getString("file.tableFileName"));
+        this.fileChooser.setSelectedFile(new File(pathname));
 
-        switch (type) {
-            case CSV -> this.exportToCSV(cell, fileChooser);
-            case FYI -> this.exportToDat(cell, fileChooser);
-            case SQL -> this.exportToMySQLScript(cell, fileChooser);
-        }
-    }
-
-    public ExportFile(Tree tree) {
-        this.exportToDsl(tree);
-    }
-
-    private void exportToMySQLScript(Cell cell, JFileChooser fileChooser) {
-        fileChooser.setSelectedFile(new File("tabela.sql"));
-
-        int userSelection = fileChooser.showSaveDialog(null);
+        int userSelection = this.fileChooser.showSaveDialog(null);
 
         if (userSelection != JFileChooser.APPROVE_OPTION) {
             return;
         }
 
-        MainController.setLastDirectory(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
+        MainController.setLastDirectory(new File(this.fileChooser.getCurrentDirectory().getAbsolutePath()));
 
-        File fileToSave = fileChooser.getSelectedFile();
+        File fileToSave = this.fileChooser.getSelectedFile();
         String filePath = fileToSave.getAbsolutePath();
 
-        if (!filePath.endsWith(".sql")) {
+        if (!filePath.endsWith(FileType.SQL.extension)) {
             filePath = String.format("%s.sql", filePath);
             fileToSave = new File(filePath);
         }
 
         if (fileToSave.exists()) {
             int selectedOption = JOptionPane.showConfirmDialog(
-                null, "O arquivo já existe. Deseja substituí-lo?",
-                "Confirmar substituição", JOptionPane.YES_NO_OPTION
+                null, ConstantController.getString("file.substitution"),
+                ConstantController.getString("file.substitutionConfirmation"), JOptionPane.YES_NO_OPTION
             );
 
             if (selectedOption == JOptionPane.NO_OPTION) {
-                this.exportToMySQLScript(cell, fileChooser);
+                this.exportToMySQLScript(cell);
                 return;
             }
         }
 
         AtomicReference<Boolean> exitReference = new AtomicReference<>(false);
 
+        String text = String.format("%s: ", ConstantController.getString("exportFile.createNewDatabase"));
+
         ExportSQLScriptForm.SQLScriptInf inf = new ExportSQLScriptForm.SQLScriptInf(
-            new StringBuilder(), new StringBuilder(), new HashMap<>(), new HashMap<>(), new HashMap<>(),
-            new JCheckBox("Criar Database novo: "), new StringBuilder(), new Vector<>(), new Vector<>()
+            new StringBuilder(), new StringBuilder(), new HashMap<>(), new HashMap<>(),
+            new HashMap<>(), new JCheckBox(text), new StringBuilder(), new Vector<>(), new Vector<>()
         );
 
         new ExportSQLScriptForm(cell, inf, exitReference);
 
-        if (exitReference.get()) {
-            return;
-        }
+        if (exitReference.get()) return;
 
         try {
             FileWriter sql = new FileWriter(fileToSave);
@@ -120,7 +134,7 @@ public class ExportFile extends JPanel {
                 Column column = cell
                     .getColumns()
                     .stream()
-                    .filter(x -> x.getSourceAndName().equals(columnName))
+                    .filter(c -> c.getSourceAndName().equals(columnName))
                     .findFirst()
                     .orElseThrow();
 
@@ -144,7 +158,13 @@ public class ExportFile extends JPanel {
                 sqlContent.append("NULL");
             }
 
-            int numberOfPrimaryKeys = inf.pkCheckBoxes().values().stream().filter(AbstractButton::isSelected).toList().size();
+            int numberOfPrimaryKeys = inf
+                .pkCheckBoxes()
+                .values()
+                .stream()
+                .filter(AbstractButton::isSelected)
+                .toList()
+                .size();
 
             if (numberOfPrimaryKeys > 0) {
                 sqlContent.append(",\n\n\tPRIMARY KEY (");
@@ -173,7 +193,7 @@ public class ExportFile extends JPanel {
                     ColumnDataType type = cell
                         .getColumns()
                         .stream()
-                        .filter(x -> x.getSourceAndName().equals(finalColumnNames.get(finalI)))
+                        .filter(c -> c.getSourceAndName().equals(finalColumnNames.get(finalI)))
                         .findFirst()
                         .orElseThrow()
                         .getDataType();
@@ -208,34 +228,33 @@ public class ExportFile extends JPanel {
         }
     }
 
-    private void exportToDat(Cell cell, JFileChooser fileChooser) {
+    public void exportToFYI(Cell cell, List<Column> primaryKeyColumns) {
+        if (primaryKeyColumns == null || primaryKeyColumns.isEmpty()) return;
 
-        fileChooser.setSelectedFile(new File("tabela.head"));
+        String pathname = String.format("%s%s", ConstantController.getString("file.tableFileName"), FileType.HEADER.extension);
 
-        int userSelection = fileChooser.showSaveDialog(null);
+        this.fileChooser.setSelectedFile(new File(pathname));
+
+        int userSelection = this.fileChooser.showSaveDialog(null);
 
         if (userSelection == JFileChooser.APPROVE_OPTION) {
-
-            MainController.setLastDirectory(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
-            File fileToSave = fileChooser.getSelectedFile();
+            MainController.setLastDirectory(new File(this.fileChooser.getCurrentDirectory().getAbsolutePath()));
+            File fileToSave = this.fileChooser.getSelectedFile();
             String filePath = fileToSave.getAbsolutePath();
 
-            if (!filePath.endsWith(".head")) {
-
-                filePath += ".head";
+            if (!filePath.endsWith(FileType.HEADER.extension)) {
+                filePath += FileType.HEADER.extension;
                 fileToSave = new File(filePath);
-
             }
 
-            String headFileName = fileChooser.getSelectedFile().getName() + ".head";
-            String fileName = headFileName.endsWith(".head") ? headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
+            String headFileName = String.format("%s%s", this.fileChooser.getSelectedFile().getName(), FileType.HEADER.extension);
+            String fileName = headFileName.endsWith(FileType.HEADER.extension) ? headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
 
             if (fileToSave.exists()) {
-                int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
-                    "Confirmar substituição", JOptionPane.YES_NO_OPTION);
+                int result = JOptionPane.showConfirmDialog(null, ConstantController.getString("file.substitution"), ConstantController.getString("file.substitutionConfirmation"), JOptionPane.YES_NO_OPTION);
 
                 if (result == JOptionPane.NO_OPTION) {
-                    this.exportToDat(cell, fileChooser);
+                    this.exportToFYI(cell, primaryKeyColumns);
                     return;
                 }
             }
@@ -259,11 +278,17 @@ public class ExportFile extends JPanel {
 
             AtomicReference<Boolean> exitReference = new AtomicReference<>(false);
 
-            TableCreator tableCreator = new TableCreator(fileName, cell.getColumns(), rows, true);
+            List<Column> columnsWithPrimaryKey = new ArrayList<>();
 
-            if (exitReference.get()) {
-                return;
+            for (Column column : cell.getColumns()) {
+                Column readyColumn = primaryKeyColumns.contains(column) ? new Column(column.getName(), column.getSource(), column.getDataType(), true) : column;
+
+                columnsWithPrimaryKey.add(readyColumn);
             }
+
+            TableCreator tableCreator = new TableCreator(fileName, columnsWithPrimaryKey, rows, fileToSave, true);
+
+            if (exitReference.get()) return;
 
             TableCell createdCell = tableCreator.getTableCell();
 
@@ -271,7 +296,7 @@ public class ExportFile extends JPanel {
             createdCell.getTable().close();
 
             Path headSourcePath = Paths.get(headFileName);
-            String datFileName = String.format("%s.dat", fileName);
+            String datFileName = String.format("%s%s", fileName, FileType.FYI.extension);
             Path datSourcePath = Paths.get(datFileName);
 
             Path headDestinationPath = Paths.get(filePath);
@@ -286,30 +311,29 @@ public class ExportFile extends JPanel {
         }
     }
 
-    private void exportToCSV(Cell cell, JFileChooser fileChooser) {
+    public void exportToCSV(Cell cell) {
         try {
-            String defaultFileName = cell.getSources().stream().findFirst().orElse(null).getName() + ".csv";
+            String defaultFileName = String.format("%s%s", cell.getSources().stream().findFirst().orElse(null).getName(), FileType.CSV.extension);
 
-            fileChooser.setSelectedFile(new File(defaultFileName));
+            this.fileChooser.setSelectedFile(new File(defaultFileName));
 
-            int userSelection = fileChooser.showSaveDialog(null);
+            int userSelection = this.fileChooser.showSaveDialog(null);
 
             if (userSelection == JFileChooser.APPROVE_OPTION) {
-                MainController.setLastDirectory(new File(fileChooser.getCurrentDirectory().getAbsolutePath()));
+                MainController.setLastDirectory(new File(this.fileChooser.getCurrentDirectory().getAbsolutePath()));
 
-                File fileToSave = fileChooser.getSelectedFile();
+                File fileToSave = this.fileChooser.getSelectedFile();
                 String filePath = fileToSave.getAbsolutePath();
 
-                if (!filePath.endsWith(".csv")) {
-                    filePath += ".csv";
+                if (!filePath.endsWith(FileType.CSV.extension)) {
+                    filePath = String.format("%s%s", filePath, FileType.CSV.extension);
                     fileToSave = new File(filePath);
                 }
 
                 if (fileToSave.exists()) {
-                    int result = JOptionPane.showConfirmDialog(null, "O arquivo já existe. Deseja substituir?",
-                        "Confirmar substituição", JOptionPane.YES_NO_OPTION);
+                    int result = JOptionPane.showConfirmDialog(null, ConstantController.getString("file.substitution"), ConstantController.getString("file.substitutionConfirmation"), JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.NO_OPTION) {
-                        this.exportToCSV(cell, fileChooser);
+                        this.exportToCSV(cell);
                         return;
                     }
                 }
@@ -370,10 +394,10 @@ public class ExportFile extends JPanel {
             mxGraphComponent component = MainFrame.getGraphComponent();
 
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Salvar imagem");
+            fileChooser.setDialogTitle(ConstantController.getString("exportFile.saveImage"));
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-            String defaultFileName = "arvore.jpeg";
+            String defaultFileName = String.format("%s.jpeg", ConstantController.getString("file.treeFileName"));
             fileChooser.setSelectedFile(new File(defaultFileName));
 
             int userSelection = fileChooser.showSaveDialog(component);
@@ -400,19 +424,19 @@ public class ExportFile extends JPanel {
                 Thumbnails.of(image).size(size.width, size.height).outputQuality(1.0f).toFile(new File(path));
             }
         } catch (IOException exception) {
-            System.out.printf("Error: %s%n", exception);
+            System.out.printf(String.format("%s: %s", ConstantController.getString("file.error.toSave"), exception.getMessage()));
         }
     }
 
-    private void exportToDsl(Tree tree) {
+    public void exportToDsl(Tree tree) {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Salvar árvore");
+        fileChooser.setDialogTitle(ConstantController.getString("exportFile.saveTree"));
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setSelectedFile(new File("arvore.txt"));
 
-        if (fileChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
+        String defaultFileName = String.format("%s.txt", ConstantController.getString("file.treeFileName"));
+        fileChooser.setSelectedFile(new File(defaultFileName));
+
+        if (fileChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) return;
 
         String filePath = fileChooser.getSelectedFile().getPath();
 
@@ -420,20 +444,29 @@ public class ExportFile extends JPanel {
             filePath = String.format("%s.txt", filePath);
         }
 
+        BufferedWriter writer = null;
+
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+            writer = new BufferedWriter(new FileWriter(filePath));
             writer.write(DslUtils.generateDslTree(tree));
-            writer.close();
         } catch (IOException exception) {
-            System.out.printf("Ocorreu um erro ao salvar o arquivo: %s%n", exception.getMessage());
+            System.out.printf(String.format("%s: %s", ConstantController.getString("file.error.toSave"), exception.getMessage()));
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException exception) {
+                System.out.printf(String.format("%s: %s", ConstantController.getString("file.error.toSave"), exception.getMessage()));
+            }
         }
 
         final String finalPath = filePath.substring(0, filePath.lastIndexOf("/") + 1);
 
-        tree
-            .getLeaves()
-            .forEach(table -> FileUtils.copyDatFilesWithHead(
-                String.format("%s.head", table.getName()), table.getName(), Path.of(finalPath))
-            );
+        tree.getLeaves().forEach(table -> {
+            String tableName = table.getName();
+
+            FileUtils.copyDatFilesWithHead(String.format("%s%s", tableName, FileType.HEADER.extension), tableName, Path.of(finalPath));
+        });
     }
 }

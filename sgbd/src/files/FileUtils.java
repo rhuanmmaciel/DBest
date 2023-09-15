@@ -1,6 +1,7 @@
 package files;
 
 import java.io.File;
+import java.io.IOException;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,26 +9,91 @@ import java.nio.file.StandardCopyOption;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import controllers.ConstantController;
+
+import enums.FileType;
 
 public class FileUtils {
 
-    public static void deleteFile(File file) {
-        if (file != null) {
-            file.delete();
+    private static final File TEMP = new File("temp");
+
+    private FileUtils() {
+
+    }
+
+    private static void createTempIfNotExists() {
+        if (Stream.of(Objects.requireNonNull(ConstantController.ROOT_DIRECTORY.toFile().listFiles())).noneMatch(file -> file.isDirectory() && file.getName().equals("temp"))) {
+            TEMP.mkdir();
+        }
+    }
+
+    public static Optional<File> getFileFromTempDirectory(String fileName) {
+        createTempIfNotExists();
+
+        File file = null;
+
+        for (File tempDirectoryFile : Objects.requireNonNull(TEMP.listFiles())) {
+            if (Objects.equals(fileName, tempDirectoryFile.getName())) {
+                file = new File(tempDirectoryFile.getAbsolutePath());
+                break;
+            }
+        }
+
+        return file == null ? Optional.empty() : Optional.of(file);
+    }
+
+    public static Path getTempDirectory() {
+        createTempIfNotExists();
+
+        return TEMP.toPath();
+    }
+
+    public static void moveToTempDirectory(File file) {
+        createTempIfNotExists();
+
+        try {
+            Files.move(file.toPath(), new File(TEMP.getAbsolutePath(), file.getName()).toPath());
+        } catch (IOException ignored) {
+
+        }
+    }
+
+    public static File getFile(String fileName) {
+        for (File file : Objects.requireNonNull(ConstantController.ROOT_DIRECTORY.toFile().listFiles())) {
+            if (fileName.equals(file.getName())) {
+                return file;
+            }
+        }
+
+        throw new NoSuchElementException("The file doesn't exist");
+    }
+
+    public static void deleteFile(Path path) {
+        try {
+            Files.delete(path);
+        } catch (IOException ignored) {
+
         }
     }
 
     public static void clearMemory() {
-        File directory = new File(".");
+        File directory = ConstantController.ROOT_DIRECTORY.toFile();
         File[] files = directory.listFiles();
 
         if (files == null) return;
 
         for (File file : files) {
-            String fileName = file.getName();
+            if (file.isDirectory() && file.getName().equals("temp")) {
+                for (File insideFiles : Objects.requireNonNull(file.listFiles())) {
+                    deleteFile(insideFiles.toPath());
+                }
 
-            if (file.isFile() && (fileName.endsWith(".dat") || fileName.endsWith(".head"))) {
-                deleteFile(file);
+                deleteFile(file.toPath());
             }
         }
     }
@@ -42,7 +108,7 @@ public class FileUtils {
         for (File file : files) {
             String fileName = file.getName();
 
-            if (file.isFile() && fileName.endsWith(".dat")) {
+            if (file.isFile() && fileName.endsWith(FileType.FYI.extension)) {
                 fileNames.add(fileName.substring(0, fileName.length() - 4));
             }
         }
@@ -52,12 +118,12 @@ public class FileUtils {
 
     public static boolean copyDatFilesWithHead(String path, String tableName, Path destinationDirectory) {
         try {
-            boolean shouldReplaceFileName = !path.endsWith(String.format("%s.head", tableName));
+            boolean shouldReplaceFileName = !path.endsWith(String.format("%s%s", tableName, FileType.HEADER.extension));
 
             Path headFilePath = Path.of(path);
 
             if (shouldReplaceFileName) {
-                String newHeadFileName = String.format("%s.head", tableName);
+                String newHeadFileName = String.format("%s%s", tableName, FileType.HEADER.extension);
                 Path newHeadFilePath = destinationDirectory.resolve(newHeadFileName);
                 Files.copy(headFilePath, newHeadFilePath, StandardCopyOption.REPLACE_EXISTING);
             } else {
@@ -65,8 +131,8 @@ public class FileUtils {
                 Files.copy(headFilePath, destinationHeadFilePath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            String newDatFileName = String.format("%s.dat", tableName);
-            Path datFilePath = Path.of(path.replace(".head", ".dat"));
+            String newDatFileName = String.format("%s%s", tableName, FileType.FYI.extension);
+            Path datFilePath = Path.of(path.replace(FileType.HEADER.extension, FileType.FYI.extension));
 
             if (shouldReplaceFileName) {
                 Path newDatFilePath = destinationDirectory.resolve(newDatFileName);

@@ -22,34 +22,31 @@ import sgbd.query.Operator;
 
 public abstract class SetOperators implements IOperator {
 
+    @Override
     public void executeOperation(mxCell jCell, List<String> arguments) {
         Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
         if (optionalCell.isEmpty()) return;
 
         OperationCell cell = (OperationCell) optionalCell.get();
-        OperationErrorType error = null;
+        OperationErrorType errorType = null;
 
         try {
-
-            error = OperationErrorType.NO_PARENT;
+            errorType = OperationErrorType.NO_PARENT;
             OperationErrorVerifier.hasParent(cell);
 
-            error = OperationErrorType.NO_TWO_PARENTS;
+            errorType = OperationErrorType.NO_TWO_PARENTS;
             OperationErrorVerifier.twoParents(cell);
 
-            error = OperationErrorType.PARENT_ERROR;
+            errorType = OperationErrorType.PARENT_ERROR;
             OperationErrorVerifier.noParentError(cell);
 
-            error = null;
-
-        } catch (TreeException e) {
-
-            cell.setError(error);
-
+            errorType = null;
+        } catch (TreeException exception) {
+            cell.setError(errorType);
         }
 
-        if (error != null) return;
+        if (errorType != null) return;
 
         Cell parentCell1 = cell.getParents().get(0);
         Cell parentCell2 = cell.getParents().get(1);
@@ -64,9 +61,10 @@ public abstract class SetOperators implements IOperator {
 
         Operator readyOperator = this.createSetOperator(operator1, operator2, selectedColumns1, selectedColumns2);
 
-        Operation.operationSetter(cell, "   " + cell.getType().symbol + "   ", arguments, readyOperator);
+        String operationName = String.format("   %s   ", cell.getType().symbol);
 
+        Operation.operationSetter(cell, operationName, arguments, readyOperator);
     }
 
-    abstract Operator createSetOperator(Operator op1, Operator op2, List<String> columns1, List<String> columns2);
+    abstract Operator createSetOperator(Operator operator1, Operator operator2, List<String> columns1, List<String> columns2);
 }

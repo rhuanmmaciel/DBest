@@ -34,9 +34,8 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
     protected Tree tree;
 
-    protected Cell(String name, String style, mxCell jCell, int width, int height) {
+    protected Cell(String name, mxCell jCell, int width, int height) {
         this.columns = new ArrayList<>();
-        this.style = style;
         this.name = name;
         this.jCell = jCell;
         this.width = width;
@@ -44,6 +43,12 @@ public abstract sealed class Cell permits TableCell, OperationCell {
         this.child = null;
         this.operator = null;
         this.tree = new Tree();
+
+        this.style = jCell != null
+            ? jCell.getStyle() : this.isCSVTableCell()
+            ? "csv" : this.isFYITableCell()
+            ? "fyi" : this.isOperationCell()
+            ? "operation" : "";
 
         CellUtils.addCell(jCell, this);
     }
@@ -156,6 +161,22 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
     public int getWidth() {
         return this.width;
+    }
+
+    public boolean isFYITableCell(){
+        return this instanceof FYITableCell;
+    }
+
+    public boolean isCSVTableCell(){
+        return this instanceof CSVTableCell;
+    }
+
+    public boolean isTableCell(){
+        return this instanceof TableCell;
+    }
+
+    public boolean isOperationCell(){
+        return this instanceof OperationCell;
     }
 
     @Override

@@ -1,0 +1,7 @@
+
+‚
+java:S1149C"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ÖéÌ8¥…Î€©1
+‡
+java:S1149F"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ëÿ–Ïûÿÿÿÿ8¥…Î€©1
+n
+java:S2677"LUse or store the value returned from "readLine" instead of throwing it away.(£­—âÿÿÿÿÿ8¨…Î€©1

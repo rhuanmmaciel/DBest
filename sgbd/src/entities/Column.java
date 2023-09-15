@@ -1,13 +1,16 @@
 package entities;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.jetbrains.annotations.NotNull;
+
 import entities.cells.Cell;
 
 import enums.ColumnDataType;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Column {
+public class Column implements Comparable<Column> {
 
     private final String name;
 
@@ -26,6 +29,10 @@ public class Column {
 
     public Column(String name, String source, ColumnDataType dataType) {
         this(name, source, dataType, false);
+    }
+
+    public Column(String name, String source, boolean isPrimaryKey) {
+        this(name, source, ColumnDataType.NONE, isPrimaryKey);
     }
 
     public Column(String name, String source) {
@@ -98,9 +105,8 @@ public class Column {
     public static boolean hasSource(String sourceAndName) {
         return
             sourceAndName != null &&
-            sourceAndName.contains(".") &&
-            sourceAndName.indexOf(".") > 0 &&
-            sourceAndName.indexOf(".") < sourceAndName.length() - 1;
+                sourceAndName.contains(".") &&
+                sourceAndName.indexOf(".") < sourceAndName.length() - 1;
     }
 
     @Override
@@ -118,5 +124,14 @@ public class Column {
             "Source: %s -- Nome: %s -- Tipo: %s -- Primary key: %s",
             this.name, this.source, this.dataType, this.isPrimaryKey
         );
+    }
+
+    @Override
+    public int compareTo(@NotNull Column column) {
+        if (Objects.equals(column.getName(), this.name) && Objects.equals(column.getSource(), this.source)) return 0;
+
+        if (Objects.equals(column.getName(), this.name)) return 1;
+
+        return -1;
     }
 }

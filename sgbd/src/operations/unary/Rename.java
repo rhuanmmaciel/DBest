@@ -8,19 +8,19 @@ import com.mxgraph.model.mxCell;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
+
 import enums.OperationErrorType;
+
 import exceptions.tree.TreeException;
+
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
+
 import sgbd.query.Operator;
 import sgbd.query.unaryop.RenameSourceOperator;
 
 public class Rename implements IOperator {
-
-    public Rename() {
-
-    }
 
     @Override
     public void executeOperation(mxCell jCell, List<String> arguments) {
@@ -29,31 +29,30 @@ public class Rename implements IOperator {
         if (optionalCell.isEmpty()) return;
 
         OperationCell cell = (OperationCell) optionalCell.get();
-        OperationErrorType error = null;
+        OperationErrorType errorType = null;
 
         try {
-            error = OperationErrorType.NO_PARENT;
+            errorType = OperationErrorType.NO_PARENT;
             OperationErrorVerifier.hasParent(cell);
 
-            error = OperationErrorType.NO_ONE_PARENT;
+            errorType = OperationErrorType.NO_ONE_PARENT;
             OperationErrorVerifier.oneParent(cell);
 
-            error = OperationErrorType.PARENT_ERROR;
+            errorType = OperationErrorType.PARENT_ERROR;
             OperationErrorVerifier.noParentError(cell);
 
-            error = OperationErrorType.NULL_ARGUMENT;
+            errorType = OperationErrorType.NULL_ARGUMENT;
             OperationErrorVerifier.noNullArgument(arguments);
 
-            error = OperationErrorType.EMPTY_ARGUMENT;
+            errorType = OperationErrorType.EMPTY_ARGUMENT;
             OperationErrorVerifier.noEmptyArgument(arguments);
 
-            error = null;
-
+            errorType = null;
         } catch (TreeException exception) {
-            cell.setError(error);
+            cell.setError(errorType);
         }
 
-        if (error != null) return;
+        if (errorType != null) return;
 
         Cell parentCell = cell.getParents().get(0);
 
@@ -63,6 +62,8 @@ public class Rename implements IOperator {
             operator = new RenameSourceOperator(operator, name.substring(0, name.indexOf(":")), name.substring(name.indexOf(":") + 1));
         }
 
-        Operation.operationSetter(cell, cell.getType().symbol + " " + arguments, arguments, operator);
+        String operationName = String.format("%s %s", cell.getType().symbol, arguments);
+
+        Operation.operationSetter(cell, operationName, arguments, operator);
     }
 }

@@ -1,9 +1,11 @@
 package gui.frames.dsl;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -23,250 +25,258 @@ import javax.swing.JToolBar;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 
-import dsl.antlr4.RelAlgebraLexer;
-import dsl.antlr4.RelAlgebraParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import controller.MainController;
+import org.kordamp.ikonli.dashicons.Dashicons;
+import org.kordamp.ikonli.swing.FontIcon;
+
+import controllers.ConstantController;
+import controllers.MainController;
+
 import dsl.AntlrController;
 import dsl.DslController;
 import dsl.DslErrorListener;
+import dsl.antlr4.RelAlgebraLexer;
+import dsl.antlr4.RelAlgebraParser;
+
 import enums.OperationType;
+
+import exceptions.dsl.InputException;
+
 import gui.utils.CustomDocumentFilter;
 import gui.utils.JTextLineNumber;
 
 public class TextEditor extends JFrame implements ActionListener {
 
-	private final JTextPane textPane = new JTextPane();
+    private final JTextPane textPane = new JTextPane();
 
-	private static String lastPath = null;
+    private static String lastPath = null;
 
-	private final JTextPane console = new JTextPane();
+    private final JTextPane console = new JTextPane();
 
-	private final JButton btnBack = new JButton("<");
-	private final JButton btnImport = new JButton("Importar");
-	private final JMenuItem menuItemSelection = new JMenuItem(OperationType.SELECTION.displayName);
-	private final JMenuItem menuItemProjection = new JMenuItem(OperationType.PROJECTION.displayName);
-	private final JMenuItem menuItemJoin = new JMenuItem(OperationType.JOIN.displayName);
-	private final JMenuItem menuItemLeftJoin = new JMenuItem(OperationType.LEFT_JOIN.displayName);
-	private final JMenuItem menuItemRightJoin = new JMenuItem(OperationType.RIGHT_JOIN.displayName);
-	private final JMenuItem menuItemCartesianProduct = new JMenuItem(OperationType.CARTESIAN_PRODUCT.displayName);
-	private final JMenuItem menuItemUnion = new JMenuItem(OperationType.UNION.displayName);
-	private final JMenuItem menuItemIntersection = new JMenuItem(OperationType.INTERSECTION.displayName);
-	private final JMenuItem menuItemGroup = new JMenuItem(OperationType.GROUP.displayName);
+    private final JButton backButton = new JButton();
 
-	private final JButton btnRun = new JButton("Executar");
-	private final JButton btnRunSelection = new JButton("Executar texto selecionado");
+    private final JButton importButton = new JButton();
 
-	private final MainController main;
+    private final JMenuItem selectionMenuItem = new JMenuItem(OperationType.SELECTION.displayName);
 
-	public TextEditor(MainController main) {
-		
-		((AbstractDocument) textPane.getDocument()).setDocumentFilter(new CustomDocumentFilter(textPane));
-		
-		this.main = main;
+    private final JMenuItem projectionMenuItem = new JMenuItem(OperationType.PROJECTION.displayName);
 
-		JToolBar toolBar = new JToolBar();
-		toolBar.setFloatable(false);
-		console.setEditable(false);
+    private final JMenuItem joinMenuItem = new JMenuItem(OperationType.JOIN.displayName);
 
-        JTextLineNumber lineNumber = new JTextLineNumber(textPane);
-		JScrollPane scrollPane = new JScrollPane(textPane);
-		scrollPane.setRowHeaderView(lineNumber);
+    private final JMenuItem leftJoinMenuItem = new JMenuItem(OperationType.LEFT_JOIN.displayName);
+
+    private final JMenuItem rightJoinMenuItem = new JMenuItem(OperationType.RIGHT_JOIN.displayName);
+
+    private final JMenuItem cartesianProductMenuItem = new JMenuItem(OperationType.CARTESIAN_PRODUCT.displayName);
+
+    private final JMenuItem unionMenuItem = new JMenuItem(OperationType.UNION.displayName);
+
+    private final JMenuItem intersectionMenuItem = new JMenuItem(OperationType.INTERSECTION.displayName);
+
+    private final JMenuItem groupMenuItem = new JMenuItem(OperationType.GROUP.displayName);
+
+    private final JButton runButton = new JButton(ConstantController.getString("textEditor.execute"));
+
+    private final JButton runSelection = new JButton(ConstantController.getString("textEditor.executeSelectedText"));
+
+    private final MainController mainController;
+
+    public TextEditor(MainController mainController) {
+        ((AbstractDocument) this.textPane.getDocument()).setDocumentFilter(new CustomDocumentFilter(this.textPane));
+
+        this.mainController = mainController;
+
+        JToolBar toolBar = new JToolBar();
+        toolBar.setFloatable(false);
+
+        this.console.setEditable(false);
+
+        JTextLineNumber lineNumber = new JTextLineNumber(this.textPane);
+
+        JScrollPane scrollPane = new JScrollPane(this.textPane);
+        scrollPane.setRowHeaderView(lineNumber);
 
         scrollPane.getVerticalScrollBar().addAdjustmentListener(e -> lineNumber.repaint());
 
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		getContentPane().add(toolBar, BorderLayout.NORTH);
-		Box bottomPane = Box.createVerticalBox();
-		getContentPane().add(bottomPane, BorderLayout.SOUTH);
+        this.getContentPane().add(scrollPane, BorderLayout.CENTER);
+        this.getContentPane().add(toolBar, BorderLayout.NORTH);
 
-		bottomPane.setPreferredSize(new Dimension(bottomPane.getWidth(), main.getContentPane().getHeight() / 4));
+        Box bottomPane = Box.createVerticalBox();
+        this.getContentPane().add(bottomPane, BorderLayout.SOUTH);
 
-		JLabel lblConsole = new JLabel("Console");
-		bottomPane.setAlignmentX(Box.LEFT_ALIGNMENT);
-		bottomPane.add(lblConsole);
+        bottomPane.setPreferredSize(new Dimension(bottomPane.getWidth(), mainController.getContentPane().getHeight() / 4));
 
-		Box consoleAndButtons = Box.createHorizontalBox();
-		consoleAndButtons.add(console);
-		consoleAndButtons.add(Box.createHorizontalStrut(3));
-		
-		Box buttons = Box.createVerticalBox();
-		buttons.add(btnRun);
-		buttons.add(Box.createVerticalStrut(3));
-		buttons.add(btnRunSelection);
+        JLabel lblConsole = new JLabel(ConstantController.getString("console"));
+        bottomPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+        bottomPane.add(lblConsole);
 
-		consoleAndButtons.add(buttons);
-		
-		bottomPane.add(consoleAndButtons);
+        Box consoleAndButtons = Box.createHorizontalBox();
+        consoleAndButtons.add(this.console);
+        consoleAndButtons.add(Box.createHorizontalStrut(3));
 
-		toolBar.add(btnBack);
-		toolBar.add(btnImport);
+        Box buttons = Box.createVerticalBox();
+        buttons.add(this.runButton);
+        buttons.add(Box.createVerticalStrut(3));
+        buttons.add(this.runSelection);
 
-		JMenuBar menuBar = new JMenuBar();
-		toolBar.add(menuBar);
-		JMenu mnOperations = new JMenu("Operações");
-		menuBar.add(mnOperations);
+        consoleAndButtons.add(buttons);
 
-		mnOperations.add(menuItemSelection);
-		menuItemSelection.addActionListener(this);
-		mnOperations.add(menuItemProjection);
-		menuItemProjection.addActionListener(this);
-		mnOperations.add(menuItemJoin);
-		menuItemJoin.addActionListener(this);
-		mnOperations.add(menuItemLeftJoin);
-		menuItemLeftJoin.addActionListener(this);
-		mnOperations.add(menuItemRightJoin);
-		menuItemRightJoin.addActionListener(this);
-		mnOperations.add(menuItemCartesianProduct);
-		menuItemCartesianProduct.addActionListener(this);
-		mnOperations.add(menuItemUnion);
-		menuItemUnion.addActionListener(this);
-		mnOperations.add(menuItemIntersection);
-		menuItemIntersection.addActionListener(this);
-		mnOperations.add(menuItemGroup);
-		menuItemGroup.addActionListener(this);
+        bottomPane.add(consoleAndButtons);
 
-		btnBack.addActionListener(this);
-		btnImport.addActionListener(this);
-		btnRun.addActionListener(this);
-		btnRunSelection.addActionListener(this);
+        toolBar.add(this.backButton);
+        toolBar.add(this.importButton);
 
-	}
+        JMenuBar menuBar = new JMenuBar();
+        toolBar.add(menuBar);
+        JMenu mnOperations = new JMenu(ConstantController.getString("textEditor.operations"));
+        menuBar.add(mnOperations);
 
-	private void run() {
+        mnOperations.add(this.selectionMenuItem);
+        this.selectionMenuItem.addActionListener(this);
+        mnOperations.add(this.projectionMenuItem);
+        this.projectionMenuItem.addActionListener(this);
+        mnOperations.add(this.joinMenuItem);
+        this.joinMenuItem.addActionListener(this);
+        mnOperations.add(this.leftJoinMenuItem);
+        this.leftJoinMenuItem.addActionListener(this);
+        mnOperations.add(this.rightJoinMenuItem);
+        this.rightJoinMenuItem.addActionListener(this);
+        mnOperations.add(this.cartesianProductMenuItem);
+        this.cartesianProductMenuItem.addActionListener(this);
+        mnOperations.add(this.unionMenuItem);
+        this.unionMenuItem.addActionListener(this);
+        mnOperations.add(this.intersectionMenuItem);
+        this.intersectionMenuItem.addActionListener(this);
+        mnOperations.add(this.groupMenuItem);
+        this.groupMenuItem.addActionListener(this);
 
-		run(textPane.getText());
+        this.backButton.addActionListener(this);
+        this.importButton.addActionListener(this);
+        this.runButton.addActionListener(this);
+        this.runSelection.addActionListener(this);
 
-	}
+        this.setIcons();
+    }
 
-	private void run(String text) {
+    private void run() {
+        this.run(this.textPane.getText());
+    }
 
-		if (text == null)
-			return;
+    private void run(String text) {
+        if (text == null) return;
 
-		console.setText("");
+        this.console.setText("");
 
-		RelAlgebraParser parser = new RelAlgebraParser(
-				new CommonTokenStream(new RelAlgebraLexer(CharStreams.fromString(text))));
+        RelAlgebraParser parser = new RelAlgebraParser(new CommonTokenStream(new RelAlgebraLexer(CharStreams.fromString(text))));
 
-		parser.removeErrorListeners();
+        parser.removeErrorListeners();
 
-		DslErrorListener errorListener = new DslErrorListener();
-		parser.addErrorListener(errorListener);
+        DslErrorListener errorListener = new DslErrorListener();
+        parser.addErrorListener(errorListener);
 
-		ParseTreeWalker walker = new ParseTreeWalker();
+        ParseTreeWalker walker = new ParseTreeWalker();
 
-		AntlrController listener = new AntlrController();
+        AntlrController listener = new AntlrController();
 
-		walker.walk(listener, parser.command());
+        walker.walk(listener, parser.command());
 
-		if (!DslErrorListener.getErrors().isEmpty())
-			DslErrorListener.throwError(console);
+        this.execute();
+    }
 
-		else {
+    private void execute() {
+        if (DslErrorListener.getErrors().isEmpty()) {
+            try {
+                DslController.parser();
+            } catch (InputException exception) {
+                DslErrorListener.throwError(this.console);
+            }
+            return;
+        }
 
-			DslController.parser();
+        DslErrorListener.throwError(this.console);
+    }
 
-			if (!DslErrorListener.getErrors().isEmpty())
-				DslErrorListener.throwError(console);
+    private void setIcons() {
+        int iconsSize = 20;
 
-		}
+        FontIcon iconBack = FontIcon.of(Dashicons.ARROW_LEFT_ALT);
+        iconBack.setIconSize(iconsSize);
+        this.backButton.setIcon(iconBack);
 
-		DslErrorListener.clearErrors();
+        FontIcon iconImport = FontIcon.of(Dashicons.OPEN_FOLDER);
+        iconImport.setIconSize(iconsSize);
+        this.importButton.setIcon(iconImport);
+    }
 
-	}
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        if (event.getSource() == this.backButton) {
+            this.mainController.goBackToMain();
+        } else if (event.getSource() == this.runButton) {
+            this.run();
+        } else if (event.getSource() == this.runSelection) {
+            this.run(this.textPane.getSelectedText());
+        } else if (event.getSource() == this.selectionMenuItem) {
+            this.insertOperation(ConstantController.getString("textEditor.operations.example.selection"));
+        } else if (event.getSource() == this.projectionMenuItem) {
+            this.insertOperation(ConstantController.getString("textEditor.operations.example.projection"));
+        } else if (event.getSource() == this.joinMenuItem) {
+            this.insertOperation(ConstantController.getString("textEditor.operations.example.join"));
+        } else if (event.getSource() == this.leftJoinMenuItem) {
+            this.insertOperation(ConstantController.getString("textEditor.operations.example.leftJoin"));
+        } else if (event.getSource() == this.rightJoinMenuItem) {
+            this.insertOperation(ConstantController.getString("textEditor.operations.example.rightJoin"));
+        } else if (event.getSource() == this.cartesianProductMenuItem) {
+            this.insertOperation(ConstantController.getString("textEditor.operations.example.cartesianProduct"));
+        } else if (event.getSource() == this.unionMenuItem) {
+            this.insertOperation(ConstantController.getString("textEditor.operations.example.union"));
+        } else if (event.getSource() == this.intersectionMenuItem) {
+            this.insertOperation(ConstantController.getString("textEditor.operations.example.intersection"));
+        } else if (event.getSource() == this.groupMenuItem) {
+            this.insertOperation(ConstantController.getString("textEditor.operations.example.group"));
+        } else if (event.getSource() == this.importButton) {
+            this.importText();
+        }
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+    private void importText() {
+        JFileChooser fileUpload = new JFileChooser();
 
-		if (e.getSource() == btnBack)
-			main.goBackToMain();
+        fileUpload.setCurrentDirectory(MainController.getLastDirectory());
 
-		else if (e.getSource() == btnRun)
-			run();
-		else if (e.getSource() == btnRunSelection)
-			run(textPane.getSelectedText());
+        if (fileUpload.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            lastPath = fileUpload.getCurrentDirectory().getAbsolutePath();
 
-		else if (e.getSource() == menuItemSelection)
-			insertOperation("selection[predicado](tabela);");
-		
-		else if (e.getSource() == menuItemProjection)
-			insertOperation("projection[colunas](tabela);");
-		
-		else if (e.getSource() == menuItemJoin)
-			insertOperation("join[coluna1,coluna2](tabela1,tabela2);");
-		
-		else if (e.getSource() == menuItemLeftJoin)
-			insertOperation("leftJoin[coluna1,coluna2](tabela1,tabela2);");
-		
-		else if (e.getSource() == menuItemRightJoin)
-			insertOperation("rightJoin[coluna1,coluna2](tabela1,tabela2);");
-		
-		else if (e.getSource() == menuItemCartesianProduct)
-			insertOperation("cartesianProduct(tabela1,tabela2);");
-		
-		else if (e.getSource() == menuItemUnion)
-			insertOperation("union(tabela1,tabela2);");
+            MainController.setLastDirectory(new File(fileUpload.getCurrentDirectory().getAbsolutePath()));
 
-		else if (e.getSource() == menuItemIntersection)
-			insertOperation("intersection(tabela1,tabela2);");
+            StringBuilder stringBuilder = new StringBuilder();
 
-		else if (e.getSource() == menuItemGroup)
-			insertOperation("group[colunaAgrupada,coluna1Agregação,coluna2Agregação,colunaNAgregação](tabela);");
+            try (BufferedReader reader = new BufferedReader(new FileReader(fileUpload.getSelectedFile()))) {
+                String line;
 
-		else if(e.getSource() == btnImport)
-			importText();
-		
-	}
+                while ((line = reader.readLine()) != null) {
+                    stringBuilder.append(line).append("\n");
+                }
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
 
-	private void importText() {
-		
-		JFileChooser fileUpload = new JFileChooser();
+            this.textPane.setText(stringBuilder.toString());
+        }
+    }
 
-		fileUpload.setCurrentDirectory(MainController.getLastDirectory());
-		
-		if (fileUpload.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			
-			lastPath = fileUpload.getCurrentDirectory().getAbsolutePath();
-			
-			MainController.setLastDirectory(new File(fileUpload.getCurrentDirectory().getAbsolutePath()));
-			
-	        StringBuilder stringBuilder = new StringBuilder();
-	        
-	        try (BufferedReader reader = new BufferedReader(new FileReader(fileUpload.getSelectedFile()))) {
-	        	
-	            String line;
-	            while ((line = reader.readLine()) != null) 
-	                stringBuilder.append(line).append("\n");
-	            
-	            
-	        } catch (IOException e) {
+    private void insertOperation(String text) {
+        try {
+            this.textPane.getDocument().insertString(this.textPane.getCaretPosition(), text, null);
+        } catch (BadLocationException exception) {
+            exception.printStackTrace();
+        }
+    }
 
-				e.printStackTrace();
-
-			}
-			
-	        textPane.setText(stringBuilder.toString());
-	        
-		}
-		
-	}
-	
-	private void insertOperation(String text) {
-
-		try {
-			textPane.getDocument().insertString(textPane.getCaretPosition(), text, null);
-		} catch (BadLocationException error) {
-			error.printStackTrace();
-		}
-
-	}
-
-	public static String getLastPath() {
-		return lastPath;
-	}
-	
+    public static String getLastPath() {
+        return lastPath;
+    }
 }

@@ -18,12 +18,12 @@ import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.view.mxGraph;
 
-import controller.MainController;
+import controllers.MainController;
 
 import entities.Tree;
 import entities.cells.CSVTableCell;
 import entities.cells.Cell;
-import entities.cells.FyiTableCell;
+import entities.cells.FYITableCell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
 
@@ -277,13 +277,13 @@ public class CellUtils extends MainController {
             }
         }
 
-        Table table = MainController.getTables().get(cell.getValue());
+        TableCell tableCell = MainController.getTables().get(cell.getValue());
         String cellStyle = cell.getStyle();
 
         if (cellStyle.equals(FileType.FYI.id)) {
-            new FyiTableCell(cell, (String) cell.getValue(), FileType.FYI.id, table);
+            new FYITableCell((FYITableCell) tableCell, cell);
         } else if (cellStyle.equals(FileType.CSV.id)) {
-            new CSVTableCell(cell, (String) cell.getValue(), FileType.CSV.id, table);
+            new CSVTableCell((CSVTableCell) tableCell, cell);
         }
     }
 

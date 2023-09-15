@@ -1,26 +1,33 @@
 package database;
 
-import com.mxgraph.model.mxCell;
-import controller.ConstantController;
-import entities.cells.CSVTableCell;
-import entities.cells.FyiTableCell;
-import entities.cells.TableCell;
-import enums.FileType;
-import files.csv.CSVInfo;
-import gui.frames.main.MainFrame;
-import sgbd.prototype.Prototype;
-import sgbd.prototype.RowData;
-import sgbd.prototype.column.Column;
-import sgbd.table.CSVTable;
-import sgbd.table.SimpleTable;
-import sgbd.table.Table;
-import sgbd.table.components.Header;
-
+import java.io.File;
 import java.nio.file.Path;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.mxgraph.model.mxCell;
+
+import controllers.ConstantController;
+
+import entities.cells.CSVTableCell;
+import entities.cells.FYITableCell;
+import entities.cells.TableCell;
+
+import enums.FileType;
+
+import files.FileUtils;
+import files.csv.CSVInfo;
+
+import gui.frames.main.MainFrame;
+
+import sgbd.prototype.Prototype;
+import sgbd.prototype.RowData;
+import sgbd.prototype.metadata.Metadata;
+import sgbd.table.CSVTable;
+import sgbd.table.Table;
+import sgbd.table.components.Header;
 
 public class TableCreator {
 
@@ -41,11 +48,11 @@ public class TableCreator {
 
     public TableCreator(
         String tableName, List<entities.Column> columns, Map<Integer,
-        Map<String, String>> data, boolean mustExport
+        Map<String, String>> data, File headerFile, boolean mustExport
     ) {
         this(mustExport);
 
-        this.createFyiTable(tableName, columns, data);
+        this.createFYITable(tableName, columns, data, headerFile);
     }
 
     private void createCSVTable(
@@ -57,12 +64,19 @@ public class TableCreator {
         Header header = new Header(prototype, tableName);
         header.set(Header.FILE_PATH, path.toString());
 
+        String headerFileName = String.format("%s%s", tableName, FileType.HEADER.extension);
+
         CSVTable table = new CSVTable(header, separator, stringDelimiter, beginIndex);
         table.open();
-        table.saveHeader(String.format("%s.head", tableName));
+        table.saveHeader(headerFileName);
+
+        File headerFile = FileUtils.getFile(headerFileName);
+
+        FileUtils.moveToTempDirectory(headerFile);
+        headerFile = FileUtils.getFileFromTempDirectory(headerFileName).get();
 
         if (this.mustExport) {
-            this.tableCell = new CSVTableCell(null, tableName, FileType.CSV.id, columns, table, prototype);
+            this.tableCell = new CSVTableCell(null, tableName, columns, table, prototype, headerFile);
             return;
         }
 
@@ -73,23 +87,23 @@ public class TableCreator {
                 ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.CSV.id
             );
 
-        this.tableCell = new CSVTableCell(jCell, tableName, FileType.CSV.id, columns, table, prototype);
+        this.tableCell = new CSVTableCell(jCell, tableName, columns, table, prototype, headerFile);
     }
 
-    private void createFyiTable(
-        String tableName, List<entities.Column> columns, Map<Integer, Map<String, String>> data
+    private void createFYITable(
+        String tableName, List<entities.Column> columns, Map<Integer, Map<String, String>> data, File headerFile
     ) {
         List<RowData> rows = new ArrayList<>(this.getRowData(columns, data));
 
         Prototype prototype = this.createPrototype(columns);
 
-        Table table = SimpleTable.openTable(new Header(prototype, tableName));
+        Table table = Table.openTable(new Header(prototype, tableName));
         table.open();
         table.insert(rows);
-        table.saveHeader(String.format("%s.head", tableName));
+        table.saveHeader(String.format("%s%s", tableName, FileType.HEADER.extension));
 
         if (this.mustExport) {
-            this.tableCell = new FyiTableCell(null, tableName, FileType.FYI.id, columns, table, prototype);
+            this.tableCell = new FYITableCell(null, tableName, columns, table, prototype, headerFile);
             return;
         }
 
@@ -100,7 +114,7 @@ public class TableCreator {
                 ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.FYI.id
             );
 
-        this.tableCell = new FyiTableCell(jCell, tableName, FileType.FYI.id, columns, table, prototype);
+        this.tableCell = new FYITableCell(jCell, tableName, columns, table, prototype, headerFile);
     }
 
     private Prototype createPrototype(List<entities.Column> columns) {
@@ -113,35 +127,35 @@ public class TableCreator {
             switch (column.getDataType()) {
                 case INTEGER -> {
                     size = 4;
-                    flags = Column.SIGNED_INTEGER_COLUMN;
+                    flags = Metadata.SIGNED_INTEGER_COLUMN;
                 }
                 case LONG -> {
                     size = 8;
-                    flags = Column.SIGNED_INTEGER_COLUMN;
+                    flags = Metadata.SIGNED_INTEGER_COLUMN;
                 }
                 case FLOAT -> {
                     size = 4;
-                    flags = Column.FLOATING_POINT;
+                    flags = Metadata.FLOATING_POINT;
                 }
                 case DOUBLE -> {
                     size = 8;
-                    flags = Column.FLOATING_POINT;
+                    flags = Metadata.FLOATING_POINT;
                 }
                 case STRING -> {
                     size = Short.MAX_VALUE;
-                    flags = Column.STRING;
+                    flags = Metadata.STRING;
                 }
                 case CHARACTER -> {
                     size = 1;
-                    flags = Column.STRING;
+                    flags = Metadata.STRING;
                 }
                 default -> {
                     size = 100;
-                    flags = Column.NONE;
+                    flags = Metadata.NONE;
                 }
             }
 
-            flags |= column.getIsPrimaryKey() ? Column.PRIMARY_KEY : Column.CAN_NULL_COLUMN;
+            flags |= column.getIsPrimaryKey() ? Metadata.PRIMARY_KEY : Metadata.CAN_NULL_COLUMN;
 
             prototype.addColumn(column.getName(), size, flags);
         }
@@ -155,16 +169,19 @@ public class TableCreator {
         for (Map<String, String> line : content.values()) {
             RowData rowData = new RowData();
 
-            for (String data : line.keySet()) {
-                entities.Column column = columns.stream().filter(x -> x.getName().equals(data)).findFirst().orElseThrow();
+            for (Map.Entry<String, String> data : line.entrySet()) {
+                String key = data.getKey();
+                String value = data.getValue();
 
-                if (!line.get(data).equals(ConstantController.NULL) && !line.get(data).isEmpty()) {
+                entities.Column column = columns.stream().filter(c -> c.getName().equals(key)).findFirst().orElseThrow();
+
+                if (!value.equals(ConstantController.NULL) && !value.isEmpty()) {
                     switch (column.getDataType()) {
-                        case INTEGER -> rowData.setInt(column.getName(), (int) (Double.parseDouble(line.get(data).strip())));
-                        case LONG -> rowData.setLong(column.getName(), (long) (Double.parseDouble(line.get(data).strip())));
-                        case FLOAT -> rowData.setFloat(column.getName(), Float.parseFloat(line.get(data).strip()));
-                        case DOUBLE -> rowData.setDouble(column.getName(), Double.parseDouble(line.get(data).strip()));
-                        default -> rowData.setString(column.getName(), line.get(data).strip());
+                        case INTEGER -> rowData.setInt(column.getName(), (int) (Double.parseDouble(value.strip())));
+                        case LONG -> rowData.setLong(column.getName(), (long) (Double.parseDouble(value.strip())));
+                        case FLOAT -> rowData.setFloat(column.getName(), Float.parseFloat(value.strip()));
+                        case DOUBLE -> rowData.setDouble(column.getName(), Double.parseDouble(value.strip()));
+                        default -> rowData.setString(column.getName(), value.strip());
                     }
                 }
             }

@@ -1,11 +1,15 @@
 package entities.cells;
 
+import java.io.File;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mxgraph.model.mxCell;
 
-import controller.ConstantController;
+import controllers.ConstantController;
 
 import entities.Column;
-
 import enums.ColumnDataType;
 
 import sgbd.prototype.Prototype;
@@ -13,64 +17,66 @@ import sgbd.query.sourceop.TableScan;
 import sgbd.table.Table;
 import sgbd.util.global.Util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract sealed class TableCell extends Cell permits CSVTableCell, FyiTableCell {
+public abstract sealed class TableCell extends Cell permits CSVTableCell, FYITableCell {
 
     private Table table;
 
     private Prototype prototype;
 
-    protected TableCell(mxCell jCell, String name, String style, List<Column> columns, Table table, Prototype prototype) {
-        super(name, style, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
+    private File headerFile;
+
+    protected TableCell(mxCell jCell, String name, Table table, Prototype prototype, File headerFile) {
+        super(name, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
+
+        this.headerFile = headerFile;
+        this.table = table;
+        this.prototype = prototype;
+
+        this.setOperator(new TableScan(table));
+    }
+
+    protected TableCell(
+        mxCell jCell, String name, List<Column> columns, Table table, Prototype prototype, File headerFile
+    ) {
+
+        this(jCell, name, table, prototype, headerFile);
 
         this.setColumns(columns);
-		this.setTable(table);
-		this.setPrototype(prototype);
     }
 
-    protected TableCell(mxCell jCell, String name, String style, Table table) {
-        super(name, style, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
+    protected TableCell(mxCell jCell, String name, Table table, File headerFile) {
+        this(jCell, name, table, table.getHeader().getPrototype(), headerFile);
 
-		this.setTable(table);
-		this.setPrototype(table.getHeader().getPrototype());
-		this.setColumns();
-    }
-
-    private void setTable(Table table) {
-        this.table = table;
-
-		this.setOperator(new TableScan(table));
+        this.setColumns();
     }
 
     public Table getTable() {
         return this.table;
     }
 
-    private void setPrototype(Prototype prototype) {
-        this.prototype = prototype;
-    }
-
     public Prototype getPrototype() {
         return this.prototype;
+    }
+
+    public File getHeaderFile() {
+        return this.headerFile;
     }
 
     private void setColumns(List<Column> columns) {
         this.columns = columns;
     }
 
-	@Override
+    @Override
     public boolean hasParents() {
         return false;
     }
 
-	@Override
+    @Override
     public List<Cell> getParents() {
         return new ArrayList<>();
     }
 
-	@Override
+    @Override
     public boolean hasError() {
         return false;
     }

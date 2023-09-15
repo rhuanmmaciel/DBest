@@ -23,6 +23,7 @@ import sgbd.query.unaryop.SelectColumnsOperator;
 
 public class Projection implements IOperator {
 
+    @Override
     public void executeOperation(mxCell jCell, List<String> arguments) {
         Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 

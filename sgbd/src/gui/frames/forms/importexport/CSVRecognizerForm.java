@@ -13,7 +13,12 @@ import java.awt.event.WindowEvent;
 
 import java.nio.file.Path;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
@@ -31,6 +36,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -39,8 +45,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import controller.ConstantController;
-import controller.MainController;
+import controllers.ConstantController;
+import controllers.MainController;
 
 import database.TableUtils;
 
@@ -55,7 +61,6 @@ import files.csv.CSVRecognizer;
 import files.csv.CSVRecognizer.CSVData;
 
 import gui.frames.ErrorFrame;
-
 import gui.utils.JTableUtils;
 import gui.utils.JTableUtils.CustomTableModel;
 
@@ -89,13 +94,13 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
 
     private final ButtonGroup separatorGroup = new ButtonGroup();
 
-    private final JRadioButton commaRadioButton = new JRadioButton("Vírgula");
+    private final JRadioButton commaRadioButton = new JRadioButton(ConstantController.getString("csvRecognizer.comma"));
 
-    private final JRadioButton semicolonRadioButton = new JRadioButton("Ponto e vírgula");
+    private final JRadioButton semicolonRadioButton = new JRadioButton(ConstantController.getString("csvRecognizer.semicolon"));
 
-    private final JRadioButton spaceRadioButton = new JRadioButton("Espaço");
+    private final JRadioButton spaceRadioButton = new JRadioButton(ConstantController.getString("csvRecognizer.space"));
 
-    private final JRadioButton otherRadioButton = new JRadioButton("Outro: ");
+    private final JRadioButton otherRadioButton = new JRadioButton(ConstantController.getString("csvRecognizer.other"));
 
     private final Map<String, JComboBox<?>> typeComboBoxes = new HashMap<>();
 
@@ -141,6 +146,7 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
 
         this.addWindowListener(new WindowAdapter() {
 
+            @Override
             public void windowClosing(WindowEvent event) {
                 exitReference.set(true);
             }
@@ -198,7 +204,7 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
 
         itemsPadding.add(Box.createHorizontalStrut(10));
 
-        itemTableName.add(new JLabel("Nome: "));
+        itemTableName.add(new JLabel(String.format("%s:", ConstantController.getString("csvRecognizer.name"))));
         itemTableName.add(this.tableNameTextField);
 
         this.tableNameTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -226,7 +232,7 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
         this.tableNameTextField.setText(fileName);
 
         itemTableName.add(Box.createHorizontalGlue());
-        itemFromRow.add(new JLabel("Começa na linha: "));
+        itemFromRow.add(new JLabel(String.format("%s:", ConstantController.getString("csvRecognizer.beginRow"))));
 
         SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, this.jTable.getRowCount() - 2, 1);
 
@@ -238,7 +244,7 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
         itemFromRow.add(this.fromRowSpinner);
         itemFromRow.add(Box.createHorizontalGlue());
 
-        itemSeparator.add(new JLabel("Separador de coluna: "));
+        itemSeparator.add(new JLabel(String.format("%s:", ConstantController.getString("csvRecognizer.columnSeparator"))));
 
         this.commaRadioButton.setSelected(true);
         this.separatorGroup.add(this.commaRadioButton);
@@ -283,7 +289,7 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
         itemSeparator.add(this.otherSeparatorTextField);
         itemSeparator.add(Box.createHorizontalGlue());
 
-        itemStringDelimiter.add(new JLabel("Delimitador de String: "));
+        itemStringDelimiter.add(new JLabel(String.format("%s:", ConstantController.getString("csvRecognizer.stringDelimiter"))));
 
         this.stringDelimiterTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -315,7 +321,7 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
         this.mainPanel.setLayout(new BorderLayout());
         this.mainPanel.add(this.scrollPane);
 
-        this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        this.scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         this.scrollPane.getViewport().setBackground(Color.WHITE);
         this.scrollPane.getViewport().setPreferredSize(this.scrollPane.getPreferredSize());
     }
@@ -366,7 +372,8 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
             ColumnDataType type;
 
 			if (this.typeComboBoxes.get(columnName).getSelectedItem() != null) {
-				type = Stream.of(ColumnDataType.values())
+				type = Stream
+                    .of(ColumnDataType.values())
 					.filter(x -> x.toString().equals(Objects.requireNonNull(this.typeComboBoxes.get(columnName).getSelectedItem()).toString()))
 					.findFirst().orElseThrow();
 			} else {
@@ -498,8 +505,11 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
     }
 
     private void addFirstColumn() {
-        this.model.addColumn("Nome:");
-        this.model.setValueAt("Tipo:", 0, this.model.getColumnCount() - 1);
+        String firstColumnName = String.format("%s:", ConstantController.getString("csvRecognizer.firstColumn.name"));
+        String firstColumnType = String.format("%s:", ConstantController.getString("csvRecognizer.firstColumn.type"));
+
+        this.model.addColumn(firstColumnName);
+        this.model.setValueAt(firstColumnType, 0, this.model.getColumnCount() - 1);
 
         for (int row = 1; row < this.model.getRowCount(); row++) {
             this.model.setValueAt(row, row, this.model.getColumnCount() - 1);

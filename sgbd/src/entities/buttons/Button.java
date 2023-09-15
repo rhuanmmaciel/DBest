@@ -11,13 +11,13 @@ import entities.Action.CurrentAction;
 
 public abstract class Button<T extends AbstractButton> {
 
-    private CurrentAction action;
+    private final CurrentAction action;
 
     private T button;
 
-    private String name;
+    private final String name;
 
-    public Button(Class<T> buttonClass, String name, ActionListener listener, CurrentAction action) {
+    protected Button(Class<T> buttonClass, String name, ActionListener listener, CurrentAction action) {
         this.name = name;
 
         try {

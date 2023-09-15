@@ -1,13 +1,14 @@
 package gui.frames.forms.importexport;
 
-import gui.frames.forms.FormBase;
-
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import controllers.ConstantController;
+import gui.frames.forms.FormBase;
 
 public abstract class ImportExportAsForm extends FormBase implements ActionListener {
 
@@ -17,10 +18,10 @@ public abstract class ImportExportAsForm extends FormBase implements ActionListe
 
     protected JPanel centerPanel;
 
-    public ImportExportAsForm() {
+    protected ImportExportAsForm() {
         super(null);
 
-        this.csvButton = new JButton("Arquivo CSV");
+        this.csvButton = new JButton(ConstantController.getString("importExportAs.csvButton"));
         this.textLabel = new JLabel();
         this.centerPanel = new JPanel();
 

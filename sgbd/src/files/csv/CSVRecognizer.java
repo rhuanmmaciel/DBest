@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import controller.ConstantController;
+import controllers.ConstantController;
 
 import exceptions.InvalidCSVException;
 
@@ -29,7 +29,7 @@ public class CSVRecognizer {
 
             String line = reader.readLine();
 
-            isLineNull(line, "O arquivo CSV não possui nenhuma informação");
+            isLineNull(line, ConstantController.getString("csvRecognizer.error.noInformation"));
 
             recognizeItems(line, columnNames, stringDelimiter, separator);
 
@@ -37,7 +37,7 @@ public class CSVRecognizer {
 
             line = reader.readLine();
 
-            isLineNull(line, "O arquivo CSV possui apenas uma linha");
+            isLineNull(line, ConstantController.getString("csvRecognizer.error.justOneLine"));
 
             int size = columnNames.size();
 
@@ -61,7 +61,7 @@ public class CSVRecognizer {
                 line = reader.readLine();
             }
         } catch (IOException exception) {
-            throw new InvalidCSVException("Não foi possível ler o arquivo CSV");
+            throw new InvalidCSVException(ConstantController.getString("csvRecognizer.error.notPossibleToRead"));
         }
 
         Vector<Vector<Object>> dataArray = new Vector<>();
@@ -124,7 +124,7 @@ public class CSVRecognizer {
 
     private static void isColumnEmpty(List<String> columns) throws InvalidCSVException {
         if (columns.contains("") || columns.contains(null)) {
-            throw new InvalidCSVException("Toda coluna do arquivo CSV deve possuir um nome");
+            throw new InvalidCSVException(ConstantController.getString("csvRecognizer.error.columnNames"));
         }
     }
 

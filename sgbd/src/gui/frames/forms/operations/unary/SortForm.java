@@ -1,135 +1,146 @@
 package gui.frames.forms.operations.unary;
 
-import com.mxgraph.model.mxCell;
-import entities.Column;
-import gui.frames.forms.IFormCondition;
-import gui.frames.forms.operations.OperationForm;
-import gui.frames.forms.operations.IOperationForm;
-import utils.Utils;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButton;
+import javax.swing.UIManager;
+
+import com.mxgraph.model.mxCell;
+
+import controllers.ConstantController;
+
+import entities.Column;
+
+import gui.frames.forms.IFormCondition;
+import gui.frames.forms.operations.IOperationForm;
+import gui.frames.forms.operations.OperationForm;
+
+import utils.Utils;
 
 public class SortForm extends OperationForm implements ActionListener, IOperationForm, IFormCondition {
 
     private final ButtonGroup buttonGroup = new ButtonGroup();
-    private final JRadioButton ascendingRadioButton = new JRadioButton("Ascendente");
-    private final JRadioButton descendingRadioButton = new JRadioButton("Descendente");
+
+    private final JRadioButton ascendingRadioButton = new JRadioButton(
+        ConstantController.getString("operationForm.ascending")
+    );
+
+    private final JRadioButton descendingRadioButton = new JRadioButton(
+        ConstantController.getString("operationForm.descending")
+    );
 
     public SortForm(mxCell jCell) {
-
         super(jCell);
 
-        initializeGUI();
-
+        this.initializeGUI();
     }
 
     private void initializeGUI() {
+        this.addWindowListener(new WindowAdapter() {
 
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                closeWindow();
+            @Override
+            public void windowClosing(WindowEvent exception) {
+                SortForm.this.closeWindow();
             }
         });
 
-        addExtraComponent(ascendingRadioButton, 0, 2, 1, 1);
-        addExtraComponent(descendingRadioButton, 1, 2, 1, 1);
-        ascendingRadioButton.addActionListener(this);
-        descendingRadioButton.addActionListener(this);
-        buttonGroup.add(ascendingRadioButton);
-        buttonGroup.add(descendingRadioButton);
+        this.addExtraComponent(this.ascendingRadioButton, 0, 2, 1, 1);
+        this.addExtraComponent(this.descendingRadioButton, 1, 2, 1, 1);
+        this.ascendingRadioButton.addActionListener(this);
+        this.descendingRadioButton.addActionListener(this);
+        this.buttonGroup.add(this.ascendingRadioButton);
+        this.buttonGroup.add(this.descendingRadioButton);
 
-        cancelButton.addActionListener(this);
-        readyButton.addActionListener(this);
+        this.cancelButton.addActionListener(this);
+        this.readyButton.addActionListener(this);
 
-        setPreviousArgs();
-        checkBtnReady();
+        this.setPreviousArgs();
+        this.checkReadyButton();
 
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 
     @Override
     protected void setPreviousArgs() {
-
-        if(!previousArguments.isEmpty()){
-
-            String column = previousArguments.get(0);
+        if (!this.previousArguments.isEmpty()) {
+            String column = this.previousArguments.get(0);
             String columnName = Column.removeSource(column);
             String columnSource = Column.removeName(column);
 
-            ascendingRadioButton.setSelected(true);
-            if(Utils.startsWithIgnoreCase(column, "DESC:"))
-               descendingRadioButton.setSelected(true);
+            this.ascendingRadioButton.setSelected(true);
 
-            comboBoxSource.setSelectedItem(columnSource);
-            comboBoxColumn.setSelectedItem(columnName);
+            if (Utils.startsWithIgnoreCase(column, "DESC:")) {
+                this.descendingRadioButton.setSelected(true);
+            }
 
+            this.comboBoxSource.setSelectedItem(columnSource);
+            this.comboBoxColumn.setSelectedItem(columnName);
         }
-
-    }
-
-    private boolean noneSelection;
-
-    @Override
-    public void checkBtnReady() {
-
-        AtomicBoolean anySelected = new AtomicBoolean(false);
-
-        buttonGroup.getElements().asIterator().forEachRemaining(x -> {
-            if(x.isSelected()) anySelected.set(true);
-        });
-
-        readyButton.setEnabled(anySelected.get());
-
-        noneSelection = anySelected.get();
-
-        updateToolTipTxt();
-
     }
 
     @Override
-    public void updateToolTipTxt() {
+    public void checkReadyButton() {
+        AtomicBoolean isAnyButtonSelectedReference = new AtomicBoolean(false);
 
-        String btnReadyToolTipText = "";
+        this.buttonGroup
+            .getElements()
+            .asIterator()
+            .forEachRemaining(button -> {
+                if (button.isSelected()) isAnyButtonSelectedReference.set(true);
+            });
 
-        if (!noneSelection)
-            btnReadyToolTipText = "- Selecione pelo menos uma opção";
+        boolean isAnyButtonSelected = isAnyButtonSelectedReference.get();
+
+        this.readyButton.setEnabled(isAnyButtonSelected);
+        this.updateToolTipText(isAnyButtonSelected);
+    }
+
+    @Override
+    public void updateToolTipText(boolean... conditions) {
+        String readyButtonToolTipText = "";
+
+        boolean noneSelection = conditions[0];
+
+        if (!noneSelection) {
+            readyButtonToolTipText = String.format(
+                "- %s",
+                ConstantController.getString("operationForm.toolTip.sort.selectAtLeastOne")
+            );
+        }
 
         UIManager.put("ToolTip.foreground", Color.RED);
 
-        readyButton.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
-
+        this.readyButton.setToolTipText(readyButtonToolTipText.isEmpty() ? null : readyButtonToolTipText);
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
+        this.checkReadyButton();
 
-        checkBtnReady();
+        if (actionEvent.getSource() == this.readyButton) {
+            String order = this.ascendingRadioButton.isSelected() ? "ASC:" : "DESC:";
+            String source = Objects.requireNonNull(this.comboBoxSource.getSelectedItem()).toString();
+            String column = Objects.requireNonNull(this.comboBoxColumn.getSelectedItem()).toString();
 
-        if (actionEvent.getSource() == readyButton) {
+            this.arguments.add(String.format("%s%s.%s", order, source, column));
 
-            String order = ascendingRadioButton.isSelected() ? "ASC:" : "DESC:";
-            arguments.add(order+Column.composeSourceAndName(Objects.requireNonNull(comboBoxSource.getSelectedItem()).toString(), Objects.requireNonNull(comboBoxColumn.getSelectedItem()).toString()
-            ));
-            onReadyButtonClicked();
-
-        } else if (actionEvent.getSource() == cancelButton) {
-
-            closeWindow();
-
+            this.onReadyButtonClicked();
+        } else if (actionEvent.getSource() == this.cancelButton) {
+            this.closeWindow();
         }
     }
 
     protected void closeWindow() {
-        dispose();
+        this.dispose();
     }
 }

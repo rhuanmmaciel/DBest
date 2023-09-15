@@ -2,7 +2,7 @@ package application;
 
 import javax.swing.*;
 
-import controller.MainController;
+import controllers.MainController;
 
 public class DBest {
 

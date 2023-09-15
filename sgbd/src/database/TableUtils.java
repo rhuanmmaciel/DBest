@@ -2,11 +2,15 @@ package database;
 
 import java.util.*;
 
-import controller.ConstantController;
+import controllers.ConstantController;
 
 import enums.ColumnDataType;
 
 public class TableUtils {
+
+    private TableUtils() {
+
+    }
 
     public static boolean hasNull(List<String> columnData) {
 		for (String data : columnData) {
@@ -28,7 +32,6 @@ public class TableUtils {
 
         for (String data : columnData) {
             if (!data.equals(ConstantController.NULL)) {
-
 				if (data.length() > 1) {
 					types.remove(ColumnDataType.CHARACTER);
 				}
@@ -71,24 +74,18 @@ public class TableUtils {
     }
 
     public static boolean canBePrimaryKey(List<List<String>> columns) {
-		if (columns.isEmpty()) {
-			return false;
-		}
+		if (columns.isEmpty()) return false;
 
         int size = columns.get(0).size();
 
 		for (List<String> column : columns) {
-			if (column.size() != size) {
-				return false;
-			}
+			if (column.size() != size) return false;
 		}
 
         Map<Integer, List<String>> uniqueData = new LinkedHashMap<>();
 
         for (List<String> column : columns) {
-			if (column.contains("") || column.contains(null) || column.contains(ConstantController.NULL)) {
-				return false;
-			}
+			if (column.contains("") || column.contains(null) || column.contains(ConstantController.NULL)) return false;
 
             int i = 0;
 

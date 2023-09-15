@@ -1,15 +1,24 @@
 package gui.utils;
 
-import controller.ConstantController;
-
-import java.awt.*;
-
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.util.Vector;
 
 import javax.swing.JTable;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+
+import controllers.ConstantController;
 
 public class JTableUtils {
+
+    private JTableUtils() {
+
+    }
 
     public static void preferredColumnWidthByColumnName(JTable jTable, int columnIndex) {
         TableColumn column = jTable.getColumnModel().getColumn(columnIndex);
@@ -73,6 +82,8 @@ public class JTableUtils {
             .getColumnModel()
             .getColumn(columnIndex)
             .setCellRenderer(new DefaultTableCellRenderer() {
+
+                @Override
                 public Component getTableCellRendererComponent(
                     JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column
                 ) {
