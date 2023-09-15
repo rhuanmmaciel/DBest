@@ -2,6 +2,7 @@ package controllers;
 
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Frame;
 import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -78,6 +79,8 @@ public class MainController extends MainFrame {
     public static final CommandController commandController = new CommandController();
 
     private static File lastDirectory = new File("");
+
+    public static Console console = null;
 
     private static int currentTableYPosition = 0;
 
@@ -316,6 +319,17 @@ public class MainController extends MainFrame {
                 80, 30, style
             );
         }
+    }
+
+    private void openConsole() {
+        if (console == null) {
+            console = new Console();
+            return;
+        }
+
+        console.setLocationRelativeTo(null);
+        console.setExtendedState(Frame.NORMAL);
+        console.toFront();
     }
 
     private void changeScreen() {

@@ -5,188 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/controllers/ConstantController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/FyiDatabase.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/2/02e58ac25a424aeca3df8b6b893f2c312e6b457d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/3/0358de90ce539e1eab83da2be8f1745089d40996" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/3/0358de90ce539e1eab83da2be8f1745089d40996" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/c/0c48664560425cea5abdfe15f45f006bc3320fd3" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/c/0c48664560425cea5abdfe15f45f006bc3320fd3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/e/0e199b74aa163a586ebf297c036b025d4f185bfa" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/e/0e199b74aa163a586ebf297c036b025d4f185bfa" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/1/6/161ad2951c8e337191b5cc96894c424916dc27d8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/1/213b924e127d95f72e4d6b5d5e8170c80f28c1c3" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/1/213b924e127d95f72e4d6b5d5e8170c80f28c1c3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/1/2166353ce7dbf8a772da901ba0b3e250a8069c9f" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/1/2166353ce7dbf8a772da901ba0b3e250a8069c9f" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/5/25ab11c589d1a302f21e27f730ced729cf3e401c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/b/2b55f5a598d663d0174650dd28caa4fa46d16d8e" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/b/2b55f5a598d663d0174650dd28caa4fa46d16d8e" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/5/3551d2e39c97b220491d16f478fb2be88041ddec" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/5/3551d2e39c97b220491d16f478fb2be88041ddec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/c/4cd8f72d9dbe925135a5a57918dbf12796e53058" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/c/4cd8f72d9dbe925135a5a57918dbf12796e53058" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/0/5018eac808f67ed262845f7fbfb5b120b5d53b94" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/0/5018eac808f67ed262845f7fbfb5b120b5d53b94" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/3/536e02cecb07d6d9df76dbf10081407a87ffce0d" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/3/536e02cecb07d6d9df76dbf10081407a87ffce0d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/9/592f858c2a4cc8f2f49a04df5c56b915b1042e84" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/9/592f858c2a4cc8f2f49a04df5c56b915b1042e84" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/9/59aa59ab6c99e373fc3f039dc42cda446b9b8831" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/d/5d29738deaaef42605828d4a7a956a30880226f8" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/d/5d29738deaaef42605828d4a7a956a30880226f8" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/f/5f56d91879c43735b29378aa173392c8b7fd8c64" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/f/5f56d91879c43735b29378aa173392c8b7fd8c64" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/d/6d56c163e40dd95a27f0d04c69dd25a5a6dfe4c6" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/d/6d56c163e40dd95a27f0d04c69dd25a5a6dfe4c6" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/1/71b04fd53bc4cdd004f610fdfdc3716c720de21e" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/1/71b04fd53bc4cdd004f610fdfdc3716c720de21e" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/6/76bfde56fef91243311825eef08912a0495ba53c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/7/77757250422ac41e80d67f51ffe635903ba1c5b6" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/8/78b4e47d6ddf31404fbaef58341f2aebd0f35f30" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/1/81b1b6d589d4f5721be49c723d4ba7a061e7e5c6" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/1/81b1b6d589d4f5721be49c723d4ba7a061e7e5c6" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/6/8610f55cd68aa82bfe51f11c58ead602a45c3bdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/5/95142ad4834bb84bf969112c80628d80f4220a87" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/5/95142ad4834bb84bf969112c80628d80f4220a87" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/e/9e325da03e7fdaf943bef16d2d62b117301fa50e" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/e/9e325da03e7fdaf943bef16d2d62b117301fa50e" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/4/a4756d22d6c8646b0425ff088d20c4d5ba0bc298" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/4/a4756d22d6c8646b0425ff088d20c4d5ba0bc298" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/e/ae5f4dd5b920945d1346ec97f30ad869c27fde04" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/e/ae5f4dd5b920945d1346ec97f30ad869c27fde04" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/f/af69d3f23c68cd74bf6395c050433d232451fbfb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/f/af69d3f23c68cd74bf6395c050433d232451fbfb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/4/b49b7894398ca62c32e9f226621b13e8da4b26f7" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/4/b49b7894398ca62c32e9f226621b13e8da4b26f7" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/c/bc016da98c5864458ed1d0f4716dcccfab7ea6dc" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/c/bc016da98c5864458ed1d0f4716dcccfab7ea6dc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/1/c190ab24d80f861c6a7ccdd7958ac908a0703e9c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/2/c2ab4f2e7b63d0703605fba6ca2c64062928e8c3" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/2/c2ab4f2e7b63d0703605fba6ca2c64062928e8c3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/8/c843302b960335761bf5073472144991c0e1d8c7" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/8/c843302b960335761bf5073472144991c0e1d8c7" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/8/d8b11a4ded4c2ef774618cfca83a7e7412d4fe27" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/8/d8b11a4ded4c2ef774618cfca83a7e7412d4fe27" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/a/da4685b74f4d41d8bd14e0ca9da39f208a848b82" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/7/f7887bb0cf0755885d21e30fda18907b2252f4dc" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/7/f7887bb0cf0755885d21e30fda18907b2252f4dc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/8/f80b38f72e9b5ed2b4cca4fd2631b1caa7d9e694" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/8/f80b38f72e9b5ed2b4cca4fd2631b1caa7d9e694" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/a/fa5cebb248796b8b941b5ebc5e6aa901ee530ecc" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/a/fa5cebb248796b8b941b5ebc5e6aa901ee530ecc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/0/2/02e58ac25a424aeca3df8b6b893f2c312e6b457d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/1/6/161ad2951c8e337191b5cc96894c424916dc27d8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/2/5/25ab11c589d1a302f21e27f730ced729cf3e401c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/5/9/59aa59ab6c99e373fc3f039dc42cda446b9b8831" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/7/6/76bfde56fef91243311825eef08912a0495ba53c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/7/7/77757250422ac41e80d67f51ffe635903ba1c5b6" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/7/8/78b4e47d6ddf31404fbaef58341f2aebd0f35f30" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/8/6/8610f55cd68aa82bfe51f11c58ead602a45c3bdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/c/1/c190ab24d80f861c6a7ccdd7958ac908a0703e9c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/d/a/da4685b74f4d41d8bd14e0ca9da39f208a848b82" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/FyiDatabase.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/DBest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/application/DBest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/commands/BaseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/BaseCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/commands/BaseUndoableRedoableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/BaseUndoableRedoableCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/commands/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/commands/CommandController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/CommandController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/commands/ExecuteOperationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/ExecuteOperationCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/commands/InsertEdgeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertEdgeCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/commands/InsertOperationCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertOperationCellCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/commands/RemoveCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/RemoveCellCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/commands/UndoableRedoableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/UndoableRedoableCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/ConstantController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/TableCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableCreator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/TableUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/TuplesExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TuplesExtractor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/AntlrController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/AntlrController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/DslController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/DslErrorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslErrorListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/BinaryExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/BinaryExpression.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/Expression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/Expression.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/Import.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/Import.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/OperationExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/OperationExpression.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/Relation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/Relation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/UnaryExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/UnaryExpression.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/VariableDeclaration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/VariableDeclaration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/enums/CommandType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/enums/CommandType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/utils/DslUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/utils/DslUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/Action.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Action.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/Column.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Column.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/Tree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Tree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/buttons/Button.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/buttons/Button.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/CSVTableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/CSVTableCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/Cell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/FyiTableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/FYITableCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/TableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/TableCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/utils/CoordinatesUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/utils/CoordinatesUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/utils/TreeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/utils/TreeUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/utils/cells/CellRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/utils/cells/CellRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/utils/cells/CellUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/utils/cells/CellUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/enums/ColumnDataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/ColumnDataType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/enums/FileType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/FileType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/enums/OperationFlags.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/enums/OperationType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/OperationType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/ExportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ExportFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/ImportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ImportFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/csv/CSVRecognizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/csv/CSVRecognizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/MainController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/frames/DataFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/DataFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/dsl/Console.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/dsl/Console.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/dsl/TextEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/dsl/TextEditor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/IFormCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/IFormCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/create/CustomProviders.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/create/CustomProviders.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameAddColumn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameAddColumn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameCreateData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameCreateData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameCreateTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameCreateTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/CSVRecognizerForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/CSVRecognizerForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportSQLScriptForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportSQLScriptForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportAsForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportExportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportExportAsForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportFromDslForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/OperationForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/OperationForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/binary/JoinsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/binary/JoinsForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/AggregationForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/AggregationForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/GroupForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/GroupForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/IndexerForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/IndexerForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/RenameForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/RenameForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/SelectionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/SelectionForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/SortForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/SortForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/utils/CustomDocumentFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/utils/CustomDocumentFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/utils/JTableUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/utils/JTableUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/utils/JTextLineNumber.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/utils/JTextLineNumber.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/OperationErrorVerifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/OperationErrorVerifier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/CartesianProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/CartesianProduct.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/joins/Join.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/joins/Join.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/joins/JoinOperators.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/joins/JoinOperators.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/joins/LeftJoin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/joins/LeftJoin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/joins/RightJoin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/joins/RightJoin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/set/Intersection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/set/Intersection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/set/SetOperators.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/set/SetOperators.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/set/Union.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/set/Union.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Group.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Indexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Projection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Projection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Rename.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Rename.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Selection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Selection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Sort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Sort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/RandomUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/RandomUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controller/MainController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controller/MainController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/AntlrController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/dsl/AntlrController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/DslController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/DslErrorListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/dsl/DslErrorListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/utils/DslUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/dsl/utils/DslUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/Action$CreateCellAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Action$CreateCellAction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/Action$CurrentAction$ActionType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Action$CurrentAction$ActionType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/Action$CurrentAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Action$CurrentAction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/Action.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Action.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/Column.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Column.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/Tree.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Tree.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/buttons/Button.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/buttons/Button.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/Cell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/cells/Cell.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/OperationCell.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/TableCell.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/utils/TreeUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/utils/TreeUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/enums/FileType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/enums/FileType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/enums/OperationType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/enums/OperationType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/DataFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/DataFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/dsl/Console.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/dsl/TextEditor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/CustomProviders$Char.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/CustomProviders$Char.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/CustomProviders$MyCustomFaker.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/CustomProviders.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/CustomProviders.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameAddColumn.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameAddColumn.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateData.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateData.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/main/MainFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/main/MainFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/utils/JTextLineNumber$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/utils/JTextLineNumber.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/utils/JTextLineNumber.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -336,7 +162,7 @@
       <workItem from="1693764969994" duration="15187000" />
       <workItem from="1694606315519" duration="1321000" />
       <workItem from="1694609359861" duration="18516000" />
-      <workItem from="1694734348722" duration="3035000" />
+      <workItem from="1694734348722" duration="4801000" />
     </task>
     <servers />
   </component>
