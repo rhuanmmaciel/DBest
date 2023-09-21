@@ -5,22 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0dee0e35-6e46-4f1c-8cdf-26b078d3568c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/sgbd_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/resourceBundles.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/ConstantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ConstantController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/TableCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableCreator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/DslController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/Cell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/CsvTableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/CsvTableCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/FyiTableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/FyiTableCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/TableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/TableCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/utils/CellUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/utils/CellUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/files/ImportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ImportFile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/frames/DataFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/DataFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Indexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/BooleanExpressionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/BooleanExpressionTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/CsvTableTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/CsvTableTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/FyiTableTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/FyiTableTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,10 +66,10 @@
   "keyToString": {
     "git-widget-placeholder": "rhuan",
     "last_opened_file_path": "/home/rhuan/Documents/repositories/dbest/sgbd",
-    "project.structure.last.edited": "Problems",
-    "project.structure.proportion": "0.0",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler"
   }
 }]]></component>
   <component name="RecentsManager">

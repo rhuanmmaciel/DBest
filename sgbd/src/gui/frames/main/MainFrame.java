@@ -17,7 +17,6 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
-import enums.FileType;
 
 import controller.ConstantController;
 import entities.Action.CurrentAction;
@@ -71,6 +70,10 @@ public abstract class MainFrame extends JFrame
 	protected JMenuBar menuBar = new JMenuBar();
 	protected JMenuItem menuItemImportTable = new JMenuItem(ConstantController.getString("menu.file.importTable"));
 	protected JMenuItem menuItemImportTree = new JMenuItem(ConstantController.getString("menu.file.importTree"));
+	protected JMenuItem menuItemThemeMetal = new JMenuItem("Metal");
+	protected JMenuItem menuItemThemeNimbus = new JMenuItem("Nimbus");
+	protected JMenuItem menuItemThemeMotif = new JMenuItem("Motif");
+	protected JMenuItem menuItemThemeGTK = new JMenuItem("GTK");
 
 	public MainFrame(Set<Button<?>> buttons) {
 
@@ -78,6 +81,10 @@ public abstract class MainFrame extends JFrame
 		this.buttons = buttons;
 		initGUI();
 
+	}
+
+	protected void refreshAllComponents(){
+		SwingUtilities.updateComponentTreeUI(this);
 	}
 
 	private void initGUI() {
@@ -121,24 +128,53 @@ public abstract class MainFrame extends JFrame
 
 	private void addMenuBarsItems(){
 
-		JMenu fileMenu = new JMenu(ConstantController.getString("menu.file"));
 		JMenu editMenu = new JMenu(ConstantController.getString("menu.edit"));
-		JMenu appearanceMenu = new JMenu(ConstantController.getString("menu.appearance"));
 
-		fileMenu.add(menuItemImportTable);
-		fileMenu.add(menuItemImportTree);
+		addFileMenuItems();
+		addAppearanceMenuItems();
 
 		editMenu.add(new JMenuItem(ConstantController.getString("menu.edit.undo")));
 		editMenu.add(new JMenuItem(ConstantController.getString("menu.edit.redo")));
 
-		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
+
+
+
+	}
+
+	private void addAppearanceMenuItems(){
+
+		JMenu appearanceMenu = new JMenu(ConstantController.getString("menu.appearance"));
 		menuBar.add(appearanceMenu);
+
+		JMenu themeMenu = new JMenu("Theme");
+		appearanceMenu.add(themeMenu);
+
+		themeMenu.add(menuItemThemeMetal);
+		themeMenu.add(menuItemThemeGTK);
+		themeMenu.add(menuItemThemeMotif);
+		themeMenu.add(menuItemThemeNimbus);
+
+		menuItemThemeGTK.addActionListener(this);
+		menuItemThemeMetal.addActionListener(this);
+		menuItemThemeMotif.addActionListener(this);
+		menuItemThemeNimbus.addActionListener(this);
+
+	}
+
+	private void addFileMenuItems(){
+
+		JMenu fileMenu = new JMenu(ConstantController.getString("menu.file"));
+		menuBar.add(fileMenu);
+
+		fileMenu.add(menuItemImportTable);
+		fileMenu.add(menuItemImportTree);
 
 		menuItemImportTable.addActionListener(this);
 		menuItemImportTree.addActionListener(this);
 
 	}
+
 
 	private void setJCellStyles(){
 

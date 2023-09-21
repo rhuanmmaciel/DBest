@@ -1,10 +1,12 @@
 package entities.cells;
 
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
+import controller.ConstantController;
 import entities.Column;
 import sgbd.prototype.Prototype;
 import sgbd.query.Operator;
-import sgbd.table.Table;
+import sgbd.source.table.Table;
 
 import java.io.File;
 import java.util.List;
@@ -23,7 +25,7 @@ public final class FyiTableCell extends TableCell {
 
     public FyiTableCell(String name, Table table, File headerFile) {
 
-        super(null, name, table, headerFile);
+        super(new mxCell(null, new mxGeometry(), ConstantController.JCELL_FYI_STYLE), name, table, headerFile);
 
     }
 

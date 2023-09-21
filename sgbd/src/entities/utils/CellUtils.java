@@ -15,7 +15,7 @@ import entities.cells.*;
 import enums.FileType;
 import enums.TableType;
 import gui.frames.DataFrame;
-import sgbd.table.Table;
+import sgbd.source.table.Table;
 
 public class CellUtils extends MainController {
 

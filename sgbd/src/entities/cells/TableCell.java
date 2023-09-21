@@ -11,8 +11,7 @@ import entities.Column;
 import enums.ColumnDataType;
 import sgbd.prototype.Prototype;
 import sgbd.query.sourceop.TableScan;
-import sgbd.table.Table;
-import sgbd.table.components.Header;
+import sgbd.source.table.Table;
 import sgbd.util.global.Util;
 
 public abstract sealed class TableCell extends Cell permits CsvTableCell, FyiTableCell {

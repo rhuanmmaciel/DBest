@@ -12,7 +12,7 @@ import sgbd.query.Operator;
 import sgbd.query.TestOperators;
 import sgbd.query.sourceop.TableScan;
 import sgbd.query.unaryop.FilterOperator;
-import sgbd.table.Table;
+import sgbd.source.table.Table;
 
 public class BooleanExpressionTest {
 

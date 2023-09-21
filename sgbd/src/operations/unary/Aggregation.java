@@ -18,9 +18,9 @@ import sgbd.query.binaryop.joins.NestedLoopJoin;
 import sgbd.query.sourceop.TableScan;
 import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.query.unaryop.GroupOperator;
-import sgbd.table.MemoryTable;
-import sgbd.table.Table;
-import sgbd.table.components.Header;
+import sgbd.source.components.Header;
+import sgbd.source.table.MemoryTable;
+import sgbd.source.table.Table;
 import util.Utils;
 
 import java.util.ArrayList;

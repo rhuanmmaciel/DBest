@@ -21,7 +21,7 @@ import enums.FileType;
 import enums.TableType;
 import exceptions.dsl.InputException;
 import gui.frames.dsl.TextEditor;
-import sgbd.table.Table;
+import sgbd.source.table.Table;
 
 public class DslController {
 

@@ -34,6 +34,7 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 		this.operator = null;
 		this.tree = new Tree();
 		cells.put(jCell, this);
+		if(jCell == null) throw new RuntimeException();
 
 		this.style = jCell != null ? jCell.getStyle()
 				: isCsvTableCell() ? "csv"

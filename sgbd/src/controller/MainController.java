@@ -38,6 +38,7 @@ import enums.OperationType;
 import enums.TableType;
 import files.FileUtils;
 import gui.frames.CellInformationFrame;
+import gui.frames.GeneralStatsFrame;
 import gui.frames.dsl.Console;
 import gui.frames.dsl.TextEditor;
 import gui.frames.forms.create.FormFrameCreateTable;
@@ -207,10 +208,40 @@ public class MainController extends MainFrame {
         if(actionEvent.getSource() == menuItemImportTable)
             newTable(CurrentAction.ActionType.IMPORT_FILE);
 
+        String theme = getTheme(actionEvent);
 
+        if(!theme.isEmpty())
+            try {
+
+                UIManager.setLookAndFeel(theme);
+                refreshAllComponents();
+                JFrame.setDefaultLookAndFeelDecorated(true);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                     | UnsupportedLookAndFeelException e) {
+
+                e.printStackTrace();
+
+            }
 
     }
 
+    private String getTheme(ActionEvent actionEvent) {
+
+        if(actionEvent.getSource() == menuItemThemeGTK)
+            return "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+
+        if(actionEvent.getSource() == menuItemThemeMotif)
+            return "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
+
+        if(actionEvent.getSource() == menuItemThemeMetal)
+            return "ch.randelshofer.quaqua.QuaquaLookAndFeel";
+
+        if(actionEvent.getSource() == menuItemThemeNimbus)
+            return "javax.swing.plaf.nimbus.NimbusLookAndFeel";
+
+        return "";
+
+    }
 
     public void menuItemClicked(ActionEvent e, Button<?> btnClicked, String style) {
 
@@ -455,6 +486,10 @@ public class MainController extends MainFrame {
                 System.out.println(jCell);
 
             }
+
+        } else if (e.getKeyCode() == KeyEvent.VK_M) {
+
+//            new GeneralStatsFrame();
 
         }
     }

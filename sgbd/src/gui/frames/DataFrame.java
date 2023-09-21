@@ -34,7 +34,7 @@ public class DataFrame extends JDialog implements ActionListener {
 	private final JButton btnAllLeft = new JButton();
 	private final JButton btnAllRight = new JButton();
 	private final JButton btnStats = new JButton();
-	private final JPanel centerPane = new JPanel();
+	private final JPanel tablePanel = new JPanel(new BorderLayout());
 	private JScrollPane scrollPane;
 	private final JTextPane textPane = new JTextPane();
 	private FontIcon iconStats;
@@ -120,31 +120,12 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		int firstElement = page * 15;
 		int lastElement = page * 15 + 14;
-		int currentElement = firstElement;
 
-		DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel();
 
 		model.addColumn("");
 
-		if(page > currentLastPage) {
-
-			Map<String, String> row = TuplesExtractor.getRow(operator, true);
-
-			while (row != null && currentElement < lastElement) {
-
-				rows.add(row);
-				row = TuplesExtractor.getRow(operator, true);
-				if (row != null) currentElement++;
-				if (currentElement >= lastElement) {
-					rows.add(row);
-				}
-
-			}
-
-			if (row == null && lastPage == null)
-				lastPage = currentElement / 15;
-
-		}
+		getTuples(firstElement, page, lastElement);
 
 		currentLastPage = Math.max(currentLastPage, page);
 
@@ -192,6 +173,30 @@ public class DataFrame extends JDialog implements ActionListener {
 
 	}
 
+	private void getTuples(int currentElement, int page, int lastElement){
+
+		if(page > currentLastPage) {
+
+			Map<String, String> row = TuplesExtractor.getRow(operator, true);
+
+			while (row != null && currentElement < lastElement) {
+
+				rows.add(row);
+				row = TuplesExtractor.getRow(operator, true);
+				if (row != null) currentElement++;
+				if (currentElement >= lastElement) {
+					rows.add(row);
+				}
+
+			}
+
+			if (row == null && lastPage == null)
+				lastPage = currentElement / 15;
+
+		}
+
+	}
+
 	private void initializeGUI() {
 
 		JPanel contentPane = new JPanel(new BorderLayout());
@@ -211,13 +216,11 @@ public class DataFrame extends JDialog implements ActionListener {
 		northPane.add(lblPages);
 		northPane.add(btnStats);
 
-		JPanel tablePanel = new JPanel(new BorderLayout());
 		tablePanel.add(table.getTableHeader(), BorderLayout.NORTH);
 		tablePanel.add(table, BorderLayout.CENTER);
 		scrollPane = new JScrollPane(tablePanel);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		centerPane.add(scrollPane);
 
 		textPane.setEditable(false);
 
@@ -228,7 +231,7 @@ public class DataFrame extends JDialog implements ActionListener {
 		southPane.add(btnAllRight);
 
 		contentPane.add(northPane, BorderLayout.NORTH);
-		contentPane.add(centerPane, BorderLayout.CENTER);
+		contentPane.add(scrollPane, BorderLayout.CENTER);
 		contentPane.add(southPane, BorderLayout.SOUTH);
 
 		verifyButtons();
@@ -275,12 +278,12 @@ public class DataFrame extends JDialog implements ActionListener {
 
 		}if(e.getSource() == btnAllLeft){
 
-			currentIndex = Math.max(currentIndex - 100, 0);
+			currentIndex = 0;
 
 		}else if(e.getSource() == btnAllRight){
 
 			if(lastPage == null)
-				for(int i = 0; lastPage == null && i < 100; i++) updateTable(++currentIndex);
+				while (lastPage == null) updateTable(++currentIndex);
 			else currentIndex = lastPage;
 
 		}else if(e.getSource() == btnStats){
@@ -338,19 +341,24 @@ public class DataFrame extends JDialog implements ActionListener {
 
 	private void alternateScreen(){
 
-		if(centerPane.isAncestorOf(scrollPane)) {
+		if(scrollPane.isAncestorOf(tablePanel)) {
 
-			centerPane.remove(scrollPane);
-			centerPane.add(textPane);
+			scrollPane.setViewportView(null);
+			scrollPane.setViewportView(textPane);
+
 			iconStats.setIkon(Dashicons.EDITOR_TABLE);
 
-		}else{
+			revalidate();
+			repaint();
 
-			centerPane.remove(textPane);
-			centerPane.add(scrollPane);
-			iconStats.setIkon(Dashicons.BOOK);
+			return;
 
 		}
+
+		scrollPane.setViewportView(null);
+		scrollPane.setViewportView(tablePanel);
+
+		iconStats.setIkon(Dashicons.BOOK);
 
 		revalidate();
 		repaint();

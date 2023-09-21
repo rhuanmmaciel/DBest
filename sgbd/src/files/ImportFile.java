@@ -25,7 +25,7 @@ import enums.TableType;
 import files.csv.CsvInfo;
 import gui.frames.forms.importexport.CsvRecognizerForm;
 import gui.frames.main.MainFrame;
-import sgbd.table.Table;
+import sgbd.source.table.Table;
 
 public class ImportFile {
 

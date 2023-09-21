@@ -21,10 +21,10 @@ import gui.frames.main.MainFrame;
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
 import sgbd.prototype.column.Column;
-import sgbd.table.CSVTable;
-import sgbd.table.SimpleTable;
-import sgbd.table.Table;
-import sgbd.table.components.Header;
+import sgbd.source.components.Header;
+import sgbd.source.table.CSVTable;
+import sgbd.source.table.SimpleTable;
+import sgbd.source.table.Table;
 
 
 public class TableCreator {

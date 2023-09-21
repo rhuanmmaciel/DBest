@@ -2,8 +2,8 @@ package tests;
 
 import sgbd.prototype.Prototype;
 import sgbd.prototype.column.Column;
-import sgbd.table.Table;
-import sgbd.table.components.Header;
+import sgbd.source.components.Header;
+import sgbd.source.table.Table;
 
 import java.util.HashMap;
 

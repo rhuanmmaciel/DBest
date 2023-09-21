@@ -20,7 +20,10 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import sgbd.prototype.query.fields.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,21 +73,25 @@ public class BooleanExpressionRecognizer {
 
     private String getString(Element element){
 
-        if(element instanceof Value value){
+        return switch (element){
 
-            if(value.getField() instanceof IntegerField) return String.valueOf(value.getField().getInt());
-            if(value.getField() instanceof FloatField) return String.valueOf(value.getField().getFloat());
-            if(value.getField() instanceof LongField) return String.valueOf(value.getField().getLong());
-            if(value.getField() instanceof DoubleField) return String.valueOf(value.getField().getDouble());
-            if(value.getField() instanceof StringField) return "'"+value.getField().getString()+"'";
+            case Value value -> switch (value.getField()){
 
-            throw new UnsupportedOperationException("This type of Field is not supported");
+                case IntegerField field -> String.valueOf(field.getInt());
+                case FloatField field -> String.valueOf(field.getFloat());
+                case LongField field -> String.valueOf(field.getLong());
+                case DoubleField field -> String.valueOf(field.getDouble());
+                case StringField field -> "'"+field.getString()+"'";
 
-        }
+                default -> throw new IllegalStateException("Unexpected value: " + value.getField());
 
-        if(element instanceof Null) return ConstantController.NULL;
+            };
 
-        return element.toString();
+            case Null ignored -> ConstantController.NULL;
+
+            default -> element.toString();
+
+        };
 
     }
 

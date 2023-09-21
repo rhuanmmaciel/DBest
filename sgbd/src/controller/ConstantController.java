@@ -36,6 +36,9 @@ public class ConstantController {
     public static final Action.CurrentAction NONE_ACTION = new Action.CurrentAction(Action.CurrentAction.ActionType.NONE);
     public static final int UI_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.65);
     public static final int UI_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.7);
+    public static final String JCELL_FYI_STYLE = "fyi";
+    public static final String JCELL_CSV_STYLE = "csv";
+    public static final String JCELL_OPERATION_STYLE = "operation";
 
     public static String getString(String txt){
         return messages.getString(txt);

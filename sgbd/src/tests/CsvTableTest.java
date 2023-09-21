@@ -1,22 +1,15 @@
 package tests;
 
-import controller.ConstantController;
 import database.TableCreator;
-import database.TuplesExtractor;
 import entities.Column;
 import enums.ColumnDataType;
-import enums.FileType;
 import sgbd.prototype.Prototype;
-import sgbd.prototype.RowData;
-import sgbd.prototype.query.Tuple;
-import sgbd.prototype.query.fields.*;
 import sgbd.query.Operator;
 import sgbd.query.TestOperators;
 import sgbd.query.sourceop.TableScan;
 import sgbd.query.unaryop.FilterColumnsOperator;
-import sgbd.table.CSVTable;
-import sgbd.table.Table;
-import sgbd.table.components.Header;
+import sgbd.source.components.Header;
+import sgbd.source.table.CSVTable;
 
 import java.util.*;
 
