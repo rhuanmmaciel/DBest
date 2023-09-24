@@ -118,7 +118,7 @@ public class TableCreator {
         this.tableCell = new FYITableCell(jCell, tableName, columns, table, prototype, headerFile);
     }
 
-    private Prototype createPrototype(List<entities.Column> columns) {
+    public static Prototype createPrototype(List<entities.Column> columns) {
         Prototype prototype = new Prototype();
 
         for (entities.Column column : columns) {
