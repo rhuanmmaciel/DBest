@@ -1,6 +1,7 @@
 package booleanexpression;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -10,15 +11,21 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import com.mxgraph.model.mxCell;
+
 import booleanexpression.antlr.BooleanExpressionDSLController;
 import booleanexpression.antlr.BooleanExpressionDSLLexer;
 import booleanexpression.antlr.BooleanExpressionDSLParser;
 
 import controllers.ConstantController;
 
+import entities.cells.Cell;
+import entities.utils.cells.CellUtils;
+
 import lib.booleanexpression.entities.elements.Element;
 import lib.booleanexpression.entities.elements.Null;
 import lib.booleanexpression.entities.elements.Value;
+import lib.booleanexpression.entities.elements.Variable;
 import lib.booleanexpression.entities.expressions.AtomicExpression;
 import lib.booleanexpression.entities.expressions.BooleanExpression;
 import lib.booleanexpression.entities.expressions.LogicalExpression;
@@ -26,7 +33,6 @@ import lib.booleanexpression.enums.LogicalOperator;
 import lib.booleanexpression.enums.RelationalOperator;
 
 import sgbd.prototype.query.fields.DoubleField;
-import sgbd.prototype.query.fields.Field;
 import sgbd.prototype.query.fields.FloatField;
 import sgbd.prototype.query.fields.IntegerField;
 import sgbd.prototype.query.fields.LongField;
@@ -35,6 +41,12 @@ import sgbd.prototype.query.fields.StringField;
 import static booleanexpression.Utils.getElement;
 
 public class BooleanExpressionRecognizer {
+
+    private final List<Cell> parents;
+
+    public BooleanExpressionRecognizer(mxCell jCell){
+        this.parents = CellUtils.getActiveCells().get(jCell).getParents();
+    }
 
     public String recognizer(BooleanExpression booleanExpression) {
         if (booleanExpression instanceof AtomicExpression atomicExpression) {
@@ -72,24 +84,21 @@ public class BooleanExpressionRecognizer {
     }
 
     private String getString(Element element) {
-        if (element instanceof Value value) {
-            Field<?> field = value.getField();
-
-            if (field instanceof IntegerField) return String.valueOf(field.getInt());
-            if (field instanceof FloatField) return String.valueOf(field.getFloat());
-            if (field instanceof LongField) return String.valueOf(field.getLong());
-            if (field instanceof DoubleField) return String.valueOf(field.getDouble());
-            if (field instanceof StringField) return String.format("'%s'", field.getString());
-
-            throw new UnsupportedOperationException("This type of Field is not supported");
-        }
-
-        if (element instanceof Null) return ConstantController.NULL;
-
-        return element.toString();
+        return switch (element) {
+            case Value value -> switch (value.getField()) {
+                case IntegerField field -> String.valueOf(field.getInt());
+                case FloatField field -> String.valueOf(field.getFloat());
+                case LongField field -> String.valueOf(field.getLong());
+                case DoubleField field -> String.valueOf(field.getDouble());
+                case StringField field -> String.format("'%s'", field.getString());
+                default -> throw new IllegalStateException(String.format("Unexpected value: %s", value.getField()));
+            };
+            case Null ignored -> ConstantController.NULL;
+            default -> element.toString();
+        };
     }
 
-    public BooleanExpression recognizer(String text) {
+    public BooleanExpression recognizer(String text) throws BooleanExpressionException {
         BooleanExpressionDSLParser parser = new BooleanExpressionDSLParser(
             new CommonTokenStream(
                 new BooleanExpressionDSLLexer(CharStreams.fromString(text))
@@ -107,10 +116,14 @@ public class BooleanExpressionRecognizer {
 
         walker.walk(listener, parser.command());
 
+        if (!ErrorListener.getErrors().isEmpty()) {
+            throw new BooleanExpressionException(ConstantController.getString("booleanExpression.error.invalidFormat"));
+        }
+
         return this.recognize(text);
     }
 
-    private BooleanExpression recognize(String text) {
+    private BooleanExpression recognize(String text) throws BooleanExpressionException {
         boolean isAtomic = !this.hasAnyLogicalOperator(text);
 
         if (isAtomic) return (this.recognizeAtomic(text));
@@ -120,7 +133,7 @@ public class BooleanExpressionRecognizer {
         return this.consumeTokens(tokens);
     }
 
-    private BooleanExpression consumeTokens(List<String> tokens) {
+    private BooleanExpression consumeTokens(List<String> tokens) throws BooleanExpressionException {
         Optional<LogicalOperator> operator = this.whichLogicalOperator(tokens);
 
         this.prioritizeAnds(tokens);
@@ -155,7 +168,7 @@ public class BooleanExpressionRecognizer {
         }
     }
 
-    private LogicalExpression recognizeLogical(LogicalOperator logicalOperator, List<String> tokens) {
+    private LogicalExpression recognizeLogical(LogicalOperator logicalOperator, List<String> tokens) throws BooleanExpressionException {
         List<BooleanExpression> expressions = new ArrayList<>();
         List<List<String>> eachExpressionTokens = new ArrayList<>();
         List<Integer> logicalOperatorIndexes = this.getExternalLogicalOperatorIndexes(tokens);
@@ -299,7 +312,7 @@ public class BooleanExpressionRecognizer {
         return tokens;
     }
 
-    private AtomicExpression recognizeAtomic(String text) {
+    private AtomicExpression recognizeAtomic(String text) throws BooleanExpressionException {
         text = text.replace(")", "").replace("(", "");
 
         String finalText = text;
@@ -308,14 +321,42 @@ public class BooleanExpressionRecognizer {
             .stream()
             .filter(finalText::contains)
             .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(() -> new BooleanExpressionException(
+                ConstantController.getString("booleanExpression.error.relationalOperatorUnknown")
+            ));
 
         String[] elements = text.split(relationalOperator);
 
-        if (elements.length != 2) throw new IllegalArgumentException("There are no two elements");
+        if (elements.length != 2) {
+            throw new BooleanExpressionException(ConstantController.getString("booleanExpression.error.notTwoElementsInAtomicExpression"));
+        }
 
         Element firstElement = this.recognizeElement(elements[0]);
         Element secondElement = this.recognizeElement(elements[1]);
+
+        if (firstElement instanceof Variable) {
+            this.parents
+                .stream()
+                .map(Cell::getColumns)
+                .flatMap(Collection::stream)
+                .filter(column -> column.getName().equals(elements[0].strip()) || column.getSourceAndName().equals(elements[0].strip()))
+                .findAny()
+                .orElseThrow(() -> new BooleanExpressionException(
+                    ConstantController.getString("booleanExpression.error.elementIsNotAColumn")
+                ));
+        }
+
+        if (secondElement instanceof Variable) {
+            this.parents
+                .stream()
+                .map(Cell::getColumns)
+                .flatMap(Collection::stream)
+                .filter(column -> column.getName().equals(elements[1].strip()) || column.getSourceAndName().equals(elements[1].strip()))
+                .findAny()
+                .orElseThrow(() -> new BooleanExpressionException(
+                    ConstantController.getString("booleanExpression.error.elementIsNotAColumn")
+                ));
+        }
 
         return new AtomicExpression(firstElement, secondElement, RelationalOperator.getOperator(relationalOperator));
     }

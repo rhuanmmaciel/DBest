@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +22,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
@@ -29,10 +31,12 @@ import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 
 import controllers.ConstantController;
+
 import entities.Action.CurrentAction;
 import entities.buttons.Button;
 import entities.buttons.OperationButton;
 import entities.buttons.ToolBarButton;
+
 import enums.FileType;
 import enums.OperationType;
 
@@ -60,12 +64,65 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
     protected JMenu operationsMenuItem;
 
-    protected JMenuBar menuBar;
+    protected JMenuItem showMenuItem;
 
-    protected JMenuItem showMenuItem, informationsMenuItem, exportTableMenuItem, exportTreeMenuItem, editMenuItem,
-        removeMenuItem, selectionMenuItem, projectionMenuItem, sortMenuItem, aggregationMenuItem, groupMenuItem,
-        renameMenuItem, indexerMenuItem, joinMenuItem, leftJoinMenuItem, rightJoinMenuItem, cartesianProductMenuItem,
-        unionMenuItem, intersectionMenuItem, importTableMenuItem, importTreeMenuItem;
+    protected JMenuItem informationsMenuItem;
+
+    protected JMenuItem exportTableMenuItem;
+
+    protected JMenuItem exportTreeMenuItem;
+
+    protected JMenuItem editMenuItem;
+
+    protected JMenuItem removeMenuItem;
+
+    protected JMenuItem selectionMenuItem;
+
+    protected JMenuItem projectionMenuItem;
+
+    protected JMenuItem sortMenuItem;
+
+    protected JMenuItem aggregationMenuItem;
+
+    protected JMenuItem groupMenuItem;
+
+    protected JMenuItem renameMenuItem;
+
+    protected JMenuItem indexerMenuItem;
+
+    protected JMenuItem joinMenuItem;
+
+    protected JMenuItem leftJoinMenuItem;
+
+    protected JMenuItem rightJoinMenuItem;
+
+    protected JMenuItem cartesianProductMenuItem;
+
+    protected JMenuItem unionMenuItem;
+
+    protected JMenuItem intersectionMenuItem;
+
+    protected JMenuItem importTableMenuItem;
+
+    protected JMenuItem importTreeMenuItem;
+
+    protected JMenuBar topMenuBar = new JMenuBar();
+
+    protected JMenuItem importTableTopMenuBarItem = new JMenuItem(ConstantController.getString("menu.file.importTable"));
+
+    protected JMenuItem importTreeTopMenuBarItem = new JMenuItem(ConstantController.getString("menu.file.importTree"));
+
+    protected JMenuItem metalThemeTopMenuBarItem = new JMenuItem(ConstantController.getString("menu.appearance.theme.metal"));
+
+    protected JMenuItem nimbusThemeTopMenuBarItem = new JMenuItem(ConstantController.getString("menu.appearance.theme.nimbus"));
+
+    protected JMenuItem motifThemeTopMenuBarItem = new JMenuItem(ConstantController.getString("menu.appearance.theme.motif"));
+
+    protected JMenuItem gtkThemeTopMenuBarItem = new JMenuItem(ConstantController.getString("menu.appearance.theme.gtk"));
+
+    protected JMenuItem undoTopMenuBarItem = new JMenuItem(String.format("%s (%s)", ConstantController.getString("menu.edit.undo"), ConstantController.getString("menu.edit.undo.shortcut")));
+
+    protected JMenuItem redoTopMenuBarItem = new JMenuItem(String.format("%s (%s)", ConstantController.getString("menu.edit.redo"), ConstantController.getString("menu.edit.redo.shortcut")));
 
     protected MainFrame(Set<Button<?>> buttons) {
         super(ConstantController.APPLICATION_TITLE);
@@ -84,7 +141,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.toolBar = new JToolBar();
         this.buttons = buttons;
         this.popupMenuJCell = new JPopupMenu();
-        this.menuBar = new JMenuBar();
+        this.topMenuBar = new JMenuBar();
         this.showMenuItem = new JMenuItem(ConstantController.getString("cell.show"));
         this.informationsMenuItem = new JMenuItem(ConstantController.getString("cell.informations"));
         this.exportTableMenuItem = new JMenuItem(ConstantController.getString("cell.exportTable"));
@@ -109,6 +166,10 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.importTreeMenuItem = new JMenuItem(ConstantController.getString("menu.file.importTree"));
     }
 
+    protected void refreshAllComponents(){
+        SwingUtilities.updateComponentTreeUI(this);
+    }
+
     private void initializeGUI() {
         this.setSize(ConstantController.UI_SCREEN_WIDTH, ConstantController.UI_SCREEN_HEIGHT);
         this.setLocationRelativeTo(null);
@@ -116,14 +177,17 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.operationsPanel.setLayout(new BoxLayout(this.operationsPanel, BoxLayout.Y_AXIS));
         tablesPanel.add(this.tablesComponent, BorderLayout.CENTER);
 
+        this.getContentPane().add(this.topMenuBar, BorderLayout.NORTH);
         this.getContentPane().add(graphComponent, BorderLayout.CENTER);
         this.getContentPane().add(tablesPanel, BorderLayout.WEST);
         this.getContentPane().add(this.operationsPanel, BorderLayout.EAST);
+        this.getContentPane().add(this.toolBar, BorderLayout.SOUTH);
 
         this.addOperationButtons();
         this.addBottomButtons();
-
-        this.getContentPane().add(this.toolBar, BorderLayout.SOUTH);
+        this.addTopMenuBarFileItems();
+        this.addTopMenuBarAppearanceItems();
+        this.addTopMenuBarEditItems();
 
         this.getContentPane().addKeyListener(this);
 
@@ -139,29 +203,52 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
         mainContainer = this.getContentPane();
 
+        this.setJCellsStyle();
         this.setVisible(true);
     }
 
-    private void addMenuBarsItems(){
+    private void addTopMenuBarFileItems() {
         JMenu fileMenu = new JMenu(ConstantController.getString("menu.file"));
-        JMenu editMenu = new JMenu(ConstantController.getString("menu.edit"));
-        JMenu appearanceMenu = new JMenu(ConstantController.getString("menu.appearance"));
+        this.topMenuBar.add(fileMenu);
 
-        fileMenu.add(this.importTableMenuItem);
-        fileMenu.add(this.importTreeMenuItem);
+        fileMenu.add(this.importTableTopMenuBarItem);
+        fileMenu.add(this.importTreeTopMenuBarItem);
 
-        editMenu.add(new JMenuItem(ConstantController.getString("menu.edit.undo")));
-        editMenu.add(new JMenuItem(ConstantController.getString("menu.edit.redo")));
-
-        this.menuBar.add(fileMenu);
-        this.menuBar.add(editMenu);
-        this.menuBar.add(appearanceMenu);
-
-        this.importTableMenuItem.addActionListener(this);
-        this.importTreeMenuItem.addActionListener(this);
+        this.importTableTopMenuBarItem.addActionListener(this);
+        this.importTreeTopMenuBarItem.addActionListener(this);
     }
 
-    private void setJCellStyles(){
+    private void addTopMenuBarAppearanceItems() {
+        JMenu appearanceMenu = new JMenu(ConstantController.getString("menu.appearance"));
+        this.topMenuBar.add(appearanceMenu);
+
+        JMenu themeMenu = new JMenu(ConstantController.getString("menu.appearance.theme"));
+        appearanceMenu.add(themeMenu);
+
+        themeMenu.add(this.metalThemeTopMenuBarItem);
+        themeMenu.add(this.gtkThemeTopMenuBarItem);
+        themeMenu.add(this.motifThemeTopMenuBarItem);
+        themeMenu.add(this.nimbusThemeTopMenuBarItem);
+
+        this.gtkThemeTopMenuBarItem.addActionListener(this);
+        this.metalThemeTopMenuBarItem.addActionListener(this);
+        this.motifThemeTopMenuBarItem.addActionListener(this);
+        this.nimbusThemeTopMenuBarItem.addActionListener(this);
+    }
+
+    private void addTopMenuBarEditItems() {
+        JMenu editMenu = new JMenu(ConstantController.getString("menu.edit"));
+
+        editMenu.add(this.undoTopMenuBarItem);
+        editMenu.add(this.redoTopMenuBarItem);
+
+        this.undoTopMenuBarItem.addActionListener(this);
+        this.redoTopMenuBarItem.addActionListener(this);
+
+        this.topMenuBar.add(editMenu);
+    }
+
+    private void setJCellsStyle() {
         Map<String, Object> style = new HashMap<>();
         style.put(mxConstants.STYLE_FILLCOLOR, "#6EFAEC");
 
@@ -272,6 +359,14 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
     public static mxGraph getGraph() {
         return graph;
+    }
+
+    public static mxGraph getTablesGraph() {
+        return tablesGraph;
+    }
+
+    public static JPanel getTablesPanel() {
+        return tablesPanel;
     }
 
     public static mxGraphComponent getGraphComponent() {

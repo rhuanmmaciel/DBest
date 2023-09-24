@@ -51,6 +51,8 @@ public abstract sealed class Cell permits TableCell, OperationCell {
             ? "operation" : "";
 
         CellUtils.addCell(jCell, this);
+
+        if (jCell == null) throw new RuntimeException();
     }
 
     public Coordinates getUpperLeftPosition() {

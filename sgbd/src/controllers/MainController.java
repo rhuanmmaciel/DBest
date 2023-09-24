@@ -10,7 +10,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.io.File;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,7 +21,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
@@ -28,6 +33,7 @@ import com.mxgraph.util.mxEvent;
 import dsl.entities.BinaryExpression;
 import dsl.entities.OperationExpression;
 import dsl.entities.Relation;
+
 import entities.Action.CreateOperationCellAction;
 import entities.Action.CreateTableCellAction;
 import entities.Action.CurrentAction;
@@ -43,14 +49,20 @@ import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import entities.utils.TreeUtils;
 import entities.utils.cells.CellUtils;
+
 import enums.OperationType;
 import enums.TableType;
+
 import files.ExportFile;
 import files.FileUtils;
+
 import gui.commands.CommandController;
+import gui.commands.ImportTableCommand;
 import gui.commands.InsertOperationCellCommand;
+import gui.commands.InsertTableCellCommand;
 import gui.commands.RemoveCellCommand;
 import gui.commands.UndoableRedoableCommand;
+
 import gui.frames.CellInformationFrame;
 import gui.frames.dsl.Console;
 import gui.frames.dsl.TextEditor;
@@ -58,6 +70,7 @@ import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.ExportAsForm;
 import gui.frames.forms.importexport.ImportAsForm;
 import gui.frames.main.MainFrame;
+
 import utils.RandomUtils;
 
 public class MainController extends MainFrame {
@@ -90,6 +103,7 @@ public class MainController extends MainFrame {
         super(new HashSet<>());
 
         this.tablesComponent.getGraphControl().addMouseListener(new MouseAdapter() {
+
             @Override
             public void mousePressed(MouseEvent event) {
                 Object cell = MainController.this.tablesComponent.getCellAt(event.getX(), event.getY());
@@ -103,12 +117,13 @@ public class MainController extends MainFrame {
 
         graph.addListener(mxEvent.CELLS_ADDED, (sender, event) -> {
             if (this.isTableCellSelected) {
-                CellUtils.verifyCell((mxCell) graph.getSelectionCell(), this.ghostCell);
+                this.executeInsertTableCellCommand((mxCell) graph.getSelectionCell(), this.ghostCell);
                 this.isTableCellSelected = false;
             }
         });
 
         this.addWindowListener(new WindowAdapter() {
+
             @Override
             public void windowClosing(WindowEvent event) {
                 FileUtils.clearMemory();
@@ -137,14 +152,13 @@ public class MainController extends MainFrame {
             clickedButton.setCurrentAction(this.currentActionReference);
 
             switch (this.currentActionReference.get().getType()) {
-                //case DELETE_CELL -> CellUtils.removeCell(this.cell);
                 case DELETE_CELL -> this.executeRemoveCellCommand(this.cell);
                 case DELETE_ALL -> CellUtils.deleteGraph();
                 case PRINT_SCREEN -> this.printScreen();
                 case SHOW_CELL -> CellUtils.showTable(this.cell);
                 case IMPORT_FILE -> this.createNewTable(CurrentAction.ActionType.IMPORT_FILE);
                 case CREATE_TABLE_CELL -> this.createNewTable(CurrentAction.ActionType.CREATE_TABLE_CELL);
-                case OPEN_CONSOLE -> new Console();
+                case OPEN_CONSOLE -> this.openConsole();
                 case OPEN_TEXT_EDITOR -> this.changeScreen();
             }
 
@@ -154,10 +168,46 @@ public class MainController extends MainFrame {
             }
         }
 
-        this.menuItemClicked(event, clickedButton, style);
+        this.onBottomMenuItemClicked(event, clickedButton, style);
+        this.onTopMenuBarItemClicked(event);
 
         currentEdgeReference.set(new Edge());
-        // currentEdgeReference.get().reset();
+    }
+
+    private void onTopMenuBarItemClicked(ActionEvent event) {
+        Object source = event.getSource();
+        String theme = null;
+
+        if (source == this.importTableTopMenuBarItem) {
+            this.createNewTable(CurrentAction.ActionType.IMPORT_FILE);
+        } else if (source == this.importTreeTopMenuBarItem) {
+
+        } else if (source == this.gtkThemeTopMenuBarItem) {
+            theme = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+        } else if (source == this.motifThemeTopMenuBarItem) {
+            theme = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
+        } else if (source == this.metalThemeTopMenuBarItem) {
+            theme = "ch.randelshofer.quaqua.QuaquaLookAndFeel";
+        } else if (source == this.nimbusThemeTopMenuBarItem) {
+            theme = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
+        } else if (source == this.undoTopMenuBarItem) {
+            commandController.undo();
+        } else if (source == this.redoTopMenuBarItem) {
+            commandController.redo();
+        }
+
+        if (theme == null) return;
+
+        try {
+            UIManager.setLookAndFeel(theme);
+            this.refreshAllComponents();
+            JFrame.setDefaultLookAndFeelDecorated(true);
+        } catch (
+            ClassNotFoundException | InstantiationException |
+            IllegalAccessException | UnsupportedLookAndFeelException exception
+        ) {
+            exception.printStackTrace();
+        }
     }
 
     @Override
@@ -206,7 +256,7 @@ public class MainController extends MainFrame {
         }
 
         if (optionalCell.isPresent() || this.ghostCell != null) {
-            this.executeInsertCellCommand(event);
+            this.executeInsertOperationCellCommand(event);
         }
 
         if (optionalCell.isPresent() && event.getClickCount() == 2) {
@@ -214,7 +264,19 @@ public class MainController extends MainFrame {
         }
     }
 
-    public void executeInsertCellCommand(MouseEvent event) {
+    public void executeImportTableCommand(TableCell tableCell) {
+        commandController.execute(new ImportTableCommand(tableCell));
+    }
+
+    public void executeInsertTableCellCommand(mxCell jCell, mxCell ghostCell) {
+        UndoableRedoableCommand command = new InsertTableCellCommand(
+            new AtomicReference<>(jCell), new AtomicReference<>(ghostCell)
+        );
+
+        commandController.execute(command);
+    }
+
+    public void executeInsertOperationCellCommand(MouseEvent event) {
         UndoableRedoableCommand command = new InsertOperationCellCommand(
             event, new AtomicReference<>(this.cell), this.invisibleCellReference,
             new AtomicReference<>(this.ghostCell), new AtomicReference<>(currentEdgeReference.get()),
@@ -223,7 +285,7 @@ public class MainController extends MainFrame {
 
         if (
             this.currentActionReference.get().getType() == ActionType.CREATE_EDGE &&
-            this.invisibleCellReference.get() == null
+                this.invisibleCellReference.get() == null
         ) {
             command.execute();
         } else if (this.currentActionReference.get().getType() != ActionType.NONE) {
@@ -243,13 +305,7 @@ public class MainController extends MainFrame {
         resetCurrentEdgeReferenceValue(new Edge());
     }
 
-    private void menuBarItemClicked(ActionEvent actionEvent){
-        if (actionEvent.getSource() == this.importTableMenuItem) {
-            this.createNewTable(CurrentAction.ActionType.IMPORT_FILE);
-        }
-    }
-
-    public void menuItemClicked(ActionEvent event, Button<?> clickedButton, String style) {
+    public void onBottomMenuItemClicked(ActionEvent event, Button<?> clickedButton, String style) {
         CreateOperationCellAction createOperationAction = null;
 
         Object menuItem = event.getSource();
@@ -337,7 +393,6 @@ public class MainController extends MainFrame {
         this.revalidate();
     }
 
-
     private void createNewTable(CurrentAction.ActionType action) {
         AtomicReference<Boolean> cancelServiceReference = new AtomicReference<>(false);
 
@@ -346,18 +401,18 @@ public class MainController extends MainFrame {
             : new ImportAsForm(cancelServiceReference).getResult();
 
         if (!cancelServiceReference.get()) {
-            saveTable(tableCell);
-            CellUtils.removeCell(tableCell.getJCell());
+            this.executeImportTableCommand(tableCell);
+            CellUtils.desactivateActiveJCell(MainFrame.getGraph(), tableCell.getJCell());
         } else {
             if (tableCell != null) {
                 TreeUtils.deleteTree(tableCell.getTree());
             }
         }
 
-        this.setNoneAction();
+        this.setCurrentActionToNone();
     }
 
-    private void setNoneAction() {
+    private void setCurrentActionToNone() {
         this.currentActionReference.set(ConstantController.NONE_ACTION);
     }
 
@@ -369,9 +424,9 @@ public class MainController extends MainFrame {
 
     public static void saveTable(TableCell tableCell) {
         String tableName = tableCell.getName();
-        boolean create = tables.keySet().stream().noneMatch(x -> x.equals(tableName));
+        boolean shouldCreateTable = tables.keySet().stream().noneMatch(x -> x.equals(tableName));
 
-        if (!create) return;
+        if (!shouldCreateTable) return;
 
         tablesGraph.insertVertex(
             tablesGraph.getDefaultParent(), null, tableName, 0,
@@ -395,7 +450,7 @@ public class MainController extends MainFrame {
             CellUtils.removeCell(this.invisibleCellReference);
         }
 
-        this.setNoneAction();
+        this.setCurrentActionToNone();
     }
 
     @Override
@@ -409,7 +464,7 @@ public class MainController extends MainFrame {
         } else if (keyCode == KeyEvent.VK_DELETE) {
             if (this.cell != null) {
                 CellUtils.removeCell(this.cell);
-                this.setNoneAction();
+                this.setCurrentActionToNone();
             }
         } else if (keyCode == KeyEvent.VK_E) {
             graphComponent.getGraphControl().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
@@ -435,6 +490,8 @@ public class MainController extends MainFrame {
             commandController.undo();
         } else if (keyCode == KeyEvent.VK_Y && (event.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
             commandController.redo();
+        } else if (keyCode == KeyEvent.VK_M) {
+            // new GeneralStatsFrame();
         }
     }
 
@@ -554,5 +611,17 @@ public class MainController extends MainFrame {
         OperationCell cell = operationExpression.getCell();
 
         cell.setAllNewTrees();
+    }
+
+    public static int getCurrentTableYPosition() {
+        return currentTableYPosition;
+    }
+
+    public static void incrementCurrentTableYPosition(int offset) {
+        currentTableYPosition += offset;
+    }
+
+    public static void decrementCurrentTableYPosition(int offset) {
+        currentTableYPosition = Math.max(currentTableYPosition - offset, 0);
     }
 }

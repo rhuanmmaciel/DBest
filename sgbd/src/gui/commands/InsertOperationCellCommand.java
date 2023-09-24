@@ -1,6 +1,7 @@
 package gui.commands;
 
 import java.awt.event.MouseEvent;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -14,6 +15,7 @@ import entities.Action.CurrentAction.ActionType;
 import entities.Edge;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
+
 import gui.frames.main.MainFrame;
 
 public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
@@ -85,7 +87,7 @@ public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
             this.currentActionType == ActionType.CREATE_TABLE_CELL ||
             this.currentActionType == ActionType.CREATE_OPERATOR_CELL
         ) {
-            CellUtils.desactivateActiveJCell(this.cellReference.get());
+            CellUtils.desactivateActiveJCell(MainFrame.getGraph(), this.cellReference.get());
         }
     }
 
@@ -100,7 +102,7 @@ public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
             this.currentActionType == ActionType.CREATE_TABLE_CELL ||
             this.currentActionType == ActionType.CREATE_OPERATOR_CELL
         ) {
-            CellUtils.activateInactiveJCell(this.cellReference.get());
+            CellUtils.activateInactiveJCell(MainFrame.getGraph(), this.cellReference.get());
         }
 
         this.removeCell(this.ghostCellReference);

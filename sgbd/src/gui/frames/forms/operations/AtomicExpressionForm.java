@@ -105,20 +105,20 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 
     @Override
     public void updateToolTipText(boolean... conditions) {
-        String btnReadyToolTipText = "";
+        String readyButtonToolTipText = "";
 
         boolean isTxtField1Empty = conditions[0];
         boolean isTxtField2Empty = conditions[1];
 
         if (isTxtField1Empty) {
-            btnReadyToolTipText = "- " + ConstantController.getString("operationForm.atomicExpression.toolTip.firstElement");
+            readyButtonToolTipText = "- " + ConstantController.getString("operationForm.atomicExpression.toolTip.firstElement");
         } else if (isTxtField2Empty) {
-            btnReadyToolTipText = "- " + ConstantController.getString("operationForm.atomicExpression.toolTip.secondElement");
+            readyButtonToolTipText = "- " + ConstantController.getString("operationForm.atomicExpression.toolTip.secondElement");
         }
 
         UIManager.put("ToolTip.foreground", Color.RED);
 
-        this.readyButton.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
+        this.readyButton.setToolTipText(readyButtonToolTipText.isEmpty() ? null : readyButtonToolTipText);
     }
 
     private enum ValueType {
@@ -126,7 +126,6 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
     }
 
     public AtomicExpressionForm(BooleanExpressionForm root, mxCell jCell) {
-
         super(jCell);
 
         this.root = root;
@@ -342,7 +341,7 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
             RelationalOperator relationalOperator = RelationalOperator.getOperator((String) this.comboBoxOperator.getSelectedItem());
 
             this.atomicExpression = new AtomicExpression(firstElement, secondElement, relationalOperator);
-            this.checkReadyButton();
+            this.onReadyButtonClicked();
         } else if (event.getSource() == this.cancelButton) {
             this.closeWindow();
         }

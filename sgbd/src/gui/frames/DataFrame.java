@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +27,17 @@ import org.kordamp.ikonli.dashicons.Dashicons;
 import org.kordamp.ikonli.swing.FontIcon;
 
 import controllers.ConstantController;
+
 import database.TuplesExtractor;
+
 import engine.info.Parameters;
+
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+
 import gui.utils.JTableUtils;
+
 import sgbd.info.Query;
 import sgbd.query.Operator;
 
@@ -53,9 +59,9 @@ public class DataFrame extends JDialog implements ActionListener {
 
     private final JButton btnStats = new JButton();
 
-    private final JPanel centerPane = new JPanel();
+    private final JPanel tablePanel = new JPanel(new BorderLayout());
 
-    private JScrollPane scrollPane;
+    private JScrollPane scrollPanel;
 
     private final JTextPane textPane = new JTextPane();
 
@@ -158,29 +164,12 @@ public class DataFrame extends JDialog implements ActionListener {
     private void updateTable(int page) {
         int firstElement = page * 15;
         int lastElement = page * 15 + 14;
-        int currentElement = firstElement;
 
         DefaultTableModel model = new DefaultTableModel();
 
         model.addColumn("");
 
-        if (page > this.currentLastPage) {
-            Map<String, String> row = TuplesExtractor.getRow(this.operator, true);
-
-            while (row != null && currentElement < lastElement) {
-                this.rows.add(row);
-
-                row = TuplesExtractor.getRow(this.operator, true);
-
-                if (row != null) currentElement++;
-
-                if (currentElement >= lastElement) this.rows.add(row);
-            }
-
-            if (row == null && this.lastPage == null) {
-                this.lastPage = currentElement / 15;
-            }
-        }
+        this.getTuples(firstElement, page, lastElement);
 
         this.currentLastPage = Math.max(this.currentLastPage, page);
 
@@ -227,6 +216,28 @@ public class DataFrame extends JDialog implements ActionListener {
         this.table.repaint();
     }
 
+    private void getTuples(int currentElement, int page, int lastElement) {
+        if (page > this.currentLastPage) {
+            Map<String, String> row = TuplesExtractor.getRow(this.operator, true);
+
+            while (row != null && currentElement < lastElement) {
+                this.rows.add(row);
+
+                row = TuplesExtractor.getRow(this.operator, true);
+
+                if (row != null) currentElement++;
+
+                if (currentElement >= lastElement) {
+                    this.rows.add(row);
+                }
+            }
+
+            if (row == null && this.lastPage == null) {
+                this.lastPage = currentElement / 15;
+            }
+        }
+    }
+
     private void initializeGUI() {
         JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -245,13 +256,11 @@ public class DataFrame extends JDialog implements ActionListener {
         northPane.add(this.lblPages);
         northPane.add(this.btnStats);
 
-        JPanel tablePanel = new JPanel(new BorderLayout());
-        tablePanel.add(this.table.getTableHeader(), BorderLayout.NORTH);
-        tablePanel.add(this.table, BorderLayout.CENTER);
-        this.scrollPane = new JScrollPane(tablePanel);
-        this.scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        this.scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        this.centerPane.add(this.scrollPane);
+        this.tablePanel.add(this.table.getTableHeader(), BorderLayout.NORTH);
+        this.tablePanel.add(this.table, BorderLayout.CENTER);
+        this.scrollPanel = new JScrollPane(this.tablePanel);
+        this.scrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        this.scrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         this.textPane.setEditable(false);
 
@@ -262,7 +271,7 @@ public class DataFrame extends JDialog implements ActionListener {
         southPane.add(this.btnAllRight);
 
         contentPane.add(northPane, BorderLayout.NORTH);
-        contentPane.add(this.centerPane, BorderLayout.CENTER);
+        contentPane.add(this.scrollPanel, BorderLayout.CENTER);
         contentPane.add(southPane, BorderLayout.SOUTH);
 
         this.verifyButtons();
@@ -275,11 +284,10 @@ public class DataFrame extends JDialog implements ActionListener {
     }
 
     private void resize() {
-
         this.pack();
+
         if (this.getWidth() > ConstantController.UI_SCREEN_WIDTH) {
             int height = this.getHeight();
-
             this.setSize((int) (ConstantController.UI_SCREEN_WIDTH * 0.95), height);
         }
     }
@@ -301,10 +309,10 @@ public class DataFrame extends JDialog implements ActionListener {
         }
 
         if (event.getSource() == this.btnAllLeft) {
-            this.currentIndex = Math.max(this.currentIndex - 100, 0);
+            this.currentIndex = 0;
         } else if (event.getSource() == this.btnAllRight) {
             if (this.lastPage == null) {
-                for (int i = 0; this.lastPage == null && i < 100; i++) {
+                while (this.lastPage == null) {
                     this.updateTable(++this.currentIndex);
                 }
             } else {
@@ -328,15 +336,20 @@ public class DataFrame extends JDialog implements ActionListener {
     }
 
     private void alternateScreen() {
-        if (this.centerPane.isAncestorOf(this.scrollPane)) {
-            this.centerPane.remove(this.scrollPane);
-            this.centerPane.add(this.textPane);
+        if (this.scrollPanel.isAncestorOf(this.tablePanel)) {
+            this.scrollPanel.setViewportView(null);
+            this.scrollPanel.setViewportView(this.textPane);
             this.iconStats.setIkon(Dashicons.EDITOR_TABLE);
-        } else {
-            this.centerPane.remove(this.textPane);
-            this.centerPane.add(this.scrollPane);
-            this.iconStats.setIkon(Dashicons.BOOK);
+
+            this.revalidate();
+            this.repaint();
+
+            return;
         }
+
+        this.scrollPanel.setViewportView(null);
+        this.scrollPanel.setViewportView(this.tablePanel);
+        this.iconStats.setIkon(Dashicons.BOOK);
 
         this.revalidate();
         this.repaint();

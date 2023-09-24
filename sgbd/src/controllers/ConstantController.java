@@ -21,7 +21,7 @@ public class ConstantController {
 
     private static final String COUNTRY = "US";
 
-    private static final Locale CURRENT_LOCALE = new Locale(LANGUAGE, COUNTRY);
+    private static final Locale CURRENT_LOCALE = Locale.of("pt", "BR");
 
     private static final ResourceBundle MESSAGES = ResourceBundle.getBundle("language.messages", CURRENT_LOCALE);
 
@@ -51,13 +51,19 @@ public class ConstantController {
 
     public static final String NULL = "null";
 
-    public static final String PK_CSV_TABLE_NAME = "__IDX__";
+    public static final String PRIMARY_KEY_CSV_TABLE_NAME = "__IDX__";
 
     public static final CurrentAction NONE_ACTION = new CurrentAction(ActionType.NONE);
 
     public static final int UI_SCREEN_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.65);
 
     public static final int UI_SCREEN_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.7);
+
+    public static final String JCELL_FYI_STYLE = "fyi";
+
+    public static final String JCELL_CSV_STYLE = "csv";
+
+    public static final String JCELL_OPERATION_STYLE = "operation";
 
     private ConstantController() {
 

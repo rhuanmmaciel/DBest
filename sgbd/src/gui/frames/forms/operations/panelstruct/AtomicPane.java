@@ -43,11 +43,7 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
         if (actionEvent.getSource() == this.editButton) {
             this.booleanExpression = new AtomicExpressionForm(this.root, this.jCell).getResult();
 
-            this.expression.setText(
-                this.booleanExpression != null ?
-                    new BooleanExpressionRecognizer().recognizer(this.booleanExpression) :
-                    ""
-            );
+            this.expression.setText(this.booleanExpression != null ? new BooleanExpressionRecognizer(this.jCell).recognizer(this.booleanExpression) : "");
 
             this.updateRootSize();
             this.root.checkReadyButton();

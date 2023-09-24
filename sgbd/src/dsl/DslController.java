@@ -3,6 +3,7 @@ package dsl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,19 +14,25 @@ import com.google.gson.JsonObject;
 
 import controllers.ConstantController;
 import controllers.MainController;
+
 import dsl.entities.BinaryExpression;
 import dsl.entities.Expression;
 import dsl.entities.OperationExpression;
 import dsl.entities.Relation;
 import dsl.entities.VariableDeclaration;
 import dsl.utils.DslUtils;
+
 import entities.cells.CSVTableCell;
 import entities.cells.FYITableCell;
+
 import enums.FileType;
 import enums.TableType;
+
 import exceptions.dsl.InputException;
+
 import gui.frames.dsl.TextEditor;
-import sgbd.table.Table;
+
+import sgbd.source.table.Table;
 
 public class DslController {
 

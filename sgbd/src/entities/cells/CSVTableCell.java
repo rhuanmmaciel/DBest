@@ -1,17 +1,20 @@
 package entities.cells;
 
 import java.io.File;
+
 import java.util.List;
 
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
 
 import controllers.ConstantController;
+
 import entities.Column;
 
 import sgbd.prototype.Prototype;
 import sgbd.query.Operator;
 import sgbd.query.unaryop.FilterColumnsOperator;
-import sgbd.table.Table;
+import sgbd.source.table.Table;
 
 public final class CSVTableCell extends TableCell {
 
@@ -24,14 +27,14 @@ public final class CSVTableCell extends TableCell {
     }
 
     public CSVTableCell(String name, Table table, File headerFile) {
-        super(null, name, table, headerFile);
+        super(new mxCell(null, new mxGeometry(), ConstantController.JCELL_CSV_STYLE), name, table, headerFile);
     }
 
     @Override
     public void setOperator(Operator operator) {
         this.operator = new FilterColumnsOperator(
             operator,
-            List.of(String.format("%s.%s", this.getTable().getTableName(), ConstantController.PK_CSV_TABLE_NAME))
+            List.of(String.format("%s.%s", this.getTable().getSourceName(), ConstantController.PRIMARY_KEY_CSV_TABLE_NAME))
         );
     }
 }

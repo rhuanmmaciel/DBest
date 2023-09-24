@@ -14,32 +14,25 @@ import javax.swing.JOptionPane;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
-import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.view.mxGraph;
 
+import controllers.ConstantController;
 import controllers.MainController;
 
 import entities.Tree;
-import entities.cells.CSVTableCell;
 import entities.cells.Cell;
-import entities.cells.FYITableCell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
-
 import entities.utils.TreeUtils;
-
-import enums.FileType;
 
 import gui.frames.DataFrame;
 import gui.frames.main.MainFrame;
 
-import sgbd.table.Table;
-
 public class CellUtils extends MainController {
 
-    public static void activateInactiveJCell(mxCell inactiveJCell) {
-        if (inactiveJCell == null) return;
+    public static void activateInactiveJCell(mxGraph jGraph, mxCell inactiveJCell) {
+        if (jGraph == null || inactiveJCell == null) return;
 
         Optional<Cell> optionalInactiveCell = CellRepository.getInactiveCell(inactiveJCell);
         List<Cell> parents = new ArrayList<>();
@@ -78,22 +71,20 @@ public class CellUtils extends MainController {
 
         TreeUtils.updateTreesAboveAndBelow(parents, child);
 
-        mxGraph graph = MainFrame.getGraph();
-
-        graph.getModel().beginUpdate();
+        jGraph.getModel().beginUpdate();
 
         try {
-            graph.addCell(inactiveJCell);
+            jGraph.addCell(inactiveJCell);
             optionalInactiveCell.ifPresent(cell -> CellRepository.addCell(inactiveJCell, cell));
         } finally {
-            graph.getModel().endUpdate();
+            jGraph.getModel().endUpdate();
         }
 
-        graph.refresh();
+        jGraph.refresh();
     }
 
-    public static void desactivateActiveJCell(mxCell activeJCell) {
-        if (activeJCell == null) return;
+    public static void desactivateActiveJCell(mxGraph jGraph, mxCell activeJCell) {
+        if (jGraph == null || activeJCell == null) return;
 
         Optional<Cell> optionalActiveCell = CellRepository.getActiveCell(activeJCell);
         List<Cell> parents = new ArrayList<>();
@@ -133,24 +124,21 @@ public class CellUtils extends MainController {
 
         TreeUtils.updateTreesAboveAndBelow(parents, child);
 
-        mxGraph graph = MainFrame.getGraph();
-
-        graph.getModel().beginUpdate();
+        jGraph.getModel().beginUpdate();
 
         try {
-            graph.removeCells(new Object[]{activeJCell}, true);
+            jGraph.removeCells(new Object[]{activeJCell}, false);
             CellRepository.removeCell(activeJCell);
         } finally {
-            graph.getModel().endUpdate();
+            jGraph.getModel().endUpdate();
         }
 
-        graph.refresh();
+        jGraph.refresh();
     }
 
-    public static void removeCell(mxCell jCell) {
-        if (jCell == null) return;
+    public static void removeCell(mxGraph jGraph, mxCell jCell) {
+        if (jGraph == null || jCell == null) return;
 
-        mxGraph graph = MainFrame.getGraph();
         Optional<Cell> optionalCell = CellRepository.getActiveCell(jCell);
         List<Cell> parents = new ArrayList<>();
         OperationCell child = null;
@@ -196,20 +184,20 @@ public class CellUtils extends MainController {
 
         TreeUtils.updateTreesAboveAndBelow(parents, child);
 
-        graph.getModel().beginUpdate();
+        jGraph.getModel().beginUpdate();
 
         try {
-            graph.removeCells(new Object[]{jCell}, true);
+            jGraph.removeCells(new Object[]{jCell}, true);
             CellRepository.removeCell(jCell);
         } finally {
-            graph.getModel().endUpdate();
+            jGraph.getModel().endUpdate();
         }
 
-        graph.refresh();
+        jGraph.refresh();
     }
 
     public static void removeCell(AtomicReference<mxCell> jCell) {
-        removeCell(jCell.get());
+        removeCell(MainFrame.getGraph(), jCell.get());
         jCell.set(null);
     }
 
@@ -261,29 +249,7 @@ public class CellUtils extends MainController {
         if (!cell.hasError()) {
             new DataFrame(cell);
         } else {
-            JOptionPane.showMessageDialog(null, "A operação possui erros", "Erro", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public static void verifyCell(mxCell cell, mxCell ghostCell) {
-        if (cell == null || cell == ghostCell || CellRepository.activeCellsContainsKey(cell)) return;
-
-        Object parent = graph.getDefaultParent();
-        Object[] vertices = mxGraphModel.getChildVertices(graph.getModel(), parent);
-
-        for (Object vertex : vertices) {
-            if (!CellRepository.activeCellsContainsKey((mxCell) vertex)) {
-                cell = (mxCell) vertex;
-            }
-        }
-
-        TableCell tableCell = MainController.getTables().get(cell.getValue());
-        String cellStyle = cell.getStyle();
-
-        if (cellStyle.equals(FileType.FYI.id)) {
-            new FYITableCell((FYITableCell) tableCell, cell);
-        } else if (cellStyle.equals(FileType.CSV.id)) {
-            new CSVTableCell((CSVTableCell) tableCell, cell);
+            JOptionPane.showMessageDialog(null, ConstantController.getString("cell.operationCell.error"), ConstantController.getString("error"), JOptionPane.ERROR_MESSAGE);
         }
     }
 

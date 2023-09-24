@@ -1,6 +1,7 @@
 package database;
 
 import java.io.File;
+
 import java.nio.file.Path;
 
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ import gui.frames.main.MainFrame;
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
 import sgbd.prototype.metadata.Metadata;
-import sgbd.table.CSVTable;
-import sgbd.table.Table;
-import sgbd.table.components.Header;
+import sgbd.source.table.CSVTable;
+import sgbd.source.table.Table;
+import sgbd.source.components.Header;
 
 public class TableCreator {
 

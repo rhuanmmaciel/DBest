@@ -6,8 +6,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,30 +20,30 @@ import javax.swing.UIManager;
 import com.mxgraph.model.mxCell;
 
 import booleanexpression.BooleanExpressionRecognizer;
-
 import controllers.ConstantController;
-
 import gui.frames.forms.IFormCondition;
 import gui.frames.forms.operations.panelstruct.AtomicPane;
 import gui.frames.forms.operations.panelstruct.ExpressionPane;
 import gui.frames.forms.operations.panelstruct.LogicalPane;
-
 import lib.booleanexpression.entities.expressions.BooleanExpression;
 import lib.booleanexpression.entities.expressions.LogicalExpression;
 import lib.booleanexpression.enums.LogicalOperator;
 
 public class BooleanExpressionForm extends OperationForm implements ActionListener, IOperationForm, IFormCondition {
 
-    private final JButton andButton = new JButton("AND");
+    private final JButton andButton = new JButton(ConstantController.getString("operationForm.booleanExpression.andButton"));
 
-    private final JButton orButton = new JButton("OR");
+    private final JButton orButton = new JButton(ConstantController.getString("operationForm.booleanExpression.orButton"));
 
     private final JButton atomicButton = new JButton(ConstantController.getString("operationForm.booleanExpression.atomicExpressionButton"));
+
+    private final mxCell jCell;
 
     private ExpressionPane root = null;
 
     public BooleanExpressionForm(mxCell jCell) {
         super(jCell);
+        this.jCell = jCell;
         this.initGUI();
     }
 
@@ -55,7 +55,7 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
     private void initGUI() {
         this.centerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        this.addWindowListener(new java.awt.event.WindowAdapter() {
+        this.addWindowListener(new WindowAdapter() {
 
             @Override
             public void windowClosing(WindowEvent event) {
@@ -169,10 +169,10 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
             if (this.root instanceof AtomicPane atomicPane) {
                 this.arguments.add(atomicPane.getAtomicExpression());
             } else {
-                this.arguments.add(new BooleanExpressionRecognizer().recognizer(this.getBooleanExpression(this.root)));
+                this.arguments.add(new BooleanExpressionRecognizer(this.jCell).recognizer(this.getBooleanExpression(this.root)));
             }
 
-            this.checkReadyButton();
+            this.onReadyButtonClicked();
         }
 
         this.checkReadyButton();
@@ -257,18 +257,18 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
         boolean leafNotAnAtomic = conditions[1];
         boolean anyAtomicIncomplete = conditions[2];
 
-        String btnReadyToolTipText = "";
+        String readyButtonToolTipText = "";
 
         if (noArgument) {
-            btnReadyToolTipText = String.format("- %s", ConstantController.getString("operationForm.booleanExpression.toolTip.selectOne"));
+            readyButtonToolTipText = String.format("- %s", ConstantController.getString("operationForm.booleanExpression.toolTip.selectOne"));
         } else if (leafNotAnAtomic) {
-            btnReadyToolTipText = String.format("- %s", ConstantController.getString("operationForm.booleanExpression.toolTip.mostInternal"));
+            readyButtonToolTipText = String.format("- %s", ConstantController.getString("operationForm.booleanExpression.toolTip.mostInternal"));
         } else if (anyAtomicIncomplete) {
-            btnReadyToolTipText = String.format("- %s", ConstantController.getString("operationForm.booleanExpression.toolTip.incomplete"));
+            readyButtonToolTipText = String.format("- %s", ConstantController.getString("operationForm.booleanExpression.toolTip.incomplete"));
         }
 
         UIManager.put("ToolTip.foreground", Color.RED);
 
-        this.readyButton.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
+        this.readyButton.setToolTipText(readyButtonToolTipText.isEmpty() ? null : readyButtonToolTipText);
     }
 }

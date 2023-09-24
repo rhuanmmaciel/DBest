@@ -134,7 +134,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         this.model = model;
         this.table = table;
         this.columns = new ArrayList<>(columns);
-        this.faker = new Faker(new Locale("pt", "BR"));
+        this.faker = new Faker(Locale.of("pt", "BR"));
         this.dbestFaker = new DBestFaker();
 
         this.initializeGUI();

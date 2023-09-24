@@ -1,16 +1,16 @@
 
 e
 java:S1192«"GDefine a constant instead of duplicating this literal "%s: %s" 3 times.(¢‰¹¤8”©Ó€©1
-{
-java:S1192]"^Define a constant instead of duplicating this literal "file.substitutionConfirmation" 3 times.(¦³¢Ñ8•©Ó€©1
-n
-java:S1192\"RDefine a constant instead of duplicating this literal "file.substitution" 3 times.(ª†œ^8•©Ó€©1
 p
 java:S1192«"RDefine a constant instead of duplicating this literal "file.error.toSave" 3 times.(¢‰¹¤8•©Ó€©1
+n
+java:S1192\"RDefine a constant instead of duplicating this literal "file.substitution" 3 times.(ª†œ^8•©Ó€©1
+{
+java:S1192]"^Define a constant instead of duplicating this literal "file.substitutionConfirmation" 3 times.(¦³¢Ñ8•©Ó€©1
+k
+java:S2095Õ"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(ÐÞ®ýøÿÿÿÿ8¾Ôá±©1
 e
 java:S2095t"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(¼ò€ö8»ºÓ€©1
-k
-java:S2095Õ"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(ÐÞ®ýøÿÿÿÿ8»ºÓ€©1
 ƒ
 java:S1149¹"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(€»¯ä8ÆºÓ€©1
 ƒ

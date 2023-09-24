@@ -5,12 +5,123 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/FYIDatabase.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/3/0358de90ce539e1eab83da2be8f1745089d40996" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/3/0358de90ce539e1eab83da2be8f1745089d40996" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/b/0bd85fee126845604e51b1701ab607d213371c2f" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/b/0bd85fee126845604e51b1701ab607d213371c2f" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/1/1/11492f006c9314964db9c895986a87573506833f" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/1/1/11492f006c9314964db9c895986a87573506833f" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/0/20b90a3a083d03409088a7da0a9f71754cd1c15b" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/0/20b90a3a083d03409088a7da0a9f71754cd1c15b" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/1/213b924e127d95f72e4d6b5d5e8170c80f28c1c3" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/1/213b924e127d95f72e4d6b5d5e8170c80f28c1c3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/1/2166353ce7dbf8a772da901ba0b3e250a8069c9f" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/1/2166353ce7dbf8a772da901ba0b3e250a8069c9f" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/8/28702f2f62466e017636cc9772b8d15dae3f74f0" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/8/28702f2f62466e017636cc9772b8d15dae3f74f0" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/b/2b55f5a598d663d0174650dd28caa4fa46d16d8e" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/b/2b55f5a598d663d0174650dd28caa4fa46d16d8e" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/b/2b6f66841ab3075c7c308d7bf3c1f805fc146d8a" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/b/2b6f66841ab3075c7c308d7bf3c1f805fc146d8a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/b/2babc641564130a50b14bf022baa79b0546530a4" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/b/2babc641564130a50b14bf022baa79b0546530a4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/9/39ce46b2ad2dab0fc9ec2d46f8f4828e1b7a0089" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/9/39ce46b2ad2dab0fc9ec2d46f8f4828e1b7a0089" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/e/3ee91b6752a7afdb1a576c5455ea3d8c41b1a66e" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/e/3ee91b6752a7afdb1a576c5455ea3d8c41b1a66e" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/2/420119cae0e16c7ffd7fe1d74660700bacb30abd" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/2/420119cae0e16c7ffd7fe1d74660700bacb30abd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/7/47c9b7102fb7c6b19aad1f4eff9504dec7400910" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/7/47c9b7102fb7c6b19aad1f4eff9504dec7400910" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/9/495dfc60799b0bdc69db603d45e63d69603d2de5" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/9/495dfc60799b0bdc69db603d45e63d69603d2de5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/b/4befd9f9b0c50c801e6b405e9bff183dd43f857e" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/b/4befd9f9b0c50c801e6b405e9bff183dd43f857e" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/c/4cd8f72d9dbe925135a5a57918dbf12796e53058" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/c/4cd8f72d9dbe925135a5a57918dbf12796e53058" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/0/5018eac808f67ed262845f7fbfb5b120b5d53b94" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/9/592f858c2a4cc8f2f49a04df5c56b915b1042e84" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/9/592f858c2a4cc8f2f49a04df5c56b915b1042e84" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/d/5d29738deaaef42605828d4a7a956a30880226f8" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/d/5d29738deaaef42605828d4a7a956a30880226f8" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/d/6d56c163e40dd95a27f0d04c69dd25a5a6dfe4c6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/b/7b7099683d64ed257dadb21a81207e590a7d1e4f" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/b/7b7099683d64ed257dadb21a81207e590a7d1e4f" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/b/8b3f6a6de4a9d42f3363877540dab00ead0c34b6" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/b/8b3f6a6de4a9d42f3363877540dab00ead0c34b6" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/1/91c13a3be8baece567e5dc61db02527a7765b921" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/1/91c13a3be8baece567e5dc61db02527a7765b921" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/3/93bd0ea8d22281c8bc6f5d7f0b32493638d0ddcc" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/3/93bd0ea8d22281c8bc6f5d7f0b32493638d0ddcc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/4/943052eea67264bc62c21ad5c3bf3bb581b2129b" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/4/943052eea67264bc62c21ad5c3bf3bb581b2129b" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/5/95142ad4834bb84bf969112c80628d80f4220a87" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/5/95142ad4834bb84bf969112c80628d80f4220a87" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/7/974a06423b3a8a717db0f9da485dd1ebaea910a8" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/7/974a06423b3a8a717db0f9da485dd1ebaea910a8" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/b/9b010d004f0073a39f82a21c1949bac97148b565" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/b/9b010d004f0073a39f82a21c1949bac97148b565" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/e/9e325da03e7fdaf943bef16d2d62b117301fa50e" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/e/9e325da03e7fdaf943bef16d2d62b117301fa50e" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/4/a4756d22d6c8646b0425ff088d20c4d5ba0bc298" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/4/a4756d22d6c8646b0425ff088d20c4d5ba0bc298" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/d/adc47b393781d9f679324225e1982bc330c31729" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/d/adc47b393781d9f679324225e1982bc330c31729" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/e/ae5f4dd5b920945d1346ec97f30ad869c27fde04" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/e/ae5f4dd5b920945d1346ec97f30ad869c27fde04" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/f/af7de44b011ac83026170c076ac74c1b26342f46" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/f/af7de44b011ac83026170c076ac74c1b26342f46" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/0/b048581722536f46e94686cec08db8f541f34544" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/0/b048581722536f46e94686cec08db8f541f34544" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/4/b49b7894398ca62c32e9f226621b13e8da4b26f7" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/4/b49b7894398ca62c32e9f226621b13e8da4b26f7" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/9/b9a41648a5341f8b13de9c530aa3231a6374708a" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/9/b9a41648a5341f8b13de9c530aa3231a6374708a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/c/bc016da98c5864458ed1d0f4716dcccfab7ea6dc" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/c/bc016da98c5864458ed1d0f4716dcccfab7ea6dc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/2/c2ab4f2e7b63d0703605fba6ca2c64062928e8c3" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/2/c2ab4f2e7b63d0703605fba6ca2c64062928e8c3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/6/c65497151a8950ac7531f480a3534f60c5465743" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/6/c65497151a8950ac7531f480a3534f60c5465743" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/8/c843302b960335761bf5073472144991c0e1d8c7" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/8/c843302b960335761bf5073472144991c0e1d8c7" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/5/d57c5161cc1654d5b15a7ad4d93bf8ce28879955" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/5/d57c5161cc1654d5b15a7ad4d93bf8ce28879955" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/8/d8b11a4ded4c2ef774618cfca83a7e7412d4fe27" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/8/d8b11a4ded4c2ef774618cfca83a7e7412d4fe27" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/c/dc04c7b0ebb22b138290cf359f79930698ae92b6" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/c/dc04c7b0ebb22b138290cf359f79930698ae92b6" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/f/df55d2a7cf1e18de03c553345241caa4081d3739" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/f/df55d2a7cf1e18de03c553345241caa4081d3739" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/0/f01aa892a9a9ecd6277e2d8aa0cd05649a323c27" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/0/f01aa892a9a9ecd6277e2d8aa0cd05649a323c27" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/7/f7887bb0cf0755885d21e30fda18907b2252f4dc" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/7/f7887bb0cf0755885d21e30fda18907b2252f4dc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/8/f80b38f72e9b5ed2b4cca4fd2631b1caa7d9e694" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/8/f80b38f72e9b5ed2b4cca4fd2631b1caa7d9e694" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/d/fdce7c666316a9227bfa10aa2ec4d59dd8558828" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/d/fdce7c666316a9227bfa10aa2ec4d59dd8558828" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/5/0/5018eac808f67ed262845f7fbfb5b120b5d53b94" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/6/d/6d56c163e40dd95a27f0d04c69dd25a5a6dfe4c6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/FYIDatabase.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/people..head" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/ConstantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/ConstantController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/TableCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableCreator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/DslController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/CSVTableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/CSVTableCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/Cell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/FYITableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/FYITableCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/TableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/TableCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/utils/cells/CellUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/utils/cells/CellUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/files/ImportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ImportFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/BaseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/BaseCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/BaseUndoableRedoableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/BaseUndoableRedoableCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/CommandController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/CommandController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/ExecuteOperationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/ExecuteOperationCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertEdgeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertEdgeCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertOperationCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertOperationCellCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/RemoveCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/RemoveCellCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/frames/DataFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/DataFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameCreateData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameCreateData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/AtomicExpressionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/AtomicExpressionForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/binary/JoinsForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/AtomicPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/AtomicPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/SelectionForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/utils/CustomDocumentFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/utils/CustomDocumentFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/utils/JTableUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/utils/JTableUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/utils/JTextLineNumber.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/utils/JTextLineNumber.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/binary/joins/JoinOperators.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/joins/JoinOperators.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Indexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Selection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Selection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/DslErrorListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/dsl/DslErrorListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/utils/DslUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/dsl/utils/DslUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Action$CurrentAction$ActionType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Action$CurrentAction$ActionType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Column.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Column.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Coordinates.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Coordinates.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Tree.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Tree.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/Cell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/cells/Cell.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/OperationCell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/cells/OperationCell.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/TableCell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/cells/TableCell.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/enums/ColumnDataType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/enums/ColumnDataType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/enums/FileType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/enums/FileType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/enums/OperationArity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/enums/OperationArity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/enums/OperationType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/enums/OperationType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/CellInformationFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/CellInformationFrame.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/DataFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/DataFrame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/dsl/Console.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/dsl/Console.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/dsl/TextEditor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/dsl/TextEditor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateData.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/main/MainFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/main/MainFrame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/utils/JTextLineNumber.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/utils/JTextLineNumber.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" afterDir="false" />
     </list>
@@ -54,35 +165,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;marcos&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last.edited.regexp&quot;: &quot;(test.ada)&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/wisentini/dev/DBest/sgbd/src/database/connection&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.build.tools.auto.reload&quot;: &quot;ALL&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Java&quot;,
-    &quot;two.files.diff.last.used.file&quot;: &quot;C:/Users/wisentini/dev/DBest/sgbd/src/files/ImportFile.java&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "full.screen.before.presentation.mode": "false",
+    "git-widget-placeholder": "marcos",
+    "ignore.virus.scanning.warn.message": "true",
+    "last.edited.regexp": "(test.ada)",
+    "last_opened_file_path": "C:/Users/wisentini/dev/DBest/sgbd/lib/fyi-database.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.build.tools.auto.reload": "ALL",
+    "settings.editor.selected.configurable": "preferences.sourceCode.Java",
+    "two.files.diff.last.used.file": "C:/Users/wisentini/dev/DBest/sgbd/src/files/ImportFile.java",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\wisentini\dev\DBest\sgbd\src\database\connection" />
@@ -101,11 +212,11 @@
       <recent name="gui.frames.forms.operations" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="gui.commands" />
       <recent name="enums" />
       <recent name="gui.frames.forms.importexport" />
       <recent name="controller" />
       <recent name="commands" />
-      <recent name="entities.cells" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -162,7 +273,10 @@
       <workItem from="1693764969994" duration="15187000" />
       <workItem from="1694606315519" duration="1321000" />
       <workItem from="1694609359861" duration="18516000" />
-      <workItem from="1694734348722" duration="4801000" />
+      <workItem from="1694734348722" duration="6126000" />
+      <workItem from="1695290749930" duration="25533000" />
+      <workItem from="1695348417103" duration="2586000" />
+      <workItem from="1695554406482" duration="20183000" />
     </task>
     <servers />
   </component>
@@ -186,6 +300,29 @@
     </option>
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/gui/commands/InsertOperationCellCommand.java</url>
+          <line>54</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/controllers/MainController.java</url>
+          <line>464</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/controllers/MainController.java</url>
+          <line>213</line>
+          <properties class="controllers.MainController" method="mouseClicked">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="java.io.RandomAccessFile" memberName="closeLock" />

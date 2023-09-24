@@ -32,7 +32,7 @@ import files.csv.CSVInfo;
 import gui.frames.forms.importexport.CSVRecognizerForm;
 import gui.frames.main.MainFrame;
 
-import sgbd.table.Table;
+import sgbd.source.table.Table;
 
 public class ImportFile {
 

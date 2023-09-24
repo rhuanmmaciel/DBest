@@ -10,11 +10,12 @@ import com.mxgraph.model.mxCell;
 import controllers.ConstantController;
 
 import entities.Column;
+
 import enums.ColumnDataType;
 
 import sgbd.prototype.Prototype;
 import sgbd.query.sourceop.TableScan;
-import sgbd.table.Table;
+import sgbd.source.table.Table;
 import sgbd.util.global.Util;
 
 public abstract sealed class TableCell extends Cell permits CSVTableCell, FYITableCell {
@@ -87,7 +88,7 @@ public abstract sealed class TableCell extends Cell permits CSVTableCell, FYITab
             .getPrototype()
             .getColumns()
             .stream()
-            .filter(column -> this instanceof CSVTableCell && !column.getName().equals(ConstantController.PK_CSV_TABLE_NAME))
+            .filter(column -> this instanceof CSVTableCell && !column.getName().equals(ConstantController.PRIMARY_KEY_CSV_TABLE_NAME))
             .toList();
 
         List<Column> columns = new ArrayList<>();

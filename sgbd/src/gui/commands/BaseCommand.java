@@ -1,6 +1,6 @@
 package gui.commands;
 
-public abstract class BaseCommand implements Command {
+abstract class BaseCommand implements Command {
 
     protected final Class<?> clazz;
 

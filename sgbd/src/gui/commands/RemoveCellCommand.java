@@ -6,6 +6,8 @@ import com.mxgraph.model.mxCell;
 
 import entities.utils.cells.CellUtils;
 
+import gui.frames.main.MainFrame;
+
 public class RemoveCellCommand extends BaseUndoableRedoableCommand {
 
     private final AtomicReference<mxCell> cellReference;
@@ -16,16 +18,16 @@ public class RemoveCellCommand extends BaseUndoableRedoableCommand {
 
     @Override
     public void execute() {
-        CellUtils.desactivateActiveJCell(this.cellReference.get());
+        CellUtils.desactivateActiveJCell(MainFrame.getGraph(), this.cellReference.get());
     }
 
     @Override
     public void undo() {
-        CellUtils.activateInactiveJCell(this.cellReference.get());
+        CellUtils.activateInactiveJCell(MainFrame.getGraph(), this.cellReference.get());
     }
 
     @Override
     public void redo() {
-        CellUtils.desactivateActiveJCell(this.cellReference.get());
+        CellUtils.desactivateActiveJCell(MainFrame.getGraph(), this.cellReference.get());
     }
 }

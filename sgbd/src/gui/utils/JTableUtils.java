@@ -121,13 +121,11 @@ public class JTableUtils {
         }
 
         public void setRowEnabled(int row, boolean enabled) {
-			if (row >= this.enabledRows.length) {
-				return;
+			if (row < this.enabledRows.length) {
+                this.enabledRows[row] = enabled;
+
+                this.fireTableRowsUpdated(row, row);
 			}
-
-            this.enabledRows[row] = enabled;
-
-            this.fireTableRowsUpdated(row, row);
         }
     }
 }

@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import com.mxgraph.model.mxCell;
 
+import controllers.ConstantController;
+
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
@@ -33,8 +35,9 @@ import sgbd.query.binaryop.joins.NestedLoopJoin;
 import sgbd.query.sourceop.TableScan;
 import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.query.unaryop.GroupOperator;
-import sgbd.table.Table;
-import sgbd.table.components.Header;
+import sgbd.source.components.Header;
+import sgbd.source.table.MemoryTable;
+import sgbd.source.table.Table;
 
 import utils.Utils;
 
@@ -43,7 +46,7 @@ public class Aggregation implements IOperator {
     public enum Function {
         MAX {
             public String getDisplayName() {
-                return "Máximo";
+                return ConstantController.getString("operationForm.maximum");
             }
 
             public String getPrefix() {
@@ -51,7 +54,7 @@ public class Aggregation implements IOperator {
             }
         }, MIN {
             public String getDisplayName() {
-                return "Mínimo";
+                return ConstantController.getString("operationForm.minimum");
             }
 
             public String getPrefix() {
@@ -59,7 +62,7 @@ public class Aggregation implements IOperator {
             }
         }, AVG {
             public String getDisplayName() {
-                return "Média";
+                return ConstantController.getString("operationForm.average");
             }
 
             public String getPrefix() {
@@ -67,7 +70,7 @@ public class Aggregation implements IOperator {
             }
         }, COUNT {
             public String getDisplayName() {
-                return "Contagem";
+                return ConstantController.getString("operationForm.count");
             }
 
             public String getPrefix() {
@@ -111,7 +114,11 @@ public class Aggregation implements IOperator {
             OperationErrorVerifier.oneArgument(arguments);
 
             errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
-            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourcesAndNames(), arguments.stream().map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, "")).toList(), List.of("*"));
+            OperationErrorVerifier.parentContainsColumns(
+                cell.getParents().get(0).getColumnSourcesAndNames(),
+                arguments.stream().map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, "")).toList(),
+                List.of("*")
+            );
 
             errorType = OperationErrorType.NO_PREFIX;
             OperationErrorVerifier.everyoneHavePrefix(arguments, PREFIXES);
@@ -149,7 +156,7 @@ public class Aggregation implements IOperator {
         Prototype prototype = new Prototype();
         prototype.addColumn("madeUp", 4, Metadata.SIGNED_INTEGER_COLUMN | Metadata.PRIMARY_KEY);
 
-        Table table = Table.openTable(new Header(prototype, "Aux"));
+        Table table = MemoryTable.openTable(new Header(prototype, "Aux"));
         table.open();
 
         RowData row = new RowData();

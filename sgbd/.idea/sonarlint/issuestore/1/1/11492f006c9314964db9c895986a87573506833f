@@ -1,0 +1,12 @@
+
+ƒ
+java:S1192@"fDefine a constant instead of duplicating this literal "operationForm.atomicExpression.insert" 8 times.(Òíáİ8Ûšá±©1
+T
+java:S1948."2Make "atomicExpression" transient or serializable.(÷Ê üÿÿÿÿ8æá±©1
+K
+java:S19484")Make "parent2" transient or serializable.(ŞøŠåüÿÿÿÿ8æá±©1
+z
+java:S2177£"WRename this method; there is a "private" method in the parent class with the same name.(•¶¯œıÿÿÿÿ8ıá±©1
+^	java:S125ô"<This block of commented-out lines of code should be removed.(·Û¸Æøÿÿÿÿ8‹Ÿá±©1
+o
+java:S3776ù"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.( Â–-8Ÿá±©1

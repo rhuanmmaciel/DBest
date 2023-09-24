@@ -23,8 +23,6 @@ I
 src/files/ExportFile.java,2\1\2166353ce7dbf8a772da901ba0b3e250a8069c9f
 J
 src/application/DBest.java,8\f\8f89a596daf248c8a0bee838dab4775f79702961
-h
-8src/gui/frames/forms/operations/unary/SelectionForm.java,5\0\5018eac808f67ed262845f7fbfb5b120b5d53b94
 O
 src/operations/unary/Group.java,8\1\81b1b6d589d4f5721be49c723d4ba7a061e7e5c6
 P
@@ -41,8 +39,6 @@ N
 +src/operations/binary/CartesianProduct.java,0\e\0e199b74aa163a586ebf297c036b025d4f185bfa
 X
 (src/gui/frames/CellInformationFrame.java,d\8\d8b11a4ded4c2ef774618cfca83a7e7412d4fe27
-e
-5src/gui/frames/forms/operations/binary/JoinsForm.java,6\d\6d56c163e40dd95a27f0d04c69dd25a5a6dfe4c6
 c
 3src/gui/frames/forms/importexport/ExportAsForm.java,4\c\4cd8f72d9dbe925135a5a57918dbf12796e53058
 [
@@ -303,3 +299,9 @@ H
 ,src/database/connection/MySQLConnection.java,f\0\f01aa892a9a9ecd6277e2d8aa0cd05649a323c27
 S
 #src/controllers/MainController.java,d\f\df55d2a7cf1e18de03c553345241caa4081d3739
+=
+.editorconfig,6\2\626a747c8694eaae66f2afb3d1a745b045782c70
+\
+,src/gui/commands/InsertTableCellCommand.java,f\8\f80ad158d0c0f45326c994f660b44bd3f68a76a7
+X
+(src/gui/commands/ImportTableCommand.java,4\2\42cace00afbbe41c872dcbf5f4cf19a0840cb95d

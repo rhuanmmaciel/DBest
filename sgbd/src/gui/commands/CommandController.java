@@ -22,9 +22,7 @@ public class CommandController {
         command.execute();
 
         this.history.add(command);
-
         this.undos.clear();
-
         this.redos.clear();
     }
 
@@ -34,12 +32,8 @@ public class CommandController {
         command.execute();
 
         this.history.add(command);
-
         this.redos.clear();
-
         this.undos.push(command);
-
-        System.out.printf("EXECUTE: %s%n", command);
     }
 
     public void undo() {
@@ -50,10 +44,7 @@ public class CommandController {
         command.undo();
 
         this.redos.push(command);
-
         this.history.add(command);
-
-        System.out.printf("   UNDO: %s%n", command);
     }
 
     public void redo() {
@@ -64,10 +55,7 @@ public class CommandController {
         command.redo();
 
         this.undos.push(command);
-
         this.history.add(command);
-
-        System.out.printf("   REDO: %s%n", command);
     }
 
     public boolean canUndo() {

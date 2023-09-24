@@ -1,0 +1,29 @@
+
+€
+java:S1450*"^Remove the "columnNameLabel" field and declare it as a local variable in the relevant methods.(¤¡ëÛøÿÿÿÿ8ĞÂâ±©1
+K
+java:S1948,")Make "columns" transient or serializable.(Ïïô‡üÿÿÿÿ8ÑÂâ±©1
+]
+java:S1854X"@Remove this useless assignment to local variable "isPrimaryKey".(äÜ¿î8ÛÂâ±©1
+^
+java:S1854]"BRemove this useless assignment to local variable "columnDataType".(êÛ8ÛÂâ±©1
+_
+java:S1854_"BRemove this useless assignment to local variable "columnDataType".(ä‚®¼8ÛÂâ±©1
+d
+java:S1854a"BRemove this useless assignment to local variable "columnDataType".(ĞìØÍıÿÿÿÿ8ÜÂâ±©1
+d
+java:S1854c"BRemove this useless assignment to local variable "columnDataType".(õØé£úÿÿÿÿ8ÜÂâ±©1
+d
+java:S1854e"BRemove this useless assignment to local variable "columnDataType".(Ìóöúÿÿÿÿÿ8ÜÂâ±©1
+d
+java:S1854g"BRemove this useless assignment to local variable "columnDataType".(¨âÅıÿÿÿÿ8ÜÂâ±©1
+^
+java:S1854i"BRemove this useless assignment to local variable "columnDataType".(êÛ8ÜÂâ±©1
+U
+java:S1481V"3Remove this unused "columnDataType" local variable.(ƒ¤îİÿÿÿÿÿ8İÂâ±©1
+N
+java:S1481X"1Remove this unused "isPrimaryKey" local variable.(äÜ¿î8ßÂâ±©1
+U
+java:S1068*"3Remove this unused "columnNameLabel" private field.(¤¡ëÛøÿÿÿÿ8ôÂâ±©1
+M
+java:S1068,"+Remove this unused "columns" private field.(Ïïô‡üÿÿÿÿ8õÂâ±©1

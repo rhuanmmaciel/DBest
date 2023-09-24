@@ -66,7 +66,7 @@ public class InsertEdgeCommand extends BaseUndoableRedoableCommand {
         }
 
         MainFrame.getGraphComponent().getGraphControl().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        CellUtils.desactivateActiveJCell(this.invisibleCellReference.get());
+        CellUtils.desactivateActiveJCell(MainFrame.getGraph(), this.invisibleCellReference.get());
         EdgeUtils.removeEdge(this.edgeReference.get());
         EdgeUtils.removeEdges(this.cellReference.get());
         MainController.resetCurrentEdgeReferenceValue();
@@ -76,7 +76,7 @@ public class InsertEdgeCommand extends BaseUndoableRedoableCommand {
 
     @Override
     public void redo() {
-        CellUtils.activateInactiveJCell(this.invisibleCellReference.get());
+        CellUtils.activateInactiveJCell(MainFrame.getGraph(), this.invisibleCellReference.get());
         EdgeUtils.addEdge(this.edgeReference.get(), this.cellReference.get());
 
         while (this.commandController.canRedo()) {

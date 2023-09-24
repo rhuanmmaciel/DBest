@@ -25,8 +25,9 @@ import sgbd.query.agregation.CountAgregation;
 import sgbd.query.binaryop.joins.NestedLoopJoin;
 import sgbd.query.sourceop.TableScan;
 import sgbd.query.unaryop.GroupOperator;
-import sgbd.table.Table;
-import sgbd.table.components.Header;
+import sgbd.source.components.Header;
+import sgbd.source.table.MemoryTable;
+import sgbd.source.table.Table;
 
 public class Indexer implements IOperator {
 
@@ -74,7 +75,7 @@ public class Indexer implements IOperator {
         Prototype prototype1 = new Prototype();
         prototype1.addColumn("column", 4, Metadata.SIGNED_INTEGER_COLUMN | Metadata.PRIMARY_KEY);
 
-        Table table = Table.openTable(new Header(prototype1, "aux"));
+        Table table = MemoryTable.openTable(new Header(prototype1, "aux"));
         table.open();
 
         RowData row = new RowData();

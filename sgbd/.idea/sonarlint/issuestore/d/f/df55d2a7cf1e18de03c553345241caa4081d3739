@@ -1,23 +1,39 @@
 
-{	java:S131"YComplete cases by adding the missing enum constants or add a default case to this switch.(±–°•şÿÿÿÿ8ÍÑÖ©©1
-^	java:S125"<This block of commented-out lines of code should be removed.(Íã†Œşÿÿÿÿ8ÍÑÖ©©1
-^	java:S125£"<This block of commented-out lines of code should be removed.(®˜•ıÿÿÿÿ8ĞÑÖ©©1
 p
-java:S3776§"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(³şİÔ8ÑÑÖ©©1
+java:S1104U"SMake console a static final constant or non-public and provide accessors if needed.(ÌãĞù8œØÓÌ«1
+J
+java:S1444U"-Make this "public static console" field final(ÌãĞù8ØÓÌ«1
+s
+java:S3655¡"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Êø×–øÿÿÿÿ8ÛÓÌ«1
+s
+java:S3655€"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(•öŸáÿÿÿÿÿ8ÛÓÌ«1
+s
+java:S3655¢"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÊÍóÿÿÿÿÿ8ÛÓÌ«1
+n
+java:S3655"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(›ÁØŠ8ÛÓÌ«1
+{	java:S131"YComplete cases by adding the missing enum constants or add a default case to this switch.(±–°•şÿÿÿÿ8£ÛÓÌ«1
+^	java:S125£"<This block of commented-out lines of code should be removed.(®˜•ıÿÿÿÿ8¥ÛÓÌ«1
+p
+java:S3776§"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(³şİÔ8¦ÛÓÌ«1
 o
-java:S3776ÿ"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(à»ßF8ÚÑÖ©©1
+java:S3776‹"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(à»ßF8¼ÛÓÌ«1
+T
+java:S2696Õ"6Make the enclosing method "static" or remove this set.(¦ù†8ÉÛÓÌ«1
+^	java:S125ì"<This block of commented-out lines of code should be removed.(î»ØÅşÿÿÿÿ8ĞÛÓÌ«1
 p
-java:S3776Š"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(¸Ïø­8éÑÖ©©1
-H	java:S106"+Replace this use of System.out by a logger.(ú•€Ë8 õ€©1
-H	java:S106Ÿ"+Replace this use of System.out by a logger.(Á÷Ö¿8ëÑÖ©©1
+java:S3776¡"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(¸Ïø­8ÚÛÓÌ«1
+H	java:S106µ"+Replace this use of System.out by a logger.(ú•€Ë8àÛÓÌ«1
+H	java:S106¶"+Replace this use of System.out by a logger.(Á÷Ö¿8àÛÓÌ«1
 W
-java:S2864¡"4Iterate over the "entrySet" instead of the "keySet".(åÂÚæúÿÿÿÿ8ëÑÖ©©1
-H	java:S106¢"+Replace this use of System.out by a logger.(©åÿü8ëÑÖ©©1
-M	java:S106¥"+Replace this use of System.out by a logger.(²èõ±ûÿÿÿÿ8ëÑÖ©©1
-H	java:S106¨"+Replace this use of System.out by a logger.(…ïÉñ8ìÑÖ©©1
+java:S2864¸"4Iterate over the "entrySet" instead of the "keySet".(åÂÚæúÿÿÿÿ8àÛÓÌ«1
+H	java:S106¹"+Replace this use of System.out by a logger.(©åÿü8áÛÓÌ«1
+M	java:S106¼"+Replace this use of System.out by a logger.(²èõ±ûÿÿÿÿ8âÛÓÌ«1
+H	java:S106¿"+Replace this use of System.out by a logger.(…ïÉñ8ãÛÓÌ«1
 k
-java:S3252ª"HUse static access with "java.awt.event.InputEvent" for "CTRL_DOWN_MASK".(›ƒşàøÿÿÿÿ8ìÑÖ©©1
+java:S3252Á"HUse static access with "java.awt.event.InputEvent" for "CTRL_DOWN_MASK".(›ƒşàøÿÿÿÿ8ãÛÓÌ«1
 k
-java:S3252¬"HUse static access with "java.awt.event.InputEvent" for "CTRL_DOWN_MASK".(®ä„…şÿÿÿÿ8ìÑÖ©©1
+java:S3252Ã"HUse static access with "java.awt.event.InputEvent" for "CTRL_DOWN_MASK".(®ä„…şÿÿÿÿ8äÛÓÌ«1
 Z
-java:S1144ù"7Remove this unused private "menuBarItemClicked" method.(Àœùøÿÿÿÿ8ùÑÖ©©1
+java:S1144…"7Remove this unused private "menuBarItemClicked" method.(Àœùøÿÿÿÿ8†ÜÓÌ«1
+N
+java:S1144Ó"0Remove this unused private "openConsole" method.(¤àùà8†ÜÓÌ«1

@@ -174,6 +174,17 @@ public final class OperationCell extends Cell {
         return this.getOperator() != null;
     }
 
+    private void setError() {
+        String style = this.getJCell().getStyle();
+
+        style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKECOLOR, "red");
+        style = mxStyleUtils.setStyle(style, mxConstants.STYLE_FONTCOLOR, "red");
+
+        MainFrame.getGraph().getModel().setStyle(this.getJCell(), style);
+
+        this.error = true;
+    }
+
     public void setError(OperationErrorType message) {
         String style = this.getJCell().getStyle();
 
@@ -197,6 +208,11 @@ public final class OperationCell extends Cell {
             case NO_PREFIX -> "Algum parâmetro não possui prefixo";
             case SAME_SOURCE -> "Existem colunas com a mesma fonte. É necessário a renomeação";
         };
+    }
+
+    public void setError(String message) {
+        this.setError();
+        this.errorMessage = message;
     }
 
     public void removeError() {

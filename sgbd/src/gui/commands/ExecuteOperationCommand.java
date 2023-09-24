@@ -2,6 +2,7 @@ package gui.commands;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -16,9 +17,12 @@ import entities.cells.OperationCell;
 import entities.utils.TreeUtils;
 import entities.utils.cells.CellUtils;
 import entities.utils.edges.EdgeUtils;
+
 import enums.OperationArity;
 import enums.OperationType;
+
 import gui.frames.forms.operations.IOperationForm;
+
 import operations.IOperator;
 
 public class ExecuteOperationCommand extends BaseUndoableRedoableCommand {
