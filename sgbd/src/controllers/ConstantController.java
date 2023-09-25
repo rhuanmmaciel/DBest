@@ -1,19 +1,16 @@
 package controllers;
 
-import java.awt.Toolkit;
+import entities.Action.CurrentAction;
+import entities.Action.CurrentAction.ActionType;
+import lib.booleanexpression.enums.RelationalOperator;
 
+import java.awt.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import entities.Action.CurrentAction;
-import entities.Action.CurrentAction.ActionType;
-
-import lib.booleanexpression.enums.RelationalOperator;
 
 public class ConstantController {
 
@@ -21,7 +18,7 @@ public class ConstantController {
 
     private static final String COUNTRY = "US";
 
-    private static final Locale CURRENT_LOCALE = Locale.of("pt", "BR");
+    private static final Locale CURRENT_LOCALE = Locale.of(LANGUAGE, COUNTRY);
 
     private static final ResourceBundle MESSAGES = ResourceBundle.getBundle("language.messages", CURRENT_LOCALE);
 

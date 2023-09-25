@@ -1,61 +1,65 @@
 package dsl;
 
-import java.awt.Color;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-
+import controllers.ConstantController;
+import gui.frames.ErrorFrame;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
-import controllers.ConstantController;
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DslErrorListener extends BaseErrorListener {
 
-    private static final List<String> ERRORS = new ArrayList<>();
+	private static final List<String> errors = new ArrayList<>();
 
-    @Override
-    public void syntaxError(
-        Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
-        int charPositionInLine, String msg, RecognitionException e
-    ) {
-        String lineString = ConstantController.getString("dsl.error.line");
-        String error = String.format("%s %d:%d %s", lineString, line, charPositionInLine, msg);
-        ERRORS.add(error);
-    }
+	@Override
+	public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
+			String msg, RecognitionException e) {
 
-    public static void addErrors(String error) {
-        ERRORS.add(error);
-    }
+		String error = String.format(ConstantController.getString("dsl.error.line") +" %d:%d %s", line, charPositionInLine, msg);
+		errors.add(error);
 
-    public static List<String> getErrors() {
-        return ERRORS;
-    }
+	}
 
-    public static void clearErrors() {
-        ERRORS.clear();
-    }
+	public static void addErrors(String error) {
+		errors.add(error);
+	}
 
-    public static void throwError(JTextPane component) {
-        StyledDocument document = component.getStyledDocument();
-        Style style = document.addStyle("errorStyle", null);
-        StyleConstants.setForeground(style, Color.RED);
+	public static List<String> getErrors() {
+		return errors;
+	}
 
-        DslErrorListener.getErrors().forEach(error -> {
-            try {
-                document.insertString(document.getLength(), String.format("%s%n", error), style);
-            } catch (BadLocationException exception) {
-                exception.printStackTrace();
-            }
-        });
+	public static void clearErrors() {
+		errors.clear();
+	}
 
-        DslController.reset();
-    }
+	public static void throwError(JTextPane component) {
+
+		StyledDocument doc = component.getStyledDocument();
+		Style style = doc.addStyle("errorStyle", null);
+		StyleConstants.setForeground(style, Color.RED);
+
+		DslErrorListener.getErrors().forEach(error -> {
+			try {
+
+				doc.insertString(doc.getLength(), error + "\n", style);
+
+			} catch (BadLocationException e) {
+
+				new ErrorFrame(e.getMessage());
+
+			}
+		});
+
+		DslController.reset();
+
+	}
+
 }

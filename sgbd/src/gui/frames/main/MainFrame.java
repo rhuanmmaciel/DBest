@@ -252,7 +252,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         Map<String, Object> style = new HashMap<>();
         style.put(mxConstants.STYLE_FILLCOLOR, "#6EFAEC");
 
-        String customStyle = FileType.CSV.id;
+        String customStyle = FileType.CSV.ID;
 
         graph.getStylesheet().putCellStyle(customStyle, style);
         tablesGraph.getStylesheet().putCellStyle(customStyle, style);

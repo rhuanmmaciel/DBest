@@ -65,7 +65,7 @@ public class TableCreator {
         Header header = new Header(prototype, tableName);
         header.set(Header.FILE_PATH, path.toString());
 
-        String headerFileName = String.format("%s%s", tableName, FileType.HEADER.extension);
+        String headerFileName = String.format("%s%s", tableName, FileType.HEADER.EXTENSION);
 
         CSVTable table = new CSVTable(header, separator, stringDelimiter, beginIndex);
         table.open();
@@ -85,7 +85,7 @@ public class TableCreator {
             .getGraph()
             .insertVertex(
                 MainFrame.getGraph().getDefaultParent(), null, tableName, 0, 0,
-                ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.CSV.id
+                ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.CSV.ID
             );
 
         this.tableCell = new CSVTableCell(jCell, tableName, columns, table, prototype, headerFile);
@@ -101,7 +101,7 @@ public class TableCreator {
         Table table = Table.openTable(new Header(prototype, tableName));
         table.open();
         table.insert(rows);
-        table.saveHeader(String.format("%s%s", tableName, FileType.HEADER.extension));
+        table.saveHeader(String.format("%s%s", tableName, FileType.HEADER.EXTENSION));
 
         if (this.mustExport) {
             this.tableCell = new FYITableCell(null, tableName, columns, table, prototype, headerFile);
@@ -112,7 +112,7 @@ public class TableCreator {
             .getGraph()
             .insertVertex(
                 MainFrame.getGraph().getDefaultParent(), null, tableName, 0, 0,
-                ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.FYI.id
+                ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.FYI.ID
             );
 
         this.tableCell = new FYITableCell(jCell, tableName, columns, table, prototype, headerFile);

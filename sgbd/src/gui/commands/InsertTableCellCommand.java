@@ -45,9 +45,9 @@ public class InsertTableCellCommand extends BaseUndoableRedoableCommand {
         TableCell tableCell = MainController.getTables().get(this.jCellReference.get().getValue());
         String cellStyle = this.jCellReference.get().getStyle();
 
-        if (cellStyle.equals(FileType.FYI.id)) {
+        if (cellStyle.equals(FileType.FYI.ID)) {
             new FYITableCell((FYITableCell) tableCell, this.jCellReference.get());
-        } else if (cellStyle.equals(FileType.CSV.id)) {
+        } else if (cellStyle.equals(FileType.CSV.ID)) {
             new CSVTableCell((CSVTableCell) tableCell, this.jCellReference.get());
         }
     }

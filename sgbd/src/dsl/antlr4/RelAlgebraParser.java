@@ -133,7 +133,7 @@ public class RelAlgebraParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_command; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RelAlgebraListener ) ((RelAlgebraListener)listener).enterCommand(this);
+			if ( listener instanceof RelAlgebraListener) ((RelAlgebraListener)listener).enterCommand(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {

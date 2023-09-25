@@ -8,12 +8,12 @@ public enum FileType {
     FYI    ("fyi", ".dat"),
     HEADER ("head", ".head");
 
-    public final String id;
+    public final String ID;
 
-    public final String extension;
+    public final String EXTENSION;
 
     FileType(String id, String extension) {
-        this.id = id;
-        this.extension = extension;
+        this.ID = id;
+        this.EXTENSION = extension;
     }
 }

@@ -82,7 +82,7 @@ public class ExportFile extends JPanel {
         File fileToSave = this.fileChooser.getSelectedFile();
         String filePath = fileToSave.getAbsolutePath();
 
-        if (!filePath.endsWith(FileType.SQL.extension)) {
+        if (!filePath.endsWith(FileType.SQL.EXTENSION)) {
             filePath = String.format("%s.sql", filePath);
             fileToSave = new File(filePath);
         }
@@ -231,7 +231,7 @@ public class ExportFile extends JPanel {
     public void exportToFYI(Cell cell, List<Column> primaryKeyColumns) {
         if (primaryKeyColumns == null || primaryKeyColumns.isEmpty()) return;
 
-        String pathname = String.format("%s%s", ConstantController.getString("file.tableFileName"), FileType.HEADER.extension);
+        String pathname = String.format("%s%s", ConstantController.getString("file.tableFileName"), FileType.HEADER.EXTENSION);
 
         this.fileChooser.setSelectedFile(new File(pathname));
 
@@ -242,13 +242,13 @@ public class ExportFile extends JPanel {
             File fileToSave = this.fileChooser.getSelectedFile();
             String filePath = fileToSave.getAbsolutePath();
 
-            if (!filePath.endsWith(FileType.HEADER.extension)) {
-                filePath += FileType.HEADER.extension;
+            if (!filePath.endsWith(FileType.HEADER.EXTENSION)) {
+                filePath += FileType.HEADER.EXTENSION;
                 fileToSave = new File(filePath);
             }
 
-            String headFileName = String.format("%s%s", this.fileChooser.getSelectedFile().getName(), FileType.HEADER.extension);
-            String fileName = headFileName.endsWith(FileType.HEADER.extension) ? headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
+            String headFileName = String.format("%s%s", this.fileChooser.getSelectedFile().getName(), FileType.HEADER.EXTENSION);
+            String fileName = headFileName.endsWith(FileType.HEADER.EXTENSION) ? headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
 
             if (fileToSave.exists()) {
                 int result = JOptionPane.showConfirmDialog(null, ConstantController.getString("file.substitution"), ConstantController.getString("file.substitutionConfirmation"), JOptionPane.YES_NO_OPTION);
@@ -296,7 +296,7 @@ public class ExportFile extends JPanel {
             createdCell.getTable().close();
 
             Path headSourcePath = Paths.get(headFileName);
-            String datFileName = String.format("%s%s", fileName, FileType.FYI.extension);
+            String datFileName = String.format("%s%s", fileName, FileType.FYI.EXTENSION);
             Path datSourcePath = Paths.get(datFileName);
 
             Path headDestinationPath = Paths.get(filePath);
@@ -313,7 +313,7 @@ public class ExportFile extends JPanel {
 
     public void exportToCSV(Cell cell) {
         try {
-            String defaultFileName = String.format("%s%s", cell.getSources().stream().findFirst().orElse(null).getName(), FileType.CSV.extension);
+            String defaultFileName = String.format("%s%s", cell.getSources().stream().findFirst().orElse(null).getName(), FileType.CSV.EXTENSION);
 
             this.fileChooser.setSelectedFile(new File(defaultFileName));
 
@@ -325,8 +325,8 @@ public class ExportFile extends JPanel {
                 File fileToSave = this.fileChooser.getSelectedFile();
                 String filePath = fileToSave.getAbsolutePath();
 
-                if (!filePath.endsWith(FileType.CSV.extension)) {
-                    filePath = String.format("%s%s", filePath, FileType.CSV.extension);
+                if (!filePath.endsWith(FileType.CSV.EXTENSION)) {
+                    filePath = String.format("%s%s", filePath, FileType.CSV.EXTENSION);
                     fileToSave = new File(filePath);
                 }
 
@@ -466,7 +466,7 @@ public class ExportFile extends JPanel {
         tree.getLeaves().forEach(table -> {
             String tableName = table.getName();
 
-            FileUtils.copyDatFilesWithHead(String.format("%s%s", tableName, FileType.HEADER.extension), tableName, Path.of(finalPath));
+            FileUtils.copyDatFilesWithHead(String.format("%s%s", tableName, FileType.HEADER.EXTENSION), tableName, Path.of(finalPath));
         });
     }
 }

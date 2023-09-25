@@ -5,47 +5,55 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dsl.utils.DslUtils;
-
 import enums.OperationType;
+import exceptions.dsl.InputException;
 
 public final class BinaryExpression extends OperationExpression {
 
-    private Expression<?> source2;
+	private dsl.entities.Expression<?> source2;
+	
+	public BinaryExpression(String command) throws InputException {
+	
+		super(command);
+		binaryRecognizer(command);
+		
+	}
 
-    public BinaryExpression(String command) {
-        super(command);
+	private void binaryRecognizer(String input) throws InputException {
 
-        this.binaryRecognizer(command);
-    }
+		int endIndex = input.indexOf('(');
 
-    private void binaryRecognizer(String input) {
-        int endIndex = input.indexOf('(');
+		String regex = "\\[[^\\[]*\\(";
 
-        String regex = "\\[[^\\[]*\\(";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(input);
 
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
+		if (matcher.find()) {
 
-        if (matcher.find()) {
-            endIndex = Math.min(input.indexOf('['), endIndex);
-            this.setArguments(List.of(input.substring(input.indexOf("[") + 1, input.indexOf("]")).split(",")));
-        }
+			endIndex = Math.min(input.indexOf('['), endIndex);
+			setArguments(List.of(input.substring(input.indexOf("[") + 1, input.indexOf("]")).split(",")));
 
-        this.setType(OperationType.fromString(input.substring(0, endIndex).toLowerCase()));
+		}
+		
+		setType(OperationType.fromString(input.substring(0, endIndex).toLowerCase()));
+		
+		int sourcePosition = input.indexOf("(") + 1;
+		int commaPosition = DslUtils.findCommaPosition(input.substring(sourcePosition))
+				+ input.substring(0, sourcePosition).length();
 
-        int sourcePosition = input.indexOf("(") + 1;
-        int commaPosition = DslUtils.findCommaPosition(input.substring(sourcePosition)) + input.substring(0, sourcePosition).length();
+		String source1 = input.substring(sourcePosition, commaPosition);
+		String source2 = input.substring(commaPosition + 1, input.lastIndexOf(")"));
 
-        String source1 = input.substring(sourcePosition, commaPosition);
-        String source2 = input.substring(commaPosition + 1, input.lastIndexOf(")"));
+		setSource(DslUtils.expressionRecognizer(source1));
+		this.source2 = DslUtils.expressionRecognizer(source2);
+		
+		setCoordinates(input.substring(input.lastIndexOf(")") + 1));
 
-        this.setSource(DslUtils.expressionRecognizer(source1));
-        this.source2 = DslUtils.expressionRecognizer(source2);
+	}
 
-        this.setCoordinates(input.substring(input.lastIndexOf(")") + 1));
-    }
 
-    public Expression<?> getSource2() {
-        return this.source2;
-    }
+	public Expression<?> getSource2() {
+		return source2;
+	}
+	
 }

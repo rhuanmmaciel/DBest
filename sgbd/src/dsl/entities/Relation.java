@@ -1,35 +1,36 @@
 package dsl.entities;
 
 import dsl.utils.DslUtils;
-
 import entities.cells.TableCell;
 
 public final class Relation extends Expression<TableCell> {
 
-    private final String name;
+	private final String name;
+	private TableCell cell = null;
+	
+	public Relation(String command) {
 
-    private TableCell cell = null;
+		super(command);
+		
+		this.name = DslUtils.clearTableName(command);
+		setCoordinates(command);
+		
+	}
 
-    public Relation(String command) {
-        super(command);
+	public String getName() {
+		return name;
+	}
 
-        this.name = DslUtils.clearTableName(command);
-        this.setCoordinates(command);
-    }
+	@Override
+	public TableCell getCell() {
+		return cell;
+	}
 
-    public String getName() {
-        return this.name;
-    }
+	@Override
+	public void setCell(TableCell cell) {
 
-    @Override
-    public TableCell getCell() {
-        return this.cell;
-    }
-
-    @Override
-    public void setCell(TableCell cell) {
-        if (this.cell == null) {
-            this.cell = cell;
-        }
-    }
+		if(this.cell == null) this.cell = cell;
+		
+	}
+	
 }

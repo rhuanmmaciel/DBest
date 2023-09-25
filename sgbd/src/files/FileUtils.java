@@ -108,7 +108,7 @@ public class FileUtils {
         for (File file : files) {
             String fileName = file.getName();
 
-            if (file.isFile() && fileName.endsWith(FileType.FYI.extension)) {
+            if (file.isFile() && fileName.endsWith(FileType.FYI.EXTENSION)) {
                 fileNames.add(fileName.substring(0, fileName.length() - 4));
             }
         }
@@ -118,12 +118,12 @@ public class FileUtils {
 
     public static boolean copyDatFilesWithHead(String path, String tableName, Path destinationDirectory) {
         try {
-            boolean shouldReplaceFileName = !path.endsWith(String.format("%s%s", tableName, FileType.HEADER.extension));
+            boolean shouldReplaceFileName = !path.endsWith(String.format("%s%s", tableName, FileType.HEADER.EXTENSION));
 
             Path headFilePath = Path.of(path);
 
             if (shouldReplaceFileName) {
-                String newHeadFileName = String.format("%s%s", tableName, FileType.HEADER.extension);
+                String newHeadFileName = String.format("%s%s", tableName, FileType.HEADER.EXTENSION);
                 Path newHeadFilePath = destinationDirectory.resolve(newHeadFileName);
                 Files.copy(headFilePath, newHeadFilePath, StandardCopyOption.REPLACE_EXISTING);
             } else {
@@ -131,8 +131,8 @@ public class FileUtils {
                 Files.copy(headFilePath, destinationHeadFilePath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            String newDatFileName = String.format("%s%s", tableName, FileType.FYI.extension);
-            Path datFilePath = Path.of(path.replace(FileType.HEADER.extension, FileType.FYI.extension));
+            String newDatFileName = String.format("%s%s", tableName, FileType.FYI.EXTENSION);
+            Path datFilePath = Path.of(path.replace(FileType.HEADER.EXTENSION, FileType.FYI.EXTENSION));
 
             if (shouldReplaceFileName) {
                 Path newDatFilePath = destinationDirectory.resolve(newDatFileName);

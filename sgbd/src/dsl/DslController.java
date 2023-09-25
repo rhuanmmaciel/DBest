@@ -1,167 +1,182 @@
 package dsl;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import controllers.ConstantController;
+import controllers.MainController;
+import dsl.entities.*;
+import dsl.utils.DslUtils;
+import entities.cells.CSVTableCell;
+import entities.cells.FYITableCell;
+import enums.FileType;
+import enums.TableType;
+import exceptions.dsl.InputException;
+import gui.frames.dsl.TextEditor;
+import sgbd.source.table.Table;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import controllers.ConstantController;
-import controllers.MainController;
-
-import dsl.entities.BinaryExpression;
-import dsl.entities.Expression;
-import dsl.entities.OperationExpression;
-import dsl.entities.Relation;
-import dsl.entities.VariableDeclaration;
-import dsl.utils.DslUtils;
-
-import entities.cells.CSVTableCell;
-import entities.cells.FYITableCell;
-
-import enums.FileType;
-import enums.TableType;
-
-import exceptions.dsl.InputException;
-
-import gui.frames.dsl.TextEditor;
-
-import sgbd.source.table.Table;
-
 public class DslController {
 
-    private DslController() {
+	private static final List<String> commands = new ArrayList<>();
+	private static final Map<String, VariableDeclaration> declarations = new HashMap<>();
 
-    }
+	public static void addCommand(String command) {
 
-    private static final List<String> COMMANDS = new ArrayList<>();
+		commands.add(command);
 
-    private static final Map<String, VariableDeclaration> DECLARATIONS = new HashMap<>();
+	}
 
-    public static void addCommand(String command) {
-        COMMANDS.add(command);
-    }
+	public static String getVariableContent(String input) {
 
-    public static String getVariableContent(String input) {
-        return DECLARATIONS.get(input).getExpression();
-    }
+		return declarations.get(input).getExpression();
 
-    public static boolean containsVariable(String input) {
-        return DECLARATIONS.containsKey(input);
-    }
+	}
 
-    public static void reset() {
-        COMMANDS.clear();
-        DECLARATIONS.clear();
-        DslErrorListener.clearErrors();
-    }
+	public static boolean containsVariable(String input) {
 
-    public static void parser() throws InputException {
-        execute();
-        reset();
-    }
+		return declarations.containsKey(input);
 
-    private static void execute() throws InputException {
-        for (String command : COMMANDS) {
-            switch (DslUtils.commandRecognizer(command)) {
-                case IMPORT_STATEMENT -> importTable(command);
-                case EXPRESSION -> solveExpression(DslUtils.expressionRecognizer(command));
-                case VARIABLE_DECLARATION -> solveDeclaration(new VariableDeclaration(command));
-            }
+	}
 
-            if (!DslErrorListener.getErrors().isEmpty()) {
-                return;
-            }
-        }
-    }
+	public static void reset() {
 
-    private static void importTable(String importStatement) throws InputException {
-        String path = importStatement.substring(6, importStatement.indexOf(FileType.HEADER.extension) + 5);
+		commands.clear();
+		declarations.clear();
+		DslErrorListener.clearErrors();
 
-        String tableName;
+	}
 
-        if (path.startsWith("this.")) {
-            tableName = path.substring(path.indexOf("this.") + 5, path.indexOf(FileType.HEADER.extension));
-            path = String.format("%s/%s", TextEditor.getLastPath(), path.substring(path.indexOf("this.") + 5));
-        } else {
-            tableName = path.substring(path.lastIndexOf("/") + 1, path.indexOf(FileType.HEADER.extension));
-        }
+	public static void parser() throws InputException {
 
-        String unnamedImport = importStatement.substring(0, importStatement.indexOf(FileType.HEADER.extension) + 5);
+		execute();
+		reset();
 
-        if (!unnamedImport.equals(importStatement)) {
-            tableName = importStatement.substring(importStatement.indexOf(FileType.HEADER.extension) + 7);
-        }
+	}
 
-        if (MainController.getTables().containsKey(DslUtils.clearTableName(tableName))) {
-            String message = String.format("%s: '%s'", ConstantController.getString("dsl.error.sameName"), DslUtils.clearTableName(tableName));
-            throw new InputException(message);
-        }
+	private static void execute() throws InputException {
 
-        TableType tableType;
+		for (String command : commands) {
 
-        try {
-            JsonObject headerFile = new Gson().fromJson(new FileReader(path), JsonObject.class);
-            tableType = headerFile
-                .getAsJsonObject("information")
-                .get("file-path")
-                .getAsString()
-                .replaceAll("' | \"", "")
-                .endsWith(".dat") ? TableType.FYI_TABLE : TableType.CSV_TABLE;
-        } catch (FileNotFoundException exception) {
-            String message = String.format("%s: '%s%s'", ConstantController.getString("dsl.error.fileNotFound"), DslUtils.clearTableName(tableName), FileType.HEADER.extension);
-            throw new InputException(message);
-        }
+			switch (DslUtils.commandRecognizer(command)) {
 
-        Table table = Table.loadFromHeader(path);
-        table.open();
+			case IMPORT_STATEMENT -> importTable(command);
+			case EXPRESSION ->
+				solveExpression(DslUtils.expressionRecognizer(command));
+			case VARIABLE_DECLARATION -> solveDeclaration(new VariableDeclaration(command));
 
-        switch (tableType) {
-            case CSV_TABLE -> MainController.saveTable(new CSVTableCell(DslUtils.clearTableName(tableName), table, new File(path)));
-            case FYI_TABLE -> MainController.saveTable(new FYITableCell(DslUtils.clearTableName(tableName), table, new File(path)));
-        }
-    }
+			}
 
-    private static void solveDeclaration(VariableDeclaration declaration) {
-        DECLARATIONS.put(declaration.getVariable(), declaration);
-    }
+		}
 
-    private static void solveExpression(Expression<?> expression) {
-        if (!DslErrorListener.getErrors().isEmpty()) {
-            return;
-        }
+	}
 
-        if (expression instanceof OperationExpression operationExpression) {
-            if (operationExpression.getSource() instanceof Relation relation) {
-                createTable(relation);
-            } else {
-                solveExpression(operationExpression.getSource());
-            }
+	private static void importTable(String importStatement) throws InputException {
 
-            if (operationExpression instanceof BinaryExpression binaryExpression) {
-                if (binaryExpression.getSource2() instanceof Relation relation) {
-                    createTable(relation);
-                } else {
-                    solveExpression(binaryExpression.getSource2());
-                }
-            }
-        } else if (expression instanceof Relation relation) {
-            createTable(relation);
-            return;
-        } else {
-            throw new RuntimeException("Expression is null");
-        }
+		String path = importStatement.substring(6, importStatement.indexOf(FileType.HEADER.EXTENSION) + 5);
 
-        MainController.putOperationCell(operationExpression);
-    }
+		String tableName;
 
-    private static void createTable(Relation relation) {
-        MainController.putTableCell(relation);
-    }
+		if (path.startsWith("this.")) {
+
+			tableName = path.substring(path.indexOf("this.") + 5, path.indexOf(FileType.HEADER.EXTENSION));
+			path = TextEditor.getLastPath() + "/" + path.substring(path.indexOf("this.") + 5);
+
+		} else {
+
+			tableName = path.substring(path.lastIndexOf("/") + 1, path.indexOf(FileType.HEADER.EXTENSION));
+
+		}
+
+		String unnamedImport = importStatement.substring(0, importStatement.indexOf(FileType.HEADER.EXTENSION) + 5);
+
+		if (!unnamedImport.equals(importStatement)) {
+
+			tableName = importStatement.substring(importStatement.indexOf(FileType.HEADER.EXTENSION) + 7);
+
+		}
+
+		if (MainController.getTables().containsKey(DslUtils.clearTableName(tableName)))
+			throw new InputException(ConstantController.getString("dsl.error.sameName") +
+							": '" + DslUtils.clearTableName(tableName) + "'");
+
+		TableType tableType;
+
+		try {
+
+			JsonObject headerFile = new Gson().fromJson(new FileReader(path), JsonObject.class);
+			tableType = headerFile.getAsJsonObject("information").get("file-path").getAsString()
+					.replaceAll("' | \"", "").endsWith(".dat")
+					? TableType.FYI_TABLE : TableType.CSV_TABLE;
+
+		}catch (FileNotFoundException e){
+
+			throw new InputException(ConstantController.getString("dsl.error.fileNotFound") +": '" +
+					DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION);
+
+		}
+
+
+		Table table = Table.loadFromHeader(path);
+		table.open();
+
+		switch (tableType){
+
+			case CSV_TABLE -> MainController.saveTable(new CSVTableCell(DslUtils.clearTableName(tableName),
+					table, new File(path)));
+			case FYI_TABLE -> 		MainController.saveTable(new FYITableCell(DslUtils.clearTableName(tableName),
+					table, new File(path)));
+
+		}
+
+	}
+
+	private static void solveDeclaration(VariableDeclaration declaration) {
+
+		declarations.put(declaration.getVariable(), declaration);
+
+	}
+
+	private static void solveExpression(Expression<?> expression) throws InputException {
+
+		if (expression instanceof OperationExpression operationExpression) {
+
+			if (operationExpression.getSource() instanceof Relation relation)
+				createTable(relation);
+			else
+				solveExpression(operationExpression.getSource());
+
+			if (operationExpression instanceof BinaryExpression binaryExpression)
+
+				if (binaryExpression.getSource2() instanceof Relation relation2)
+					createTable(relation2);
+				else
+					solveExpression(binaryExpression.getSource2());
+
+		} else if (expression instanceof Relation relation) {
+
+			createTable(relation);
+			return;
+
+		} else
+			throw new InputException("expression is null");
+
+
+
+		MainController.putOperationCell(operationExpression);
+
+	}
+
+	private static void createTable(Relation relation){
+
+		MainController.putTableCell(relation);
+
+	}
+
 }
