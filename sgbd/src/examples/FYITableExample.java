@@ -1,4 +1,4 @@
-package tests;
+package examples;
 
 import java.util.Map;
 
@@ -7,7 +7,7 @@ import sgbd.prototype.metadata.Metadata;
 import sgbd.source.components.Header;
 import sgbd.source.table.Table;
 
-public class FYITableTest {
+public class FYITableExample {
 
     public static void main(String[] args) {
         Map<String, String> table = Map.of(

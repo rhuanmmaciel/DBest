@@ -1,61 +1,37 @@
 package files;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.Vector;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.swing.AbstractButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
 import com.mxgraph.swing.mxGraphComponent;
-
 import controllers.ConstantController;
 import controllers.MainController;
-
 import database.TableCreator;
 import database.TuplesExtractor;
-
 import dsl.utils.DslUtils;
-
 import entities.Column;
 import entities.Tree;
 import entities.cells.Cell;
 import entities.cells.TableCell;
-
 import enums.ColumnDataType;
 import enums.FileType;
-
 import gui.frames.ErrorFrame;
 import gui.frames.forms.importexport.ExportSQLScriptForm;
 import gui.frames.main.MainFrame;
-
 import net.coobird.thumbnailator.Thumbnails;
-
 import sgbd.query.Operator;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ExportFile extends JPanel {
 
@@ -82,7 +58,7 @@ public class ExportFile extends JPanel {
         File fileToSave = this.fileChooser.getSelectedFile();
         String filePath = fileToSave.getAbsolutePath();
 
-        if (!filePath.endsWith(FileType.SQL.EXTENSION)) {
+        if (!filePath.endsWith(FileType.SQL.extension)) {
             filePath = String.format("%s.sql", filePath);
             fileToSave = new File(filePath);
         }
@@ -231,7 +207,7 @@ public class ExportFile extends JPanel {
     public void exportToFYI(Cell cell, List<Column> primaryKeyColumns) {
         if (primaryKeyColumns == null || primaryKeyColumns.isEmpty()) return;
 
-        String pathname = String.format("%s%s", ConstantController.getString("file.tableFileName"), FileType.HEADER.EXTENSION);
+        String pathname = String.format("%s%s", ConstantController.getString("file.tableFileName"), FileType.HEADER.extension);
 
         this.fileChooser.setSelectedFile(new File(pathname));
 
@@ -242,13 +218,13 @@ public class ExportFile extends JPanel {
             File fileToSave = this.fileChooser.getSelectedFile();
             String filePath = fileToSave.getAbsolutePath();
 
-            if (!filePath.endsWith(FileType.HEADER.EXTENSION)) {
-                filePath += FileType.HEADER.EXTENSION;
+            if (!filePath.endsWith(FileType.HEADER.extension)) {
+                filePath += FileType.HEADER.extension;
                 fileToSave = new File(filePath);
             }
 
-            String headFileName = String.format("%s%s", this.fileChooser.getSelectedFile().getName(), FileType.HEADER.EXTENSION);
-            String fileName = headFileName.endsWith(FileType.HEADER.EXTENSION) ? headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
+            String headFileName = String.format("%s%s", this.fileChooser.getSelectedFile().getName(), FileType.HEADER.extension);
+            String fileName = headFileName.endsWith(FileType.HEADER.extension) ? headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
 
             if (fileToSave.exists()) {
                 int result = JOptionPane.showConfirmDialog(null, ConstantController.getString("file.substitution"), ConstantController.getString("file.substitutionConfirmation"), JOptionPane.YES_NO_OPTION);
@@ -296,7 +272,7 @@ public class ExportFile extends JPanel {
             createdCell.getTable().close();
 
             Path headSourcePath = Paths.get(headFileName);
-            String datFileName = String.format("%s%s", fileName, FileType.FYI.EXTENSION);
+            String datFileName = String.format("%s%s", fileName, FileType.FYI.extension);
             Path datSourcePath = Paths.get(datFileName);
 
             Path headDestinationPath = Paths.get(filePath);
@@ -313,7 +289,7 @@ public class ExportFile extends JPanel {
 
     public void exportToCSV(Cell cell) {
         try {
-            String defaultFileName = String.format("%s%s", cell.getSources().stream().findFirst().orElse(null).getName(), FileType.CSV.EXTENSION);
+            String defaultFileName = String.format("%s%s", cell.getSources().stream().findFirst().orElse(null).getName(), FileType.CSV.extension);
 
             this.fileChooser.setSelectedFile(new File(defaultFileName));
 
@@ -325,8 +301,8 @@ public class ExportFile extends JPanel {
                 File fileToSave = this.fileChooser.getSelectedFile();
                 String filePath = fileToSave.getAbsolutePath();
 
-                if (!filePath.endsWith(FileType.CSV.EXTENSION)) {
-                    filePath = String.format("%s%s", filePath, FileType.CSV.EXTENSION);
+                if (!filePath.endsWith(FileType.CSV.extension)) {
+                    filePath = String.format("%s%s", filePath, FileType.CSV.extension);
                     fileToSave = new File(filePath);
                 }
 
@@ -466,7 +442,7 @@ public class ExportFile extends JPanel {
         tree.getLeaves().forEach(table -> {
             String tableName = table.getName();
 
-            FileUtils.copyDatFilesWithHead(String.format("%s%s", tableName, FileType.HEADER.EXTENSION), tableName, Path.of(finalPath));
+            FileUtils.copyDatFilesWithHead(String.format("%s%s", tableName, FileType.HEADER.extension), tableName, Path.of(finalPath));
         });
     }
 }

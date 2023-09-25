@@ -1,30 +1,25 @@
 package entities.cells;
 
-import java.io.File;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mxgraph.model.mxCell;
-
 import controllers.ConstantController;
-
 import entities.Column;
-
 import enums.ColumnDataType;
-
 import sgbd.prototype.Prototype;
 import sgbd.query.sourceop.TableScan;
 import sgbd.source.table.Table;
 import sgbd.util.global.Util;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract sealed class TableCell extends Cell permits CSVTableCell, FYITableCell {
 
-    private Table table;
+    private final Table table;
 
-    private Prototype prototype;
+    private final Prototype prototype;
 
-    private File headerFile;
+    private final File headerFile;
 
     protected TableCell(mxCell jCell, String name, Table table, Prototype prototype, File headerFile) {
         super(name, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);

@@ -1,22 +1,15 @@
 package files;
 
+import controllers.ConstantController;
+import enums.FileType;
+
 import java.io.File;
 import java.io.IOException;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
-
-import controllers.ConstantController;
-
-import enums.FileType;
 
 public class FileUtils {
 
@@ -108,7 +101,7 @@ public class FileUtils {
         for (File file : files) {
             String fileName = file.getName();
 
-            if (file.isFile() && fileName.endsWith(FileType.FYI.EXTENSION)) {
+            if (file.isFile() && fileName.endsWith(FileType.FYI.extension)) {
                 fileNames.add(fileName.substring(0, fileName.length() - 4));
             }
         }
@@ -118,12 +111,12 @@ public class FileUtils {
 
     public static boolean copyDatFilesWithHead(String path, String tableName, Path destinationDirectory) {
         try {
-            boolean shouldReplaceFileName = !path.endsWith(String.format("%s%s", tableName, FileType.HEADER.EXTENSION));
+            boolean shouldReplaceFileName = !path.endsWith(String.format("%s%s", tableName, FileType.HEADER.extension));
 
             Path headFilePath = Path.of(path);
 
             if (shouldReplaceFileName) {
-                String newHeadFileName = String.format("%s%s", tableName, FileType.HEADER.EXTENSION);
+                String newHeadFileName = String.format("%s%s", tableName, FileType.HEADER.extension);
                 Path newHeadFilePath = destinationDirectory.resolve(newHeadFileName);
                 Files.copy(headFilePath, newHeadFilePath, StandardCopyOption.REPLACE_EXISTING);
             } else {
@@ -131,8 +124,8 @@ public class FileUtils {
                 Files.copy(headFilePath, destinationHeadFilePath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            String newDatFileName = String.format("%s%s", tableName, FileType.FYI.EXTENSION);
-            Path datFilePath = Path.of(path.replace(FileType.HEADER.EXTENSION, FileType.FYI.EXTENSION));
+            String newDatFileName = String.format("%s%s", tableName, FileType.FYI.extension);
+            Path datFilePath = Path.of(path.replace(FileType.HEADER.extension, FileType.FYI.extension));
 
             if (shouldReplaceFileName) {
                 Path newDatFilePath = destinationDirectory.resolve(newDatFileName);

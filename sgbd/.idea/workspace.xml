@@ -6,62 +6,22 @@
   <component name="ChangeListManager">
     <list default="true" id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/people.head" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controllers/ConstantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/ConstantController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/booleanexpression/ErrorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/booleanexpression/ErrorListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/database/TableCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableCreator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/AntlrController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/DslController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/DslErrorListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/antlr4/RelAlgebra.interp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/antlr4/RelAlgebra.tokens" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/antlr4/RelAlgebraBaseListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/antlr4/RelAlgebraLexer.interp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/antlr4/RelAlgebraLexer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/antlr4/RelAlgebraLexer.tokens" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/antlr4/RelAlgebraListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/antlr4/RelAlgebraParser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/antlr4/grammar/RelAlgebra.g4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/BinaryExpression.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/Command.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/Expression.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/Import.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/OperationExpression.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/Relation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/UnaryExpression.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/entities/VariableDeclaration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/enums/CommandType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/utils/DslUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/connection/MySQLConnection.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/DslController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/TableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/TableCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums/DatabaseConnectionType.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/enums/FileType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/FileType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums/OperationErrorType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/OperationErrorType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/files/ExportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ExportFile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/files/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/FileUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/files/ImportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ImportFile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertTableCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertTableCellCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/AntlrController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/DslController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/DslErrorListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraBaseListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraLexer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$CartesianProductContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$CommandContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$ExpressionContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$ImportStatementContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$JoinContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$LeftJoinContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$NameDeclarationContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$NestedContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$NumberContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$PathStatementContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$PositionContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$ProjectionContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$RelationContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$RightJoinContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$SelectionContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$SimpleContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$UnionContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/utils/DslUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/BooleanExpressionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/BooleanExpressionExample.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/CSVTableTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/CSVTableExample.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/FYITableTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/FYITableExample.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +49,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,

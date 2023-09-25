@@ -79,26 +79,26 @@ public class DslController {
 
 	private static void importTable(String importStatement) throws InputException {
 
-		String path = importStatement.substring(6, importStatement.indexOf(FileType.HEADER.EXTENSION) + 5);
+		String path = importStatement.substring(6, importStatement.indexOf(FileType.HEADER.extension) + 5);
 
 		String tableName;
 
 		if (path.startsWith("this.")) {
 
-			tableName = path.substring(path.indexOf("this.") + 5, path.indexOf(FileType.HEADER.EXTENSION));
+			tableName = path.substring(path.indexOf("this.") + 5, path.indexOf(FileType.HEADER.extension));
 			path = TextEditor.getLastPath() + "/" + path.substring(path.indexOf("this.") + 5);
 
 		} else {
 
-			tableName = path.substring(path.lastIndexOf("/") + 1, path.indexOf(FileType.HEADER.EXTENSION));
+			tableName = path.substring(path.lastIndexOf("/") + 1, path.indexOf(FileType.HEADER.extension));
 
 		}
 
-		String unnamedImport = importStatement.substring(0, importStatement.indexOf(FileType.HEADER.EXTENSION) + 5);
+		String unnamedImport = importStatement.substring(0, importStatement.indexOf(FileType.HEADER.extension) + 5);
 
 		if (!unnamedImport.equals(importStatement)) {
 
-			tableName = importStatement.substring(importStatement.indexOf(FileType.HEADER.EXTENSION) + 7);
+			tableName = importStatement.substring(importStatement.indexOf(FileType.HEADER.extension) + 7);
 
 		}
 
@@ -118,7 +118,7 @@ public class DslController {
 		}catch (FileNotFoundException e){
 
 			throw new InputException(ConstantController.getString("dsl.error.fileNotFound") +": '" +
-					DslUtils.clearTableName(tableName) + FileType.HEADER.EXTENSION);
+					DslUtils.clearTableName(tableName) + FileType.HEADER.extension);
 
 		}
 

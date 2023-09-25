@@ -11,6 +11,7 @@ import enums.FileType;
 import files.csv.CSVInfo;
 import gui.frames.forms.importexport.CSVRecognizerForm;
 import gui.frames.main.MainFrame;
+import org.jetbrains.annotations.NotNull;
 import sgbd.source.table.Table;
 
 import javax.swing.*;
@@ -27,7 +28,7 @@ public class ImportFile {
 
     private final JFileChooser fileUpload = new JFileChooser();
 
-    private AtomicReference<Boolean> exitReference;
+    private final AtomicReference<Boolean> exitReference;
 
     private final StringBuilder tableName = new StringBuilder();
 
@@ -35,7 +36,7 @@ public class ImportFile {
 
     private final List<Column> columns = new ArrayList<>();
 
-    private FileType fileType;
+    private final FileType fileType;
 
     private TableCell tableCell = null;
 
@@ -48,15 +49,7 @@ public class ImportFile {
     }
 
     private void importFile() {
-        FileNameExtensionFilter filter;
-
-        switch (this.fileType) {
-            case CSV -> filter = new FileNameExtensionFilter("CSV files", "csv");
-            case EXCEL -> filter = new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
-            case FYI -> filter = new FileNameExtensionFilter("Headers files", "head");
-            case SQL -> throw new UnsupportedOperationException(String.format("Unimplemented case: %s", this.fileType));
-            default -> throw new IllegalArgumentException(String.format("Unexpected value: %s", this.fileType));
-        }
+        FileNameExtensionFilter filter = getFileNameExtensionFilter();
 
         this.fileUpload.setFileFilter(filter);
 
@@ -68,6 +61,7 @@ public class ImportFile {
                     CSVInfo info = this.csv();
 
                     if (!this.exitReference.get()) {
+                        assert info != null;
                         TableCreator tableCreator = new TableCreator(
                             this.tableName.toString(), this.columns, info, false
                         );
@@ -83,7 +77,7 @@ public class ImportFile {
                     if (!this.exitReference.get()) {
                         String selectedFileName = this.fileUpload.getSelectedFile().getName();
 
-                        String fileName = selectedFileName.endsWith(FileType.HEADER.EXTENSION) ?
+                        String fileName = selectedFileName.endsWith(FileType.HEADER.extension) ?
                             selectedFileName.substring(0, selectedFileName.indexOf(".")) :
                             selectedFileName;
 
@@ -91,7 +85,7 @@ public class ImportFile {
                             .getGraph()
                             .insertVertex(
                                 MainFrame.getGraph().getDefaultParent(), null,
-                                fileName, 0, 0, 80, 30, FileType.FYI.ID
+                                fileName, 0, 0, 80, 30, FileType.FYI.id
                             );
 
                         table.get().open();
@@ -107,15 +101,26 @@ public class ImportFile {
         }
     }
 
+    @NotNull
+    private FileNameExtensionFilter getFileNameExtensionFilter() {
+
+        return switch (this.fileType) {
+            case CSV -> new FileNameExtensionFilter("CSV files", "csv");
+            case EXCEL -> new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
+            case FYI -> new FileNameExtensionFilter("Headers files", "head");
+            case SQL -> throw new UnsupportedOperationException(String.format("Unimplemented case: %s", this.fileType));
+            default -> throw new IllegalArgumentException(String.format("Unexpected value: %s", this.fileType));
+        };
+    }
+
     private void header(AtomicReference<Table> table) {
-        if (!this.fileUpload.getSelectedFile().getName().toLowerCase().endsWith(FileType.HEADER.EXTENSION)) {
-            JOptionPane.showMessageDialog(null, String.format("%s %s", ConstantController.getString("file.error.selectRightExtension"), FileType.HEADER.EXTENSION));
+        if (!this.fileUpload.getSelectedFile().getName().toLowerCase().endsWith(FileType.HEADER.extension)) {
+            JOptionPane.showMessageDialog(null, String.format("%s %s", ConstantController.getString("file.error.selectRightExtension"), FileType.HEADER.extension));
             this.exitReference.set(true);
             return;
         }
 
         String file = this.fileUpload.getSelectedFile().getAbsolutePath();
-
         table.set(Table.loadFromHeader(file));
     }
 
@@ -201,8 +206,9 @@ public class ImportFile {
     }
 
     private CSVInfo csv() {
-        if (!this.fileUpload.getSelectedFile().getName().toLowerCase().endsWith(FileType.CSV.EXTENSION)) {
-            JOptionPane.showMessageDialog(null, "Por favor, selecione um arquivo CSV.");
+        if (!this.fileUpload.getSelectedFile().getName().toLowerCase().endsWith(FileType.CSV.extension)) {
+            JOptionPane.showMessageDialog(null, ConstantController.getString("file.error.selectRightExtension")+" "
+                    +FileType.CSV.extension);
 
             this.exitReference.set(true);
 

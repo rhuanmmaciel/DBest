@@ -1,4 +1,4 @@
-package tests;
+package examples;
 
 import lib.booleanexpression.entities.elements.Value;
 import lib.booleanexpression.entities.elements.Variable;
@@ -15,7 +15,7 @@ import sgbd.query.sourceop.TableScan;
 import sgbd.query.unaryop.FilterOperator;
 import sgbd.source.table.Table;
 
-public class BooleanExpressionTest {
+public class BooleanExpressionExample {
 
     public static void main(String[] args) {
         Table movie = Table.loadFromHeader("/home/rhuan/Documents/repositories/dbest/tabelas-fbd/ator.head");
