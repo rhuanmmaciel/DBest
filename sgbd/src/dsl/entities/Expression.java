@@ -3,27 +3,28 @@ package dsl.entities;
 import java.util.Optional;
 
 import dsl.utils.DslUtils;
-
 import entities.Coordinates;
 import entities.cells.Cell;
 
-public abstract sealed class Expression<T extends Cell> extends Command permits OperationExpression, Relation {
+public abstract sealed class Expression <T extends Cell> extends Command permits OperationExpression, Relation {
 
-    private Optional<Coordinates> coordinates;
+	private Optional<Coordinates> coordinates;
+	
+	public Expression(String command) {
+		super(command);
+	}
 
-    protected Expression(String command) {
-        super(command);
-    }
+	protected void setCoordinates(String input) {
+		
+		coordinates = DslUtils.getPosition(input);
+		
+	}
 
-    protected void setCoordinates(String input) {
-        this.coordinates = DslUtils.getPosition(input);
-    }
-
-    public Optional<Coordinates> getCoordinates() {
-        return this.coordinates;
-    }
-
-    public abstract T getCell();
-
-    public abstract void setCell(T cell);
+	public Optional<Coordinates> getCoordinates() {
+		return coordinates;
+	}
+	
+	public abstract T getCell();
+	public abstract void setCell(T cell);
+	
 }

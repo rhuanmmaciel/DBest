@@ -1,11 +1,11 @@
 package booleanexpression;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ErrorListener extends BaseErrorListener {
 
@@ -16,12 +16,7 @@ public class ErrorListener extends BaseErrorListener {
         Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
         int charPositionInLine, String msg, RecognitionException e
     ) {
-        System.out.println("ERROOOOOOOOOOOOOOOO");
         String error = String.format("line %d:%d %s", line, charPositionInLine, msg);
-        errors.add(error);
-    }
-
-    public static void addErrors(String error) {
         errors.add(error);
     }
 
@@ -29,7 +24,4 @@ public class ErrorListener extends BaseErrorListener {
         return errors;
     }
 
-    public static void clearErrors() {
-        errors.clear();
-    }
 }

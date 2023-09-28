@@ -6,7 +6,22 @@
   <component name="ChangeListManager">
     <list default="true" id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/booleanexpression/ErrorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/booleanexpression/ErrorListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/database/TableCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableCreator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/connection/MySQLConnection.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/DslController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/TableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/TableCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums/DatabaseConnectionType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums/FileType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/FileType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums/OperationErrorType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/OperationErrorType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/files/ExportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ExportFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/files/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/files/ImportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ImportFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertTableCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertTableCellCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/BooleanExpressionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/BooleanExpressionExample.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/CSVTableTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/CSVTableExample.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/FYITableTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/FYITableExample.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +49,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -58,10 +73,10 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "full.screen.before.presentation.mode": "false",
-    "git-widget-placeholder": "marcos",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "last.edited.regexp": "(test.ada)",
-    "last_opened_file_path": "C:/Users/wisentini/dev/DBest/sgbd/lib/fyi-database.jar",
+    "last_opened_file_path": "/home/rhuan/Documents/a/DBest/sgbd/src/dsl",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -79,6 +94,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/dsl" />
       <recent name="C:\Users\wisentini\dev\DBest\sgbd\src\database\connection" />
       <recent name="C:\Users\wisentini\dev\DBest\sgbd\src\gui\frames\forms\operations" />
       <recent name="C:\Users\wisentini\dev\DBest\sgbd\src" />
@@ -194,6 +210,24 @@
           <url>file://$PROJECT_DIR$/src/controllers/MainController.java</url>
           <line>464</line>
           <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/dsl/DslController.java</url>
+          <line>57</line>
+          <properties class="dsl.DslController" method="execute">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/dsl/utils/DslUtils.java</url>
+          <line>44</line>
+          <properties class="dsl.utils.DslUtils" method="expressionRecognizer">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -1,61 +1,37 @@
 package files;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.Vector;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.swing.AbstractButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
 import com.mxgraph.swing.mxGraphComponent;
-
 import controllers.ConstantController;
 import controllers.MainController;
-
 import database.TableCreator;
 import database.TuplesExtractor;
-
 import dsl.utils.DslUtils;
-
 import entities.Column;
 import entities.Tree;
 import entities.cells.Cell;
 import entities.cells.TableCell;
-
 import enums.ColumnDataType;
 import enums.FileType;
-
 import gui.frames.ErrorFrame;
 import gui.frames.forms.importexport.ExportSQLScriptForm;
 import gui.frames.main.MainFrame;
-
 import net.coobird.thumbnailator.Thumbnails;
-
 import sgbd.query.Operator;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ExportFile extends JPanel {
 

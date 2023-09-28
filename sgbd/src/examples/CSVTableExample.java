@@ -1,13 +1,8 @@
-package tests;
-
-import java.util.List;
+package examples;
 
 import database.TableCreator;
-
 import entities.Column;
-
 import enums.ColumnDataType;
-
 import sgbd.prototype.Prototype;
 import sgbd.query.Operator;
 import sgbd.query.TestOperators;
@@ -16,7 +11,9 @@ import sgbd.query.unaryop.FilterColumnsOperator;
 import sgbd.source.components.Header;
 import sgbd.source.table.CSVTable;
 
-public class CSVTableTest {
+import java.util.List;
+
+public class CSVTableExample {
 
     public static void main(String[] args) {
         List<Column> columns = List.of(
@@ -28,7 +25,7 @@ public class CSVTableTest {
             new Column("Age", "biostats", ColumnDataType.INTEGER)
         );
 
-        Prototype prototype = TableCreator.createPrototype(columns);
+        Prototype prototype = new TableCreator(false).createPrototype(columns);
 
         Header header = new Header(prototype, "biostats");
         header.set(Header.FILE_PATH, "/home/rhuan/Documents/biostats.csv");

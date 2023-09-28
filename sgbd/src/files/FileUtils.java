@@ -1,22 +1,15 @@
 package files;
 
+import controllers.ConstantController;
+import enums.FileType;
+
 import java.io.File;
 import java.io.IOException;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
-
-import controllers.ConstantController;
-
-import enums.FileType;
 
 public class FileUtils {
 
