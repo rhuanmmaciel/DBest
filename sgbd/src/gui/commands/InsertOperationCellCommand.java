@@ -87,7 +87,7 @@ public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
             this.currentActionType == ActionType.CREATE_TABLE_CELL ||
             this.currentActionType == ActionType.CREATE_OPERATOR_CELL
         ) {
-            CellUtils.desactivateActiveJCell(MainFrame.getGraph(), this.cellReference.get());
+            CellUtils.deactivateActiveJCell(MainFrame.getGraph(), this.cellReference.get());
         }
     }
 

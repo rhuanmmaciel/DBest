@@ -1,6 +1,14 @@
 package gui.frames.forms.operations.unary;
 
-import java.awt.Dimension;
+import com.mxgraph.model.mxCell;
+import controllers.ConstantController;
+import entities.Column;
+import entities.cells.Cell;
+import gui.frames.forms.operations.IOperationForm;
+import gui.frames.forms.operations.OperationForm;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -8,151 +16,152 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Objects;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
-import com.mxgraph.model.mxCell;
-
-import entities.Column;
-import entities.cells.Cell;
-import gui.frames.forms.operations.IOperationForm;
-import gui.frames.forms.operations.OperationForm;
-
 public class GroupForm extends OperationForm implements ActionListener, IOperationForm {
 
-    private final JButton btnAdd = new JButton("Adicionar");
-
-    private final JButton btnRemove = new JButton("Remover colunas");
-
+    private final JButton btnAdd = new JButton(ConstantController.getString("operationForm.add"));
+    private final JButton btnRemove = new JButton(ConstantController.getString("operationForm.removeColumns"));
     private final JTextArea textArea = new JTextArea();
-
     private final JComboBox<String> comboBoxGroupBySource = new JComboBox<>();
-
     private final JComboBox<String> comboBoxGroupByColumn = new JComboBox<>();
-
-    private final JComboBox<String> comboBoxAggregation = new JComboBox<>(new String[]{"Mínimo", "Máximo", "Média", "Contagem"});
+    private final JComboBox<String> comboBoxAggregation = new JComboBox<>(new String[]{
+            ConstantController.getString("operationForm.minimum"),
+            ConstantController.getString("operationForm.maximum"),
+            ConstantController.getString("operationForm.average"),
+            ConstantController.getString("operationForm.count")});
 
     public GroupForm(mxCell jCell) {
 
         super(jCell);
 
-        this.initializeGUI();
+        initializeGUI();
+
     }
 
     private void initializeGUI() {
 
-        this.addWindowListener(new WindowAdapter() {
-
-            @Override
+        addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                GroupForm.this.closeWindow();
+                closeWindow();
             }
         });
 
-        this.centerPanel.removeAll();
+        centerPanel.removeAll();
 
-        this.readyButton.addActionListener(this);
-        this.cancelButton.addActionListener(this);
+        btnReady.addActionListener(this);
+        btnCancel.addActionListener(this);
 
-        this.textArea.setPreferredSize(new Dimension(300, 300));
-        this.textArea.setEditable(false);
+        textArea.setPreferredSize(new Dimension(300,300));
+        textArea.setEditable(false);
 
-        this.btnAdd.addActionListener(this);
-        this.btnRemove.addActionListener(this);
+        btnAdd.addActionListener(this);
+        btnRemove.addActionListener(this);
 
-        this.addExtraComponent(new JLabel("Fonte:"), 0, 0, 1, 1);
-        this.addExtraComponent(this.comboBoxSource, 1, 0, 1, 1);
-        this.addExtraComponent(new JLabel("Coluna:"), 0, 1, 1, 1);
-        this.addExtraComponent(this.comboBoxColumn, 1, 1, 1, 1);
-        this.addExtraComponent(new JLabel("Agregação:"), 0, 2, 1, 1);
-        this.addExtraComponent(this.comboBoxAggregation, 1, 2, 1, 1);
-        this.addExtraComponent(this.btnAdd, 0, 3, 1, 1);
-        this.addExtraComponent(this.btnRemove, 1, 3, 1, 1);
-        this.addExtraComponent(new JScrollPane(this.textArea), 0, 4, 2, 2);
-        this.addExtraComponent(new JLabel("Fonte:"), 0, 6, 1, 1);
-        this.addExtraComponent(this.comboBoxGroupBySource, 1, 6, 1, 1);
-        this.addExtraComponent(new JLabel("Agrupar por:"), 0, 7, 1, 1);
-        this.addExtraComponent(this.comboBoxGroupByColumn, 1, 7, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.source")+":"), 0, 0, 1, 1);
+        addExtraComponent(comboBoxSource, 1, 0, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.column")+":"), 0, 1, 1, 1);
+        addExtraComponent(comboBoxColumn, 1, 1, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operation.aggregation")+":"), 0, 2, 1, 1);
+        addExtraComponent(comboBoxAggregation, 1, 2, 1, 1);
+        addExtraComponent(btnAdd, 0, 3, 1, 1);
+        addExtraComponent(btnRemove, 1, 3, 1, 1);
+        addExtraComponent(new JScrollPane(textArea), 0, 4, 2, 2);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.source")+":"), 0, 6, 1, 1);
+        addExtraComponent(comboBoxGroupBySource, 1, 6, 1, 1);
+        addExtraComponent(new JLabel(ConstantController.getString("operationForm.groupBy")+":"), 0, 7, 1, 1);
+        addExtraComponent(comboBoxGroupByColumn, 1, 7, 1, 1);
 
-        this.parent1.getSources().stream()
-            .map(Cell::getName)
-            .forEach(this.comboBoxGroupBySource::addItem);
+        parent1.getSources().stream()
+                .map(Cell::getName)
+                .forEach(comboBoxGroupBySource::addItem);
 
-        this.comboBoxGroupBySource.addActionListener(actionEvent -> this.setColumns(this.comboBoxGroupByColumn, this.comboBoxGroupBySource, this.parent1));
+        comboBoxGroupBySource.addActionListener(actionEvent -> setColumns(comboBoxGroupByColumn, comboBoxGroupBySource, parent1));
 
-        this.setColumns(this.comboBoxGroupByColumn, this.comboBoxGroupBySource, this.parent1);
-        this.setPreviousArgs();
+        setColumns(comboBoxGroupByColumn, comboBoxGroupBySource, parent1);
+        setPreviousArgs();
 
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+
     }
 
     @Override
     protected void setPreviousArgs() {
 
-        if (!this.previousArguments.isEmpty()) {
+        if(!previousArguments.isEmpty()){
 
-            String groupByColumn = this.previousArguments.get(0);
-            String groupByColumnName = Column.removeSource(groupByColumn);
+            String groupByColumn = previousArguments.get(0);
+            String groupByColumnName =Column.removeSource(groupByColumn);
             String groupByColumnSource = Column.removeName(groupByColumn);
 
-            this.comboBoxGroupBySource.setSelectedItem(groupByColumnSource);
-            this.comboBoxGroupByColumn.setSelectedItem(groupByColumnName);
+            comboBoxGroupBySource.setSelectedItem(groupByColumnSource);
+            comboBoxGroupByColumn.setSelectedItem(groupByColumnName);
 
-            for (String element : this.previousArguments.subList(1, this.previousArguments.size())) {
+            for(String element : previousArguments.subList(1, previousArguments.size())){
 
-                String textColumnsPicked = this.textArea.getText() + "\n" + element;
-                this.textArea.setText(textColumnsPicked);
+                String textColumnsPicked = textArea.getText() + "\n" + element;
+                textArea.setText(textColumnsPicked);
+
             }
+
         }
+
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
-        if (actionEvent.getSource() == this.btnAdd) {
+        if (actionEvent.getSource() == btnAdd) {
 
-            if (this.comboBoxColumn.getItemCount() > 0) {
-                this.updateColumns();
-            }
-        } else if (actionEvent.getSource() == this.btnRemove) {
+            if (comboBoxColumn.getItemCount() > 0)
+                updateColumns();
 
-            this.textArea.setText("");
-        } else if (actionEvent.getSource() == this.cancelButton) {
+        } else if (actionEvent.getSource() == btnRemove) {
 
-            this.closeWindow();
-        } else if (actionEvent.getSource() == this.readyButton) {
+            textArea.setText("");
 
-            this.arguments.addAll(List.of(this.textArea.getText().split("\n")));
-            this.arguments.remove(0);
-            this.arguments.add(0, Column.composeSourceAndName(Objects.requireNonNull(this.comboBoxGroupBySource.getSelectedItem()).toString(), Objects.requireNonNull(this.comboBoxGroupByColumn.getSelectedItem()).toString()
-            ));
-            this.onReadyButtonClicked();
+        } else if(actionEvent.getSource() == btnCancel){
+
+            closeWindow();
+
+        }else if (actionEvent.getSource() == btnReady) {
+
+            arguments.addAll(List.of(textArea.getText().split("\n")));
+            arguments.remove(0);
+            arguments.add(0, Column.composeSourceAndName(Objects.requireNonNull(comboBoxGroupBySource.getSelectedItem()).toString(), Objects.requireNonNull(comboBoxGroupByColumn.getSelectedItem()).toString())
+            );
+            btnReady();
+
         }
+
     }
 
-    private void updateColumns() {
+    private void updateColumns(){
 
-        String aggregation = switch (Objects.requireNonNull(this.comboBoxAggregation.getSelectedItem()).toString()) {
-            case "Máximo" -> "MAX:";
-            case "Mínimo" -> "MIN:";
-            case "Média" -> "AVG:";
-            case "Contagem" -> "COUNT:";
-            default ->
-                throw new IllegalStateException("Unexpected value: " + this.comboBoxAggregation.getSelectedItem().toString());
-        };
-        String column = aggregation +
-            this.comboBoxSource.getSelectedItem() +
-            "." + this.comboBoxColumn.getSelectedItem();
-        String textColumnsPicked = this.textArea.getText() + "\n" + column;
-        this.textArea.setText(textColumnsPicked);
+        String selected = Objects.requireNonNull(comboBoxAggregation.getSelectedItem()).toString();
+
+        String suffix;
+
+        if(selected.equals(ConstantController.getString("operationForm.maximum")))
+            suffix = "MAX:";
+        else  if(selected.equals(ConstantController.getString("operationForm.minimum")))
+            suffix = "MIN:";
+        else  if(selected.equals(ConstantController.getString("operationForm.average")))
+            suffix = "AVG:";
+        else  if(selected.equals(ConstantController.getString("operationForm.count")))
+            suffix = "COUNT:";
+        else
+            throw new IllegalStateException("Unexpected value: " + selected);
+
+        String column = suffix+
+                comboBoxSource.getSelectedItem()+
+                "."+comboBoxColumn.getSelectedItem();
+        String textColumnsPicked = textArea.getText() + "\n" + column;
+        textArea.setText(textColumnsPicked);
+
     }
 
     protected void closeWindow() {
-        this.dispose();
+        dispose();
     }
 }

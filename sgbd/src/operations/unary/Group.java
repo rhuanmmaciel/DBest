@@ -1,33 +1,23 @@
 package operations.unary;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import com.mxgraph.model.mxCell;
-
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
-
 import enums.OperationErrorType;
-
 import exceptions.tree.TreeException;
-
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-
 import sgbd.query.Operator;
-import sgbd.query.agregation.AgregationOperation;
-import sgbd.query.agregation.AvgAgregation;
-import sgbd.query.agregation.CountAgregation;
-import sgbd.query.agregation.MaxAgregation;
-import sgbd.query.agregation.MinAgregation;
+import sgbd.query.agregation.*;
 import sgbd.query.unaryop.GroupOperator;
-
 import utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class Group implements IOperator {
 
@@ -61,11 +51,11 @@ public class Group implements IOperator {
             errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
 
             OperationErrorVerifier.parentContainsColumns(
-                cell.getParents().get(0).getColumnSourcesAndNames(), arguments.stream().limit(1).toList()
+                cell.getParents().getFirst().getColumnSourcesAndNames(), arguments.stream().limit(1).toList()
             );
 
             OperationErrorVerifier.parentContainsColumns(
-                cell.getParents().get(0).getColumnSourcesAndNames(),
+                cell.getParents().getFirst().getColumnSourcesAndNames(),
                 arguments
                     .stream()
                     .map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, ""))
@@ -83,11 +73,11 @@ public class Group implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().get(0);
+        Cell parentCell = cell.getParents().getFirst();
 
         List<String> fixedArguments = new ArrayList<>();
 
-        fixedArguments.add(Column.composeSourceAndName(parentCell.getSourceNameByColumnName(arguments.get(0)), arguments.get(0)));
+        fixedArguments.add(Column.composeSourceAndName(parentCell.getSourceNameByColumnName(arguments.getFirst()), arguments.getFirst()));
 
         for (String argument : arguments.subList(1, arguments.size())) {
             String fixedArgument = argument.substring(0, Utils.getFirstMatchingPrefixIgnoreCase(argument, PREFIXES).length())
@@ -97,7 +87,7 @@ public class Group implements IOperator {
             fixedArguments.add(fixedArgument);
         }
 
-        String groupBy = fixedArguments.get(0);
+        String groupBy = fixedArguments.getFirst();
 
         List<AgregationOperation> aggregations = new ArrayList<>();
 

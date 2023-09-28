@@ -1,24 +1,19 @@
 package operations.unary;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.mxgraph.model.mxCell;
-
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
-
 import enums.OperationErrorType;
-
 import exceptions.tree.TreeException;
-
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-
 import sgbd.query.Operator;
 import sgbd.query.unaryop.RenameSourceOperator;
+
+import java.util.List;
+import java.util.Optional;
 
 public class Rename implements IOperator {
 
@@ -54,7 +49,7 @@ public class Rename implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().get(0);
+        Cell parentCell = cell.getParents().getFirst();
 
         Operator operator = parentCell.getOperator();
 

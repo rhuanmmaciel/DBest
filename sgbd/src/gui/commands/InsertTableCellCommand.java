@@ -54,7 +54,7 @@ public class InsertTableCellCommand extends BaseUndoableRedoableCommand {
 
     @Override
     public void undo() {
-        CellUtils.desactivateActiveJCell(MainFrame.getGraph(), this.jCellReference.get());
+        CellUtils.deactivateActiveJCell(MainFrame.getGraph(), this.jCellReference.get());
     }
 
     @Override

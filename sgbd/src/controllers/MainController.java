@@ -1,39 +1,11 @@
 package controllers;
 
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Frame;
-import java.awt.MouseInfo;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import java.io.File;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.util.mxEvent;
-
 import dsl.entities.BinaryExpression;
 import dsl.entities.OperationExpression;
 import dsl.entities.Relation;
-
 import entities.Action.CreateOperationCellAction;
 import entities.Action.CreateTableCellAction;
 import entities.Action.CurrentAction;
@@ -42,36 +14,31 @@ import entities.Edge;
 import entities.Tree;
 import entities.buttons.Button;
 import entities.buttons.OperationButton;
-import entities.cells.CSVTableCell;
-import entities.cells.Cell;
-import entities.cells.FYITableCell;
-import entities.cells.OperationCell;
-import entities.cells.TableCell;
+import entities.cells.*;
 import entities.utils.TreeUtils;
 import entities.utils.cells.CellUtils;
-
 import enums.OperationType;
 import enums.TableType;
-
 import files.ExportFile;
 import files.FileUtils;
-
-import gui.commands.CommandController;
-import gui.commands.ImportTableCommand;
-import gui.commands.InsertOperationCellCommand;
-import gui.commands.InsertTableCellCommand;
-import gui.commands.RemoveCellCommand;
-import gui.commands.UndoableRedoableCommand;
-
+import gui.commands.*;
 import gui.frames.CellInformationFrame;
+import gui.frames.ErrorFrame;
 import gui.frames.dsl.Console;
 import gui.frames.dsl.TextEditor;
 import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.ExportAsForm;
 import gui.frames.forms.importexport.ImportAsForm;
 import gui.frames.main.MainFrame;
-
 import utils.RandomUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MainController extends MainFrame {
 
@@ -186,8 +153,6 @@ public class MainController extends MainFrame {
             theme = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
         } else if (source == this.motifThemeTopMenuBarItem) {
             theme = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
-        } else if (source == this.metalThemeTopMenuBarItem) {
-            theme = "ch.randelshofer.quaqua.QuaquaLookAndFeel";
         } else if (source == this.nimbusThemeTopMenuBarItem) {
             theme = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
         } else if (source == this.undoTopMenuBarItem) {
@@ -206,7 +171,7 @@ public class MainController extends MainFrame {
             ClassNotFoundException | InstantiationException |
             IllegalAccessException | UnsupportedLookAndFeelException exception
         ) {
-            exception.printStackTrace();
+            new ErrorFrame(ConstantController.getString("error"));
         }
     }
 
@@ -402,7 +367,7 @@ public class MainController extends MainFrame {
 
         if (!cancelServiceReference.get()) {
             this.executeImportTableCommand(tableCell);
-            CellUtils.desactivateActiveJCell(MainFrame.getGraph(), tableCell.getJCell());
+            CellUtils.deactivateActiveJCell(MainFrame.getGraph(), tableCell.getJCell());
         } else {
             if (tableCell != null) {
                 TreeUtils.deleteTree(tableCell.getTree());

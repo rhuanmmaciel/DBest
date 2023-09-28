@@ -1,10 +1,12 @@
 package database;
 
-import java.util.*;
-
 import controllers.ConstantController;
-
 import enums.ColumnDataType;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TableUtils {
 
@@ -76,7 +78,7 @@ public class TableUtils {
     public static boolean canBePrimaryKey(List<List<String>> columns) {
 		if (columns.isEmpty()) return false;
 
-        int size = columns.get(0).size();
+        int size = columns.getFirst().size();
 
 		for (List<String> column : columns) {
 			if (column.size() != size) return false;

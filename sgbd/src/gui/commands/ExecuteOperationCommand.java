@@ -1,29 +1,23 @@
 package gui.commands;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.jetbrains.annotations.NotNull;
-
 import com.mxgraph.model.mxCell;
-
 import entities.Edge;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.TreeUtils;
 import entities.utils.cells.CellUtils;
 import entities.utils.edges.EdgeUtils;
-
 import enums.OperationArity;
 import enums.OperationType;
-
 import gui.frames.forms.operations.IOperationForm;
-
 import operations.IOperator;
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ExecuteOperationCommand extends BaseUndoableRedoableCommand {
 
@@ -33,7 +27,8 @@ public class ExecuteOperationCommand extends BaseUndoableRedoableCommand {
 
     private final AtomicReference<Edge> edgeReference;
 
-    private Cell cell, cellCopy;
+    private final Cell cell;
+    private Cell cellCopy;
 
     public ExecuteOperationCommand(
         @NotNull AtomicReference<mxCell> cellReference,

@@ -6,22 +6,68 @@
   <component name="ChangeListManager">
     <list default="true" id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/booleanexpression/ErrorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/booleanexpression/ErrorListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/TableCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableCreator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/connection/MySQLConnection.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/DslController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/TableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/TableCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/enums/DatabaseConnectionType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/enums/FileType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/FileType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/enums/OperationErrorType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/OperationErrorType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/biostats.head" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/TableUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/utils/DslUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/utils/DslUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/Coordinates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Coordinates.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/Edge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Edge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/utils/cells/CellUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/utils/cells/CellUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/files/ExportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ExportFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/FileUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/files/ImportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ImportFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/ExecuteOperationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/ExecuteOperationCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/ImportTableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/ImportTableCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertEdgeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertEdgeCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertOperationCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertOperationCellCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertTableCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertTableCellCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/RemoveCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/RemoveCellCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/CellInformationFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/CellInformationFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/IFormCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/IFormCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/CSVRecognizerForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/CSVRecognizerForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportSQLScriptForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportSQLScriptForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/PrimaryKeyChooserForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/PrimaryKeyChooserForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/AtomicExpressionForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/IOperationForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/OperationForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/AtomicPane.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/ExpressionPane.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/LogicalPane.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/AggregationForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/GroupForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/IndexerForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/ProjectionForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/RenameForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/SortForm.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/BooleanExpressionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/BooleanExpressionExample.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/CSVTableTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/CSVTableExample.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/FYITableTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/FYITableExample.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/OperationErrorVerifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/OperationErrorVerifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/binary/CartesianProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/CartesianProduct.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/binary/joins/JoinOperators.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/joins/JoinOperators.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/binary/set/SetOperators.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/set/SetOperators.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Group.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Indexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Projection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Projection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Rename.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Rename.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Selection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Selection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/unary/Sort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Sort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/table.head" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/DslController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/dsl/DslController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/utils/DslUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/dsl/utils/DslUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Coordinates.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Coordinates.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Edge.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Edge.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/TableCell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/cells/TableCell.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/enums/FileType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/enums/FileType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/CellInformationFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/CellInformationFrame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/main/MainFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/main/MainFrame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +122,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "last.edited.regexp": "(test.ada)",
-    "last_opened_file_path": "/home/rhuan/Documents/a/DBest/sgbd/src/dsl",
+    "last_opened_file_path": "/home/rhuan/Documents/a/DBest/sgbd/src/gui/frames/forms",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -94,11 +140,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/gui/frames/forms" />
       <recent name="$PROJECT_DIR$/src/dsl" />
       <recent name="C:\Users\wisentini\dev\DBest\sgbd\src\database\connection" />
       <recent name="C:\Users\wisentini\dev\DBest\sgbd\src\gui\frames\forms\operations" />
       <recent name="C:\Users\wisentini\dev\DBest\sgbd\src" />
-      <recent name="C:\Users\wisentini\dev\DBest\sgbd\lib" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/dsl/antlr4" />
@@ -130,6 +176,35 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="Babashka" factoryName="BabashkaLocalRepl" activateToolWindowBeforeRun="false">
+      <setting name="displayName" value="" />
+      <setting name="bbPath" value="" />
+      <setting name="parameters" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <setting name="workingDir" value="" />
+      <setting name="focusEditor" value="false" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
+      <option name="configVersion" value="1" />
+      <option name="options" />
+      <option name="profiles" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="ClojureREPL" factoryName="Remote" activateToolWindowBeforeRun="false">
+      <setting name="displayName" value="" />
+      <setting name="host" value="" />
+      <setting name="port" value="0" />
+      <setting name="replType" value="SOCKET" />
+      <setting name="configType" value="SPECIFY" />
+      <setting name="replPortFileType" value="STANDARD" />
+      <setting name="customPortFile" value="" />
+      <setting name="fixLineNumbers" value="false" />
+      <setting name="focusEditor" value="false" />
+      <method v="2" />
     </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -206,15 +281,10 @@
           <line>54</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/controllers/MainController.java</url>
-          <line>464</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/dsl/DslController.java</url>
           <line>57</line>
-          <properties class="dsl.DslController" method="execute">
+          <properties class="dsl.DslController">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -223,7 +293,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/dsl/utils/DslUtils.java</url>
           <line>44</line>
-          <properties class="dsl.utils.DslUtils" method="expressionRecognizer">
+          <properties class="dsl.utils.DslUtils">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>

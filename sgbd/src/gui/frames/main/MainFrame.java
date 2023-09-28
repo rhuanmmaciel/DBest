@@ -1,44 +1,24 @@
 package gui.frames.main;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
-
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
-
 import controllers.ConstantController;
-
 import entities.Action.CurrentAction;
 import entities.buttons.Button;
 import entities.buttons.OperationButton;
 import entities.buttons.ToolBarButton;
-
 import enums.FileType;
 import enums.OperationType;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class MainFrame extends JFrame implements ActionListener, MouseListener, KeyListener, MouseMotionListener {
 
@@ -111,8 +91,6 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
     protected JMenuItem importTableTopMenuBarItem = new JMenuItem(ConstantController.getString("menu.file.importTable"));
 
     protected JMenuItem importTreeTopMenuBarItem = new JMenuItem(ConstantController.getString("menu.file.importTree"));
-
-    protected JMenuItem metalThemeTopMenuBarItem = new JMenuItem(ConstantController.getString("menu.appearance.theme.metal"));
 
     protected JMenuItem nimbusThemeTopMenuBarItem = new JMenuItem(ConstantController.getString("menu.appearance.theme.nimbus"));
 
@@ -225,13 +203,11 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         JMenu themeMenu = new JMenu(ConstantController.getString("menu.appearance.theme"));
         appearanceMenu.add(themeMenu);
 
-        themeMenu.add(this.metalThemeTopMenuBarItem);
         themeMenu.add(this.gtkThemeTopMenuBarItem);
         themeMenu.add(this.motifThemeTopMenuBarItem);
         themeMenu.add(this.nimbusThemeTopMenuBarItem);
 
         this.gtkThemeTopMenuBarItem.addActionListener(this);
-        this.metalThemeTopMenuBarItem.addActionListener(this);
         this.motifThemeTopMenuBarItem.addActionListener(this);
         this.nimbusThemeTopMenuBarItem.addActionListener(this);
     }

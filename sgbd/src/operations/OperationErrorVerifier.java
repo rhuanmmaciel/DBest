@@ -1,18 +1,16 @@
 package operations;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-
 import exceptions.tree.ArgumentsException;
 import exceptions.tree.ParentsAmountException;
 import exceptions.tree.ParentsErrorException;
-
 import utils.Utils;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class OperationErrorVerifier {
 
@@ -84,7 +82,7 @@ public class OperationErrorVerifier {
 
     public static void noEmptyArgument(List<String> arguments) throws ArgumentsException {
         if (arguments.isEmpty()) throw new ArgumentsException("");
-        if (arguments.get(0).isEmpty()) throw new ArgumentsException("");
+        if (arguments.getFirst().isEmpty()) throw new ArgumentsException("");
     }
 
     public static void oneArgument(List<String> arguments) throws ArgumentsException {

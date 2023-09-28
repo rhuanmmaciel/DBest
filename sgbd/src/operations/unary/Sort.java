@@ -1,28 +1,22 @@
 package operations.unary;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 import com.mxgraph.model.mxCell;
-
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
-
 import enums.OperationErrorType;
-
 import exceptions.tree.TreeException;
-
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-
 import sgbd.query.Operator;
 import sgbd.query.unaryop.SortOperator;
-
 import utils.Utils;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public class Sort implements IOperator {
 
@@ -53,9 +47,9 @@ public class Sort implements IOperator {
 
             errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
             OperationErrorVerifier.parentContainsColumns(
-                cell.getParents().get(0).getColumnSourcesAndNames(),
+                cell.getParents().getFirst().getColumnSourcesAndNames(),
                 Collections.singletonList(
-                    Utils.replaceIfStartsWithIgnoreCase(arguments.get(0), PREFIXES, ""))
+                    Utils.replaceIfStartsWithIgnoreCase(arguments.getFirst(), PREFIXES, ""))
             );
 
             errorType = null;
@@ -65,11 +59,11 @@ public class Sort implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().get(0);
+        Cell parentCell = cell.getParents().getFirst();
 
         Operator operator = parentCell.getOperator();
 
-        String column = arguments.get(0);
+        String column = arguments.getFirst();
 
         boolean isAscendingOrder = !Utils.startsWithIgnoreCase(column, "DESC:");
 

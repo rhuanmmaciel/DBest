@@ -1,36 +1,21 @@
 package operations.unary;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import com.mxgraph.model.mxCell;
-
 import controllers.ConstantController;
-
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
-
 import enums.OperationErrorType;
-
 import exceptions.tree.TreeException;
-
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
 import sgbd.prototype.metadata.Metadata;
 import sgbd.query.Operator;
-import sgbd.query.agregation.AgregationOperation;
-import sgbd.query.agregation.AvgAgregation;
-import sgbd.query.agregation.CountAgregation;
-import sgbd.query.agregation.MaxAgregation;
-import sgbd.query.agregation.MinAgregation;
+import sgbd.query.agregation.*;
 import sgbd.query.binaryop.joins.NestedLoopJoin;
 import sgbd.query.sourceop.TableScan;
 import sgbd.query.unaryop.FilterColumnsOperator;
@@ -38,8 +23,12 @@ import sgbd.query.unaryop.GroupOperator;
 import sgbd.source.components.Header;
 import sgbd.source.table.MemoryTable;
 import sgbd.source.table.Table;
-
 import utils.Utils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class Aggregation implements IOperator {
 
@@ -115,7 +104,7 @@ public class Aggregation implements IOperator {
 
             errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
             OperationErrorVerifier.parentContainsColumns(
-                cell.getParents().get(0).getColumnSourcesAndNames(),
+                cell.getParents().getFirst().getColumnSourcesAndNames(),
                 arguments.stream().map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, "")).toList(),
                 List.of("*")
             );
@@ -130,13 +119,13 @@ public class Aggregation implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().get(0);
+        Cell parentCell = cell.getParents().getFirst();
 
         Operator operator = parentCell.getOperator();
 
         String fixedArgument = arguments
-            .get(0)
-            .substring(0, Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length()) + Column.composeSourceAndName(parentCell.getSourceNameByColumnName(arguments.get(0).substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length())), arguments.get(0).substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length()));
+            .getFirst()
+            .substring(0, Utils.getFirstMatchingPrefixIgnoreCase(arguments.getFirst(), PREFIXES).length()) + Column.composeSourceAndName(parentCell.getSourceNameByColumnName(arguments.getFirst().substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.getFirst(), PREFIXES).length())), arguments.getFirst().substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.getFirst(), PREFIXES).length()));
 
         String sourceName = Column.removeName(fixedArgument).substring(Utils.getFirstMatchingPrefixIgnoreCase(fixedArgument, PREFIXES).length());
         String columnName = Column.removeSource(fixedArgument);
@@ -167,6 +156,6 @@ public class Aggregation implements IOperator {
         readyOperator = new GroupOperator(readyOperator, "Aux", "madeUp", aggregations);
         readyOperator = new FilterColumnsOperator(readyOperator, List.of("Aux.madeUp"));
 
-        Operation.operationSetter(cell, arguments.get(0), List.of(fixedArgument), readyOperator);
+        Operation.operationSetter(cell, arguments.getFirst(), List.of(fixedArgument), readyOperator);
     }
 }

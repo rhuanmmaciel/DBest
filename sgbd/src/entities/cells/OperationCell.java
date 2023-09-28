@@ -1,34 +1,28 @@
 package entities.cells;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxStyleUtils;
-
 import controllers.ConstantController;
-
 import entities.Column;
 import entities.Edge;
 import entities.utils.cells.CellUtils;
-
 import enums.ColumnDataType;
 import enums.OperationArity;
 import enums.OperationErrorType;
 import enums.OperationType;
-
+import gui.frames.ErrorFrame;
 import gui.frames.forms.operations.IOperationForm;
 import gui.frames.main.MainFrame;
-
 import operations.IOperator;
-
 import sgbd.query.Operator;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public final class OperationCell extends Cell {
 
@@ -95,7 +89,7 @@ public final class OperationCell extends Cell {
             InstantiationException | IllegalAccessException |
             NoSuchMethodException | InvocationTargetException exception
         ) {
-            exception.printStackTrace();
+            new ErrorFrame(ConstantController.getString("error"));
         }
     }
 
@@ -114,7 +108,7 @@ public final class OperationCell extends Cell {
             InstantiationException | IllegalAccessException |
             NoSuchMethodException | InvocationTargetException exception
         ) {
-            exception.printStackTrace();
+            new ErrorFrame(ConstantController.getString("error"));
         }
     }
 
@@ -196,17 +190,17 @@ public final class OperationCell extends Cell {
         this.error = true;
 
         this.errorMessage = switch (message) {
-            case NO_ONE_ARGUMENT -> "O parâmetro passado possui erros";
-            case NO_ONE_PARENT -> "A operação possui mais de uma célula pai";
-            case NO_PARENT -> "A operação não possui uma célula pai";
-            case NULL_ARGUMENT -> "O parâmetro fornecido é nulo";
-            case PARENT_ERROR -> "Há erro(s) em células anteriores";
-            case PARENT_WITHOUT_COLUMN -> "Alguma coluna fornecida não existe na célula pai";
-            case NO_TWO_PARENTS -> "A operação não possui duas células pais";
-            case NO_TWO_ARGUMENTS -> "Alguma coluna fornecida não existe na respectiva célula pai";
-            case EMPTY_ARGUMENT -> "Não foi fornecido um parâmetro";
-            case NO_PREFIX -> "Algum parâmetro não possui prefixo";
-            case SAME_SOURCE -> "Existem colunas com a mesma fonte. É necessário a renomeação";
+            case NO_ONE_ARGUMENT -> ConstantController.getString("cell.operationCell.error.noOneArgument");
+            case NO_ONE_PARENT -> ConstantController.getString("cell.operationCell.error.noOneParent");
+            case NO_PARENT -> ConstantController.getString("cell.operationCell.error.noParent");
+            case NULL_ARGUMENT -> ConstantController.getString("cell.operationCell.error.nullArgument");
+            case PARENT_ERROR -> ConstantController.getString("cell.operationCell.error.parentError");
+            case PARENT_WITHOUT_COLUMN -> ConstantController.getString("cell.operationCell.error.parentWithoutColumn");
+            case NO_TWO_PARENTS -> ConstantController.getString("cell.operationCell.error.noTwoParents");
+            case NO_TWO_ARGUMENTS -> ConstantController.getString("cell.operationCell.error.noTwoArguments");
+            case EMPTY_ARGUMENT -> ConstantController.getString("cell.operationCell.error.emptyArgument");
+            case NO_PREFIX -> ConstantController.getString("cell.operationCell.error.noPrefix");
+            case SAME_SOURCE -> ConstantController.getString("cell.operationCell.error.sameSource");
         };
     }
 
@@ -259,7 +253,7 @@ public final class OperationCell extends Cell {
     }
 
     public String getErrorMessage() {
-        return this.hasError() ? this.errorMessage : "Sem erros";
+        return this.hasError() ? this.errorMessage : ConstantController.getString("cell.operationCell.error.noError");
     }
 
     public void setColumns() {

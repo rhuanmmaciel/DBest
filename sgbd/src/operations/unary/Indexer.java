@@ -1,22 +1,14 @@
 package operations.unary;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.mxgraph.model.mxCell;
-
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
-
 import enums.OperationErrorType;
-
 import exceptions.tree.TreeException;
-
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-
 import sgbd.prototype.Prototype;
 import sgbd.prototype.RowData;
 import sgbd.prototype.metadata.Metadata;
@@ -28,6 +20,9 @@ import sgbd.query.unaryop.GroupOperator;
 import sgbd.source.components.Header;
 import sgbd.source.table.MemoryTable;
 import sgbd.source.table.Table;
+
+import java.util.List;
+import java.util.Optional;
 
 public class Indexer implements IOperator {
 
@@ -68,7 +63,7 @@ public class Indexer implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().get(0);
+        Cell parentCell = cell.getParents().getFirst();
 
         Operator operator = parentCell.getOperator();
 
@@ -91,19 +86,19 @@ public class Indexer implements IOperator {
         count.close();
 
         Prototype prototype2 = new Prototype();
-        prototype2.addColumn(arguments.get(0), 4, Metadata.SIGNED_INTEGER_COLUMN | Metadata.PRIMARY_KEY);
+        prototype2.addColumn(arguments.getFirst(), 4, Metadata.SIGNED_INTEGER_COLUMN | Metadata.PRIMARY_KEY);
 
         Table table2 = Table.openTable(new Header(prototype2, "aux"));
         table2.open();
 
         for (int n = 1; n <= numberOfRows; n++) {
             RowData rowData = new RowData();
-            rowData.setInt(arguments.get(0), n);
+            rowData.setInt(arguments.getFirst(), n);
             table2.insert(rowData);
         }
 
         Operator readyOperator = new NestedLoopJoin(new TableScan(table2), operator, (tuple1, tuple2) -> {
-            boolean foundIndex = i == tuple1.getContent("aux").getInt(arguments.get(0));
+            boolean foundIndex = i == tuple1.getContent("aux").getInt(arguments.getFirst());
             boolean rightTuple = j == i;
 
             if (foundIndex) {

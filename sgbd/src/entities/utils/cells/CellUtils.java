@@ -1,33 +1,24 @@
 package entities.utils.cells;
 
-import java.awt.event.MouseEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-
-import javax.swing.JOptionPane;
-
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.view.mxGraph;
-
 import controllers.ConstantController;
 import controllers.MainController;
-
 import entities.Tree;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import entities.utils.TreeUtils;
-
 import gui.frames.DataFrame;
 import gui.frames.main.MainFrame;
+
+import javax.swing.*;
+import java.awt.event.MouseEvent;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class CellUtils extends MainController {
 
@@ -83,7 +74,7 @@ public class CellUtils extends MainController {
         jGraph.refresh();
     }
 
-    public static void desactivateActiveJCell(mxGraph jGraph, mxCell activeJCell) {
+    public static void deactivateActiveJCell(mxGraph jGraph, mxCell activeJCell) {
         if (jGraph == null || activeJCell == null) return;
 
         Optional<Cell> optionalActiveCell = CellRepository.getActiveCell(activeJCell);
