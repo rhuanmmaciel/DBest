@@ -255,8 +255,6 @@ X
 (src/booleanexpression/ErrorListener.java,8\a\8a4ffedf573527e07fdaf7d7d0e374b969f86bea
 P
  src/booleanexpression/Utils.java,b\2\b2e7a1b930336c1cdf2787b13997819e722a77cb
-U
-%src/enums/DatabaseConnectionType.java,8\2\8246deb10c049764b13cdda48ee78fc210e26653
 V
 &src/dsl/entities/BinaryExpression.java,0\7\07029af127e0b78e00b8d06bbf44251a1e6655fc
 M
@@ -295,8 +293,6 @@ V
 &src/exceptions/dsl/InputException.java,5\e\5e2c05dacef05451ea211305c0bdd2989f5dea0e
 H
 src/enums/TableType.java,e\e\ee88aa660d065deddf5e477467bbd2a54bceefb8
-\
-,src/database/connection/MySQLConnection.java,f\0\f01aa892a9a9ecd6277e2d8aa0cd05649a323c27
 S
 #src/controllers/MainController.java,d\f\df55d2a7cf1e18de03c553345241caa4081d3739
 =
@@ -305,3 +301,5 @@ S
 ,src/gui/commands/InsertTableCellCommand.java,f\8\f80ad158d0c0f45326c994f660b44bd3f68a76a7
 X
 (src/gui/commands/ImportTableCommand.java,4\2\42cace00afbbe41c872dcbf5f4cf19a0840cb95d
+Z
+*src/examples/BooleanExpressionExample.java,0\7\0703e975d030d243027ab2f53e3b41b7b8632575

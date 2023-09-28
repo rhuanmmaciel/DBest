@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="fyi-database (2)">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/fyi-database.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
