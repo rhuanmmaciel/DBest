@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import sgbd.source.table.Table;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.nio.file.Path;
@@ -49,7 +50,7 @@ public class ImportFile {
     }
 
     private void importFile() {
-        FileNameExtensionFilter filter = getFileNameExtensionFilter();
+        FileFilter filter = getFileNameExtensionFilter();
 
         this.fileUpload.setFileFilter(filter);
 

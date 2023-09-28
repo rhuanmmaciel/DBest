@@ -126,7 +126,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
         this.initForm();
         this.initBottom();
 
-        this.checkReadyButton();
+        this.checkBtnReady();
 
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -143,17 +143,17 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
         this.txtFieldDatabaseName.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent documentEvent) {
-                ExportSQLScriptForm.this.checkReadyButton();
+                ExportSQLScriptForm.this.checkBtnReady();
             }
 
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
-                ExportSQLScriptForm.this.checkReadyButton();
+                ExportSQLScriptForm.this.checkBtnReady();
             }
 
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
-                ExportSQLScriptForm.this.checkReadyButton();
+                ExportSQLScriptForm.this.checkBtnReady();
             }
         });
 
@@ -163,17 +163,17 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
         this.txtFieldTableName.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent documentEvent) {
-                ExportSQLScriptForm.this.checkReadyButton();
+                ExportSQLScriptForm.this.checkBtnReady();
             }
 
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
-                ExportSQLScriptForm.this.checkReadyButton();
+                ExportSQLScriptForm.this.checkBtnReady();
             }
 
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
-                ExportSQLScriptForm.this.checkReadyButton();
+                ExportSQLScriptForm.this.checkBtnReady();
             }
         });
 
@@ -232,8 +232,8 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
     }
 
     private void initBottom() {
-        this.cancelButton.addActionListener(this);
-        this.readyButton.addActionListener(this);
+        this.btnCancel.addActionListener(this);
+        this.btnReady.addActionListener(this);
     }
 
     private void loadJTable() {
@@ -254,17 +254,17 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
                         @Override
                         public void insertUpdate(DocumentEvent documentEvent) {
-                            ExportSQLScriptForm.this.checkReadyButton();
+                            ExportSQLScriptForm.this.checkBtnReady();
                         }
 
                         @Override
                         public void removeUpdate(DocumentEvent documentEvent) {
-                            ExportSQLScriptForm.this.checkReadyButton();
+                            ExportSQLScriptForm.this.checkBtnReady();
                         }
 
                         @Override
                         public void changedUpdate(DocumentEvent documentEvent) {
-                            ExportSQLScriptForm.this.checkReadyButton();
+                            ExportSQLScriptForm.this.checkBtnReady();
                         }
                     });
 
@@ -344,14 +344,14 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        this.checkReadyButton();
+        this.checkBtnReady();
 
-        if (this.cancelButton == actionEvent.getSource()) {
+        if (this.btnCancel == actionEvent.getSource()) {
             this.exitReference.set(true);
             this.closeWindow();
         }
 
-        if (this.readyButton == actionEvent.getSource()) {
+        if (this.btnReady == actionEvent.getSource()) {
             this.databaseName.append(this.txtFieldDatabaseName.getText());
             this.tableName.append(this.txtFieldTableName.getText());
             this.additionalCommand.append(this.textArea.getText());
@@ -372,7 +372,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
     }
 
     @Override
-    public void checkReadyButton() {
+    public void checkBtnReady() {
         List<List<String>> columnsSelected = new ArrayList<>();
 
         for (Map.Entry<String, JCheckBox> checkBox : this.pkCheckBoxes.entrySet()) {
@@ -391,7 +391,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
         boolean everyColumnHasName = this.newColumnNameTxtFields.values().stream().noneMatch(x -> x.getText().isBlank());
         boolean canBePK = columnsSelected.isEmpty() || TableUtils.canBePrimaryKey(columnsSelected);
 
-        this.readyButton.setEnabled(canBePK && !this.txtFieldDatabaseName.getText().isBlank() && !this.txtFieldTableName.getText().isBlank() && everyColumnHasName);
+        this.btnReady.setEnabled(canBePK && !this.txtFieldDatabaseName.getText().isBlank() && !this.txtFieldTableName.getText().isBlank() && everyColumnHasName);
     }
 
     @Override

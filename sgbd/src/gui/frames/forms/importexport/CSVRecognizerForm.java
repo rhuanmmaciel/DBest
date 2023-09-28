@@ -1,76 +1,40 @@
 package gui.frames.forms.importexport;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import controllers.ConstantController;
+import controllers.MainController;
+import database.TableUtils;
+import entities.Column;
+import enums.ColumnDataType;
+import exceptions.InvalidCSVException;
+import files.csv.CSVInfo;
+import files.csv.CSVRecognizer;
+import files.csv.CSVRecognizer.CSVData;
+import gui.frames.ErrorFrame;
+import gui.frames.forms.FormBase;
+import gui.utils.JTableUtils;
+import gui.utils.JTableUtils.CustomTableModel;
 
-import java.nio.file.Path;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Vector;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
-import controllers.ConstantController;
-import controllers.MainController;
-
-import database.TableUtils;
-
-import entities.Column;
-
-import enums.ColumnDataType;
-
-import exceptions.InvalidCSVException;
-
-import files.csv.CSVInfo;
-import files.csv.CSVRecognizer;
-import files.csv.CSVRecognizer.CSVData;
-
-import gui.frames.ErrorFrame;
-import gui.utils.JTableUtils;
-import gui.utils.JTableUtils.CustomTableModel;
-
-public class CSVRecognizerForm extends JDialog implements ActionListener {
-
-    private final JPanel contentPanel = new JPanel();
+public class CSVRecognizerForm extends FormBase implements ActionListener {
 
     private final JPanel headerPanel = new JPanel();
-
-    private final JPanel bottomPanel = new JPanel();
 
     private final JPanel mainPanel = new JPanel();
 
@@ -79,10 +43,6 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
     private JTable jTable;
 
     private DefaultTableModel model;
-
-    private final JButton cancelButton = new JButton("Cancelar");
-
-    private final JButton doneButton = new JButton("Pronto");
 
     private final JTextField stringDelimiterTextField = new JTextField();
 
@@ -134,7 +94,7 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
         Path path, StringBuilder tableName, List<Column> columns,
         Map<Integer, Map<String, String>> content, AtomicReference<Boolean> exitReference
     ) {
-        super((Window) null, "Tabela CSV");
+        super(null);
 
         this.setModal(true);
 
@@ -158,8 +118,6 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
     private void initializeGUI() {
         this.setBounds(0, 0, ConstantController.UI_SCREEN_WIDTH, ConstantController.UI_SCREEN_HEIGHT);
         this.setLocationRelativeTo(null);
-        this.setContentPane(this.contentPanel);
-        this.contentPanel.setLayout(new BorderLayout(0, 0));
 
         try {
             this.csvData = CSVRecognizer.importCSV(this.path, this.defaultSeparator, this.defaultStringDelimiter, 1);
@@ -171,7 +129,8 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
         this.loadJTable();
         this.initializeHeader();
         this.initializeMain();
-        this.initializeBottom();
+        this.btnReady.addActionListener(this);
+        this.btnCancel.addActionListener(this);
         this.verifyReadyButton();
         this.setVisible(true);
     }
@@ -326,18 +285,6 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
         this.scrollPane.getViewport().setPreferredSize(this.scrollPane.getPreferredSize());
     }
 
-    private void initializeBottom() {
-        this.contentPanel.add(this.bottomPanel, BorderLayout.SOUTH);
-
-        this.bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        this.bottomPanel.add(this.cancelButton);
-        this.bottomPanel.add(this.doneButton);
-
-        this.cancelButton.addActionListener(this);
-
-        this.doneButton.addActionListener(this);
-    }
-
     @Override
     public void actionPerformed(ActionEvent event) {
         this.verifyReadyButton();
@@ -348,12 +295,12 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
 			}
         });
 
-        if (event.getSource() == this.cancelButton) {
+        if (event.getSource() == this.btnCancel) {
             this.dispose();
             this.exitReference.set(true);
         }
 
-        if (event.getSource() == this.doneButton) {
+        if (event.getSource() == this.btnReady) {
             this.dispose();
             this.setItems();
         }
@@ -362,7 +309,7 @@ public class CSVRecognizerForm extends JDialog implements ActionListener {
     private void verifyReadyButton() {
         boolean tableNameAlreadyExists = MainController.getTables().containsKey(this.tableNameTextField.getText().strip());
 
-        this.doneButton.setEnabled(!tableNameAlreadyExists);
+        this.btnReady.setEnabled(!tableNameAlreadyExists);
     }
 
     private void setItems() {

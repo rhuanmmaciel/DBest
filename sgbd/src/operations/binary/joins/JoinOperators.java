@@ -1,28 +1,21 @@
 package operations.binary.joins;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.mxgraph.model.mxCell;
-
 import booleanexpression.BooleanExpressionException;
 import booleanexpression.BooleanExpressionRecognizer;
-
+import com.mxgraph.model.mxCell;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
-
 import enums.OperationErrorType;
-
 import exceptions.tree.TreeException;
-
 import lib.booleanexpression.entities.expressions.BooleanExpression;
-
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-
 import sgbd.query.Operator;
+
+import java.util.List;
+import java.util.Optional;
 
 public abstract class JoinOperators implements IOperator {
 
@@ -52,7 +45,7 @@ public abstract class JoinOperators implements IOperator {
             OperationErrorVerifier.noParentError(cell);
 
             errorType = OperationErrorType.SAME_SOURCE;
-            OperationErrorVerifier.haveDifferentSources(cell.getParents().get(0), cell.getParents().get(1));
+            OperationErrorVerifier.haveDifferentSources(cell.getParents().getFirst(), cell.getParents().get(1));
 
             errorType = null;
         } catch (TreeException exception) {
@@ -61,14 +54,14 @@ public abstract class JoinOperators implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell1 = cell.getParents().get(0);
+        Cell parentCell1 = cell.getParents().getFirst();
         Cell parentCell2 = cell.getParents().get(1);
 
         Operator operator1 = parentCell1.getOperator();
         Operator operator2 = parentCell2.getOperator();
 
         try {
-            BooleanExpression booleanExpression = new BooleanExpressionRecognizer(jCell).recognizer(arguments.get(0));
+            BooleanExpression booleanExpression = new BooleanExpressionRecognizer(jCell).recognizer(arguments.getFirst());
             Operator readyOperator = this.createJoinOperator(operator1, operator2, booleanExpression);
             String operationName = String.format("%s   %s", cell.getType().symbol, new BooleanExpressionRecognizer(jCell).recognizer(booleanExpression));
             Operation.operationSetter(cell, operationName, arguments, readyOperator);

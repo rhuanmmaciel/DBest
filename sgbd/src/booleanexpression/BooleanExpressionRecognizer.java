@@ -1,27 +1,12 @@
 package booleanexpression;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
-import com.mxgraph.model.mxCell;
-
 import booleanexpression.antlr.BooleanExpressionDSLController;
 import booleanexpression.antlr.BooleanExpressionDSLLexer;
 import booleanexpression.antlr.BooleanExpressionDSLParser;
-
+import com.mxgraph.model.mxCell;
 import controllers.ConstantController;
-
 import entities.cells.Cell;
 import entities.utils.cells.CellUtils;
-
 import lib.booleanexpression.entities.elements.Element;
 import lib.booleanexpression.entities.elements.Null;
 import lib.booleanexpression.entities.elements.Value;
@@ -31,12 +16,17 @@ import lib.booleanexpression.entities.expressions.BooleanExpression;
 import lib.booleanexpression.entities.expressions.LogicalExpression;
 import lib.booleanexpression.enums.LogicalOperator;
 import lib.booleanexpression.enums.RelationalOperator;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import sgbd.prototype.query.fields.*;
 
-import sgbd.prototype.query.fields.DoubleField;
-import sgbd.prototype.query.fields.FloatField;
-import sgbd.prototype.query.fields.IntegerField;
-import sgbd.prototype.query.fields.LongField;
-import sgbd.prototype.query.fields.StringField;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static booleanexpression.Utils.getElement;
 
@@ -142,7 +132,7 @@ public class BooleanExpressionRecognizer {
             return this.recognizeLogical(operator.get(), tokens);
         }
 
-        return this.recognizeAtomic(tokens.get(0));
+        return this.recognizeAtomic(tokens.getFirst());
     }
 
     private void prioritizeAnds(List<String> tokens) {
@@ -231,7 +221,7 @@ public class BooleanExpressionRecognizer {
     }
 
     private boolean hasUnnecessaryExternalBrackets(List<String> tokens) {
-        if (this.isLeftBracket(tokens.get(0)) && this.isRightBracket(tokens.get(tokens.size() - 1))) {
+        if (this.isLeftBracket(tokens.getFirst()) && this.isRightBracket(tokens.get(tokens.size() - 1))) {
             int bracketsController = 0;
 
             for (String token : tokens.stream().limit(tokens.size() - 1L).toList()) {

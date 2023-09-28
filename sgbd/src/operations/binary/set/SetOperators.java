@@ -1,24 +1,19 @@
 package operations.binary.set;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import com.mxgraph.model.mxCell;
-
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
-
 import enums.OperationErrorType;
-
 import exceptions.tree.TreeException;
-
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-
 import sgbd.query.Operator;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public abstract class SetOperators implements IOperator {
 
@@ -48,7 +43,7 @@ public abstract class SetOperators implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell1 = cell.getParents().get(0);
+        Cell parentCell1 = cell.getParents().getFirst();
         Cell parentCell2 = cell.getParents().get(1);
 
         Operator operator1 = parentCell1.getOperator();

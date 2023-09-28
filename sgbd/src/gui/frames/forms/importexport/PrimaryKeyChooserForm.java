@@ -1,38 +1,24 @@
 package gui.frames.forms.importexport;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import controllers.ConstantController;
+import database.TableUtils;
+import database.TuplesExtractor;
+import entities.Column;
+import entities.cells.Cell;
+import gui.frames.forms.FormBase;
+import gui.frames.forms.IFormCondition;
+import gui.utils.JTableUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-
-import controllers.ConstantController;
-
-import database.TableUtils;
-import database.TuplesExtractor;
-
-import entities.Column;
-import entities.cells.Cell;
-
-import gui.frames.forms.FormBase;
-import gui.frames.forms.IFormCondition;
-import gui.utils.JTableUtils;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.*;
 
 public class PrimaryKeyChooserForm extends FormBase implements ActionListener, IFormCondition {
 
@@ -66,7 +52,7 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
             this.rows.add(v);
         }
 
-        this.columnNames.addAll(rowsAux.get(0).keySet());
+        this.columnNames.addAll(rowsAux.getFirst().keySet());
 
         this.initGUI();
     }
@@ -74,8 +60,8 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
     private void initGUI() {
         this.setBounds(0, 0, ConstantController.UI_SCREEN_WIDTH, ConstantController.UI_SCREEN_HEIGHT);
 
-        this.readyButton.addActionListener(this);
-        this.cancelButton.addActionListener(this);
+        this.btnReady.addActionListener(this);
+        this.btnCancel.addActionListener(this);
 
         this.model = new JTableUtils.CustomTableModel(this.rows, new Vector<>(this.columnNames));
         this.model.insertRow(0, new Object[]{});
@@ -141,7 +127,7 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
 
         this.contentPanel.add(this.scrollPane, BorderLayout.CENTER);
 
-        this.checkReadyButton();
+        this.checkBtnReady();
 
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -184,12 +170,12 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
     }
 
     @Override
-    public void checkReadyButton() {
+    public void checkBtnReady() {
         boolean hasPrimaryKey = this.pkCheckBoxes.values().stream().anyMatch(JCheckBox::isSelected);
 
         boolean canBePrimaryKey = TableUtils.canBePrimaryKey(this.getColumnsSelected());
 
-        this.readyButton.setEnabled(hasPrimaryKey && canBePrimaryKey);
+        this.btnReady.setEnabled(hasPrimaryKey && canBePrimaryKey);
 
         this.updateToolTipText(hasPrimaryKey, canBePrimaryKey);
     }
@@ -208,15 +194,15 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
 
         UIManager.put("ToolTip.foreground", Color.RED);
 
-        this.readyButton.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
+        this.btnReady.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
-        this.checkReadyButton();
+        this.checkBtnReady();
 
-        if (actionEvent.getSource() == this.readyButton) {
+        if (actionEvent.getSource() == this.btnReady) {
             for (Map.Entry<String, JCheckBox> checkBox : this.pkCheckBoxes.entrySet()) {
                 if (checkBox.getValue().isSelected()) {
                     String columnName = Column.removeSource(checkBox.getKey());
@@ -229,7 +215,7 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
             this.dispose();
         }
 
-        if (actionEvent.getSource() == this.cancelButton) {
+        if (actionEvent.getSource() == this.btnCancel) {
             this.dispose();
         }
     }

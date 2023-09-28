@@ -1,25 +1,20 @@
 package operations.unary;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.mxgraph.model.mxCell;
-
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
-
 import enums.OperationErrorType;
-
 import exceptions.tree.TreeException;
-
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-
 import sgbd.query.Operator;
 import sgbd.query.unaryop.SelectColumnsOperator;
+
+import java.util.List;
+import java.util.Optional;
 
 public class Projection implements IOperator {
 
@@ -49,7 +44,7 @@ public class Projection implements IOperator {
             OperationErrorVerifier.noEmptyArgument(arguments);
 
             errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
-            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourcesAndNames(), arguments);
+            OperationErrorVerifier.parentContainsColumns(cell.getParents().getFirst().getColumnSourcesAndNames(), arguments);
 
             errorType = null;
         } catch (TreeException exception) {
@@ -58,7 +53,7 @@ public class Projection implements IOperator {
 
 		if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().get(0);
+        Cell parentCell = cell.getParents().getFirst();
 
         List<String> fixedArguments = Column.composeSourceAndName(arguments, parentCell);
 

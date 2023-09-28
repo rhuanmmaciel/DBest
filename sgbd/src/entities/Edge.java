@@ -1,19 +1,14 @@
 package entities;
 
-import java.io.Serializable;
-
-import java.util.Optional;
-
-import javax.swing.JOptionPane;
-
 import com.mxgraph.model.mxCell;
-
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.cells.TableCell;
 import entities.utils.cells.CellUtils;
-
 import enums.OperationArity;
+
+import java.io.Serializable;
+import java.util.Optional;
 
 public class Edge implements Serializable {
 
@@ -43,13 +38,7 @@ public class Edge implements Serializable {
             cellHasTree = true;
         }
 
-        if (cellIsParent) {
-            JOptionPane.showMessageDialog(null, "Essa célula já possui filho", "Erro", JOptionPane.ERROR_MESSAGE);
-        } else if (!cellHasTree) {
-            JOptionPane.showMessageDialog(null, "Uma operação vazia não pode se associar a ninguém", "Erro", JOptionPane.ERROR_MESSAGE);
-        } else if (cellHasError) {
-            JOptionPane.showMessageDialog(null, "Não é possível associar uma operação com erros a outra", "Erro", JOptionPane.ERROR_MESSAGE);
-        } else {
+        if (!cellIsParent && cellHasTree && !cellHasError) {
             this.parent = parent;
         }
     }
@@ -78,13 +67,6 @@ public class Edge implements Serializable {
             this.child = child;
         }
 
-        if (!isOperatorCell) {
-            JOptionPane.showMessageDialog(null, "Uma tabela não pode ser associada a outra", "Erro", JOptionPane.ERROR_MESSAGE);
-        } else if (hasEnoughParents && ((OperationCell) cell).getArity() == OperationArity.UNARY) {
-            JOptionPane.showMessageDialog(null, "Não é possível associar duas tabelas a uma operação unária", "Erro", JOptionPane.ERROR_MESSAGE);
-        } else if (hasEnoughParents && ((OperationCell) cell).getArity() == OperationArity.BINARY) {
-            JOptionPane.showMessageDialog(null, "Não é possível associar três tabelas a uma operação binária", "Erro", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
     public boolean hasParent() {

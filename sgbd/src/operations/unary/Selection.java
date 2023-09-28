@@ -1,29 +1,22 @@
 package operations.unary;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.mxgraph.model.mxCell;
-
 import booleanexpression.BooleanExpressionException;
 import booleanexpression.BooleanExpressionRecognizer;
-
+import com.mxgraph.model.mxCell;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
-
 import enums.OperationErrorType;
-
 import exceptions.tree.TreeException;
-
 import lib.booleanexpression.entities.expressions.BooleanExpression;
-
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-
 import sgbd.query.Operator;
 import sgbd.query.unaryop.FilterOperator;
+
+import java.util.List;
+import java.util.Optional;
 
 public class Selection implements IOperator {
 
@@ -59,9 +52,9 @@ public class Selection implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().get(0);
+        Cell parentCell = cell.getParents().getFirst();
 
-        String expression = arguments.get(0);
+        String expression = arguments.getFirst();
 
         try {
             BooleanExpression booleanExpression = new BooleanExpressionRecognizer(jCell).recognizer(expression);
@@ -69,7 +62,7 @@ public class Selection implements IOperator {
             Operator operator = parentCell.getOperator();
             operator = new FilterOperator(operator, booleanExpression);
 
-            String operationName = String.format("%s  %s", cell.getType().symbol, booleanExpression);
+            String operationName = String.format("%s  %s", cell.getType().symbol, new BooleanExpressionRecognizer(jCell).recognizer(booleanExpression));
 
             Operation.operationSetter(cell, operationName, arguments, operator);
         } catch (BooleanExpressionException exception) {

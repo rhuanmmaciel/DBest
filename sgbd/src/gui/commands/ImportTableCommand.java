@@ -49,7 +49,7 @@ public class ImportTableCommand extends BaseUndoableRedoableCommand {
 
     @Override
     public void undo() {
-        CellUtils.desactivateActiveJCell(MainFrame.getTablesGraph(), this.tableJCell);
+        CellUtils.deactivateActiveJCell(MainFrame.getTablesGraph(), this.tableJCell);
 
         MainController.getTables().remove(this.tableCell.getName());
 

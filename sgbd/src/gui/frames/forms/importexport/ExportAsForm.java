@@ -70,7 +70,7 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == this.cancelButton) {
+        if (event.getSource() == this.btnCancel) {
             this.cancelService.set(true);
             this.closeWindow();
         } else if (event.getSource() == this.csvButton) {

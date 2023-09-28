@@ -1,56 +1,59 @@
 package gui.frames.forms.operations.panelstruct;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-
-import com.mxgraph.model.mxCell;
-
 import booleanexpression.BooleanExpressionRecognizer;
-
+import com.mxgraph.model.mxCell;
 import controllers.ConstantController;
-
 import gui.frames.forms.operations.AtomicExpressionForm;
 import gui.frames.forms.operations.BooleanExpressionForm;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class AtomicPane extends ExpressionPane implements ActionListener {
 
-    private final JButton editButton = new JButton(ConstantController.getString("operationForm.atomicPane.edit"));
-
+    private final JButton btnEdit = new JButton(ConstantController.getString("operationForm.atomicPane.edit"));
+    private final mxCell jCell;
     private final JLabel expression = new JLabel();
 
-    public AtomicPane(BooleanExpressionForm root, mxCell jCell) {
+    public AtomicPane(BooleanExpressionForm root, mxCell jCell){
+
         super(root, jCell);
+        this.jCell = jCell;
+        add(new JLabel(ConstantController.getString("operationForm.atomicPane.atomicExpression")), BorderLayout.NORTH);
 
-        this.add(new JLabel(ConstantController.getString("operationForm.atomicPane.atomicExpression")), BorderLayout.NORTH);
+        add(expression, BorderLayout.CENTER);
+        add(btnDeleteExpression, BorderLayout.EAST);
+        add(btnEdit, BorderLayout.SOUTH);
 
-        this.add(this.expression, BorderLayout.CENTER);
-        this.add(this.deleteExpressionButton, BorderLayout.EAST);
-        this.add(this.editButton, BorderLayout.SOUTH);
+        btnEdit.addActionListener(this);
+        btnEdit.addActionListener(root);
+        btnDeleteExpression.addActionListener(root);
 
-        this.editButton.addActionListener(this);
-        this.editButton.addActionListener(root);
-        this.deleteExpressionButton.addActionListener(root);
+        setVisible(true);
 
-        this.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == this.editButton) {
-            this.booleanExpression = new AtomicExpressionForm(this.root, this.jCell).getResult();
 
-            this.expression.setText(this.booleanExpression != null ? new BooleanExpressionRecognizer(this.jCell).recognizer(this.booleanExpression) : "");
+        if(actionEvent.getSource() == btnEdit){
 
-            this.updateRootSize();
-            this.root.checkReadyButton();
+            booleanExpression = new AtomicExpressionForm(root, jCell).getResult();
+            expression.setText( booleanExpression != null ?
+                    new BooleanExpressionRecognizer(jCell).recognizer(booleanExpression) :
+                    "");
+            updateRootSize();
+            root.checkBtnReady();
+
         }
+
     }
 
-    public String getAtomicExpression() {
-        return this.expression.getText();
+    public String getAtomicExpression(){
+
+        return expression.getText();
+
     }
 }
