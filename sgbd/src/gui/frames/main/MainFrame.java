@@ -10,7 +10,7 @@ import entities.Action.CurrentAction;
 import entities.buttons.Button;
 import entities.buttons.OperationButton;
 import entities.buttons.ToolBarButton;
-import enums.FileType;
+import enums.CellType;
 import enums.OperationType;
 
 import javax.swing.*;
@@ -57,6 +57,8 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
     protected JMenuItem removeMenuItem;
 
     protected JMenuItem markCellMenuItem;
+
+    protected JMenuItem unmarkCellMenuItem;
 
     protected JMenuItem selectionMenuItem;
 
@@ -129,6 +131,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.editMenuItem = new JMenuItem(ConstantController.getString("cell.edit"));
         this.removeMenuItem = new JMenuItem(ConstantController.getString("cell.remove"));
         this.markCellMenuItem = new JMenuItem(ConstantController.getString("cell.mark"));
+        this.unmarkCellMenuItem = new JMenuItem(ConstantController.getString("cell.unmark"));
         this.operationsMenuItem = new JMenu(ConstantController.getString("cell.operations"));
         this.selectionMenuItem = new JMenuItem(OperationType.SELECTION.displayName);
         this.projectionMenuItem = new JMenuItem(OperationType.PROJECTION.displayName);
@@ -231,6 +234,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
         setCSVCellStyle();
         setFYICellStyle();
+        setOperationCellStyle();
 
     }
 
@@ -238,8 +242,9 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
         Map<String, Object> style = new HashMap<>();
         style.put(mxConstants.STYLE_FILLCOLOR, "#98FB98");
+        style.put(mxConstants.STYLE_SHADOW, String.valueOf(true));
 
-        String customStyle = FileType.CSV.id;
+        String customStyle = CellType.CSV_TABLE.id;;
 
         graph.getStylesheet().putCellStyle(customStyle, style);
         tablesGraph.getStylesheet().putCellStyle(customStyle, style);
@@ -251,8 +256,38 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         Map<String, Object> style = new HashMap<>();
 
         style.put(mxConstants.STYLE_FILLCOLOR, "#32CD32");
+        style.put(mxConstants.STYLE_SHADOW, String.valueOf(true));
 
-        String customStyle = FileType.FYI.id;
+        String customStyle = CellType.FYI_TABLE.id;;
+
+        graph.getStylesheet().putCellStyle(customStyle, style);
+        tablesGraph.getStylesheet().putCellStyle(customStyle, style);
+
+    }
+
+    private void setOperationCellStyle(){
+
+        Map<String, Object> style = new HashMap<>();
+
+        style.put(mxConstants.STYLE_FILLCOLOR, "none");
+        style.put(mxConstants.STYLE_STROKECOLOR, "none");
+//        style.put(mxConstants.STYLE_SHADOW, String.valueOf(true));
+
+        String customStyle = CellType.OPERATION.id;
+
+        graph.getStylesheet().putCellStyle(customStyle, style);
+        tablesGraph.getStylesheet().putCellStyle(customStyle, style);
+
+    }
+
+    private void setMemoryCellStyle(){
+
+        Map<String, Object> style = new HashMap<>();
+
+        style.put(mxConstants.STYLE_FILLCOLOR, "#32CD32");
+        style.put(mxConstants.STYLE_SHADOW, String.valueOf(true));
+
+        String customStyle = CellType.MEMORY_TABLE.id;
 
         graph.getStylesheet().putCellStyle(customStyle, style);
         tablesGraph.getStylesheet().putCellStyle(customStyle, style);
@@ -326,6 +361,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.editMenuItem.addActionListener(this);
         this.removeMenuItem.addActionListener(this);
         this.markCellMenuItem.addActionListener(this);
+        this.unmarkCellMenuItem.addActionListener(this);
         this.selectionMenuItem.addActionListener(this);
         this.projectionMenuItem.addActionListener(this);
         this.sortMenuItem.addActionListener(this);

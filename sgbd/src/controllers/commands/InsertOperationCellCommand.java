@@ -8,6 +8,7 @@ import entities.Action.CurrentAction.ActionType;
 import entities.Edge;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
+import enums.CellType;
 import gui.frames.main.MainFrame;
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -115,7 +116,7 @@ public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
                 .insertVertex(
                     MainFrame.getGraph().getDefaultParent(), null,
                     createOperationAction.getName(), this.mouseEvent.getX(),
-                    this.mouseEvent.getY(), 80, 30, createOperationAction.getStyle()
+                    this.mouseEvent.getY(), 80, 30, CellType.OPERATION.id
                 );
 
             this.cellReference.set(this.mxCell);

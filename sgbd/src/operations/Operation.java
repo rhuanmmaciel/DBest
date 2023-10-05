@@ -5,6 +5,7 @@ import com.mxgraph.model.mxGeometry;
 
 import entities.cells.OperationCell;
 
+import entities.utils.cells.CellUtils;
 import gui.frames.main.MainFrame;
 
 import sgbd.query.Operator;
@@ -45,6 +46,9 @@ public class Operation {
 			oldGeometry.getX(), oldGeometry.getY(), textWidth, oldGeometry.getHeight()
 		);
 
+		if(CellUtils.getActiveCell(jCell).get().isMarked()) CellUtils.markCell(jCell);
+
 		MainFrame.getGraph().getModel().setGeometry(jCell, newGeometry);
+
 	}
 }

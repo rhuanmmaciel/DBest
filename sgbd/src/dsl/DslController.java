@@ -9,7 +9,7 @@ import dsl.utils.DslUtils;
 import entities.cells.CSVTableCell;
 import entities.cells.FYITableCell;
 import enums.FileType;
-import enums.TableType;
+import enums.CellType;
 import exceptions.dsl.InputException;
 import gui.frames.dsl.TextEditor;
 import sgbd.source.table.Table;
@@ -106,14 +106,14 @@ public class DslController {
 			throw new InputException(ConstantController.getString("dsl.error.sameName") +
 							": '" + DslUtils.clearTableName(tableName) + "'");
 
-		TableType tableType;
+		CellType cellType;
 
 		try {
 
 			JsonObject headerFile = new Gson().fromJson(new FileReader(path), JsonObject.class);
-			tableType = headerFile.getAsJsonObject("information").get("file-path").getAsString()
+			cellType = headerFile.getAsJsonObject("information").get("file-path").getAsString()
 					.replaceAll("' | \"", "").endsWith(".dat")
-					? TableType.FYI_TABLE : TableType.CSV_TABLE;
+					? CellType.FYI_TABLE : CellType.CSV_TABLE;
 
 		}catch (FileNotFoundException e){
 
@@ -126,7 +126,7 @@ public class DslController {
 		Table table = Table.loadFromHeader(path);
 		table.open();
 
-		switch (tableType){
+		switch (cellType){
 
 			case CSV_TABLE -> MainController.saveTable(new CSVTableCell(DslUtils.clearTableName(tableName),
 					table, new File(path)));

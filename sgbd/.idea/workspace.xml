@@ -6,31 +6,25 @@
   <component name="ChangeListManager">
     <list default="true" id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/fyi-database.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/mysql-connector-j-8.1.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/ConstantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/ConstantController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/commands/InsertOperationCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/InsertOperationCellCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/TableCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableCreator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/DslController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/DslController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/CSVTableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/CSVTableCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/Cell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/FYITableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/FYITableCell.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/utils/cells/CellUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/utils/cells/CellUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/BaseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/BaseCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/BaseUndoableRedoableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/BaseUndoableRedoableCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/CommandController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/CommandController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/ExecuteOperationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/ExecuteOperationCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/ImportTableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/ImportTableCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertEdgeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/InsertEdgeCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertOperationCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/InsertOperationCellCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertTableCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/InsertTableCellCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/RemoveCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/RemoveCellCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/UndoableRedoableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/UndoableRedoableCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums/TableType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/CellType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/OperationCell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/cells/OperationCell.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/Operation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/Operation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/DslController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/dsl/DslController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/Cell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/cells/Cell.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/main/MainFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/main/MainFrame.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/temp/people.head" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

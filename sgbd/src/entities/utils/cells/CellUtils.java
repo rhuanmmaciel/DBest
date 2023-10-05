@@ -81,8 +81,17 @@ public class CellUtils extends MainController {
         String style = cell.getStyle();
 
         style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKECOLOR, "#FF0000");
-        style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKEWIDTH, "2");
+        style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKEWIDTH, "1");
         MainFrame.getGraph().getModel().setStyle(cell, style);
+        CellUtils.getActiveCell(cell).get().markCell();
+
+    }
+
+    public static void unmarkCell(mxCell jCell){
+
+        Cell cell = CellUtils.getActiveCell(jCell).get();
+        MainFrame.getGraph().getModel().setStyle(jCell, cell.getStyle());
+        cell.unmarkCell();
 
     }
 

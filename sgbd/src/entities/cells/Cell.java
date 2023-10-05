@@ -1,18 +1,16 @@
 package entities.cells;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mxgraph.model.mxCell;
-
 import entities.Column;
 import entities.Coordinates;
 import entities.Tree;
-import entities.utils.cells.CellUtils;
 import entities.utils.RootFinder;
 import entities.utils.TreeUtils;
-
+import entities.utils.cells.CellUtils;
 import sgbd.query.Operator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract sealed class Cell permits TableCell, OperationCell {
 
@@ -33,6 +31,8 @@ public abstract sealed class Cell permits TableCell, OperationCell {
     protected final int width;
 
     protected Tree tree;
+
+    private boolean isMarked = false;
 
     protected Cell(String name, mxCell jCell, int width, int height) {
         this.columns = new ArrayList<>();
@@ -67,6 +67,18 @@ public abstract sealed class Cell permits TableCell, OperationCell {
             (int) this.jCell.getGeometry().getX() + (int) this.jCell.getGeometry().getWidth(),
             (int) this.jCell.getGeometry().getY() + (int) this.jCell.getGeometry().getHeight()
         );
+    }
+
+    public void markCell(){
+        this.isMarked = true;
+    }
+
+    public void unmarkCell(){
+        this.isMarked = false;
+    }
+
+    public boolean isMarked(){
+        return isMarked;
     }
 
     public Tree getTree() {

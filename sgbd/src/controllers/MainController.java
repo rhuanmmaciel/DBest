@@ -18,7 +18,7 @@ import entities.cells.*;
 import entities.utils.TreeUtils;
 import entities.utils.cells.CellUtils;
 import enums.OperationType;
-import enums.TableType;
+import enums.CellType;
 import files.ExportFile;
 import files.FileUtils;
 import controllers.commands.*;
@@ -191,7 +191,8 @@ public class MainController extends MainFrame {
             this.popupMenuJCell.add(this.editMenuItem);
             this.popupMenuJCell.add(this.operationsMenuItem);
             this.popupMenuJCell.add(this.removeMenuItem);
-            this.popupMenuJCell.add(this.markCellMenuItem);
+            this.popupMenuJCell.add(cell.isMarked() ? unmarkCellMenuItem : markCellMenuItem);
+            this.popupMenuJCell.remove(cell.isMarked() ? markCellMenuItem : unmarkCellMenuItem);
 
             if (cell instanceof OperationCell operationCell && !operationCell.hasBeenInitialized()) {
                 this.popupMenuJCell.remove(this.showMenuItem);
@@ -298,6 +299,8 @@ public class MainController extends MainFrame {
             CellUtils.removeCell(this.cell);
         } else if (menuItem == this.markCellMenuItem) {
             CellUtils.markCell(this.cell);
+        } else if (menuItem == this.unmarkCellMenuItem) {
+            CellUtils.unmarkCell(this.cell);
         } else if (menuItem == this.selectionMenuItem) {
             createOperationAction = OperationType.SELECTION.getAction();
             style = OperationType.SELECTION.displayName;
@@ -528,17 +531,17 @@ public class MainController extends MainFrame {
 
         TableCell tableCell = MainController.getTables().get(relation.getName());
 
-        TableType tableType = TableType.fromTableCell(tableCell);
+        CellType cellType = CellType.fromTableCell(tableCell);
 
         mxCell jTableCell = (mxCell) MainFrame
             .getGraph()
             .insertVertex(
                 graph.getDefaultParent(), null, relation.getName(), x, y,
                 ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT,
-                tableType.equals(TableType.FYI_TABLE) ? TableType.FYI_TABLE.id : TableType.CSV_TABLE.id);
+                cellType.equals(CellType.FYI_TABLE) ? CellType.FYI_TABLE.id : CellType.CSV_TABLE.id);
 
         relation.setCell(
-            tableType.equals(TableType.FYI_TABLE)
+            cellType.equals(CellType.FYI_TABLE)
                 ? new FYITableCell((FYITableCell) tableCell, jTableCell)
                 : new CSVTableCell((CSVTableCell) tableCell, jTableCell)
         );
@@ -565,7 +568,7 @@ public class MainController extends MainFrame {
             .getGraph()
             .insertVertex(
                 graph.getDefaultParent(), null, type.getFormattedDisplayName(),
-                x, y, 80, 30, type.displayName
+                x, y, 80, 30, CellType.OPERATION.id
             );
 
         List<Cell> parents = new ArrayList<>(List.of(operationExpression.getSource().getCell()));
