@@ -70,7 +70,7 @@ public class TableCreator {
         headerFile = FileUtils.getFileFromTempDirectory(headerFileName).get();
 
         if (this.mustExport) {
-            this.tableCell = new CSVTableCell(new mxCell(null, new mxGeometry(), ConstantController.JCELL_CSV_STYLE), tableName, columns, table, prototype, headerFile);
+            this.tableCell = new CSVTableCell(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_CSV_STYLE), tableName, columns, table, prototype, headerFile);
             return;
         }
 
@@ -97,7 +97,7 @@ public class TableCreator {
         table.saveHeader(String.format("%s%s", tableName, FileType.HEADER.extension));
 
         if (this.mustExport) {
-            this.tableCell = new FYITableCell(new mxCell(null, new mxGeometry(), ConstantController.JCELL_FYI_STYLE), tableName, columns, table, prototype, headerFile);
+            this.tableCell = new FYITableCell(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_FYI_STYLE), tableName, columns, table, prototype, headerFile);
             return;
         }
 

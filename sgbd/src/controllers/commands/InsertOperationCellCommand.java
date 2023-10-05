@@ -1,13 +1,6 @@
-package gui.commands;
-
-import java.awt.event.MouseEvent;
-
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.apache.commons.lang3.SerializationUtils;
+package controllers.commands;
 
 import com.mxgraph.model.mxCell;
-
 import entities.Action;
 import entities.Action.CreateOperationCellAction;
 import entities.Action.CurrentAction;
@@ -15,8 +8,12 @@ import entities.Action.CurrentAction.ActionType;
 import entities.Edge;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
-
+import enums.CellType;
 import gui.frames.main.MainFrame;
+import org.apache.commons.lang3.SerializationUtils;
+
+import java.awt.event.MouseEvent;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
 
@@ -119,7 +116,7 @@ public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
                 .insertVertex(
                     MainFrame.getGraph().getDefaultParent(), null,
                     createOperationAction.getName(), this.mouseEvent.getX(),
-                    this.mouseEvent.getY(), 80, 30, createOperationAction.getStyle()
+                    this.mouseEvent.getY(), 80, 30, CellType.OPERATION.id
                 );
 
             this.cellReference.set(this.mxCell);

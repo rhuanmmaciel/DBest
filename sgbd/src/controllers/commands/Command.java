@@ -1,4 +1,4 @@
-package gui.commands;
+package controllers.commands;
 
 public interface Command {
 

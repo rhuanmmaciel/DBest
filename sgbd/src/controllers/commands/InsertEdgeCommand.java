@@ -1,22 +1,18 @@
-package gui.commands;
-
-import java.awt.Cursor;
-
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
+package controllers.commands;
 
 import com.mxgraph.model.mxCell;
-
 import controllers.ConstantController;
 import controllers.MainController;
-
 import entities.Action.CurrentAction;
 import entities.Edge;
 import entities.cells.Cell;
 import entities.utils.cells.CellUtils;
 import entities.utils.edges.EdgeUtils;
-
 import gui.frames.main.MainFrame;
+
+import java.awt.*;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class InsertEdgeCommand extends BaseUndoableRedoableCommand {
 

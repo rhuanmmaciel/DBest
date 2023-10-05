@@ -1,4 +1,4 @@
-package gui.commands;
+package controllers.commands;
 
 import java.util.concurrent.atomic.AtomicReference;
 
