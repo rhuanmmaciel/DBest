@@ -221,7 +221,6 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
                             (atomicPane.getAtomicExpression() == null || atomicPane.getAtomicExpression().isEmpty() ||
                             atomicPane.getAtomicExpression().isBlank())) {
                         anyAtomicIncomplete = true;
-                        System.out.println(atomicPane.getAtomicExpression());
                     }
 
                 }

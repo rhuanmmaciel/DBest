@@ -6,68 +6,31 @@
   <component name="ChangeListManager">
     <list default="true" id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/biostats.head" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/fyi-database.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/mysql-connector-j-8.1.0.jar" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/TableUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dsl/utils/DslUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/utils/DslUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/Coordinates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Coordinates.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/Edge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Edge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/OperationCell.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/utils/cells/CellUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/utils/cells/CellUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/ExportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ExportFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/ImportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ImportFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/ExecuteOperationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/ExecuteOperationCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/ImportTableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/ImportTableCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertEdgeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertEdgeCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertOperationCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertOperationCellCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertTableCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/InsertTableCellCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/commands/RemoveCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/commands/RemoveCellCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/CellInformationFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/CellInformationFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/IFormCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/IFormCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/CSVRecognizerForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/CSVRecognizerForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportSQLScriptForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportSQLScriptForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/PrimaryKeyChooserForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/PrimaryKeyChooserForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/AtomicExpressionForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/IOperationForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/OperationForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/AtomicPane.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/ExpressionPane.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/panelstruct/LogicalPane.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/AggregationForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/GroupForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/IndexerForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/ProjectionForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/RenameForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/SortForm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/BaseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/BaseCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/BaseUndoableRedoableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/BaseUndoableRedoableCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/CommandController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/CommandController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/ExecuteOperationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/ExecuteOperationCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/ImportTableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/ImportTableCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertEdgeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/InsertEdgeCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertOperationCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/InsertOperationCellCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/InsertTableCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/InsertTableCellCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/RemoveCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/RemoveCellCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/commands/UndoableRedoableCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/UndoableRedoableCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/OperationErrorVerifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/OperationErrorVerifier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/CartesianProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/CartesianProduct.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/joins/JoinOperators.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/joins/JoinOperators.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/binary/set/SetOperators.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/binary/set/SetOperators.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Aggregation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Group.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Indexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Projection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Projection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Rename.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Rename.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Selection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Selection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/operations/unary/Sort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/unary/Sort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/table.head" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/DslController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/dsl/DslController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/dsl/utils/DslUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/dsl/utils/DslUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/Coordinates.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Coordinates.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/Edge.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/Edge.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/TableCell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/cells/TableCell.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/enums/FileType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/enums/FileType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/CellInformationFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/CellInformationFrame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/OperationCell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/cells/OperationCell.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/main/MainFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/main/MainFrame.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/temp/people.head" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +85,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "last.edited.regexp": "(test.ada)",
-    "last_opened_file_path": "/home/rhuan/Documents/a/DBest/sgbd/src/gui/frames/forms",
+    "last_opened_file_path": "/home/rhuan/Documents/repositories/DBest/sgbd",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -276,11 +239,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/gui/commands/InsertOperationCellCommand.java</url>
-          <line>54</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/dsl/DslController.java</url>
           <line>57</line>
@@ -298,6 +256,11 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/controllers/MainController.java</url>
+          <line>115</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

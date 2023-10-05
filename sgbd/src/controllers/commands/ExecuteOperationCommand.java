@@ -1,4 +1,4 @@
-package gui.commands;
+package controllers.commands;
 
 import com.mxgraph.model.mxCell;
 import entities.Edge;

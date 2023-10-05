@@ -1,4 +1,4 @@
-package gui.commands;
+package controllers.commands;
 
 abstract class BaseCommand implements Command {
 

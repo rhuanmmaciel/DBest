@@ -180,6 +180,7 @@ public final class OperationCell extends Cell {
     }
 
     public void setError(OperationErrorType message) {
+
         String style = this.getJCell().getStyle();
 
         style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKECOLOR, "red");

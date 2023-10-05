@@ -3,6 +3,8 @@ package entities.utils.cells;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxICell;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxStyleUtils;
 import com.mxgraph.view.mxGraph;
 import controllers.ConstantController;
 import controllers.MainController;
@@ -72,6 +74,16 @@ public class CellUtils extends MainController {
         }
 
         jGraph.refresh();
+    }
+
+    public static void markCell(mxCell cell){
+
+        String style = cell.getStyle();
+
+        style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKECOLOR, "#FF0000");
+        style = mxStyleUtils.setStyle(style, mxConstants.STYLE_STROKEWIDTH, "2");
+        MainFrame.getGraph().getModel().setStyle(cell, style);
+
     }
 
     public static void deactivateActiveJCell(mxGraph jGraph, mxCell activeJCell) {
@@ -208,7 +220,7 @@ public class CellUtils extends MainController {
     }
 
     public static void deleteGraph() {
-        int answer = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja deletar todas as árvores?", "Confirmação", JOptionPane.YES_NO_OPTION);
+        int answer = JOptionPane.showConfirmDialog(null, ConstantController.getString("cell.deleteAll"), ConstantController.getString("confirmation"), JOptionPane.YES_NO_OPTION);
 
         if (answer != JOptionPane.YES_OPTION) {
             return;

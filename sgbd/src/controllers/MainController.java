@@ -21,7 +21,7 @@ import enums.OperationType;
 import enums.TableType;
 import files.ExportFile;
 import files.FileUtils;
-import gui.commands.*;
+import controllers.commands.*;
 import gui.frames.CellInformationFrame;
 import gui.frames.ErrorFrame;
 import gui.frames.dsl.Console;
@@ -191,6 +191,7 @@ public class MainController extends MainFrame {
             this.popupMenuJCell.add(this.editMenuItem);
             this.popupMenuJCell.add(this.operationsMenuItem);
             this.popupMenuJCell.add(this.removeMenuItem);
+            this.popupMenuJCell.add(this.markCellMenuItem);
 
             if (cell instanceof OperationCell operationCell && !operationCell.hasBeenInitialized()) {
                 this.popupMenuJCell.remove(this.showMenuItem);
@@ -295,6 +296,8 @@ public class MainController extends MainFrame {
                 });
         } else if (menuItem == this.removeMenuItem) {
             CellUtils.removeCell(this.cell);
+        } else if (menuItem == this.markCellMenuItem) {
+            CellUtils.markCell(this.cell);
         } else if (menuItem == this.selectionMenuItem) {
             createOperationAction = OperationType.SELECTION.getAction();
             style = OperationType.SELECTION.displayName;
@@ -428,7 +431,7 @@ public class MainController extends MainFrame {
             }
         } else if (keyCode == KeyEvent.VK_DELETE) {
             if (this.cell != null) {
-                CellUtils.removeCell(this.cell);
+                this.executeRemoveCellCommand(this.cell);
                 this.setCurrentActionToNone();
             }
         } else if (keyCode == KeyEvent.VK_E) {
