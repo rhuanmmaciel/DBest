@@ -19,11 +19,11 @@ public class GeneralStatsFrame extends JDialog {
         StringJoiner textPaneText = new StringJoiner("\n");
 
         String queryStats = String.format("\n%s:", ConstantController.getString("dataframe.query"));
-        String primaryKeySearchStat = String.format("%s = %s", ConstantController.getString("dataframe.query.pkSearch"), Query.PK_SEARCH);
-        String sortedTuplesStat = String.format("%s = %s", ConstantController.getString("dataframe.query.sortedTuples"), Query.SORT_TUPLES);
-        String filterComparisonStat = String.format("%s = %s", ConstantController.getString("dataframe.query.filterComparison"), Query.COMPARE_FILTER);
-        String joinComparisonStat = String.format("%s = %s", ConstantController.getString("dataframe.query.joinComparison"), Query.COMPARE_JOIN);
-        String distinctTuplesComparisonStat = String.format("%s = %s", ConstantController.getString("dataframe.query.distinctTuplesComparison"), Query.COMPARE_DISTINCT_TUPLE);
+        String primaryKeySearchStat = String.format("%s = %s", ConstantController.getString("PK_SEARCH"), Query.PK_SEARCH);
+        String sortedTuplesStat = String.format("%s = %s", ConstantController.getString("SORT_TUPLES"), Query.SORT_TUPLES);
+        String filterComparisonStat = String.format("%s = %s", ConstantController.getString("COMPARE_FILTER"), Query.COMPARE_FILTER);
+        String joinComparisonStat = String.format("%s = %s", ConstantController.getString("COMPARE_JOIN"), Query.COMPARE_JOIN);
+        String distinctTuplesComparisonStat = String.format("%s = %s", ConstantController.getString("COMPARE_DISTINCT_TUPLE"), Query.COMPARE_DISTINCT_TUPLE);
 
         textPaneText.add(queryStats);
         textPaneText.add(primaryKeySearchStat);
@@ -34,12 +34,12 @@ public class GeneralStatsFrame extends JDialog {
         textPaneText.add("");
 
         String diskStats = String.format("\n%s:", ConstantController.getString("dataframe.disk"));
-        String ioSeekWriteTimeStat = String.format("%s = %fms", ConstantController.getString("dataframe.disk.IOSeekWriteTime"), (Parameters.IO_SEEK_WRITE_TIME ) / 1000000f);
-        String ioWriteTimeStat = String.format("%s = %fms", ConstantController.getString("dataframe.disk.IOWriteTime"), (Parameters.IO_SEEK_WRITE_TIME ) / 1000000f);
-        String ioSeekReadTimeStat = String.format("%s = %fms", ConstantController.getString("dataframe.disk.IOSeekReadTime"), (Parameters.IO_SEEK_READ_TIME ) / 1000000f);
-        String ioReadTimeStat = String.format("%s = %fms", ConstantController.getString("dataframe.disk.IOReadTime"), (Parameters.IO_READ_TIME ) / 1000000f);
-        String ioSyncTimeStat = String.format("%s = %fms", ConstantController.getString("dataframe.disk.IOSyncTime"), (Parameters.IO_SYNC_TIME ) / 1000000f);
-        String ioTimeStat = String.format("%s = %fms", ConstantController.getString("dataframe.disk.IOTime"), (Parameters.IO_SYNC_TIME + Parameters.IO_SEEK_WRITE_TIME + Parameters.IO_READ_TIME + Parameters.IO_SEEK_READ_TIME + Parameters.IO_WRITE_TIME ) / 1000000f);
+        String ioSeekWriteTimeStat = String.format("%s = %fms", ConstantController.getString("IO_SEEK_WRITE_TIME"), (Parameters.IO_SEEK_WRITE_TIME ) / 1000000f);
+        String ioWriteTimeStat = String.format("%s = %fms", ConstantController.getString("IO_WRITE_TIME"), (Parameters.IO_SEEK_WRITE_TIME ) / 1000000f);
+        String ioSeekReadTimeStat = String.format("%s = %fms", ConstantController.getString("IO_SEEK_READ_TIME"), (Parameters.IO_SEEK_READ_TIME ) / 1000000f);
+        String ioReadTimeStat = String.format("%s = %fms", ConstantController.getString("IO_READ_TIME"), (Parameters.IO_READ_TIME ) / 1000000f);
+        String ioSyncTimeStat = String.format("%s = %fms", ConstantController.getString("IO_SYNC_TIME"), (Parameters.IO_SYNC_TIME ) / 1000000f);
+        String ioTimeStat = String.format("%s = %fms", ConstantController.getString("IO_TOTAL_TIME"), (Parameters.IO_SYNC_TIME + Parameters.IO_SEEK_WRITE_TIME + Parameters.IO_READ_TIME + Parameters.IO_SEEK_READ_TIME + Parameters.IO_WRITE_TIME ) / 1000000f);
         String blocksLoadedStat = String.format("%s = %d", ConstantController.getString("dataframe.disk.loaded"), Parameters.BLOCK_LOADED);
         String blocksSavedStat = String.format("%s = %d", ConstantController.getString("dataframe.disk.saved"), Parameters.BLOCK_SAVED);
 

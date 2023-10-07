@@ -3,6 +3,7 @@ package controllers;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.util.mxEvent;
+import controllers.commands.*;
 import dsl.entities.BinaryExpression;
 import dsl.entities.OperationExpression;
 import dsl.entities.Relation;
@@ -17,14 +18,14 @@ import entities.buttons.OperationButton;
 import entities.cells.*;
 import entities.utils.TreeUtils;
 import entities.utils.cells.CellUtils;
-import enums.OperationType;
 import enums.CellType;
+import enums.OperationType;
 import files.ExportFile;
 import files.FileUtils;
-import controllers.commands.*;
 import gui.frames.CellInformationFrame;
+import gui.frames.ComparatorFrame;
 import gui.frames.ErrorFrame;
-import gui.frames.dsl.Console;
+import gui.frames.dsl.ConsoleFrame;
 import gui.frames.dsl.TextEditor;
 import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.ExportAsForm;
@@ -60,7 +61,9 @@ public class MainController extends MainFrame {
 
     private static File lastDirectory = new File("");
 
-    public static Console console = null;
+    public static ConsoleFrame consoleFrame = null;
+
+    public static ComparatorFrame comparatorFrame = null;
 
     private static int currentTableYPosition = 0;
 
@@ -127,6 +130,7 @@ public class MainController extends MainFrame {
                 case CREATE_TABLE_CELL -> this.createNewTable(CurrentAction.ActionType.CREATE_TABLE_CELL);
                 case OPEN_CONSOLE -> this.openConsole();
                 case OPEN_TEXT_EDITOR -> this.changeScreen();
+                case OPEN_COMPARATOR -> this.openComparator();
             }
 
             if (clickedButton instanceof OperationButton clickedOperationButton) {
@@ -349,14 +353,25 @@ public class MainController extends MainFrame {
     }
 
     private void openConsole() {
-        if (console == null) {
-            console = new Console();
+        if (consoleFrame == null) {
+            consoleFrame = new ConsoleFrame();
             return;
         }
 
-        console.setLocationRelativeTo(null);
-        console.setExtendedState(Frame.NORMAL);
-        console.toFront();
+        consoleFrame.setLocationRelativeTo(null);
+        consoleFrame.setExtendedState(Frame.NORMAL);
+        consoleFrame.toFront();
+    }
+
+    private void openComparator() {
+        if (comparatorFrame == null) {
+            comparatorFrame = new ComparatorFrame();
+            return;
+        }
+
+        comparatorFrame.setLocationRelativeTo(null);
+        comparatorFrame.setExtendedState(Frame.NORMAL);
+        comparatorFrame.toFront();
     }
 
     private void changeScreen() {

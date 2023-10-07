@@ -46,7 +46,7 @@ public class Operation {
 			oldGeometry.getX(), oldGeometry.getY(), textWidth, oldGeometry.getHeight()
 		);
 
-		if(CellUtils.getActiveCell(jCell).get().isMarked()) CellUtils.markCell(jCell);
+		if(cell.isMarked()) CellUtils.markCell(jCell);
 
 		MainFrame.getGraph().getModel().setGeometry(jCell, newGeometry);
 

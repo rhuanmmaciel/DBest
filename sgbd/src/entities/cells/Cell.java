@@ -1,6 +1,7 @@
 package entities.cells;
 
 import com.mxgraph.model.mxCell;
+import database.TuplesExtractor;
 import entities.Column;
 import entities.Coordinates;
 import entities.Tree;
@@ -159,6 +160,16 @@ public abstract sealed class Cell permits TableCell, OperationCell {
         }
 
         return null;
+    }
+
+    public CellStats getCellStats(){
+
+        CellStats initialCellStats = CellStats.getTotalCurrentStats();
+
+        TuplesExtractor.getAllRows(operator, true);
+
+        return CellStats.getTotalCurrentStats().getDiff(initialCellStats);
+
     }
 
     public List<Cell> getSources() {

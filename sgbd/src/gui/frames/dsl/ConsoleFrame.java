@@ -1,40 +1,27 @@
 package gui.frames.dsl;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyledDocument;
-
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
 import controllers.ConstantController;
-
+import controllers.MainController;
 import dsl.AntlrController;
 import dsl.DslController;
 import dsl.DslErrorListener;
 import dsl.antlr4.RelAlgebraLexer;
 import dsl.antlr4.RelAlgebraParser;
-
 import exceptions.dsl.InputException;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-public class Console extends JFrame implements ActionListener, KeyListener {
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyledDocument;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ConsoleFrame extends JFrame implements ActionListener, KeyListener {
 
     private JTextField textField;
 
@@ -48,7 +35,7 @@ public class Console extends JFrame implements ActionListener, KeyListener {
 
     private Integer index = null;
 
-    public Console() {
+    public ConsoleFrame() {
         this.initGUI();
     }
 
@@ -56,6 +43,14 @@ public class Console extends JFrame implements ActionListener, KeyListener {
         this.setSize(400, 400);
         this.setLocationRelativeTo(null);
         this.setTitle(ConstantController.getString("console"));
+
+        this.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent event) {
+                MainController.consoleFrame = null;
+            }
+        });
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         this.setContentPane(mainPanel);

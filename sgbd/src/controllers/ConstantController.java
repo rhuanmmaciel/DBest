@@ -56,6 +56,8 @@ public class ConstantController {
 
     public static final int UI_SCREEN_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.7);
 
+    public static final Dimension SCREEN_SIZE = new Dimension(UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT);
+
     public static final String J_CELL_FYI_STYLE = "fyi";
 
     public static final String J_CELL_CSV_STYLE = "csv";

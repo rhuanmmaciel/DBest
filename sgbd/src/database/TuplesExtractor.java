@@ -1,16 +1,13 @@
 package database;
 
-import java.util.*;
-
 import controllers.ConstantController;
-
 import entities.Column;
-
 import sgbd.prototype.RowData;
 import sgbd.prototype.query.Tuple;
 import sgbd.query.Operator;
-
 import utils.Utils;
+
+import java.util.*;
 
 public class TuplesExtractor {
 

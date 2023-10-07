@@ -1,11 +1,10 @@
 package entities;
 
-import java.io.Serializable;
-
 import com.mxgraph.model.mxCell;
-
 import entities.cells.TableCell;
 import enums.OperationType;
+
+import java.io.Serializable;
 
 public class Action implements Serializable {
 
@@ -13,7 +12,7 @@ public class Action implements Serializable {
 
 		public enum ActionType {
 			CREATE_EDGE, CREATE_OPERATOR_CELL, DELETE_CELL, DELETE_ALL, PRINT_SCREEN, SHOW_CELL,
-			IMPORT_FILE, CREATE_TABLE_CELL, OPEN_CONSOLE, OPEN_TEXT_EDITOR, CREATE_DB_CONNECTION, NONE
+			IMPORT_FILE, CREATE_TABLE_CELL, OPEN_CONSOLE, OPEN_TEXT_EDITOR, OPEN_COMPARATOR, NONE
 		}
 
 		private final ActionType type;

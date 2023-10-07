@@ -32,8 +32,8 @@ public abstract class JoinOperators implements IOperator {
             errorType = OperationErrorType.NULL_ARGUMENT;
             OperationErrorVerifier.noNullArgument(arguments);
 
-            errorType = OperationErrorType.NO_TWO_ARGUMENTS;
-            OperationErrorVerifier.twoArguments(arguments);
+            errorType = OperationErrorType.NO_ONE_ARGUMENT;
+            OperationErrorVerifier.oneArgument(arguments);
 
             errorType = OperationErrorType.NO_PARENT;
             OperationErrorVerifier.hasParent(cell);

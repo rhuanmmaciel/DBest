@@ -235,6 +235,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         setCSVCellStyle();
         setFYICellStyle();
         setOperationCellStyle();
+        setMemoryCellStyle();
 
     }
 
@@ -271,7 +272,6 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
         style.put(mxConstants.STYLE_FILLCOLOR, "none");
         style.put(mxConstants.STYLE_STROKECOLOR, "none");
-//        style.put(mxConstants.STYLE_SHADOW, String.valueOf(true));
 
         String customStyle = CellType.OPERATION.id;
 
@@ -321,6 +321,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s", ConstantController.getString("toolBarButtons.screenshot")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.PRINT_SCREEN)));
         this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s", ConstantController.getString("toolBarButtons.console")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.OPEN_CONSOLE)));
         this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s", ConstantController.getString("toolBarButtons.textEditor")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.OPEN_TEXT_EDITOR)));
+        this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s", ConstantController.getString("toolBarButtons.comparator")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.OPEN_COMPARATOR)));
     }
 
     private void setTablesSavedConfig() {

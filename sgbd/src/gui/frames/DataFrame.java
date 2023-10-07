@@ -1,45 +1,28 @@
 package gui.frames;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Window;
+import controllers.ConstantController;
+import database.TuplesExtractor;
+import engine.info.Parameters;
+import entities.Column;
+import entities.cells.Cell;
+import entities.cells.OperationCell;
+import gui.utils.JTableUtils;
+import org.kordamp.ikonli.dashicons.Dashicons;
+import org.kordamp.ikonli.swing.FontIcon;
+import sgbd.info.Query;
+import sgbd.query.Operator;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
-import org.kordamp.ikonli.dashicons.Dashicons;
-import org.kordamp.ikonli.swing.FontIcon;
-
-import controllers.ConstantController;
-
-import database.TuplesExtractor;
-
-import engine.info.Parameters;
-
-import entities.Column;
-import entities.cells.Cell;
-import entities.cells.OperationCell;
-
-import gui.utils.JTableUtils;
-
-import sgbd.info.Query;
-import sgbd.query.Operator;
 
 public class DataFrame extends JDialog implements ActionListener {
 
@@ -92,6 +75,18 @@ public class DataFrame extends JDialog implements ActionListener {
     private final long INITIAL_BLOCK_LOADED = Parameters.BLOCK_LOADED;
 
     private final long INITIAL_BLOCK_SAVED = Parameters.BLOCK_SAVED;
+
+    public final long INITIAL_MEMORY_ALLOCATED_BY_BLOCKS = Parameters.MEMORY_ALLOCATED_BY_BLOCKS;
+
+    public final long INITIAL_MEMORY_ALLOCATED_BY_DIRECT_BLOCKS = Parameters.MEMORY_ALLOCATED_BY_DIRECT_BLOCKS;
+
+    public final long INITIAL_MEMORY_ALLOCATED_BY_INDIRECT_BLOCKS = Parameters.MEMORY_ALLOCATED_BY_INDIRECT_BLOCKS;
+
+    public final long INITIAL_MEMORY_ALLOCATED_BY_RECORDS = Parameters.MEMORY_ALLOCATED_BY_RECORDS;
+
+    public final long INITIAL_MEMORY_ALLOCATED_BY_COMMITTABLE_BLOCKS = Parameters.MEMORY_ALLOCATED_BY_COMMITTABLE_BLOCKS;
+
+    public final long INITIAL_MEMORY_ALLOCATED_BY_BYTE_ARRAY = Parameters.MEMORY_ALLOCATED_BY_BYTE_ARRAY;
 
     private final List<Map<String, String>> rows;
 
@@ -328,9 +323,73 @@ public class DataFrame extends JDialog implements ActionListener {
     }
 
     private void updateStats() {
-        String stats = ConstantController.getString("dataframe.query") + ":\n" + ConstantController.getString("dataframe.query.pkSearch") + " = " + (Query.PK_SEARCH - this.INITIAL_PK_SEARCH) + "\n" + ConstantController.getString("dataframe.query.sortedTuples") + " = " + (Query.SORT_TUPLES - this.INITIAL_SORT_TUPLES) + "\n" + ConstantController.getString("dataframe.query.filterComparison") + " = " + (Query.COMPARE_FILTER - this.INITIAL_COMPARE_FILTER) + "\n" + ConstantController.getString("dataframe.query.joinComparison") + " = " + (Query.COMPARE_JOIN - this.INITIAL_COMPARE_JOIN) + "\n" + ConstantController.getString("dataframe.query.distinctTuplesComparison") + " = " + (Query.COMPARE_DISTINCT_TUPLE - this.INITIAL_DISTINCT_TUPLE) + "\n\n" + ConstantController.getString("dataframe.disk") + ":" + "\n" + ConstantController.getString("dataframe.disk.IOSeekWriteTime") + " = " + (Parameters.IO_SEEK_WRITE_TIME - this.INITIAL_IO_SEEK_WRITE_TIME) / 1000000f + "ms" + "\n" + ConstantController.getString("dataframe.disk.IOWriteTime") + " = " + (Parameters.IO_WRITE_TIME - this.INITIAL_IO_WRITE_TIME) / 1000000f + "ms" + "\n" + ConstantController.getString("dataframe.disk.IOSeekReadTime") + " = " + (Parameters.IO_SEEK_READ_TIME - this.INITIAL_IO_SEEK_READ_TIME) / 1000000f + "ms" + "\n" + ConstantController.getString("dataframe.disk.IOReadTime") + " = " + (Parameters.IO_READ_TIME - this.INITIAL_IO_READ_TIME) / 1000000f + "ms" + "\n" + ConstantController.getString("dataframe.disk.IOSyncTime") + " = " + (Parameters.IO_SYNC_TIME - this.INITIAL_IO_SYNC_TIME) / 1000000f + "ms" + "\n" + ConstantController.getString("dataframe.disk.IOTime") + " = " + (Parameters.IO_SYNC_TIME + Parameters.IO_SEEK_WRITE_TIME + Parameters.IO_READ_TIME + Parameters.IO_SEEK_READ_TIME + Parameters.IO_WRITE_TIME - this.INITIAL_IO_TOTAL_TIME) / 1000000f + "ms" + "\n" + ConstantController.getString("dataframe.block.loaded") + " = " + (Parameters.BLOCK_LOADED - this.INITIAL_BLOCK_LOADED) + "\n" + ConstantController.getString("dataframe.block.saved") + " = " + (Parameters.BLOCK_SAVED - this.INITIAL_BLOCK_SAVED);
 
-        this.textPane.setText(stats);
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(ConstantController.getString("dataframe.query"))
+                .append(":\n")
+                .append(ConstantController.getString("PK_SEARCH"))
+                .append(" = ")
+                .append(Query.PK_SEARCH - this.INITIAL_PK_SEARCH)
+                .append("\n")
+                .append(ConstantController.getString("SORT_TUPLES"))
+                .append(" = ")
+                .append(Query.SORT_TUPLES - this.INITIAL_SORT_TUPLES)
+                .append("\n")
+                .append(ConstantController.getString("COMPARE_FILTER"))
+                .append(" = ")
+                .append(Query.COMPARE_FILTER - this.INITIAL_COMPARE_FILTER)
+                .append("\n")
+                .append(ConstantController.getString("COMPARE_JOIN"))
+                .append(" = ")
+                .append(Query.COMPARE_JOIN - this.INITIAL_COMPARE_JOIN)
+                .append("\n")
+                .append(ConstantController.getString("COMPARE_DISTINCT_TUPLE"))
+                .append(" = ")
+                .append(Query.COMPARE_DISTINCT_TUPLE - this.INITIAL_DISTINCT_TUPLE)
+                .append("\n\n")
+                .append(ConstantController.getString("dataframe.disk"))
+                .append(":")
+                .append("\n")
+                .append(ConstantController.getString("IO_SEEK_WRITE_TIME"))
+                .append(" = ")
+                .append((Parameters.IO_SEEK_WRITE_TIME - this.INITIAL_IO_SEEK_WRITE_TIME) / 1000000f)
+                .append("ms")
+                .append("\n")
+                .append(ConstantController.getString("IO_WRITE_TIME"))
+                .append(" = ").append((Parameters.IO_WRITE_TIME - this.INITIAL_IO_WRITE_TIME) / 1000000f)
+                .append("ms")
+                .append("\n")
+                .append(ConstantController.getString("IO_SEEK_READ_TIME"))
+                .append(" = ")
+                .append((Parameters.IO_SEEK_READ_TIME - this.INITIAL_IO_SEEK_READ_TIME) / 1000000f)
+                .append("ms")
+                .append("\n")
+                .append(ConstantController.getString("IO_READ_TIME"))
+                .append(" = ")
+                .append((Parameters.IO_READ_TIME - this.INITIAL_IO_READ_TIME) / 1000000f)
+                .append("ms")
+                .append("\n")
+                .append(ConstantController.getString("IO_SYNC_TIME"))
+                .append(" = ")
+                .append((Parameters.IO_SYNC_TIME - this.INITIAL_IO_SYNC_TIME) / 1000000f)
+                .append("ms")
+                .append("\n")
+                .append(ConstantController.getString("IO_TOTAL_TIME"))
+                .append(" = ")
+                .append((Parameters.IO_SYNC_TIME + Parameters.IO_SEEK_WRITE_TIME + Parameters.IO_READ_TIME + Parameters.IO_SEEK_READ_TIME + Parameters.IO_WRITE_TIME - this.INITIAL_IO_TOTAL_TIME) / 1000000f)
+                .append("ms")
+                .append("\n")
+                .append(ConstantController.getString("BLOCK_LOADED"))
+                .append(" = ")
+                .append(Parameters.BLOCK_LOADED - this.INITIAL_BLOCK_LOADED)
+                .append("\n")
+                .append(ConstantController.getString("BLOCK_SAVED"))
+                .append(" = ")
+                .append(Parameters.BLOCK_SAVED - this.INITIAL_BLOCK_SAVED)
+                .append("\n");
+
+        this.textPane.setText(sb.toString());
 
         this.revalidate();
     }
