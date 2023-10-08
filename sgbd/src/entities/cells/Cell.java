@@ -8,6 +8,7 @@ import entities.Tree;
 import entities.utils.RootFinder;
 import entities.utils.TreeUtils;
 import entities.utils.cells.CellUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import sgbd.query.Operator;
 
 import java.util.ArrayList;
@@ -162,13 +163,21 @@ public abstract sealed class Cell permits TableCell, OperationCell {
         return null;
     }
 
-    public CellStats getCellStats(){
+    public void openOperator(){
+        operator.open();
+    }
 
-        CellStats initialCellStats = CellStats.getTotalCurrentStats();
+    public void closeOperator(){
+        operator.close();
+    }
 
-        TuplesExtractor.getAllRows(operator, true);
+    public void freeOperatorResources(){
+        operator.freeResources();
+    }
 
-        return CellStats.getTotalCurrentStats().getDiff(initialCellStats);
+    public Pair<Integer, CellStats> getCellStats(int amountOfTuples, CellStats initialCellStats){
+
+        return Pair.of(TuplesExtractor.getRows(operator, true, amountOfTuples).size(), CellStats.getTotalCurrentStats().getDiff(initialCellStats));
 
     }
 

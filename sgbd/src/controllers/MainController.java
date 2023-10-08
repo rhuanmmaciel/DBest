@@ -198,6 +198,13 @@ public class MainController extends MainFrame {
             this.popupMenuJCell.add(cell.isMarked() ? unmarkCellMenuItem : markCellMenuItem);
             this.popupMenuJCell.remove(cell.isMarked() ? markCellMenuItem : unmarkCellMenuItem);
 
+            if(cell.getTree().getCells().stream().anyMatch(Cell::isMarked) && !cell.isMarked()){
+
+                this.popupMenuJCell.remove(unmarkCellMenuItem);
+                this.popupMenuJCell.remove(markCellMenuItem);
+
+            }
+
             if (cell instanceof OperationCell operationCell && !operationCell.hasBeenInitialized()) {
                 this.popupMenuJCell.remove(this.showMenuItem);
                 this.popupMenuJCell.remove(this.operationsMenuItem);

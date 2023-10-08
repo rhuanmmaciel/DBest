@@ -53,6 +53,30 @@ public record CellStats(
         );
     }
 
+    public CellStats getSum(CellStats cellStats2){
+        return new CellStats(
+                PK_SEARCH + cellStats2.PK_SEARCH,
+                SORT_TUPLES + cellStats2.SORT_TUPLES,
+                COMPARE_FILTER + cellStats2.COMPARE_FILTER,
+                COMPARE_JOIN + cellStats2.COMPARE_JOIN,
+                COMPARE_DISTINCT_TUPLE + cellStats2.COMPARE_DISTINCT_TUPLE,
+                IO_SEEK_WRITE_TIME + cellStats2.IO_SEEK_WRITE_TIME,
+                IO_WRITE_TIME + cellStats2.IO_WRITE_TIME,
+                IO_SEEK_READ_TIME + cellStats2.IO_SEEK_READ_TIME,
+                IO_READ_TIME + cellStats2.IO_READ_TIME,
+                IO_SYNC_TIME + cellStats2.IO_SYNC_TIME,
+                IO_TOTAL_TIME + cellStats2.IO_TOTAL_TIME,
+                BLOCK_LOADED + cellStats2.BLOCK_LOADED,
+                BLOCK_SAVED + cellStats2.BLOCK_SAVED,
+                MEMORY_ALLOCATED_BY_BLOCKS + cellStats2.MEMORY_ALLOCATED_BY_BLOCKS,
+                MEMORY_ALLOCATED_BY_DIRECT_BLOCKS + cellStats2.MEMORY_ALLOCATED_BY_DIRECT_BLOCKS,
+                MEMORY_ALLOCATED_BY_INDIRECT_BLOCKS + cellStats2.MEMORY_ALLOCATED_BY_INDIRECT_BLOCKS,
+                MEMORY_ALLOCATED_BY_RECORDS + cellStats2.MEMORY_ALLOCATED_BY_RECORDS,
+                MEMORY_ALLOCATED_BY_COMMITTABLE_BLOCKS + cellStats2.MEMORY_ALLOCATED_BY_COMMITTABLE_BLOCKS,
+                MEMORY_ALLOCATED_BY_BYTE_ARRAY + cellStats2.MEMORY_ALLOCATED_BY_BYTE_ARRAY
+        );
+    }
+
     public static CellStats getTotalCurrentStats(){
         return new CellStats(
                 Query.PK_SEARCH,

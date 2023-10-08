@@ -10,7 +10,6 @@ import gui.utils.JTableUtils;
 import org.kordamp.ikonli.dashicons.Dashicons;
 import org.kordamp.ikonli.swing.FontIcon;
 import sgbd.info.Query;
-import sgbd.query.Operator;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -94,7 +93,7 @@ public class DataFrame extends JDialog implements ActionListener {
 
     private int currentIndex;
 
-    private final Operator operator;
+    private final Cell cell;
 
     private Integer lastPage = null;
 
@@ -111,8 +110,9 @@ public class DataFrame extends JDialog implements ActionListener {
             this.lblText.setText(cell.getName() + ":");
         }
 
-        this.operator = cell.getOperator();
-        this.operator.open();
+        this.cell = cell;
+
+        cell.openOperator();
 
         this.columnsName = cell.getColumnSourcesAndNames();
 
@@ -169,7 +169,7 @@ public class DataFrame extends JDialog implements ActionListener {
         this.currentLastPage = Math.max(this.currentLastPage, page);
 
         if (!this.rows.isEmpty()) {
-            for (Map.Entry<String, List<String>> columns : this.operator.getContentInfo().entrySet()) {
+            for (Map.Entry<String, List<String>> columns : this.cell.getOperator().getContentInfo().entrySet()) {
                 for (String columnName : columns.getValue()) {
                     model.addColumn(Column.composeSourceAndName(columns.getKey(), columnName));
                 }
@@ -213,12 +213,12 @@ public class DataFrame extends JDialog implements ActionListener {
 
     private void getTuples(int currentElement, int page, int lastElement) {
         if (page > this.currentLastPage) {
-            Map<String, String> row = TuplesExtractor.getRow(this.operator, true);
+            Map<String, String> row = TuplesExtractor.getRow(this.cell.getOperator(), true);
 
             while (row != null && currentElement < lastElement) {
                 this.rows.add(row);
 
-                row = TuplesExtractor.getRow(this.operator, true);
+                row = TuplesExtractor.getRow(this.cell.getOperator(), true);
 
                 if (row != null) currentElement++;
 
@@ -415,8 +415,8 @@ public class DataFrame extends JDialog implements ActionListener {
     }
 
     private void closeWindow() {
-        this.operator.close();
-        this.operator.freeResources();
+        this.cell.closeOperator();
+        this.cell.freeOperatorResources();
         this.dispose();
     }
 }

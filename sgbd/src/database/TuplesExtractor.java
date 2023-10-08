@@ -34,6 +34,25 @@ public class TuplesExtractor {
         return rows;
     }
 
+    public static List<Map<String, String>> getRows(Operator operator, boolean sourceAndName, int amount){
+
+        if(amount <= 0)
+            throw new IllegalArgumentException();
+
+        List<Map<String, String>> rows = new ArrayList<>();
+
+        for(int i = 0; i < amount; i++) {
+            Map<String, String> row = getRow(operator, sourceAndName);
+            if(row == null) return rows;
+
+            rows.add(row);
+        }
+
+        return rows;
+
+    }
+
+
     public static Map<String, String> getRow(Operator operator, boolean sourceAndName) {
         if (operator == null) return null;
 
