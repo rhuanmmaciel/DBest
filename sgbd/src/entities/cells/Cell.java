@@ -1,12 +1,14 @@
 package entities.cells;
 
 import com.mxgraph.model.mxCell;
+
 import entities.Column;
 import entities.Coordinates;
 import entities.Tree;
 import entities.utils.RootFinder;
 import entities.utils.TreeUtils;
 import entities.utils.cells.CellUtils;
+
 import sgbd.query.Operator;
 
 import java.util.ArrayList;

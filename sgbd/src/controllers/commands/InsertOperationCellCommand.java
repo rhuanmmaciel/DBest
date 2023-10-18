@@ -49,7 +49,7 @@ public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
 
     @Override
     public void execute() {
-        CurrentAction currentAction = this.currentActionReferenceCopy.get();
+        CurrentAction currentAction = this.currentActionReference.get();
         this.currentActionType = currentAction.getType();
 
         if (this.currentActionType == CurrentAction.ActionType.NONE) {
@@ -110,7 +110,7 @@ public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
     }
 
     private void insertCell() {
-        if (this.currentActionReferenceCopy.get() instanceof CreateOperationCellAction createOperationAction) {
+        if (this.currentActionReference.get() instanceof CreateOperationCellAction createOperationAction) {
             this.mxCell = (mxCell) MainFrame
                 .getGraph()
                 .insertVertex(
@@ -127,13 +127,13 @@ public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
                 this.edgeReference.get().addChild(this.mxCell);
 
                 this.currentActionType = ActionType.CREATE_EDGE;
-                this.currentActionReferenceCopy.set(new CurrentAction(this.currentActionType));
+                this.currentActionReference.set(new CurrentAction(this.currentActionType));
 
                 this.cellReference.set(this.mxCell);
 
                 this.removeCell(this.ghostCellReference);
             }
-        } else if (this.currentActionReferenceCopy.get() instanceof Action.CreateTableCellAction createTableAction) {
+        } else if (this.currentActionReference.get() instanceof Action.CreateTableCellAction createTableAction) {
             this.mxCell = createTableAction.getTableCell().getJCell();
             this.cellReference.set(this.mxCell);
 
