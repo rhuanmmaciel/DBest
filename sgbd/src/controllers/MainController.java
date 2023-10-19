@@ -195,8 +195,8 @@ public class MainController extends MainFrame {
             this.popupMenuJCell.add(this.editMenuItem);
             this.popupMenuJCell.add(this.operationsMenuItem);
             this.popupMenuJCell.add(this.removeMenuItem);
-            this.popupMenuJCell.add(cell.isMarked() ? unmarkCellMenuItem : markCellMenuItem);
-            this.popupMenuJCell.remove(cell.isMarked() ? markCellMenuItem : unmarkCellMenuItem);
+            this.popupMenuJCell.add(cell.isMarked() ? this.unmarkCellMenuItem : this.markCellMenuItem);
+            this.popupMenuJCell.remove(cell.isMarked() ? this.markCellMenuItem : this.unmarkCellMenuItem);
 
             if(cell.getTree().getCells().stream().anyMatch(Cell::isMarked) && !cell.isMarked()){
 
@@ -263,7 +263,7 @@ public class MainController extends MainFrame {
 
         if (
             this.currentActionReference.get().getType() == ActionType.CREATE_EDGE &&
-                this.invisibleCellReference.get() == null
+            this.invisibleCellReference.get() == null
         ) {
             command.execute();
         } else if (this.currentActionReference.get().getType() != ActionType.NONE) {
@@ -360,6 +360,7 @@ public class MainController extends MainFrame {
     }
 
     private void openConsole() {
+
         if (consoleFrame == null) {
             consoleFrame = new ConsoleFrame();
             return;

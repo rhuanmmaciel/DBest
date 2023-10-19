@@ -1,262 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AutoImportSettings">
-    <option name="autoReloadType" value="ALL" />
+    <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="">
+    <list default="true" id="ad789c8e-f9b5-452f-9694-e96ff8a2beb6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/fy_database.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/fyi_database.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/TuplesExtractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TuplesExtractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/commands/InsertOperationCellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/commands/InsertOperationCellCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/cells/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/Cell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/CellStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/CellStats.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/ComparatorFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/ComparatorFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/DataFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/DataFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/Cell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/cells/Cell.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="CodeInsightWorkspaceSettings">
-    <option name="optimizeImportsOnTheFly" value="true" />
-  </component>
-  <component name="ExportToHTMLSettings">
-    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/exportToHTML" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Interface" />
-        <option value="Class" />
-        <option value="Record" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 4
 }</component>
-  <component name="ProjectId" id="2N7Fm22tmVRMhvb4One7H5necsj" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
+  <component name="ProjectId" id="2WMf5mBZdFjwpmDVbZG4xiTfzQO" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last.edited.regexp&quot;: &quot;(test.ada)&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/rhuan/Documents/repositories/DBest/sgbd&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.build.tools.auto.reload&quot;: &quot;ALL&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Java&quot;,
-    &quot;two.files.diff.last.used.file&quot;: &quot;C:/Users/wisentini/dev/DBest/sgbd/src/files/ImportFile.java&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "marcos",
+    "last_opened_file_path": "C:/Users/wisentini/dev/jdsv",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/gui/frames/forms" />
-      <recent name="$PROJECT_DIR$/src/dsl" />
-      <recent name="C:\Users\wisentini\dev\DBest\sgbd\src\database\connection" />
-      <recent name="C:\Users\wisentini\dev\DBest\sgbd\src\gui\frames\forms\operations" />
-      <recent name="C:\Users\wisentini\dev\DBest\sgbd\src" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/dsl/antlr4" />
-      <recent name="$PROJECT_DIR$/src/dsl/antlr4/grammar" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="entities.utils.edges" />
-      <recent name="entities.utils.cells" />
-      <recent name="listeners" />
-      <recent name="gui.frames.forms.operations" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="tests" />
-      <recent name="gui.commands" />
-      <recent name="enums" />
-      <recent name="gui.frames.forms.importexport" />
-      <recent name="controller" />
-    </key>
-  </component>
-  <component name="RunAnythingCache">
-    <option name="myCommands">
-      <command value="clear" />
-    </option>
-  </component>
+}]]></component>
   <component name="RunManager">
-    <configuration name="sgbd" type="Application" factoryName="Application">
+    <configuration name="DBest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="application.DBest" />
       <module name="sgbd" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="application.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="Babashka" factoryName="BabashkaLocalRepl" activateToolWindowBeforeRun="false">
-      <setting name="displayName" value="" />
-      <setting name="bbPath" value="" />
-      <setting name="parameters" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <setting name="workingDir" value="" />
-      <setting name="focusEditor" value="false" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
-      <option name="configVersion" value="1" />
-      <option name="options" />
-      <option name="profiles" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="ClojureREPL" factoryName="Remote" activateToolWindowBeforeRun="false">
-      <setting name="displayName" value="" />
-      <setting name="host" value="" />
-      <setting name="port" value="0" />
-      <setting name="replType" value="SOCKET" />
-      <setting name="configType" value="SPECIFY" />
-      <setting name="replPortFileType" value="STANDARD" />
-      <setting name="customPortFile" value="" />
-      <setting name="fixLineNumbers" value="false" />
-      <setting name="focusEditor" value="false" />
-      <method v="2" />
-    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.DBest" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="346fe464-1e23-40d4-b8c3-a07433640546" name="Changes" comment="" />
-      <created>1679007371078</created>
+      <changelist id="ad789c8e-f9b5-452f-9694-e96ff8a2beb6" name="Changes" comment="" />
+      <created>1696547192091</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1679007371078</updated>
-      <workItem from="1690052016075" duration="11829000" />
-      <workItem from="1690287690833" duration="39940000" />
-      <workItem from="1690372881157" duration="32314000" />
-      <workItem from="1690456412049" duration="1197000" />
-      <workItem from="1690576259663" duration="14962000" />
-      <workItem from="1690630119151" duration="11251000" />
-      <workItem from="1690720555908" duration="3418000" />
-      <workItem from="1690744344402" duration="11430000" />
-      <workItem from="1690886087146" duration="8986000" />
-      <workItem from="1690990548710" duration="234000" />
-      <workItem from="1690990824377" duration="28745000" />
-      <workItem from="1691260037158" duration="12755000" />
-      <workItem from="1691426962184" duration="544000" />
-      <workItem from="1691427571748" duration="9145000" />
-      <workItem from="1691456120437" duration="7546000" />
-      <workItem from="1691578938351" duration="2000000" />
-      <workItem from="1691605845929" duration="16452000" />
-      <workItem from="1691665562667" duration="14016000" />
-      <workItem from="1691749815353" duration="1059000" />
-      <workItem from="1691840215847" duration="20183000" />
-      <workItem from="1691930304166" duration="19196000" />
-      <workItem from="1692035364913" duration="36804000" />
-      <workItem from="1692377373879" duration="15744000" />
-      <workItem from="1692558488674" duration="1196000" />
-      <workItem from="1692796147856" duration="12701000" />
-      <workItem from="1693003369161" duration="21929000" />
-      <workItem from="1693419001754" duration="1355000" />
-      <workItem from="1693516038772" duration="2856000" />
-      <workItem from="1693756913223" duration="7293000" />
-      <workItem from="1693764969994" duration="15187000" />
-      <workItem from="1694606315519" duration="1321000" />
-      <workItem from="1694609359861" duration="18516000" />
-      <workItem from="1694734348722" duration="6126000" />
-      <workItem from="1695290749930" duration="25533000" />
-      <workItem from="1695348417103" duration="2586000" />
-      <workItem from="1695554406482" duration="21930000" />
+      <updated>1696547192091</updated>
+      <workItem from="1696547192628" duration="4601000" />
+      <workItem from="1697498650300" duration="3162000" />
+      <workItem from="1697537158762" duration="5783000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="UnknownFeatures">
-    <option featureType="dependencySupport" implementationName="executable:docker" />
-    <option featureType="dependencySupport" implementationName="executable:kubectl" />
-    <option featureType="com.intellij.fileTypeFactory" implementationName="*.g4" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/dsl/DslController.java</url>
-          <line>57</line>
-          <properties class="dsl.DslController">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="13" />
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/controllers/commands/InsertOperationCellCommand.java</url>
+          <line>125</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/dsl/utils/DslUtils.java</url>
-          <line>44</line>
-          <properties class="dsl.utils.DslUtils">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="16" />
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/controllers/commands/InsertTableCellCommand.java</url>
+          <line>50</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-    <pin-to-top-manager>
-      <pinned-members>
-        <PinnedItemInfo parentTag="java.io.RandomAccessFile" memberName="closeLock" />
-      </pinned-members>
-    </pin-to-top-manager>
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="this.undos.toArray()[2]" />
-        <watch expression="path" />
-      </configuration>
-    </watches-manager>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
 </project>

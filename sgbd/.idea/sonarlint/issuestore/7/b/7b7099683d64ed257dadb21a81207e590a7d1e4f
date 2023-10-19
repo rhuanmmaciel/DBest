@@ -1,8 +1,0 @@
-
-T
-java:S2387("2"jCell" is the name of a field in "OperationForm".(÷È¾žýÿÿÿÿ8Æ¶ñÒ«1
-£
-java:S11863"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(›Ï‹Êûÿÿÿÿ8¿”á±©1
-u
-java:S3776Ë"RRefactor this method to reduce its Cognitive Complexity from 29 to the 15 allowed.(ˆŠ¾Ñúÿÿÿÿ8æ”á±©1
-H	java:S106é"+Replace this use of System.out by a logger.(²Î­«8é”á±©1
