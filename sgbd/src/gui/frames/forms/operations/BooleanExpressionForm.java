@@ -37,7 +37,8 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
     protected void setPreviousArgs() {
     }
 
-    private void initGUI() {
+    @Override
+    public void initGUI() {
 
         centerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 

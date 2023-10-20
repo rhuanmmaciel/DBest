@@ -57,7 +57,8 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
         this.initGUI();
     }
 
-    private void initGUI() {
+    @Override
+    public void initGUI() {
         this.setBounds(0, 0, ConstantController.UI_SCREEN_WIDTH, ConstantController.UI_SCREEN_HEIGHT);
 
         this.btnReady.addActionListener(this);

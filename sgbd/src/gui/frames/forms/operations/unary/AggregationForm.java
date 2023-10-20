@@ -26,12 +26,12 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
 
         super(jCell);
 
-        initializeGUI();
+        initGUI();
 
     }
 
-    private void initializeGUI() {
-
+    @Override
+    public void initGUI() {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 closeWindow();

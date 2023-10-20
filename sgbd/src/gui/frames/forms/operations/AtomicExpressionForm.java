@@ -130,12 +130,12 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 		comboBoxSource.addActionListener(this);
 		comboBoxSource2.addActionListener(this);
 
-		initializeGUI();
+		initGUI();
 
 	}
 
-	public void initializeGUI() {
-
+	@Override
+	public void initGUI() {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				closeWindow();

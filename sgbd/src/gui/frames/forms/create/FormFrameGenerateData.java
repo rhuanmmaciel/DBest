@@ -21,10 +21,8 @@ import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -38,25 +36,24 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
+import controllers.ConstantController;
 import entities.Column;
 
 import enums.ColumnDataType;
 
+import gui.frames.forms.FormBase;
+import gui.frames.forms.IFormCondition;
 import gui.frames.forms.create.CustomProviders.DBestFaker;
 
 import net.datafaker.Faker;
 
-public class FormFrameCreateData extends JDialog implements ActionListener, ChangeListener {
+public class FormFrameGenerateData extends FormBase implements ActionListener, ChangeListener, IFormCondition {
 
     private final List<Column> columns;
 
     private final JComboBox<Object> comboBox = new JComboBox<>();
 
     private JLabel lblColumnType;
-
-    private JButton readyButton;
-
-    private JButton cancelButton;
 
     private JTabbedPane tabbedPane;
 
@@ -126,7 +123,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 
     private final DBestFaker dbestFaker;
 
-    public FormFrameCreateData(List<Column> columns, DefaultTableModel model, JTable table) {
+    public FormFrameGenerateData(List<Column> columns, DefaultTableModel model, JTable table) {
         super((Window) null);
 
         this.setModal(true);
@@ -137,13 +134,11 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         this.faker = new Faker(Locale.of("pt", "BR"));
         this.dbestFaker = new DBestFaker();
 
-        this.initializeGUI();
+        this.initGUI();
     }
 
-    private void initializeGUI() {
-
-        this.setBounds(100, 100, 1000, 830);
-        this.setLocationRelativeTo(null);
+    @Override
+    public void initGUI() {
 
         // componentes do topPane
         List<String> columnsName = new ArrayList<>();
@@ -152,7 +147,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         Arrays.stream(columnsName.toArray()).forEach(this.comboBox::addItem);
         this.comboBox.addActionListener(this);
 
-        Label lblComboBox = new Label("Nome da coluna: ");
+        Label lblComboBox = new Label(ConstantController.getString("createTable.generateData.columnName"));
 
         this.lblColumnType = new JLabel();
 
@@ -176,16 +171,16 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         this.tabbedPane.addTab("String", null, stringPane, null);
 
         JPanel intPane = new JPanel();
-        this.tabbedPane.addTab("Inteiro", null, intPane, null);
+        this.tabbedPane.addTab("Integer", null, intPane, null);
 
         JPanel floatPane = new JPanel();
-        this.tabbedPane.addTab("Ponto Flutuante", null, floatPane, null);
+        this.tabbedPane.addTab("Float", null, floatPane, null);
 
         JPanel charPane = new JPanel();
-        this.tabbedPane.addTab("Caractere", null, charPane, null);
+        this.tabbedPane.addTab("Character", null, charPane, null);
 
         JPanel boolPane = new JPanel();
-        this.tabbedPane.addTab("Booleano", null, boolPane, null);
+        this.tabbedPane.addTab("Boolean", null, boolPane, null);
 
         this.jRadioGroup = new ButtonGroup();
 
@@ -217,43 +212,43 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         boolPane.add(boolBox);
 
         // Strings:
-        this.nameStringRadioButton = new JRadioButton("Nome Completo");
+        this.nameStringRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.fullName"));
         this.createButton(this.nameStringRadioButton);
         stringBox.add(this.nameStringRadioButton);
 
-        this.firstNameStringRadioButton = new JRadioButton("Nome");
+        this.firstNameStringRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.name"));
         this.createButton(this.firstNameStringRadioButton);
         stringBox.add(this.firstNameStringRadioButton);
 
-        this.lastNameStringRadioButton = new JRadioButton("Sobrenome");
+        this.lastNameStringRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.lastName"));
         this.createButton(this.lastNameStringRadioButton);
         stringBox.add(this.lastNameStringRadioButton);
 
-        this.cpfStringRadioButton = new JRadioButton("CPF");
+        this.cpfStringRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.cpf"));
         this.createButton(this.cpfStringRadioButton);
         stringBox.add(this.cpfStringRadioButton);
 
-        this.cnpjStringRadioButton = new JRadioButton("CNPJ");
+        this.cnpjStringRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.cnpj"));
         this.createButton(this.cnpjStringRadioButton);
         stringBox.add(this.cnpjStringRadioButton);
 
-        this.cityStringRadioButton = new JRadioButton("Cidade");
+        this.cityStringRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.city"));
         this.createButton(this.cityStringRadioButton);
         stringBox.add(this.cityStringRadioButton);
 
-        this.countryStringRadioButton = new JRadioButton("País");
+        this.countryStringRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.country"));
         this.createButton(this.countryStringRadioButton);
         stringBox.add(this.countryStringRadioButton);
 
-        this.stateStringRadioButton = new JRadioButton("Estado");
+        this.stateStringRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.state"));
         this.createButton(this.stateStringRadioButton);
         stringBox.add(this.stateStringRadioButton);
 
-        this.phoneStringRadioButton = new JRadioButton("Número de telefone");
+        this.phoneStringRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.telephoneNumber"));
         this.createButton(this.phoneStringRadioButton);
         stringBox.add(this.phoneStringRadioButton);
 
-        this.jobStringRadioButton = new JRadioButton("Área de atuação");
+        this.jobStringRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.workArea"));
         this.createButton(this.jobStringRadioButton);
         stringBox.add(this.jobStringRadioButton);
 
@@ -261,12 +256,12 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         Box intItem = Box.createHorizontalBox();
         intItem.setAlignmentX(LEFT_ALIGNMENT);
 
-        this.randomIntegerRadioButton = new JRadioButton("Número entre ");
+        this.randomIntegerRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.numberBetween")+" ");
         this.createButton(this.randomIntegerRadioButton);
         this.randomIntegerMinimumSpinner = new JSpinner();
         this.createSpinner(this.randomIntegerMinimumSpinner);
 
-        JLabel randomIntegerLabel = new JLabel(" e ");
+        JLabel randomIntegerLabel = new JLabel(" "+ConstantController.getString("createTable.generateData.and")+" ");
         this.randomIntegerMaximumSpinner = new JSpinner();
         this.createSpinner(this.randomIntegerMaximumSpinner);
 
@@ -280,13 +275,13 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         intItem = Box.createHorizontalBox();
         intItem.setAlignmentX(LEFT_ALIGNMENT);
 
-        this.randomIntegerDigitsRadioButton = new JRadioButton("Número com ");
+        this.randomIntegerDigitsRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.numberWith")+" ");
         this.createButton(this.randomIntegerDigitsRadioButton);
         this.randomIntegerDigitsSpinner = new JSpinner();
         this.createSpinner(this.randomIntegerDigitsSpinner);
         this.randomIntegerDigitsSpinner.setModel(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
         this.randomIntegerDigitsSpinner.setMaximumSize(new Dimension(180, 20));
-        JLabel randomIntegerDigitsLabel = new JLabel(" digítos");
+        JLabel randomIntegerDigitsLabel = new JLabel(" "+ConstantController.getString("createTable.generateData.digits"));
 
         intItem.add(this.randomIntegerDigitsRadioButton);
         intItem.add(this.randomIntegerDigitsSpinner);
@@ -297,7 +292,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         intItem = Box.createHorizontalBox();
         intItem.setAlignmentX(LEFT_ALIGNMENT);
 
-        this.integerSequenceRadioButton = new JRadioButton("Sequência com início em ");
+        this.integerSequenceRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.sequenceBeginningWith")+" ");
         this.createButton(this.integerSequenceRadioButton);
         this.integerSequenceSpinner = new JSpinner();
         this.createSpinner(this.integerSequenceSpinner);
@@ -313,14 +308,14 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         Box floatItem = Box.createHorizontalBox();
         floatItem.setAlignmentX(LEFT_ALIGNMENT);
 
-        this.randomFloatRadioButton = new JRadioButton("Número com ");
+        this.randomFloatRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.numberWith")+" ");
         this.createButton(this.randomFloatRadioButton);
         this.randomFloatDecimalsSpinner = new JSpinner();
         this.createSpinner(this.randomFloatDecimalsSpinner);
-        JLabel randomFloatLabel1 = new JLabel(" casa decimais entre ");
+        JLabel randomFloatLabel1 = new JLabel(" "+ConstantController.getString("createTable.generateData.decimalPlacesBetween")+" ");
         this.randomFloatMinimumSpinner = new JSpinner();
         this.createSpinner(this.randomFloatMinimumSpinner);
-        JLabel randomFloatLabel2 = new JLabel(" e ");
+        JLabel randomFloatLabel2 = new JLabel(" "+ConstantController.getString("createTable.generateData.and")+" ");
         this.randomFloatMaximumSpinner = new JSpinner();
         this.createSpinner(this.randomFloatMaximumSpinner);
 
@@ -341,15 +336,15 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 
         this.characterCheckBoxes = new ArrayList<>();
 
-        this.randomCharacterRadioButton = new JRadioButton("Caractere aleatório: ");
+        this.randomCharacterRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.randomCharacter")+": ");
         this.createButton(this.randomCharacterRadioButton);
-        this.upperCaseCharacterCheckBox = new JCheckBox("Letras maiúsculas ");
+        this.upperCaseCharacterCheckBox = new JCheckBox(ConstantController.getString("createTable.generateData.uppercaseLetters")+" ");
         this.createCheckBox(this.upperCaseCharacterCheckBox);
-        this.lowerCaseCharacterCheckBox = new JCheckBox("Letras minúsculas ");
+        this.lowerCaseCharacterCheckBox = new JCheckBox(ConstantController.getString("createTable.generateData.lowercaseLetters")+" ");
         this.createCheckBox(this.lowerCaseCharacterCheckBox);
-        this.specialCharacterCheckBox = new JCheckBox("Especiais ");
+        this.specialCharacterCheckBox = new JCheckBox(ConstantController.getString("createTable.generateData.special")+" ");
         this.createCheckBox(this.specialCharacterCheckBox);
-        this.numberCharacterCheckBox = new JCheckBox("Números ");
+        this.numberCharacterCheckBox = new JCheckBox(ConstantController.getString("createTable.generateData.numbers")+" ");
         this.createCheckBox(this.numberCharacterCheckBox);
 
         charItem.add(this.randomCharacterRadioButton);
@@ -366,7 +361,7 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         Box boolItem = Box.createHorizontalBox();
         boolItem.setAlignmentX(LEFT_ALIGNMENT);
 
-        this.randomBoolRadioButton = new JRadioButton("Booleano aleatório");
+        this.randomBoolRadioButton = new JRadioButton(ConstantController.getString("createTable.generateData.randomBoolean"));
         this.createButton(this.randomBoolRadioButton);
 
         boolItem.add(this.randomBoolRadioButton);
@@ -379,22 +374,22 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         flowLayout.setAlignment(FlowLayout.RIGHT);
         this.getContentPane().add(bottomPane, BorderLayout.SOUTH);
 
-        this.cancelButton = new JButton("Cancelar");
-        bottomPane.add(this.cancelButton);
+        bottomPane.add(this.btnCancel);
 
-        this.readyButton = new JButton("Pronto");
-        bottomPane.add(this.readyButton);
+        bottomPane.add(this.btnReady);
 
-        this.cancelButton.addActionListener(this);
-        this.readyButton.addActionListener(this);
+        this.btnCancel.addActionListener(this);
+        this.btnReady.addActionListener(this);
 
         int columnIndex = this.table.getColumnModel().getColumnIndex(Objects.requireNonNull(this.comboBox.getSelectedItem()).toString());
 
         ColumnDataType selectedColumnType = this.columns.get(columnIndex).getDataType();
 
-        this.lblColumnType.setText(String.format("Tipo: %s", selectedColumnType.toString()));
+        this.lblColumnType.setText(String.format("%s: %s", ConstantController.getString("createTable.generateData.type"), selectedColumnType.toString()));
         this.setAllowedTabs(selectedColumnType);
-        this.verifyReady();
+        this.checkBtnReady();
+        this.pack();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
@@ -428,17 +423,17 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
             this.tabbedPane.setEnabledAt(3, true);
             this.tabbedPane.setEnabledAt(4, true);
         } else if (selectedColumnType == ColumnDataType.INTEGER) {
-            this.tabbedPane.setSelectedIndex(this.tabbedPane.indexOfTab("Inteiro"));
+            this.tabbedPane.setSelectedIndex(this.tabbedPane.indexOfTab("Integer"));
             this.tabbedPane.setEnabledAt(1, true);
         } else if (selectedColumnType == ColumnDataType.FLOAT) {
-            this.tabbedPane.setSelectedIndex(this.tabbedPane.indexOfTab("Ponto Flutuante"));
+            this.tabbedPane.setSelectedIndex(this.tabbedPane.indexOfTab("Float"));
             this.tabbedPane.setEnabledAt(1, true);
             this.tabbedPane.setEnabledAt(2, true);
         } else if (selectedColumnType == ColumnDataType.CHARACTER) {
-            this.tabbedPane.setSelectedIndex(this.tabbedPane.indexOfTab("Caractere"));
+            this.tabbedPane.setSelectedIndex(this.tabbedPane.indexOfTab("Character"));
             this.tabbedPane.setEnabledAt(3, true);
         } else if (selectedColumnType == ColumnDataType.BOOLEAN) {
-            this.tabbedPane.setSelectedIndex(this.tabbedPane.indexOfTab("Booleano"));
+            this.tabbedPane.setSelectedIndex(this.tabbedPane.indexOfTab("Boolean"));
             this.tabbedPane.setEnabledAt(4, true);
         }
     }
@@ -451,53 +446,28 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
 
         ColumnDataType selectedColumnType = this.columns.get(columnIndex).getDataType();
 
-        if (event.getSource() == this.cancelButton) {
+        if (event.getSource() == this.btnCancel) {
             this.dispose();
         }
 
-        if (event.getSource() == this.readyButton) {
+        if (event.getSource() == this.btnReady) {
             this.insertItems(columnIndex, selectedColumnType);
             this.dispose();
         }
 
         if (event.getSource() == this.comboBox) {
             this.setAllowedTabs(selectedColumnType);
-            this.lblColumnType.setText(String.format("Tipo: %s", selectedColumnType.toString()));
+            this.lblColumnType.setText(String.format("%s: %s", ConstantController.getString("createTable.generateData.type"), selectedColumnType.toString()));
             this.jRadioGroup.clearSelection();
             this.characterCheckBoxes.forEach(x -> x.setSelected(false));
         }
 
-        this.verifyReady();
+        this.checkBtnReady();
     }
 
     @Override
     public void stateChanged(ChangeEvent event) {
-        this.verifyReady();
-    }
-
-    private void verifyReady() {
-        boolean isAnyCharCheckBoxSelected = this.randomCharacterRadioButton.isSelected() && this.characterCheckBoxes.stream().anyMatch(AbstractButton::isSelected);
-        boolean isAnySelected = this.jRadioGroup.getSelection() != null && !this.randomCharacterRadioButton.isSelected();
-
-        this.readyButton.setEnabled(isAnySelected || isAnyCharCheckBoxSelected);
-
-        this.updateToolTipText(isAnySelected, isAnyCharCheckBoxSelected);
-    }
-
-    private void updateToolTipText(boolean isAnySelected, boolean isAnyCharCheckBoxSelected) {
-        String btnReadyToolTipText = "";
-
-        if (!isAnyCharCheckBoxSelected) {
-            btnReadyToolTipText = "- Selecione alguma check box";
-        }
-
-        if (!isAnySelected && !this.randomCharacterRadioButton.isSelected()) {
-            btnReadyToolTipText = "- Nenhum botão selecionado";
-        }
-
-        UIManager.put("ToolTip.foreground", Color.RED);
-
-        this.readyButton.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
+        this.checkBtnReady();
     }
 
     private void insertItems(int columnIndex, ColumnDataType type) {
@@ -618,5 +588,34 @@ public class FormFrameCreateData extends JDialog implements ActionListener, Chan
         }
 
         return randomItems;
+    }
+
+    @Override
+    public void checkBtnReady() {
+
+        boolean isAnyCharCheckBoxSelected = this.randomCharacterRadioButton.isSelected() && this.characterCheckBoxes.stream().anyMatch(AbstractButton::isSelected);
+        boolean isAnySelected = this.jRadioGroup.getSelection() != null && !this.randomCharacterRadioButton.isSelected();
+
+        this.btnReady.setEnabled(isAnySelected || isAnyCharCheckBoxSelected);
+
+        this.updateToolTipText(isAnySelected, isAnyCharCheckBoxSelected);
+
+    }
+
+    @Override
+    public void updateToolTipText(boolean... conditions) {
+        String btnReadyToolTipText = "";
+
+        if (!conditions[0]) {
+            btnReadyToolTipText = "- "+ConstantController.getString("createTable.generateData.toolTipText.selectSomeOption");
+        }
+
+        if (!conditions[1] && !this.randomCharacterRadioButton.isSelected()) {
+            btnReadyToolTipText = "- "+ConstantController.getString("createTable.generateData.toolTipText.noneButtonSelected");
+        }
+
+        UIManager.put("ToolTip.foreground", Color.RED);
+
+        this.btnReady.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
     }
 }

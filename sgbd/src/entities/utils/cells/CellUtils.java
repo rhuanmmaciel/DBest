@@ -250,6 +250,7 @@ public class CellUtils extends MainController {
     }
 
     public static void showTable(mxCell jCell) {
+
         Optional<Cell> optionalCell = CellRepository.getActiveCell(jCell);
 
         if (optionalCell.isEmpty()) return;

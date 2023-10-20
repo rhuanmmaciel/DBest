@@ -7,39 +7,31 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import java.util.List;
-import java.util.Objects;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
+import controllers.ConstantController;
 import entities.Column;
 
 import enums.ColumnDataType;
 
 import gui.frames.forms.FormBase;
+import gui.frames.forms.IFormCondition;
 
-public class FormFrameAddColumn extends FormBase implements ActionListener, DocumentListener {
+public class FormFrameAddColumn extends FormBase implements ActionListener, DocumentListener, IFormCondition {
 
-    private JTextField columnNameTextField;
+    private JTextField textFieldColumnName;
 
     private JComboBox<Object> comboBox;
 
-    private final JCheckBox primaryKeyCheckBox = new JCheckBox();
+    private final JCheckBox checkBoxIsPrimaryKey = new JCheckBox();
 
     private final DefaultTableModel table;
 
-    private JButton readyButton1;
-
-    private JButton cancelButton1;
-
-    private JLabel columnNameLabel;
+    private JLabel lblColumnName;
 
     private final List<Column> columns;
 
@@ -51,10 +43,11 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
         this.columns = columns;
         this.table = table;
 
-        this.initializeGUI();
+        this.initGUI();
     }
 
-    private void initializeGUI() {
+    @Override
+    public void initGUI() {
         this.addWindowListener(new WindowAdapter() {
 
             @Override
@@ -63,94 +56,109 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
             }
         });
 
-        this.setLocationRelativeTo(null);
-        this.setContentPane(this.contentPanel);
+        btnReady.addActionListener(this);
+        btnCancel.addActionListener(this);
 
-        this.columnNameLabel = new JLabel("Nome da coluna");
-        this.columnNameTextField = new JTextField();
-        this.columnNameTextField.getDocument().addDocumentListener(this);
-        this.columnNameTextField.setColumns(10);
+        this.lblColumnName = new JLabel(ConstantController.getString("createTable.addColumn.columnName"));
+        this.textFieldColumnName = new JTextField();
+        this.textFieldColumnName.getDocument().addDocumentListener(this);
+        this.textFieldColumnName.setColumns(10);
 
         String[] dataTypeOptions = {"None", "Integer", "Float", "Character", "String", "Boolean"};
 
         this.comboBox = new JComboBox<>(dataTypeOptions);
 
-        this.updateButton();
+        Box boxMain = Box.createVerticalBox();
+
+        Box boxColumnName = Box.createHorizontalBox();
+        boxColumnName.add(lblColumnName);
+        boxColumnName.add(textFieldColumnName);
+        boxMain.add(boxColumnName);
+
+        boxMain.add(comboBox);
+
+        Box boxPrimaryKey = Box.createHorizontalBox();
+        boxPrimaryKey.add(new JLabel(ConstantController.getString("createTable.addColumn.isPK")));
+        boxPrimaryKey.add(checkBoxIsPrimaryKey);
+
+        boxMain.add(boxPrimaryKey);
+
+        contentPanel.add(boxMain);
+
+        this.checkBtnReady();
         this.pack();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == this.readyButton1) {
-            ColumnDataType columnDataType;
+        if (event.getSource() == this.btnReady) {
 
-            boolean isPrimaryKey = this.primaryKeyCheckBox.isSelected();
+            boolean isPrimaryKey = this.checkBoxIsPrimaryKey.isSelected();
 
-            String itemSelected = this.comboBox.getSelectedItem().toString();
+            ColumnDataType columnDataType = switch (comboBox.getSelectedItem().toString()) {
+                case "Integer" -> ColumnDataType.INTEGER;
+                case "Float" -> ColumnDataType.FLOAT;
+                case "String" -> ColumnDataType.STRING;
+                case "Character" -> ColumnDataType.CHARACTER;
+                case "Boolean" -> ColumnDataType.BOOLEAN;
+                case null, default -> ColumnDataType.NONE;
+            };
 
-            if (Objects.equals(itemSelected, "None")) {
-                columnDataType = ColumnDataType.NONE;
-            } else if (Objects.equals(itemSelected, "Integer")) {
-                columnDataType = ColumnDataType.INTEGER;
-            } else if (Objects.equals(itemSelected, "Float")) {
-                columnDataType = ColumnDataType.FLOAT;
-            } else if (Objects.equals(itemSelected, "String")) {
-                columnDataType = ColumnDataType.STRING;
-            } else if (Objects.equals(itemSelected, "Character")) {
-                columnDataType = ColumnDataType.CHARACTER;
-            } else if (Objects.equals(itemSelected, "Boolean")) {
-                columnDataType = ColumnDataType.BOOLEAN;
-            } else {
-                columnDataType = ColumnDataType.NONE;
-            }
-
-            this.table.addColumn(this.columnNameTextField.getText().replaceAll("[^\\p{Alnum}]", ""));
+            this.table.addColumn(this.textFieldColumnName.getText().replaceAll("[^\\p{Alnum}]", ""));
+            this.columns.add(new Column(textFieldColumnName.getText(), "any", columnDataType, isPrimaryKey));
             this.closeWindow();
         }
 
-        if (event.getSource() == this.cancelButton1) {
+        if (event.getSource() == this.btnCancel) {
             this.closeWindow();
         }
     }
 
     @Override
     public void insertUpdate(DocumentEvent event) {
-        this.updateButton();
+        this.checkBtnReady();
     }
 
     @Override
     public void removeUpdate(DocumentEvent event) {
-        this.updateButton();
+        this.checkBtnReady();
     }
 
     @Override
     public void changedUpdate(DocumentEvent event) {
-        this.updateButton();
+        this.checkBtnReady();
     }
 
-    private void updateButton() {
-        this.readyButton1.setEnabled(!this.columnNameTextField.getText().isEmpty() && this.table.findColumn(this.columnNameTextField.getText()) == -1 && this.columnNameTextField.getText().matches("^[\\p{Alnum}]*$"));
+    protected void closeWindow() {
+        this.dispose();
+    }
+
+    @Override
+    public void checkBtnReady() {
+
+        this.btnReady.setEnabled(!this.textFieldColumnName.getText().isEmpty() && this.table.findColumn(this.textFieldColumnName.getText()) == -1 && this.textFieldColumnName.getText().matches("^[\\p{Alnum}]*$"));
         this.updateToolTipText();
+
     }
 
-    private void updateToolTipText() {
+    @Override
+    public void updateToolTipText(boolean... conditions) {
+
         String createColumnButtonToolTipText = "";
 
-        if (this.columnNameTextField.getText().isEmpty()) {
+        if (this.textFieldColumnName.getText().isEmpty()) {
             createColumnButtonToolTipText = "- A coluna não possui nome";
-        } else if (this.table.findColumn(this.columnNameTextField.getText()) != -1) {
+        } else if (this.table.findColumn(this.textFieldColumnName.getText()) != -1) {
             createColumnButtonToolTipText = "- Duas colunas não podem ter o mesmo nome";
-        } else if (!this.columnNameTextField.getText().matches("^[\\p{Alnum}]*$")) {
+        } else if (!this.textFieldColumnName.getText().matches("^[\\p{Alnum}]*$")) {
             createColumnButtonToolTipText = "- Apenas letras e números podem ser utilizados para o nome da coluna";
         }
 
         UIManager.put("ToolTip.foreground", Color.RED);
 
-        this.readyButton1.setToolTipText(createColumnButtonToolTipText.isEmpty() ? null : createColumnButtonToolTipText);
-    }
+        this.btnReady.setToolTipText(createColumnButtonToolTipText.isEmpty() ? null : createColumnButtonToolTipText);
 
-    protected void closeWindow() {
-        this.dispose();
     }
 }

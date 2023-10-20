@@ -9,6 +9,7 @@ import controllers.MainController;
 
 import entities.cells.CSVTableCell;
 import entities.cells.FYITableCell;
+import entities.cells.MemoryTableCell;
 import entities.cells.TableCell;
 import entities.utils.cells.CellUtils;
 
@@ -43,13 +44,15 @@ public class InsertTableCellCommand extends BaseUndoableRedoableCommand {
         }
 
         TableCell tableCell = MainController.getTables().get(this.jCellReference.get().getValue());
-        String cellStyle = this.jCellReference.get().getStyle();
 
-        if (cellStyle.equals(FileType.FYI.id)) {
-            new FYITableCell((FYITableCell) tableCell, this.jCellReference.get());
-        } else if (cellStyle.equals(FileType.CSV.id)) {
-            new CSVTableCell((CSVTableCell) tableCell, this.jCellReference.get());
+        switch (tableCell){
+
+            case FYITableCell fyiTableCell -> new FYITableCell(fyiTableCell, this.jCellReference.get());
+            case CSVTableCell csvTableCell -> new CSVTableCell(csvTableCell, this.jCellReference.get());
+            case MemoryTableCell memoryTableCell -> new MemoryTableCell(memoryTableCell, this.jCellReference.get());
+
         }
+
     }
 
     @Override

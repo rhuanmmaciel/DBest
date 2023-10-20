@@ -28,11 +28,12 @@ public class RenameForm extends OperationForm implements IOperationForm, ActionL
 
         super(jCell);
 
-        initializeGUI();
+        initGUI();
 
     }
 
-    private void initializeGUI() {
+    @Override
+    public void initGUI() {
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {

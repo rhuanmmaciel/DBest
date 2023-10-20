@@ -27,11 +27,12 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
 
         super(jCell);
 
-        initializeGUI();
+        initGUI();
 
     }
 
-    private void initializeGUI() {
+    @Override
+    public void initGUI() {
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {

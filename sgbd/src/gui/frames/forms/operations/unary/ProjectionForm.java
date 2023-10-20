@@ -26,11 +26,12 @@ public class ProjectionForm extends OperationForm implements ActionListener, IOp
 
 		super(jCell);
 
-		initializeGUI();
+		initGUI();
 
 	}
 
-	private void initializeGUI() {
+	@Override
+	public void initGUI() {
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {

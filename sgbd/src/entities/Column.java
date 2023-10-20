@@ -121,7 +121,7 @@ public class Column implements Comparable<Column> {
     @Override
     public String toString() {
         return String.format(
-            "Source: %s -- Nome: %s -- Tipo: %s -- Primary key: %s",
+            "Name: %s -- Source: %s -- Type: %s -- Primary key: %s",
             this.name, this.source, this.dataType, this.isPrimaryKey
         );
     }

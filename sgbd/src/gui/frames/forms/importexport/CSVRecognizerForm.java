@@ -112,10 +112,11 @@ public class CSVRecognizerForm extends FormBase implements ActionListener {
             }
         });
 
-        this.initializeGUI();
+        this.initGUI();
     }
 
-    private void initializeGUI() {
+    @Override
+    public void initGUI() {
         this.setBounds(0, 0, ConstantController.UI_SCREEN_WIDTH, ConstantController.UI_SCREEN_HEIGHT);
         this.setLocationRelativeTo(null);
 

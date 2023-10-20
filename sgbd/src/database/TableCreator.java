@@ -5,7 +5,9 @@ import com.mxgraph.model.mxGeometry;
 import controllers.ConstantController;
 import entities.cells.CSVTableCell;
 import entities.cells.FYITableCell;
+import entities.cells.MemoryTableCell;
 import entities.cells.TableCell;
+import enums.CellType;
 import enums.FileType;
 import files.FileUtils;
 import files.csv.CSVInfo;
@@ -15,6 +17,7 @@ import sgbd.prototype.RowData;
 import sgbd.prototype.metadata.Metadata;
 import sgbd.source.components.Header;
 import sgbd.source.table.CSVTable;
+import sgbd.source.table.MemoryTable;
 import sgbd.source.table.Table;
 
 import java.io.File;
@@ -22,6 +25,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class TableCreator {
 
@@ -49,6 +53,15 @@ public class TableCreator {
         this.createFYITable(tableName, columns, data, headerFile);
     }
 
+    public TableCreator(
+            String tableName, List<entities.Column> columns, Map<Integer,
+            Map<String, String>> data
+    ) {
+        this(false);
+
+        this.createMemoryTable(tableName, columns, data);
+    }
+
     private void createCSVTable(
         String tableName, List<entities.Column> columns, char separator,
         char stringDelimiter, int beginIndex, Path path
@@ -70,7 +83,7 @@ public class TableCreator {
         headerFile = FileUtils.getFileFromTempDirectory(headerFileName).get();
 
         if (this.mustExport) {
-            this.tableCell = new CSVTableCell(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_CSV_STYLE), tableName, columns, table, prototype, headerFile);
+            this.tableCell = new CSVTableCell(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_CSV_TABLE_STYLE), tableName, columns, table, prototype, headerFile);
             return;
         }
 
@@ -78,7 +91,7 @@ public class TableCreator {
             .getGraph()
             .insertVertex(
                 MainFrame.getGraph().getDefaultParent(), null, tableName, 0, 0,
-                ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.CSV.id
+                ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, CellType.CSV_TABLE.id
             );
 
         this.tableCell = new CSVTableCell(jCell, tableName, columns, table, prototype, headerFile);
@@ -97,7 +110,7 @@ public class TableCreator {
         table.saveHeader(String.format("%s%s", tableName, FileType.HEADER.extension));
 
         if (this.mustExport) {
-            this.tableCell = new FYITableCell(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_FYI_STYLE), tableName, columns, table, prototype, headerFile);
+            this.tableCell = new FYITableCell(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_FYI_TABLE_STYLE), tableName, columns, table, prototype, headerFile);
             return;
         }
 
@@ -105,10 +118,32 @@ public class TableCreator {
             .getGraph()
             .insertVertex(
                 MainFrame.getGraph().getDefaultParent(), null, tableName, 0, 0,
-                ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, FileType.FYI.id
+                ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, CellType.FYI_TABLE.id
             );
 
         this.tableCell = new FYITableCell(jCell, tableName, columns, table, prototype, headerFile);
+    }
+
+    private void createMemoryTable(
+            String tableName, List<entities.Column> columns, Map<Integer, Map<String, String>> data
+    ) {
+
+        List<RowData> rows = new ArrayList<>(this.getRowData(columns, data));
+
+        Prototype prototype = this.createPrototype(columns);
+
+        Table table = MemoryTable.openTable(new Header(prototype, tableName));
+        table.open();
+        table.insert(rows);
+
+        mxCell jCell = (mxCell) MainFrame
+                .getGraph()
+                .insertVertex(
+                        MainFrame.getGraph().getDefaultParent(), null, tableName, 0, 0,
+                        ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, CellType.MEMORY_TABLE.id
+                );
+
+        this.tableCell = new MemoryTableCell(jCell, tableName, columns, table, prototype);
     }
 
     public Prototype createPrototype(List<entities.Column> columns) {

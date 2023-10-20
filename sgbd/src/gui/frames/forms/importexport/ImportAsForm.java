@@ -31,10 +31,10 @@ public class ImportAsForm extends ImportExportAsForm {
         this.tableCell = null;
         this.headFileButton = new JButton(ConstantController.getString("importAs.headerButton"));
 
-        this.initializeGUI();
+        this.initGUI2();
     }
 
-    private void initializeGUI() {
+    public void initGUI2() {
         this.addWindowListener(new WindowAdapter() {
 
             @Override

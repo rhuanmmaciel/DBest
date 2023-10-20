@@ -33,12 +33,12 @@ public class GroupForm extends OperationForm implements ActionListener, IOperati
 
         super(jCell);
 
-        initializeGUI();
+        initGUI();
 
     }
 
-    private void initializeGUI() {
-
+    @Override
+    public void initGUI() {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 closeWindow();

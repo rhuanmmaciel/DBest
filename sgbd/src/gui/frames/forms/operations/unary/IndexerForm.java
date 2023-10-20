@@ -27,7 +27,8 @@ public class IndexerForm extends OperationForm implements IOperationForm, Action
 
     }
 
-    private void initGUI(){
+    @Override
+    public void initGUI(){
 
         centerPanel.removeAll();
         addExtraComponent(new JLabel(ConstantController.getString("operationForm.columnName")+": "), 0, 0, 1, 1);

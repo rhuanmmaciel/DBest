@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract sealed class TableCell extends Cell permits CSVTableCell, FYITableCell {
+public abstract sealed class TableCell extends Cell permits CSVTableCell, FYITableCell, MemoryTableCell {
 
     private final Table table;
 
@@ -23,7 +23,6 @@ public abstract sealed class TableCell extends Cell permits CSVTableCell, FYITab
 
     protected TableCell(mxCell jCell, String name, Table table, Prototype prototype, File headerFile) {
         super(name, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
-
         this.headerFile = headerFile;
         this.table = table;
         this.prototype = prototype;
@@ -83,7 +82,7 @@ public abstract sealed class TableCell extends Cell permits CSVTableCell, FYITab
             .getPrototype()
             .getColumns()
             .stream()
-            .filter(column -> this instanceof CSVTableCell && !column.getName().equals(ConstantController.PRIMARY_KEY_CSV_TABLE_NAME))
+            .filter(column -> (!(this instanceof CSVTableCell) || !column.getName().equals(ConstantController.PRIMARY_KEY_CSV_TABLE_NAME)))
             .toList();
 
         List<Column> columns = new ArrayList<>();

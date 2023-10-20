@@ -27,8 +27,8 @@ public class RelAlgebraParser extends Parser {
 		RULE_unary = 22, RULE_binary = 23, RULE_relation = 24;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"command", "importStatement", "nameDeclaration", "pathStatement", "variableDeclaration", 
-			"createTable", "expression", "position", "number", "selection", "projection", 
+			"command", "importStatement", "nameDeclaration", "pathStatement", "variableDeclaration",
+                "createTable.btnCreate", "expression", "position", "number", "selection", "projection",
 			"sort", "group", "rename", "aggregation", "indexer", "join", "leftJoin", 
 			"rightJoin", "cartesianProduct", "union", "intersection", "unary", "binary", 
 			"relation"

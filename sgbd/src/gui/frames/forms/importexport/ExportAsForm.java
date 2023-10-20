@@ -44,7 +44,8 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
         this.initGUI();
     }
 
-    private void initGUI() {
+    @Override
+    public void initGUI() {
         this.addWindowListener(new WindowAdapter() {
 
             @Override

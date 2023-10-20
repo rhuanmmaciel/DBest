@@ -33,4 +33,7 @@ public abstract class FormBase extends JDialog {
         this.contentPanel.add(bottomPanel, BorderLayout.SOUTH);
         this.setContentPane(this.contentPanel);
     }
+
+    public abstract void initGUI();
+
 }

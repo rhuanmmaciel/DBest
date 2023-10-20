@@ -26,10 +26,12 @@ class CellRepository {
     }
 
     public static void addCell(mxICell jCell, Cell cell) {
+
         if (jCell != null && cell != null) {
             ACTIVE_CELLS.put(jCell, cell);
             INACTIVE_CELLS.remove(jCell);
         }
+
     }
 
     public static Optional<Cell> removeCell(mxICell jCell) {

@@ -284,7 +284,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
         Map<String, Object> style = new HashMap<>();
 
-        style.put(mxConstants.STYLE_FILLCOLOR, "#32CD32");
+        style.put(mxConstants.STYLE_FILLCOLOR, "#C3DEE6");
         style.put(mxConstants.STYLE_SHADOW, String.valueOf(true));
 
         String customStyle = CellType.MEMORY_TABLE.id;
@@ -314,7 +314,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
     private void addBottomButtons() {
         this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s (i)", ConstantController.getString("toolBarButtons.importTable")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.IMPORT_FILE)));
-        // buttons.add(new ToolBarButton<>(JButton.class, " Criar tabela(c) ", this, this.toolBar, new CurrentAction(CurrentAction.ActionType.CREATE_TABLE)));
+        this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s (c)", ConstantController.getString("toolBarButtons.createTable")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.CREATE_TABLE_CELL)));
         this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s (e)", ConstantController.getString("toolBarButtons.edge")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.CREATE_EDGE)));
         this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s (del)", ConstantController.getString("toolBarButtons.remove")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.DELETE_CELL)));
         this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s", ConstantController.getString("toolBarButtons.removeAll")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.DELETE_ALL)));

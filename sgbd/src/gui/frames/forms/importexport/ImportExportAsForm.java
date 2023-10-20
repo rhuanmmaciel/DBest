@@ -25,10 +25,11 @@ public abstract class ImportExportAsForm extends FormBase implements ActionListe
         this.textLabel = new JLabel();
         this.centerPanel = new JPanel();
 
-        this.initializeGUI();
+        this.initGUI();
     }
 
-    private void initializeGUI() {
+    @Override
+    public void initGUI() {
         this.contentPanel.removeAll();
         this.contentPanel.add(this.centerPanel, BorderLayout.CENTER);
 
