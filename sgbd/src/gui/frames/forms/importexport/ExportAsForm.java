@@ -27,9 +27,9 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
 
     private final AtomicReference<Boolean> cancelService;
 
-    private final JButton fyiDatabaseButton;
+    private final JButton btnFyiDatabase = new JButton(ConstantController.getString("exportAs.fyiDatabaseButton"));;
 
-    private final JButton sqlScriptButton;
+    private final JButton btnSqlScript = new JButton(ConstantController.getString("exportAs.scriptSQLButton"));;
 
     private final Cell cell;
 
@@ -37,14 +37,11 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
         this.setModal(true);
 
         this.cancelService = cancelService;
-        this.fyiDatabaseButton = new JButton(ConstantController.getString("exportAs.fyiDatabaseButton"));
-        this.sqlScriptButton = new JButton(ConstantController.getString("exportAs.scriptSQLButton"));
         this.cell = CellUtils.getActiveCell(jCell).orElse(null);
 
         this.initGUI();
     }
 
-    @Override
     public void initGUI() {
         this.addWindowListener(new WindowAdapter() {
 
@@ -56,13 +53,13 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
 
         JPanel pane = new JPanel(new FlowLayout());
 
-        pane.add(this.fyiDatabaseButton);
-        pane.add(this.csvButton);
-        pane.add(this.sqlScriptButton);
+        pane.add(this.btnFyiDatabase);
+        pane.add(this.btnCsv);
+        pane.add(this.btnSqlScript);
 
         this.contentPanel.add(pane, BorderLayout.CENTER);
-        this.sqlScriptButton.addActionListener(this);
-        this.fyiDatabaseButton.addActionListener(this);
+        this.btnSqlScript.addActionListener(this);
+        this.btnFyiDatabase.addActionListener(this);
 
         this.pack();
         this.setLocationRelativeTo(null);
@@ -74,13 +71,13 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
         if (event.getSource() == this.btnCancel) {
             this.cancelService.set(true);
             this.closeWindow();
-        } else if (event.getSource() == this.csvButton) {
+        } else if (event.getSource() == this.btnCsv) {
             this.closeWindow();
 
             if (!this.cancelService.get()) {
                 new ExportFile().exportToCSV(this.cell);
             }
-        } else if (event.getSource() == this.fyiDatabaseButton) {
+        } else if (event.getSource() == this.btnFyiDatabase) {
             this.closeWindow();
 
             List<Column> primaryKeyColumns = new PrimaryKeyChooserForm(this.cell).getSelectedColumns();
@@ -88,7 +85,7 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
             if(!this.cancelService.get() && !primaryKeyColumns.isEmpty()) {
                 new ExportFile().exportToFYI(this.cell, primaryKeyColumns);
             }
-        } else if (event.getSource() == this.sqlScriptButton) {
+        } else if (event.getSource() == this.btnSqlScript) {
             this.closeWindow();
 
             if (!this.cancelService.get()) {

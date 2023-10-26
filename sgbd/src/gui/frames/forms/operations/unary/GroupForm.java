@@ -37,7 +37,6 @@ public class GroupForm extends OperationForm implements ActionListener, IOperati
 
     }
 
-    @Override
     public void initGUI() {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {

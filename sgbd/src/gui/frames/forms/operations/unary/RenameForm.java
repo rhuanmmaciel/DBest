@@ -32,7 +32,6 @@ public class RenameForm extends OperationForm implements IOperationForm, ActionL
 
     }
 
-    @Override
     public void initGUI() {
 
         addWindowListener(new WindowAdapter() {

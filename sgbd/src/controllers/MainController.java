@@ -100,7 +100,11 @@ public class MainController extends MainFrame {
                 System.exit(0);
             }
         });
+
+        FileUtils.verifyExistingFilesToInitialize();
+
     }
+
 
     @Override
     public void actionPerformed(ActionEvent event) {

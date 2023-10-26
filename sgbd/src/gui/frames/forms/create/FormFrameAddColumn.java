@@ -46,7 +46,6 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
         this.initGUI();
     }
 
-    @Override
     public void initGUI() {
         this.addWindowListener(new WindowAdapter() {
 

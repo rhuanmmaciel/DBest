@@ -25,6 +25,8 @@ public enum CellType {
 
           case OperationCell ignored -> OPERATION;
 
+          case MemoryTableCell ignored -> MEMORY_TABLE;
+
         };
 
     }

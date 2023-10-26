@@ -105,7 +105,6 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
         this.initGUI();
     }
 
-    @Override
     public void initGUI() {
         this.addWindowListener(new WindowAdapter() {
 

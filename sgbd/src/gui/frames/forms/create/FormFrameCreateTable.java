@@ -62,7 +62,6 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
 
     }
 
-    @Override
     public void initGUI() {
 
         this.addWindowListener(new WindowAdapter() {
@@ -189,7 +188,7 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
         List<Column> rightSourceColumns = columns.stream().map(column -> new Column(column.getName(), txtFieldTableName.getText(), column.getDataType(), column.getIsPrimaryKey())).toList();
 
         if (!exitReference.get()) {
-             tableCell = new TableCreator(txtFieldTableName.getText(), rightSourceColumns, content).getTableCell();
+             tableCell = TableCreator.createMemoryTable(txtFieldTableName.getText(), rightSourceColumns, content);
         } else {
             exitReference.set(true);
         }

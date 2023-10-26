@@ -1,12 +1,16 @@
 package files;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.mxgraph.model.mxCell;
 import controllers.ConstantController;
 import controllers.MainController;
 import database.TableCreator;
 import entities.Column;
+import entities.cells.CSVTableCell;
 import entities.cells.FYITableCell;
 import entities.cells.TableCell;
+import enums.CellType;
 import enums.FileType;
 import files.csv.CSVInfo;
 import gui.frames.forms.importexport.CSVRecognizerForm;
@@ -18,6 +22,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -50,55 +56,72 @@ public class ImportFile {
     }
 
     private void importFile() {
-        FileFilter filter = getFileNameExtensionFilter();
 
-        this.fileUpload.setFileFilter(filter);
+        try
+        {
+            FileFilter filter = getFileNameExtensionFilter();
 
-        if (this.fileUpload.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            MainController.setLastDirectory(new File(this.fileUpload.getCurrentDirectory().getAbsolutePath()));
+            this.fileUpload.setFileFilter(filter);
 
-            switch (this.fileType) {
-                case CSV -> {
-                    CSVInfo info = this.csv();
+            if (this.fileUpload.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                MainController.setLastDirectory(new File(this.fileUpload.getCurrentDirectory().getAbsolutePath()));
 
-                    if (!this.exitReference.get()) {
-                        assert info != null;
-                        TableCreator tableCreator = new TableCreator(
-                            this.tableName.toString(), this.columns, info, false
-                        );
+                switch (this.fileType) {
+                    case CSV -> {
+                        CSVInfo info = this.csv();
 
-                        this.tableCell = tableCreator.getTableCell();
-                    }
-                }
-                case EXCEL -> this.excel();
-                case FYI -> {
-                    AtomicReference<Table> table = new AtomicReference<>();
-                    this.header(table);
-
-                    if (!this.exitReference.get()) {
-                        String selectedFileName = this.fileUpload.getSelectedFile().getName();
-
-                        String fileName = selectedFileName.endsWith(FileType.HEADER.extension) ?
-                            selectedFileName.substring(0, selectedFileName.indexOf(".")) :
-                            selectedFileName;
-
-                        mxCell jCell = (mxCell) MainFrame
-                            .getGraph()
-                            .insertVertex(
-                                MainFrame.getGraph().getDefaultParent(), null,
-                                fileName, 0, 0, 80, 30, FileType.FYI.id
+                        if (!this.exitReference.get()) {
+                            assert info != null;
+                            this.tableCell = TableCreator.createCSVTable(
+                                    this.tableName.toString(), this.columns, info, false
                             );
-
-                        table.get().open();
-
-                        this.tableCell = new FYITableCell(jCell, fileName, table.get(), this.fileUpload.getSelectedFile());
+                        }
                     }
+                    case EXCEL -> this.excel();
+                    case HEADER -> {
+                        AtomicReference<Table> table = new AtomicReference<>();
+                        this.header(table);
+
+                        if (!this.exitReference.get()) {
+                            String selectedFileName = this.fileUpload.getSelectedFile().getName();
+
+                            String fileName = selectedFileName.endsWith(FileType.HEADER.extension) ?
+                                    selectedFileName.substring(0, selectedFileName.indexOf(".")) :
+                                    selectedFileName;
+
+                            JsonObject headerFile = new Gson().fromJson(new FileReader(fileUpload.getSelectedFile()), JsonObject.class);
+                            CellType cellType = headerFile.getAsJsonObject("information").get("file-path").getAsString()
+                                    .replaceAll("' | \"", "").endsWith(".dat")
+                                    ? CellType.FYI_TABLE : CellType.CSV_TABLE;
+
+                            mxCell jCell = (mxCell) MainFrame
+                                    .getGraph()
+                                    .insertVertex(
+                                            MainFrame.getGraph().getDefaultParent(), null,
+                                            fileName, 0, 0, 80, 30, cellType.id
+                                    );
+
+                            table.get().open();
+
+                            this.tableCell = switch (cellType){
+                                case CSV_TABLE -> new CSVTableCell(jCell, fileName, table.get(), this.fileUpload.getSelectedFile());
+                                case FYI_TABLE -> new FYITableCell(jCell, fileName, table.get(), this.fileUpload.getSelectedFile());
+                                default -> throw new IllegalStateException("Unexpected value: " + cellType);
+                            };
+                        }
+                    }
+                    case SQL ->
+                            throw new UnsupportedOperationException(String.format("Unimplemented case: %s", this.fileType));
+                    default -> throw new IllegalArgumentException(String.format("Unexpected value: %s", this.fileType));
                 }
-                case SQL -> throw new UnsupportedOperationException(String.format("Unimplemented case: %s", this.fileType));
-                default -> throw new IllegalArgumentException(String.format("Unexpected value: %s", this.fileType));
+            } else {
+                this.exitReference.set(true);
             }
-        } else {
-            this.exitReference.set(true);
+        }
+        catch (FileNotFoundException | IllegalArgumentException e){
+
+            exitReference.set(true);
+
         }
     }
 
@@ -108,7 +131,7 @@ public class ImportFile {
         return switch (this.fileType) {
             case CSV -> new FileNameExtensionFilter("CSV files", "csv");
             case EXCEL -> new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
-            case FYI -> new FileNameExtensionFilter("Headers files", "head");
+            case HEADER -> new FileNameExtensionFilter("Headers files", "head");
             case SQL -> throw new UnsupportedOperationException(String.format("Unimplemented case: %s", this.fileType));
             default -> throw new IllegalArgumentException(String.format("Unexpected value: %s", this.fileType));
         };

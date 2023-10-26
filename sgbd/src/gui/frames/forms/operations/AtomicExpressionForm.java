@@ -134,7 +134,6 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 
 	}
 
-	@Override
 	public void initGUI() {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {

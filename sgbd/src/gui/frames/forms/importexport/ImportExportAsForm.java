@@ -12,7 +12,7 @@ import gui.frames.forms.FormBase;
 
 public abstract class ImportExportAsForm extends FormBase implements ActionListener {
 
-    protected JButton csvButton;
+    protected JButton btnCsv;
 
     protected JLabel textLabel;
 
@@ -21,21 +21,18 @@ public abstract class ImportExportAsForm extends FormBase implements ActionListe
     protected ImportExportAsForm() {
         super(null);
 
-        this.csvButton = new JButton(ConstantController.getString("importExportAs.csvButton"));
+        this.btnCsv = new JButton(ConstantController.getString("importExportAs.csvButton"));
         this.textLabel = new JLabel();
         this.centerPanel = new JPanel();
 
-        this.initGUI();
-    }
-
-    @Override
-    public void initGUI() {
         this.contentPanel.removeAll();
         this.contentPanel.add(this.centerPanel, BorderLayout.CENTER);
 
-        this.csvButton.addActionListener(this);
+        this.btnCsv.addActionListener(this);
 
         this.centerPanel.add(this.textLabel);
-        this.centerPanel.add(this.csvButton);
+        this.centerPanel.add(this.btnCsv);
+
     }
+
 }

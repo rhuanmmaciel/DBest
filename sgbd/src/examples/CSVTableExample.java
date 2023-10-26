@@ -25,7 +25,7 @@ public class CSVTableExample {
             new Column("Age", "biostats", ColumnDataType.INTEGER)
         );
 
-        Prototype prototype = new TableCreator(false).createPrototype(columns);
+        Prototype prototype = TableCreator.createPrototype(columns);
 
         Header header = new Header(prototype, "biostats");
         header.set(Header.FILE_PATH, "/home/rhuan/Documents/biostats.csv");

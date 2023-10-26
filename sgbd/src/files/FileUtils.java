@@ -1,7 +1,13 @@
 package files;
 
+import com.mxgraph.model.mxCell;
 import controllers.ConstantController;
+import controllers.MainController;
+import database.TableCreator;
+import entities.cells.TableCell;
+import entities.utils.cells.CellUtils;
 import enums.FileType;
+import gui.frames.main.MainFrame;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +22,43 @@ public class FileUtils {
     private static final File TEMP = new File("temp");
 
     private FileUtils() {
+
+    }
+
+    public static void verifyExistingFilesToInitialize(){
+
+        try
+        {
+            File initDirectory = new File("init");
+
+            for (File file : Objects.requireNonNull(initDirectory.listFiles())) {
+
+                if (!file.isFile() || !file.getName().endsWith(FileType.HEADER.extension)) continue;
+
+                TableCell tableCell = TableCreator.createTable(file);
+
+                assert tableCell != null;
+                mxCell tableJCell = (mxCell) MainFrame
+                        .getTablesGraph()
+                        .insertVertex(
+                                MainFrame.getTablesGraph().getDefaultParent(), null, tableCell.getName(),
+                                0, MainController.getCurrentTableYPosition(), tableCell.getWidth(),
+                                tableCell.getHeight(), tableCell.getStyle()
+                        );
+
+                CellUtils.addCell(tableJCell, tableCell);
+
+                MainController.getTables().put(tableCell.getName(), tableCell);
+
+                MainFrame.getTablesPanel().revalidate();
+
+                MainController.incrementCurrentTableYPosition(40);
+            }
+
+        }
+        catch (Exception ignored){
+
+        }
 
     }
 

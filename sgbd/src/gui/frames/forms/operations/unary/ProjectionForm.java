@@ -30,7 +30,6 @@ public class ProjectionForm extends OperationForm implements ActionListener, IOp
 
 	}
 
-	@Override
 	public void initGUI() {
 
 		addWindowListener(new WindowAdapter() {

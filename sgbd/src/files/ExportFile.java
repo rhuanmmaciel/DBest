@@ -223,7 +223,7 @@ public class ExportFile extends JPanel {
                 fileToSave = new File(filePath);
             }
 
-            String headFileName = String.format("%s%s", this.fileChooser.getSelectedFile().getName(), FileType.HEADER.extension);
+            String headFileName = this.fileChooser.getSelectedFile().getName();
             String fileName = headFileName.endsWith(FileType.HEADER.extension) ? headFileName.substring(0, headFileName.indexOf(".")) : headFileName;
 
             if (fileToSave.exists()) {
@@ -262,11 +262,9 @@ public class ExportFile extends JPanel {
                 columnsWithPrimaryKey.add(readyColumn);
             }
 
-            TableCreator tableCreator = new TableCreator(fileName, columnsWithPrimaryKey, rows, fileToSave, true);
-
             if (exitReference.get()) return;
 
-            TableCell createdCell = tableCreator.getTableCell();
+            TableCell createdCell = TableCreator.createFYITable(fileName, columnsWithPrimaryKey, rows, fileToSave, true);
 
             createdCell.getTable().saveHeader(headFileName);
             createdCell.getTable().close();

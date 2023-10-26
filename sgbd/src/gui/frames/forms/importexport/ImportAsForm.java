@@ -61,12 +61,12 @@ public class ImportAsForm extends ImportExportAsForm {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == this.csvButton) {
+        if (event.getSource() == this.btnCsv) {
             this.dispose();
             this.tableCell = new ImportFile(FileType.CSV, this.deleteCellReference).getResult();
         } else if (event.getSource() == this.headFileButton) {
             this.dispose();
-            this.tableCell = new ImportFile(FileType.FYI, this.deleteCellReference).getResult();
+            this.tableCell = new ImportFile(FileType.HEADER, this.deleteCellReference).getResult();
         }
     }
 

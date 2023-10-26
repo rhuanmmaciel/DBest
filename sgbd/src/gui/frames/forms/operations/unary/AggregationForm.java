@@ -30,7 +30,6 @@ public class AggregationForm extends OperationForm implements ActionListener, IO
 
     }
 
-    @Override
     public void initGUI() {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {

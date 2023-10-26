@@ -96,7 +96,6 @@ public abstract sealed class TableCell extends Cell permits CSVTableCell, FYITab
                 case "string" -> prototypeColumn.getSize() == 1 ? ColumnDataType.CHARACTER : ColumnDataType.STRING;
                 default -> ColumnDataType.NONE;
             };
-
             columns.add(new Column(prototypeColumn.getName(), this.getName(), dataType, prototypeColumn.isPrimaryKey()));
         }
 

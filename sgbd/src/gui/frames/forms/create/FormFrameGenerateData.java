@@ -137,7 +137,6 @@ public class FormFrameGenerateData extends FormBase implements ActionListener, C
         this.initGUI();
     }
 
-    @Override
     public void initGUI() {
 
         // componentes do topPane

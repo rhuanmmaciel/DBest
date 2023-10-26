@@ -1,8 +1,12 @@
 package database;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import controllers.ConstantController;
+import controllers.MainController;
+import dsl.utils.DslUtils;
 import entities.cells.CSVTableCell;
 import entities.cells.FYITableCell;
 import entities.cells.MemoryTableCell;
@@ -21,6 +25,8 @@ import sgbd.source.table.MemoryTable;
 import sgbd.source.table.Table;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,51 +35,48 @@ import java.util.Scanner;
 
 public class TableCreator {
 
-    private TableCell tableCell;
+    public static TableCell createTable(File file) throws FileNotFoundException {
 
-    private final boolean mustExport;
+        if(!file.isFile()) throw new IllegalArgumentException(ConstantController.getString("file.error.notAFile"));
 
-    public TableCreator(boolean mustExport) {
-        this.tableCell = null;
-        this.mustExport = mustExport;
+        if(!file.getName().endsWith(FileType.HEADER.extension)) throw new IllegalArgumentException(ConstantController.getString("file.error.wrongExtension"));
+
+
+        JsonObject headerFile = new Gson().fromJson(new FileReader(file), JsonObject.class);
+        CellType cellType = headerFile.getAsJsonObject("information").get("file-path").getAsString()
+                .replaceAll("' | \"", "").endsWith(".dat")
+                ? CellType.FYI_TABLE : CellType.CSV_TABLE;
+
+        String path = file.getAbsolutePath();
+
+        Table table = Table.loadFromHeader(path);
+        table.open();
+
+        String tableName = headerFile.getAsJsonObject("information").get("tablename").getAsString();
+
+        return switch (cellType){
+
+            case MEMORY_TABLE, OPERATION -> throw new IllegalArgumentException();
+            case CSV_TABLE -> new CSVTableCell(tableName,
+                    table, new File(path));
+            case FYI_TABLE -> new FYITableCell(tableName,
+                    table, new File(path));
+
+        };
+
     }
 
-    public TableCreator(String tableName, List<entities.Column> columns, CSVInfo csvInfo, boolean mustExport) {
-        this(mustExport);
-
-        this.createCSVTable(tableName, columns, csvInfo.separator(), csvInfo.stringDelimiter(), csvInfo.beginIndex(), csvInfo.path());
-    }
-
-    public TableCreator(
-        String tableName, List<entities.Column> columns, Map<Integer,
-        Map<String, String>> data, File headerFile, boolean mustExport
+    public static CSVTableCell createCSVTable(
+            String tableName, List<entities.Column> columns, CSVInfo csvInfo, boolean mustExport
     ) {
-        this(mustExport);
-
-        this.createFYITable(tableName, columns, data, headerFile);
-    }
-
-    public TableCreator(
-            String tableName, List<entities.Column> columns, Map<Integer,
-            Map<String, String>> data
-    ) {
-        this(false);
-
-        this.createMemoryTable(tableName, columns, data);
-    }
-
-    private void createCSVTable(
-        String tableName, List<entities.Column> columns, char separator,
-        char stringDelimiter, int beginIndex, Path path
-    ) {
-        Prototype prototype = this.createPrototype(columns);
+        Prototype prototype = createPrototype(columns);
 
         Header header = new Header(prototype, tableName);
-        header.set(Header.FILE_PATH, path.toString());
+        header.set(Header.FILE_PATH, csvInfo.path().toString());
 
         String headerFileName = String.format("%s%s", tableName, FileType.HEADER.extension);
 
-        CSVTable table = new CSVTable(header, separator, stringDelimiter, beginIndex);
+        CSVTable table = new CSVTable(header, csvInfo.separator(), csvInfo.stringDelimiter(), csvInfo.beginIndex());
         table.open();
         table.saveHeader(headerFileName);
 
@@ -82,10 +85,8 @@ public class TableCreator {
         FileUtils.moveToTempDirectory(headerFile);
         headerFile = FileUtils.getFileFromTempDirectory(headerFileName).get();
 
-        if (this.mustExport) {
-            this.tableCell = new CSVTableCell(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_CSV_TABLE_STYLE), tableName, columns, table, prototype, headerFile);
-            return;
-        }
+        if (mustExport)
+            return new CSVTableCell(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_CSV_TABLE_STYLE), tableName, columns, table, prototype, headerFile);
 
         mxCell jCell = (mxCell) MainFrame
             .getGraph()
@@ -94,25 +95,23 @@ public class TableCreator {
                 ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, CellType.CSV_TABLE.id
             );
 
-        this.tableCell = new CSVTableCell(jCell, tableName, columns, table, prototype, headerFile);
+         return new CSVTableCell(jCell, tableName, columns, table, prototype, headerFile);
     }
 
-    private void createFYITable(
-        String tableName, List<entities.Column> columns, Map<Integer, Map<String, String>> data, File headerFile
+    public static FYITableCell createFYITable(
+            String tableName, List<entities.Column> columns, Map<Integer, Map<String, String>> data, File headerFile, boolean mustExport
     ) {
-        List<RowData> rows = new ArrayList<>(this.getRowData(columns, data));
+        List<RowData> rows = new ArrayList<>(getRowData(columns, data));
 
-        Prototype prototype = this.createPrototype(columns);
+        Prototype prototype = createPrototype(columns);
 
         Table table = Table.openTable(new Header(prototype, tableName));
         table.open();
         table.insert(rows);
         table.saveHeader(String.format("%s%s", tableName, FileType.HEADER.extension));
 
-        if (this.mustExport) {
-            this.tableCell = new FYITableCell(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_FYI_TABLE_STYLE), tableName, columns, table, prototype, headerFile);
-            return;
-        }
+        if (mustExport)
+            return  new FYITableCell(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_FYI_TABLE_STYLE), tableName, columns, table, prototype, headerFile);
 
         mxCell jCell = (mxCell) MainFrame
             .getGraph()
@@ -121,18 +120,21 @@ public class TableCreator {
                 ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, CellType.FYI_TABLE.id
             );
 
-        this.tableCell = new FYITableCell(jCell, tableName, columns, table, prototype, headerFile);
+        return new FYITableCell(jCell, tableName, columns, table, prototype, headerFile);
     }
 
-    private void createMemoryTable(
+    public static MemoryTableCell createMemoryTable(
             String tableName, List<entities.Column> columns, Map<Integer, Map<String, String>> data
     ) {
 
-        List<RowData> rows = new ArrayList<>(this.getRowData(columns, data));
+        List<RowData> rows = new ArrayList<>(getRowData(columns, data));
 
-        Prototype prototype = this.createPrototype(columns);
+        Prototype prototype = createPrototype(columns);
 
-        Table table = MemoryTable.openTable(new Header(prototype, tableName));
+        Header h = new Header(prototype, tableName);
+        h.set(Header.TABLE_TYPE, "MemoryTable");
+
+        Table table = Table.openTable(h);
         table.open();
         table.insert(rows);
 
@@ -143,10 +145,10 @@ public class TableCreator {
                         ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, CellType.MEMORY_TABLE.id
                 );
 
-        this.tableCell = new MemoryTableCell(jCell, tableName, columns, table, prototype);
+        return new MemoryTableCell(jCell, tableName, columns, table, prototype);
     }
 
-    public Prototype createPrototype(List<entities.Column> columns) {
+    public static Prototype createPrototype(List<entities.Column> columns) {
         Prototype prototype = new Prototype();
 
         for (entities.Column column : columns) {
@@ -192,7 +194,7 @@ public class TableCreator {
         return prototype;
     }
 
-    private List<RowData> getRowData(List<entities.Column> columns, Map<Integer, Map<String, String>> content) {
+    private static List<RowData> getRowData(List<entities.Column> columns, Map<Integer, Map<String, String>> content) {
         List<RowData> rows = new ArrayList<>();
 
         for (Map<String, String> line : content.values()) {
@@ -221,7 +223,4 @@ public class TableCreator {
         return rows;
     }
 
-    public TableCell getTableCell() {
-        return this.tableCell;
-    }
 }

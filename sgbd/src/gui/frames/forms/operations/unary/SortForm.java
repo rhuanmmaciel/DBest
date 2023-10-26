@@ -31,7 +31,6 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
 
     }
 
-    @Override
     public void initGUI() {
 
         addWindowListener(new WindowAdapter() {
