@@ -12,51 +12,42 @@ import enums.ColumnDataType;
 
 public class Column implements Comparable<Column> {
 
-    private final String name;
+    public final String NAME;
 
-    private final String source;
+    public final String SOURCE;
 
-    private final ColumnDataType dataType;
+    public final ColumnDataType DATA_TYPE;
 
-    private final Boolean isPrimaryKey;
+    public final Boolean IS_PRIMARY_KEY;
 
-    public Column(String name, String source, ColumnDataType dataType, boolean isPrimaryKey) {
-        this.name = name;
-        this.source = source;
-        this.dataType = dataType;
-        this.isPrimaryKey = isPrimaryKey;
+    public final Boolean IS_IGNORED_COLUMN;
+
+    public Column(String NAME, String SOURCE, ColumnDataType DATA_TYPE, boolean IS_PRIMARY_KEY, boolean IS_IGNORED_COLUMN) {
+        this.NAME = NAME;
+        this.SOURCE = SOURCE;
+        this.DATA_TYPE = DATA_TYPE;
+        this.IS_PRIMARY_KEY = IS_PRIMARY_KEY;
+        this.IS_IGNORED_COLUMN = IS_IGNORED_COLUMN;
     }
 
-    public Column(String name, String source, ColumnDataType dataType) {
-        this(name, source, dataType, false);
+    public Column(String NAME, String SOURCE, ColumnDataType DATA_TYPE, boolean IS_PRIMARY_KEY) {
+        this(NAME, SOURCE, DATA_TYPE, IS_PRIMARY_KEY, false);
     }
 
-    public Column(String name, String source, boolean isPrimaryKey) {
-        this(name, source, ColumnDataType.NONE, isPrimaryKey);
+    public Column(String NAME, String SOURCE, ColumnDataType DATA_TYPE) {
+        this(NAME, SOURCE, DATA_TYPE, false, false);
     }
 
-    public Column(String name, String source) {
-        this(name, source, ColumnDataType.NONE, false);
+    public Column(String NAME, String SOURCE, boolean IS_PRIMARY_KEY) {
+        this(NAME, SOURCE, ColumnDataType.NONE, IS_PRIMARY_KEY, false);
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public String getSource() {
-        return this.source;
+    public Column(String NAME, String SOURCE) {
+        this(NAME, SOURCE, ColumnDataType.NONE, false, false);
     }
 
     public String getSourceAndName() {
-        return String.format("%s.%s", this.source, this.name);
-    }
-
-    public ColumnDataType getDataType() {
-        return this.dataType;
-    }
-
-    public Boolean getIsPrimaryKey() {
-        return this.isPrimaryKey;
+        return String.format("%s.%s", this.SOURCE, this.NAME);
     }
 
     public static String removeName(String sourceAndName) {
@@ -86,7 +77,7 @@ public class Column implements Comparable<Column> {
     public static boolean equals(Column column, String source, String name) {
         if (column == null || source == null || name == null) return false;
 
-        return column.getSource().equals(source) && column.getName().equals(name);
+        return column.SOURCE.equals(source) && column.NAME.equals(name);
     }
 
     public static String composeSourceAndName(String source, String name) {
@@ -112,7 +103,7 @@ public class Column implements Comparable<Column> {
     @Override
     public boolean equals(Object object) {
         if (object instanceof Column column) {
-            return this.getSource().equals(column.getSource()) && this.getName().equals(column.getName());
+            return this.SOURCE.equals(column.SOURCE) && this.NAME.equals(column.NAME);
         }
 
         return super.equals(object);
@@ -122,15 +113,15 @@ public class Column implements Comparable<Column> {
     public String toString() {
         return String.format(
             "Name: %s -- Source: %s -- Type: %s -- Primary key: %s",
-            this.name, this.source, this.dataType, this.isPrimaryKey
+            this.NAME, this.SOURCE, this.DATA_TYPE, this.IS_PRIMARY_KEY
         );
     }
 
     @Override
     public int compareTo(@NotNull Column column) {
-        if (Objects.equals(column.getName(), this.name) && Objects.equals(column.getSource(), this.source)) return 0;
+        if (Objects.equals(column.NAME, this.NAME) && Objects.equals(column.SOURCE, this.SOURCE)) return 0;
 
-        if (Objects.equals(column.getName(), this.name)) return 1;
+        if (Objects.equals(column.NAME, this.NAME)) return 1;
 
         return -1;
     }

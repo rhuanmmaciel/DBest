@@ -27,11 +27,7 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
 
     private JComboBox<Object> comboBox;
 
-    private final JCheckBox checkBoxIsPrimaryKey = new JCheckBox();
-
     private final DefaultTableModel table;
-
-    private JLabel lblColumnName;
 
     private final List<Column> columns;
 
@@ -58,7 +54,7 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
         btnReady.addActionListener(this);
         btnCancel.addActionListener(this);
 
-        this.lblColumnName = new JLabel(ConstantController.getString("createTable.addColumn.columnName"));
+        JLabel lblColumnName = new JLabel(ConstantController.getString("createTable.addColumn.columnName"));
         this.textFieldColumnName = new JTextField();
         this.textFieldColumnName.getDocument().addDocumentListener(this);
         this.textFieldColumnName.setColumns(10);
@@ -76,12 +72,6 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
 
         boxMain.add(comboBox);
 
-        Box boxPrimaryKey = Box.createHorizontalBox();
-        boxPrimaryKey.add(new JLabel(ConstantController.getString("createTable.addColumn.isPK")));
-        boxPrimaryKey.add(checkBoxIsPrimaryKey);
-
-        boxMain.add(boxPrimaryKey);
-
         contentPanel.add(boxMain);
 
         this.checkBtnReady();
@@ -94,8 +84,6 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == this.btnReady) {
 
-            boolean isPrimaryKey = this.checkBoxIsPrimaryKey.isSelected();
-
             ColumnDataType columnDataType = switch (comboBox.getSelectedItem().toString()) {
                 case "Integer" -> ColumnDataType.INTEGER;
                 case "Float" -> ColumnDataType.FLOAT;
@@ -106,7 +94,7 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
             };
 
             this.table.addColumn(this.textFieldColumnName.getText().replaceAll("[^\\p{Alnum}]", ""));
-            this.columns.add(new Column(textFieldColumnName.getText(), "any", columnDataType, isPrimaryKey));
+            this.columns.add(new Column(textFieldColumnName.getText(), "any", columnDataType));
             this.closeWindow();
         }
 

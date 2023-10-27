@@ -116,7 +116,7 @@ public class ExportFile extends JPanel {
 
                 String name = inf.newColumnNameTxtFields().get(columnName).getText();
 
-                String type = switch (column.getDataType()) {
+                String type = switch (column.DATA_TYPE) {
                     case INTEGER, LONG -> "INT";
                     case FLOAT -> "FLOAT";
                     case DOUBLE -> "DOUBLE";
@@ -172,7 +172,7 @@ public class ExportFile extends JPanel {
                         .filter(c -> c.getSourceAndName().equals(finalColumnNames.get(finalI)))
                         .findFirst()
                         .orElseThrow()
-                        .getDataType();
+                        .DATA_TYPE;
 
                     boolean isString = type == ColumnDataType.STRING || type == ColumnDataType.NONE || type == ColumnDataType.CHARACTER;
 
@@ -257,7 +257,7 @@ public class ExportFile extends JPanel {
             List<Column> columnsWithPrimaryKey = new ArrayList<>();
 
             for (Column column : cell.getColumns()) {
-                Column readyColumn = primaryKeyColumns.contains(column) ? new Column(column.getName(), column.getSource(), column.getDataType(), true) : column;
+                Column readyColumn = primaryKeyColumns.contains(column) ? new Column(column.NAME, column.SOURCE, column.DATA_TYPE, true) : column;
 
                 columnsWithPrimaryKey.add(readyColumn);
             }

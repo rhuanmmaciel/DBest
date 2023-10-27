@@ -76,7 +76,7 @@ public class TextEditor extends JFrame implements ActionListener {
 
     private final JMenuItem intersectionMenuItem = new JMenuItem(OperationType.INTERSECTION.displayName);
 
-    private final JMenuItem groupMenuItem = new JMenuItem(OperationType.GROUP.displayName);
+//    private final JMenuItem groupMenuItem = new JMenuItem(OperationType.GROUP.displayName);
 
     private final JButton runButton = new JButton(ConstantController.getString("textEditor.execute"));
 
@@ -150,8 +150,8 @@ public class TextEditor extends JFrame implements ActionListener {
         this.unionMenuItem.addActionListener(this);
         mnOperations.add(this.intersectionMenuItem);
         this.intersectionMenuItem.addActionListener(this);
-        mnOperations.add(this.groupMenuItem);
-        this.groupMenuItem.addActionListener(this);
+//        mnOperations.add(this.groupMenuItem);
+//        this.groupMenuItem.addActionListener(this);
 
         this.backButton.addActionListener(this);
         this.importButton.addActionListener(this);
@@ -235,8 +235,8 @@ public class TextEditor extends JFrame implements ActionListener {
             this.insertOperation(ConstantController.getString("textEditor.operations.example.union"));
         } else if (event.getSource() == this.intersectionMenuItem) {
             this.insertOperation(ConstantController.getString("textEditor.operations.example.intersection"));
-        } else if (event.getSource() == this.groupMenuItem) {
-            this.insertOperation(ConstantController.getString("textEditor.operations.example.group"));
+//        } else if (event.getSource() == this.groupMenuItem) {
+//            this.insertOperation(ConstantController.getString("textEditor.operations.example.group"));
         } else if (event.getSource() == this.importButton) {
             this.importText();
         }

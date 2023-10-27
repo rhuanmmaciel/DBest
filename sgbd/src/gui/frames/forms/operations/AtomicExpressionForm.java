@@ -101,7 +101,7 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 		this.root = root;
 
 		parent1.getColumns().stream()
-				.map(Column::getSource).distinct()
+				.map(column -> column.SOURCE).distinct()
 				.forEach(comboBoxSource2::addItem);
 
 		setColumns(comboBoxColumn2, comboBoxSource2, parent1);
@@ -112,11 +112,11 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 
 			this.parent2 = CellUtils.getActiveCell(jCell).get().getParents().get(1);
 			parent2.getColumns().stream()
-					.map(Column::getSource).distinct()
+					.map(column -> column.SOURCE).distinct()
 					.forEach(comboBoxSource::addItem);
 
 			parent2.getColumns().stream()
-					.map(Column::getSource).distinct()
+					.map(column -> column.SOURCE).distinct()
 					.forEach(comboBoxSource2::addItem);
 
 		}
@@ -227,12 +227,12 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 		checkBtnReady();
 
 		if(e.getSource() == comboBoxSource){
-			if(parent1.getColumns().stream().anyMatch(x -> x.getSource().
+			if(parent1.getColumns().stream().anyMatch(column -> column.SOURCE.
 					equals(Objects.requireNonNull(comboBoxSource.getSelectedItem()).toString()))){
 
 				setColumns(comboBoxColumn, comboBoxSource, parent1);
 
-			}else if(parent2 != null && parent2.getColumns().stream().anyMatch(x -> x.getSource().
+			}else if(parent2 != null && parent2.getColumns().stream().anyMatch(column -> column.SOURCE.
 					equals(Objects.requireNonNull(comboBoxSource.getSelectedItem()).toString()))){
 
 				setColumns(comboBoxColumn, comboBoxSource, parent2);
@@ -240,12 +240,12 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 			}
 		}
 		if(e.getSource() == comboBoxSource2){
-			if(parent1.getColumns().stream().anyMatch(x -> x.getSource().
+			if(parent1.getColumns().stream().anyMatch(column -> column.SOURCE.
 							equals(Objects.requireNonNull(comboBoxSource2.getSelectedItem()).toString()))){
 
 				setColumns(comboBoxColumn2, comboBoxSource2, parent1);
 
-			}else if(parent2 != null && parent2.getColumns().stream().anyMatch(x -> x.getSource().
+			}else if(parent2 != null && parent2.getColumns().stream().anyMatch(column -> column.SOURCE.
 					equals(Objects.requireNonNull(comboBoxSource2.getSelectedItem()).toString()))){
 
 				setColumns(comboBoxColumn2, comboBoxSource2, parent2);

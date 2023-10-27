@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +25,11 @@ import entities.cells.TableCell;
 import gui.frames.forms.FormBase;
 import gui.frames.forms.IFormCondition;
 
+import org.kordamp.ikonli.dashicons.Dashicons;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignD;
+import org.kordamp.ikonli.swing.FontIcon;
+
 public class FormFrameCreateTable extends FormBase implements ActionListener, DocumentListener, IFormCondition {
 
     private JTable table;
@@ -36,7 +40,9 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
 
     private JButton btnAddColumn;
 
-    private JButton btnGenerateData;
+    private JButton btnGenerateDataFrame;
+
+    private JButton btnGenerateData = new JButton();
 
     private JTextField txtFieldTableName;
 
@@ -96,7 +102,13 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
 
         JLabel tableNameLabel = new JLabel(ConstantController.getString("createTable.tableName")+": ");
 
-        this.btnGenerateData = new JButton(ConstantController.getString("createTable.generateData"));
+        this.btnGenerateDataFrame = new JButton(ConstantController.getString("createTable.generateData"));
+        this.btnGenerateDataFrame.addActionListener(this);
+
+        FontIcon iconDice = FontIcon.of(MaterialDesignD.DICE_6);
+        iconDice.setIconSize(15);
+
+        this.btnGenerateData.setIcon(iconDice);
         this.btnGenerateData.addActionListener(this);
 
         Box boxMain = Box.createVerticalBox();
@@ -111,6 +123,7 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
         Box boxBottom = Box.createHorizontalBox();
         boxBottom.add(btnAddColumn);
         boxBottom.add(btnAddRow);
+        boxBottom.add(btnGenerateDataFrame);
         boxBottom.add(btnGenerateData);
         boxMain.add(boxBottom);
 
@@ -134,7 +147,7 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
             new FormFrameAddColumn(this.model, this.columns);
         } else if (event.getSource() == this.btnAddRow) {
             this.model.insertRow(this.table.getRowCount(), new Object[]{});
-        } else if (event.getSource() == this.btnGenerateData) {
+        } else if (event.getSource() == this.btnGenerateDataFrame) {
             new FormFrameGenerateData(this.columns, this.model, this.table);
         }
 
@@ -159,8 +172,8 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
     private void updateButtons() {
         this.checkBtnReady();
         this.btnAddRow.setEnabled(this.table.getColumnCount() > 0);
+        this.btnGenerateDataFrame.setEnabled(this.table.getRowCount() > 0);
         this.btnGenerateData.setEnabled(this.table.getRowCount() > 0);
-
         this.updateToolTipText();
     }
 
@@ -185,7 +198,7 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
 
         AtomicReference<Boolean> exitReference = new AtomicReference<>(exit);
 
-        List<Column> rightSourceColumns = columns.stream().map(column -> new Column(column.getName(), txtFieldTableName.getText(), column.getDataType(), column.getIsPrimaryKey())).toList();
+        List<Column> rightSourceColumns = new ArrayList<>(columns.stream().map(column -> new Column(column.NAME, txtFieldTableName.getText(), column.DATA_TYPE, column.IS_PRIMARY_KEY)).toList());
 
         if (!exitReference.get()) {
              tableCell = TableCreator.createMemoryTable(txtFieldTableName.getText(), rightSourceColumns, content);
@@ -223,7 +236,7 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
         UIManager.put("ToolTip.foreground", Color.RED);
 
         this.btnAddRow.setToolTipText(addRowButtonToolTipText.isEmpty() ? null : addRowButtonToolTipText);
-        this.btnGenerateData.setToolTipText(createDataButtonToolTipText.isEmpty() ? null : createDataButtonToolTipText);
+        this.btnGenerateDataFrame.setToolTipText(createDataButtonToolTipText.isEmpty() ? null : createDataButtonToolTipText);
         this.btnReady.setToolTipText(createTableToolTipText.isEmpty() ? null : createTableToolTipText);
 
     }

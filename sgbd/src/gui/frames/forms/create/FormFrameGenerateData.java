@@ -141,7 +141,7 @@ public class FormFrameGenerateData extends FormBase implements ActionListener, C
 
         // componentes do topPane
         List<String> columnsName = new ArrayList<>();
-        this.columns.forEach(x -> columnsName.add(x.getName()));
+        this.columns.forEach(x -> columnsName.add(x.NAME));
 
         Arrays.stream(columnsName.toArray()).forEach(this.comboBox::addItem);
         this.comboBox.addActionListener(this);
@@ -382,7 +382,7 @@ public class FormFrameGenerateData extends FormBase implements ActionListener, C
 
         int columnIndex = this.table.getColumnModel().getColumnIndex(Objects.requireNonNull(this.comboBox.getSelectedItem()).toString());
 
-        ColumnDataType selectedColumnType = this.columns.get(columnIndex).getDataType();
+        ColumnDataType selectedColumnType = this.columns.get(columnIndex).DATA_TYPE;
 
         this.lblColumnType.setText(String.format("%s: %s", ConstantController.getString("createTable.generateData.type"), selectedColumnType.toString()));
         this.setAllowedTabs(selectedColumnType);
@@ -443,7 +443,7 @@ public class FormFrameGenerateData extends FormBase implements ActionListener, C
             .getColumnModel()
             .getColumnIndex(Objects.requireNonNull(this.comboBox.getSelectedItem()).toString());
 
-        ColumnDataType selectedColumnType = this.columns.get(columnIndex).getDataType();
+        ColumnDataType selectedColumnType = this.columns.get(columnIndex).DATA_TYPE;
 
         if (event.getSource() == this.btnCancel) {
             this.dispose();

@@ -19,9 +19,27 @@ public final class BinaryExpression extends OperationExpression {
 		
 	}
 
+    public int findFirstUnbracketedParenthesis(String input) {
+        int bracketCount = 0;
+
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+
+            if (c == '[') {
+                bracketCount++;
+            } else if (c == ']') {
+                bracketCount--;
+            } else if (c == '(' && bracketCount == 0) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
 	private void binaryRecognizer(String input) throws InputException {
 
-		int endIndex = input.indexOf('(');
+		int endIndex = findFirstUnbracketedParenthesis(input);
 
 		String regex = "\\[[^\\[]*\\(";
 
@@ -37,7 +55,7 @@ public final class BinaryExpression extends OperationExpression {
 		
 		setType(OperationType.fromString(input.substring(0, endIndex).toLowerCase()));
 		
-		int sourcePosition = input.indexOf("(") + 1;
+		int sourcePosition = findFirstUnbracketedParenthesis(input) + 1;
 		int commaPosition = DslUtils.findCommaPosition(input.substring(sourcePosition))
 				+ input.substring(0, sourcePosition).length();
 

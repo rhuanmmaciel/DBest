@@ -7,11 +7,13 @@ import com.mxgraph.model.mxGeometry;
 import controllers.ConstantController;
 import controllers.MainController;
 import dsl.utils.DslUtils;
+import entities.Column;
 import entities.cells.CSVTableCell;
 import entities.cells.FYITableCell;
 import entities.cells.MemoryTableCell;
 import entities.cells.TableCell;
 import enums.CellType;
+import enums.ColumnDataType;
 import enums.FileType;
 import files.FileUtils;
 import files.csv.CSVInfo;
@@ -29,9 +31,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class TableCreator {
 
@@ -123,9 +127,36 @@ public class TableCreator {
         return new FYITableCell(jCell, tableName, columns, table, prototype, headerFile);
     }
 
+    public static void createIgnoredPKColumn(List<entities.Column> columns, Map<Integer, Map<String, String>> data, String tableName){
+
+        String ignoredColumnName = "__IDX__";
+        int i = 1;
+
+        while (columns.stream().map(column -> column.NAME).toList().contains(ignoredColumnName))
+            ignoredColumnName = "__IDX__" + i++;
+
+        columns.add(new Column(ignoredColumnName, tableName, ColumnDataType.LONG, true, true));
+
+        HashMap<Integer, Map<String, String>> newData = new HashMap<>();
+        for(Map.Entry<Integer, Map<String, String>> rows : data.entrySet()) {
+
+            HashMap<String, String> newValues = new HashMap<>(rows.getValue());
+            newValues.put(ignoredColumnName, String.valueOf(rows.getKey()));
+
+            newData.put(rows.getKey(), newValues);
+
+        }
+
+        data.clear();
+        data.putAll(newData);
+
+    }
+
     public static MemoryTableCell createMemoryTable(
             String tableName, List<entities.Column> columns, Map<Integer, Map<String, String>> data
     ) {
+
+        if(columns.stream().noneMatch(column -> column.IS_PRIMARY_KEY)) createIgnoredPKColumn(columns, data, tableName);
 
         List<RowData> rows = new ArrayList<>(getRowData(columns, data));
 
@@ -150,12 +181,11 @@ public class TableCreator {
 
     public static Prototype createPrototype(List<entities.Column> columns) {
         Prototype prototype = new Prototype();
-
         for (entities.Column column : columns) {
             short size;
             short flags;
 
-            switch (column.getDataType()) {
+            switch (column.DATA_TYPE) {
                 case INTEGER -> {
                     size = 4;
                     flags = Metadata.SIGNED_INTEGER_COLUMN;
@@ -186,9 +216,11 @@ public class TableCreator {
                 }
             }
 
-            flags |= column.getIsPrimaryKey() ? Metadata.PRIMARY_KEY : Metadata.CAN_NULL_COLUMN;
+            flags |= column.IS_PRIMARY_KEY ? Metadata.PRIMARY_KEY : Metadata.CAN_NULL_COLUMN;
 
-            prototype.addColumn(column.getName(), size, flags);
+            flags |= column.IS_IGNORED_COLUMN ? Metadata.IGNORE_COLUMN : 0;
+
+            prototype.addColumn(column.NAME, size, flags);
         }
 
         return prototype;
@@ -204,15 +236,15 @@ public class TableCreator {
                 String key = data.getKey();
                 String value = data.getValue();
 
-                entities.Column column = columns.stream().filter(c -> c.getName().equals(key)).findFirst().orElseThrow();
+                entities.Column column = columns.stream().filter(c -> c.NAME.equals(key)).findFirst().orElseThrow();
 
                 if (!value.equals(ConstantController.NULL) && !value.isEmpty()) {
-                    switch (column.getDataType()) {
-                        case INTEGER -> rowData.setInt(column.getName(), (int) (Double.parseDouble(value.strip())));
-                        case LONG -> rowData.setLong(column.getName(), (long) (Double.parseDouble(value.strip())));
-                        case FLOAT -> rowData.setFloat(column.getName(), Float.parseFloat(value.strip()));
-                        case DOUBLE -> rowData.setDouble(column.getName(), Double.parseDouble(value.strip()));
-                        default -> rowData.setString(column.getName(), value.strip());
+                    switch (column.DATA_TYPE) {
+                        case INTEGER -> rowData.setInt(column.NAME, (int) (Double.parseDouble(value.strip())));
+                        case LONG -> rowData.setLong(column.NAME, (long) (Double.parseDouble(value.strip())));
+                        case FLOAT -> rowData.setFloat(column.NAME, Float.parseFloat(value.strip()));
+                        case DOUBLE -> rowData.setDouble(column.NAME, Double.parseDouble(value.strip()));
+                        default -> rowData.setString(column.NAME, value.strip());
                     }
                 }
             }

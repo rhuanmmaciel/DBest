@@ -94,7 +94,7 @@ public abstract class OperationForm extends FormBase {
         contentPanel.add(centerPanel, BorderLayout.CENTER);
 
         parent1.getColumns().stream()
-                .map(Column::getSource).distinct()
+                .map(x -> x.SOURCE).distinct()
                 .forEach(comboBoxSource::addItem);
 
         comboBoxSource.addActionListener(actionEvent -> setColumns(comboBoxColumn, comboBoxSource, parent1));
@@ -123,7 +123,7 @@ public abstract class OperationForm extends FormBase {
     protected void setColumns(JComboBox<String> comboBox, JComboBox<String> comboBoxS, Cell parent){
 
         comboBox.removeAllItems();
-        parent.getColumns().stream().filter(x -> x.getSource().
+        parent.getColumns().stream().filter(x -> x.SOURCE.
                         equals(Objects.requireNonNull(comboBoxS.getSelectedItem()).toString())).
                         map(Column::getSourceAndName).filter(x -> !restrictedColumns.contains(x)).
                         map(Column::removeSource).forEach(comboBox::addItem);

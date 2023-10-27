@@ -66,13 +66,13 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
     protected JMenuItem sortMenuItem;
 
-    protected JMenuItem aggregationMenuItem;
+//    protected JMenuItem aggregationMenuItem;
 
-    protected JMenuItem groupMenuItem;
+//    protected JMenuItem groupMenuItem;
 
     protected JMenuItem renameMenuItem;
 
-    protected JMenuItem indexerMenuItem;
+//    protected JMenuItem indexerMenuItem;
 
     protected JMenuItem joinMenuItem;
 
@@ -136,10 +136,10 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.selectionMenuItem = new JMenuItem(OperationType.SELECTION.displayName);
         this.projectionMenuItem = new JMenuItem(OperationType.PROJECTION.displayName);
         this.sortMenuItem = new JMenuItem(OperationType.SORT.displayName);
-        this.aggregationMenuItem = new JMenuItem(OperationType.AGGREGATION.displayName);
-        this.groupMenuItem = new JMenuItem(OperationType.GROUP.displayName);
+//        this.aggregationMenuItem = new JMenuItem(OperationType.AGGREGATION.displayName);
+//        this.groupMenuItem = new JMenuItem(OperationType.GROUP.displayName);
         this.renameMenuItem = new JMenuItem(OperationType.RENAME.displayName);
-        this.indexerMenuItem = new JMenuItem(OperationType.INDEXER.displayName);
+//        this.indexerMenuItem = new JMenuItem(OperationType.INDEXER.displayName);
         this.joinMenuItem = new JMenuItem(OperationType.JOIN.displayName);
         this.leftJoinMenuItem = new JMenuItem(OperationType.LEFT_JOIN.displayName);
         this.rightJoinMenuItem = new JMenuItem(OperationType.RIGHT_JOIN.displayName);
@@ -245,7 +245,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         style.put(mxConstants.STYLE_FILLCOLOR, "#98FB98");
         style.put(mxConstants.STYLE_SHADOW, String.valueOf(true));
 
-        String customStyle = CellType.CSV_TABLE.id;;
+        String customStyle = CellType.CSV_TABLE.id;
 
         graph.getStylesheet().putCellStyle(customStyle, style);
         tablesGraph.getStylesheet().putCellStyle(customStyle, style);
@@ -256,10 +256,10 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
         Map<String, Object> style = new HashMap<>();
 
-        style.put(mxConstants.STYLE_FILLCOLOR, "#32CD32");
+        style.put(mxConstants.STYLE_FILLCOLOR, "#EEEE89");
         style.put(mxConstants.STYLE_SHADOW, String.valueOf(true));
 
-        String customStyle = CellType.FYI_TABLE.id;;
+        String customStyle = CellType.FYI_TABLE.id;
 
         graph.getStylesheet().putCellStyle(customStyle, style);
         tablesGraph.getStylesheet().putCellStyle(customStyle, style);
@@ -300,10 +300,10 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.buttons.add(new OperationButton(stylesheet, OperationType.PROJECTION, this, this.operationsPanel));
         this.buttons.add(new OperationButton(stylesheet, OperationType.SELECTION, this, this.operationsPanel));
         this.buttons.add(new OperationButton(stylesheet, OperationType.SORT, this, this.operationsPanel));
-        this.buttons.add(new OperationButton(stylesheet, OperationType.AGGREGATION, this, this.operationsPanel));
-        this.buttons.add(new OperationButton(stylesheet, OperationType.GROUP, this, this.operationsPanel));
+//        this.buttons.add(new OperationButton(stylesheet, OperationType.AGGREGATION, this, this.operationsPanel));
+//        this.buttons.add(new OperationButton(stylesheet, OperationType.GROUP, this, this.operationsPanel));
         this.buttons.add(new OperationButton(stylesheet, OperationType.RENAME, this, this.operationsPanel));
-        this.buttons.add(new OperationButton(stylesheet, OperationType.INDEXER, this, this.operationsPanel));
+//        this.buttons.add(new OperationButton(stylesheet, OperationType.INDEXER, this, this.operationsPanel));
         this.buttons.add(new OperationButton(stylesheet, OperationType.JOIN, this, this.operationsPanel));
         this.buttons.add(new OperationButton(stylesheet, OperationType.LEFT_JOIN, this, this.operationsPanel));
         this.buttons.add(new OperationButton(stylesheet, OperationType.RIGHT_JOIN, this, this.operationsPanel));
@@ -366,10 +366,10 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.selectionMenuItem.addActionListener(this);
         this.projectionMenuItem.addActionListener(this);
         this.sortMenuItem.addActionListener(this);
-        this.aggregationMenuItem.addActionListener(this);
-        this.groupMenuItem.addActionListener(this);
+//        this.aggregationMenuItem.addActionListener(this);
+//        this.groupMenuItem.addActionListener(this);
         this.renameMenuItem.addActionListener(this);
-        this.indexerMenuItem.addActionListener(this);
+//        this.indexerMenuItem.addActionListener(this);
         this.joinMenuItem.addActionListener(this);
         this.leftJoinMenuItem.addActionListener(this);
         this.rightJoinMenuItem.addActionListener(this);
@@ -382,10 +382,10 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.operationsMenuItem.add(this.selectionMenuItem);
         this.operationsMenuItem.add(this.projectionMenuItem);
         this.operationsMenuItem.add(this.sortMenuItem);
-        this.operationsMenuItem.add(this.aggregationMenuItem);
-        this.operationsMenuItem.add(this.groupMenuItem);
+//        this.operationsMenuItem.add(this.aggregationMenuItem);
+//        this.operationsMenuItem.add(this.groupMenuItem);
         this.operationsMenuItem.add(this.renameMenuItem);
-        this.operationsMenuItem.add(this.indexerMenuItem);
+//        this.operationsMenuItem.add(this.indexerMenuItem);
         this.operationsMenuItem.addSeparator();
         this.operationsMenuItem.add(this.joinMenuItem);
         this.operationsMenuItem.add(this.leftJoinMenuItem);

@@ -56,8 +56,8 @@ public class OperationErrorVerifier {
     }
 
     public static void haveDifferentSources(Cell parent1, Cell parent2) throws ArgumentsException {
-        if (parent1.getColumns().stream().map(Column::getSource)
-            .anyMatch(x -> parent2.getColumns().stream().map(Column::getSource).anyMatch(x::equals))) {
+        if (parent1.getColumns().stream().map(column -> column.SOURCE)
+            .anyMatch(x -> parent2.getColumns().stream().map(column -> column.SOURCE).anyMatch(x::equals))) {
             throw new ArgumentsException("");
         }
     }

@@ -343,10 +343,11 @@ public class MainController extends MainFrame {
         } else if (menuItem == this.sortMenuItem) {
             createOperationAction = OperationType.SORT.getAction();
             style = OperationType.SORT.displayName;
-        } else if (this.indexerMenuItem == menuItem) {
-            createOperationAction = OperationType.INDEXER.getAction();
-            style = OperationType.INDEXER.displayName;
         }
+//         else if (this.indexerMenuItem == menuItem) {
+//            createOperationAction = OperationType.INDEXER.getAction();
+//            style = OperationType.INDEXER.displayName;
+//        }
 
         if (createOperationAction != null) {
             createOperationAction.setParent(this.cell);
@@ -565,13 +566,15 @@ public class MainController extends MainFrame {
             .insertVertex(
                 graph.getDefaultParent(), null, relation.getName(), x, y,
                 ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT,
-                cellType.equals(CellType.FYI_TABLE) ? CellType.FYI_TABLE.id : CellType.CSV_TABLE.id);
+                cellType.id);
 
         relation.setCell(
-            cellType.equals(CellType.FYI_TABLE)
-                ? new FYITableCell((FYITableCell) tableCell, jTableCell)
-                : new CSVTableCell((CSVTableCell) tableCell, jTableCell)
-        );
+        switch (cellType){
+            case FYI_TABLE -> new FYITableCell((FYITableCell) tableCell, jTableCell);
+            case CSV_TABLE -> new CSVTableCell((CSVTableCell) tableCell, jTableCell);
+            case MEMORY_TABLE -> new MemoryTableCell((MemoryTableCell) tableCell, jTableCell);
+            default -> throw new RuntimeException();
+        });
 
         relation.getCell().getTable().open();
 

@@ -6,41 +6,85 @@
   <component name="ChangeListManager">
     <list default="true" id="ad789c8e-f9b5-452f-9694-e96ff8a2beb6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/init/biostats.head" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/init/table.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/init/table.head" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/booleanexpression/BooleanExpressionRecognizer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/MainController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/database/TableCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/TableCreator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/CSVTableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/CSVTableCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/cells/TableCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/TableCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/enums/CellType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/CellType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/CSVTableExample.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/CSVTableExample.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dsl/entities/BinaryExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dsl/entities/BinaryExpression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/Column.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Column.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/cells/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/cells/Cell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums/OperationType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/OperationType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/files/ExportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ExportFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/ImportFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/ImportFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/FormBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameAddColumn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameAddColumn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/dsl/TextEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/dsl/TextEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameAddColumn.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameCreateTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameCreateTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameGenerateData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/create/FormFrameGenerateData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/CSVRecognizerForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/CSVRecognizerForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportAsForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportSQLScriptForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ExportSQLScriptForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportAsForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportExportAsForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/ImportExportAsForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/importexport/PrimaryKeyChooserForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/importexport/PrimaryKeyChooserForm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/AtomicExpressionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/AtomicExpressionForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/BooleanExpressionForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/AggregationForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/AggregationForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/GroupForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/GroupForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/IndexerForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/IndexerForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/ProjectionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/ProjectionForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/RenameForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/RenameForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/SortForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/unary/SortForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/forms/operations/OperationForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/forms/operations/OperationForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui/frames/main/MainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_en_US.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language/messages_pt_BR.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/TableCell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/cells/TableCell.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameAddColumn.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameAddColumn.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operations/OperationErrorVerifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/operations/OperationErrorVerifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/AntlrController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/DslController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/DslErrorListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraBaseListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraLexer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$CartesianProductContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$CommandContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$ExpressionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$ImportStatementContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$JoinContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$LeftJoinContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$NameDeclarationContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$NestedContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$NumberContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$PathStatementContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$PositionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$ProjectionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$RelationContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$RightJoinContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$SelectionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$SimpleContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser$UnionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/antlr4/RelAlgebraParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/dsl/utils/DslUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Action$CreateCellAction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Action$CurrentAction$ActionType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Action$CurrentAction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Action.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Column.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Coordinates.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Edge.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Tree.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/buttons/Button.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/buttons/OperationButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/buttons/ToolBarButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/Cell.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/OperationCell.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/cells/TableCell.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/utils/TreeUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/enums/ColumnDataType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/enums/FileType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/enums/OperationArity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/enums/OperationType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/CellInformationFrame.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/DataFrame.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/dsl/TextEditor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/CustomProviders$Char.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/CustomProviders.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameAddColumn.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/forms/create/FormFrameCreateTable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/frames/main/MainFrame.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/gui/utils/JTextLineNumber.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/language/messages_en_US.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/language/messages_pt_BR.properties" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +100,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -74,7 +121,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/rhuan/Documents/repositories/fy",
+    "last_opened_file_path": "/home/rhuan/Documents/repositories/DBest/sgbd",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -112,6 +159,9 @@
       </method>
     </configuration>
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
+      <option name="configVersion" value="1" />
+      <option name="options" />
+      <option name="profiles" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="ClojureREPL" factoryName="Remote" activateToolWindowBeforeRun="false">

@@ -132,14 +132,14 @@ public abstract sealed class Cell permits TableCell, OperationCell {
     }
 
     public List<String> getColumnNames() {
-        return this.getColumns().stream().map(Column::getName).toList();
+        return this.getColumns().stream().map(x -> x.NAME).toList();
     }
 
     public List<String> getColumnSourcesAndNames() {
         return this
             .getColumns()
             .stream()
-            .map(column -> Column.composeSourceAndName(column.getSource(), column.getName()))
+            .map(column -> Column.composeSourceAndName(column.SOURCE, column.NAME))
             .toList();
     }
 

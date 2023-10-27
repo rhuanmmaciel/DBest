@@ -329,7 +329,7 @@ public class BooleanExpressionRecognizer {
                 .stream()
                 .map(Cell::getColumns)
                 .flatMap(Collection::stream)
-                .filter(column -> column.getName().equals(elements[0].strip()) || column.getSourceAndName().equals(elements[0].strip()))
+                .filter(column -> column.NAME.equals(elements[0].strip()) || column.getSourceAndName().equals(elements[0].strip()))
                 .findAny()
                 .orElseThrow(() -> new BooleanExpressionException(
                     ConstantController.getString("booleanExpression.error.elementIsNotAColumn")
@@ -341,7 +341,7 @@ public class BooleanExpressionRecognizer {
                 .stream()
                 .map(Cell::getColumns)
                 .flatMap(Collection::stream)
-                .filter(column -> column.getName().equals(elements[1].strip()) || column.getSourceAndName().equals(elements[1].strip()))
+                .filter(column -> column.NAME.equals(elements[1].strip()) || column.getSourceAndName().equals(elements[1].strip()))
                 .findAny()
                 .orElseThrow(() -> new BooleanExpressionException(
                     ConstantController.getString("booleanExpression.error.elementIsNotAColumn")
