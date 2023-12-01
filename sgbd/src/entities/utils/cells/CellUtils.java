@@ -303,6 +303,7 @@ public class CellUtils extends MainController {
             .getActiveCells()
             .values()
             .stream()
+            .filter(cell -> graph.getModel().contains(cell.getJCell()))
             .map(Cell::getTree)
             .collect(Collectors.toSet());
     }

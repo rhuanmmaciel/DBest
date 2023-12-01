@@ -178,7 +178,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
         layout.setUseBoundingBox(false);
 
-        this.setTablesSavedConfig();
+        this.setTablesSavedGraphConfig();
         this.setGraphConfig();
 
         this.setMenuItemsListener();
@@ -324,7 +324,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.buttons.add(new ToolBarButton<>(JButton.class, String.format("%s", ConstantController.getString("toolBarButtons.comparator")), this, this.toolBar, new CurrentAction(CurrentAction.ActionType.OPEN_COMPARATOR)));
     }
 
-    private void setTablesSavedConfig() {
+    private void setTablesSavedGraphConfig() {
         this.tablesComponent.getGraphControl().addMouseListener(this);
         this.tablesComponent.setConnectable(false);
 
@@ -344,6 +344,10 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         graphComponent.getGraphControl().addMouseListener(this);
         graphComponent.addKeyListener(this);
         graphComponent.setFocusable(true);
+        graphComponent.setGridVisible(true);
+        graphComponent.setDragEnabled(true);
+        graphComponent.setGridStyle(1);
+        graphComponent.setAutoExtend(true);
         graphComponent.requestFocus();
         graphComponent.setComponentPopupMenu(this.popupMenuJCell);
 
@@ -352,6 +356,11 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         graph.setAutoOrigin(false);
         graph.setCellsEditable(false);
         graph.setAllowDanglingEdges(false);
+        graph.setAllowLoops(false);
+        graph.setCellsBendable(false);
+        graph.setConnectableEdges(false);
+        graph.setEdgeLabelsMovable(false);
+
     }
 
     private void setMenuItemsListener() {
@@ -420,9 +429,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
     public void mouseMoved(MouseEvent event) {
     }
 
-    @Override
-    public void mousePressed(MouseEvent event) {
-    }
+//    int startX, startY;
 
     @Override
     public void mouseReleased(MouseEvent event) {
@@ -444,7 +451,4 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
     public void keyReleased(KeyEvent event) {
     }
 
-    @Override
-    public void mouseDragged(MouseEvent event) {
-    }
 }

@@ -483,7 +483,7 @@ public class MainController extends MainFrame {
             System.out.print("\n\n");
         } else if (keyCode == KeyEvent.VK_A) {
             if (this.cell != null && CellUtils.getActiveCell(this.cell).isPresent()) {
-                System.out.println(this.cell);
+                CellUtils.getActiveCell(this.cell).get().getTree().getTreeLayer();
             }
         } else if (keyCode == KeyEvent.VK_Z && (event.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
             commandController.undo();
@@ -528,6 +528,30 @@ public class MainController extends MainFrame {
         } else if (currentActionType == ActionType.CREATE_EDGE) {
             this.setEdgeCursor();
         }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent event) {
+
+        //        startX = event.getX();
+        //        startY = event.getY();
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent event) {
+
+        //        int dx = event.getX() - startX;
+        //        int dy = event.getY() - startY;
+        //
+        //        int viewX = graphComponent.getViewport().getView().getX();
+        //        int viewY = graphComponent.getViewport().getView().getY();
+        //
+        //        graphComponent.getViewport().setViewPosition(new java.awt.Point(viewX - dx, viewY - dy));
+        //
+        //        startX = event.getX();
+        //        startY = event.getY();
+
     }
 
     public static Map<Integer, Tree> getTrees() {
