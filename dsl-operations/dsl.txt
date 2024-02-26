@@ -7,23 +7,24 @@ selection[Id < 50](mlbplayers<40,110>)<50,50>;
 
 projection[PrimaryKey,FirstName](people<180,140>)<130,40>;
 
-sort[DESC:PrimaryKey](relation)<370,40>;
+sort[DESC:PrimaryKey](people<420,140>)<370,40>;
 
 
 
 
 cartesianProduct(people<10,290>,mlbplayers<120,290>)<90,200>;
 
-join[PrimaryKey,Id](people<230,290>,mlbplayers<340,290>)<260,200>;
+join[PrimaryKey = Id](people<230,290>,mlbplayers<340,290>)<260,200>;
 
-leftJoin[PrimaryKey,Id](people<500,200>,mlbplayers<600,200>)<530,80>;
+leftJoin[PrimaryKey = Id](people<500,200>,mlbplayers<600,200>)<530,80>;
 
-rightJoin[PrimaryKey,Id](people<20,450>,mlbplayers<130,440>)<50,360>;
-
-
+rightJoin[PrimaryKey = Id](people<20,450>,mlbplayers<130,440>)<50,360>;
 
 
-union[PrimaryKey,Id](people<320,410>,mlbplayers<510,420>)<370,340>;
 
-intersection[PrimaryKey,Id](people<690,320>,mlbplayers<820,320>)<660,230>;
+
+union(people<320,410>,mlbplayers<510,420>)<370,340>;
+
+intersection(people<690,320>,mlbplayers<820,320>)<660,230>;
+
 

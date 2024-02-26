@@ -139,7 +139,7 @@ public class CellUtils extends MainController {
         jGraph.getModel().beginUpdate();
 
         try {
-            jGraph.removeCells(new Object[]{activeJCell}, false);
+            jGraph.removeCells(new Object[]{activeJCell}, true);
             CellRepository.removeCell(activeJCell);
         } finally {
             jGraph.getModel().endUpdate();

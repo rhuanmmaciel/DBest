@@ -473,17 +473,19 @@ public class MainController extends MainFrame {
             if (this.cell != null) {
                 CellUtils.showTable(this.cell);
             }
+            resetAnyAction();
         } else if (keyCode == KeyEvent.VK_DELETE) {
             if (this.cell != null) {
                 this.executeRemoveCellCommand(this.cell);
-                this.setCurrentActionToNone();
             }
+            this.resetAnyAction();
         } else if (keyCode == KeyEvent.VK_E) {
             resetEdge();
             graphComponent.getGraphControl().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             this.currentActionReference.set(new CurrentAction(CurrentAction.ActionType.CREATE_EDGE));
         } else if (keyCode == KeyEvent.VK_I) {
             this.createNewTable(CurrentAction.ActionType.IMPORT_FILE);
+            resetAnyAction();
         } else if (keyCode == KeyEvent.VK_ESCAPE) {
             this.resetAnyAction();
         } else if (keyCode == KeyEvent.VK_L) {
@@ -506,6 +508,7 @@ public class MainController extends MainFrame {
         } else if (keyCode == KeyEvent.VK_M) {
             // new GeneralStatsFrame();
         }
+
     }
 
     private void setEdgeCursor() {

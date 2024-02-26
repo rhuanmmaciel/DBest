@@ -18,7 +18,9 @@ public class RemoveCellCommand extends BaseUndoableRedoableCommand {
 
     @Override
     public void execute() {
+
         CellUtils.deactivateActiveJCell(MainFrame.getGraph(), this.cellReference.get());
+
     }
 
     @Override
