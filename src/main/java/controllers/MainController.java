@@ -105,12 +105,27 @@ public class MainController extends MainFrame {
 
     }
 
+    private void resetAnyAction(){
 
-    @Override
-    public void actionPerformed(ActionEvent event) {
         graph.removeCells(new Object[]{this.ghostCell}, true);
 
         this.ghostCell = null;
+
+        if (this.currentActionReference.get().getType() == ActionType.CREATE_EDGE) {
+            graphComponent.getGraphControl().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            CellUtils.removeCell(this.invisibleCellReference);
+        }
+
+        this.setCurrentActionToNone();
+
+        resetEdge();
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+
+        resetAnyAction();
 
         Button<?> clickedButton = this.buttons
             .stream()
@@ -450,15 +465,6 @@ public class MainController extends MainFrame {
         new ExportFile();
     }
 
-    private void deleteAction() {
-        if (this.currentActionReference.get().getType() == ActionType.CREATE_EDGE) {
-            graphComponent.getGraphControl().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            CellUtils.removeCell(this.invisibleCellReference);
-        }
-
-        this.setCurrentActionToNone();
-    }
-
     @Override
     public void keyPressed(KeyEvent event) {
         int keyCode = event.getKeyCode();
@@ -473,12 +479,13 @@ public class MainController extends MainFrame {
                 this.setCurrentActionToNone();
             }
         } else if (keyCode == KeyEvent.VK_E) {
+            resetEdge();
             graphComponent.getGraphControl().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             this.currentActionReference.set(new CurrentAction(CurrentAction.ActionType.CREATE_EDGE));
         } else if (keyCode == KeyEvent.VK_I) {
             this.createNewTable(CurrentAction.ActionType.IMPORT_FILE);
         } else if (keyCode == KeyEvent.VK_ESCAPE) {
-            this.deleteAction();
+            this.resetAnyAction();
         } else if (keyCode == KeyEvent.VK_L) {
             System.out.println("--------------------------");
             System.out.println("Árvores: ");
