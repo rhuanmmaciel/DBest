@@ -121,7 +121,8 @@ public class MainController extends MainFrame {
         String style = "";
 
         if (clickedButton != null) {
-            currentEdgeReference.set(new Edge());
+
+            resetEdge();
 
             clickedButton.setCurrentAction(this.currentActionReference);
 
@@ -146,7 +147,13 @@ public class MainController extends MainFrame {
         this.onBottomMenuItemClicked(event, clickedButton, style);
         this.onTopMenuBarItemClicked(event);
 
+        resetEdge();
+    }
+
+    private void resetEdge(){
+
         currentEdgeReference.set(new Edge());
+
     }
 
     private void onTopMenuBarItemClicked(ActionEvent event) {
