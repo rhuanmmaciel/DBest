@@ -64,6 +64,8 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
     protected JMenuItem projectionMenuItem;
 
+    protected JMenuItem filterColumnMenuItem;
+
     protected JMenuItem sortMenuItem;
 
 //    protected JMenuItem aggregationMenuItem;
@@ -135,6 +137,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.operationsMenuItem = new JMenu(ConstantController.getString("cell.operations"));
         this.selectionMenuItem = new JMenuItem(OperationType.SELECTION.displayName);
         this.projectionMenuItem = new JMenuItem(OperationType.PROJECTION.displayName);
+        this.filterColumnMenuItem = new JMenuItem(OperationType.FILTER_COLUMN.displayName);
         this.sortMenuItem = new JMenuItem(OperationType.SORT.displayName);
 //        this.aggregationMenuItem = new JMenuItem(OperationType.AGGREGATION.displayName);
 //        this.groupMenuItem = new JMenuItem(OperationType.GROUP.displayName);
@@ -298,6 +301,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         mxStylesheet stylesheet = graph.getStylesheet();
 
         this.buttons.add(new OperationButton(stylesheet, OperationType.PROJECTION, this, this.operationsPanel));
+        this.buttons.add(new OperationButton(stylesheet, OperationType.FILTER_COLUMN, this, this.operationsPanel));
         this.buttons.add(new OperationButton(stylesheet, OperationType.SELECTION, this, this.operationsPanel));
         this.buttons.add(new OperationButton(stylesheet, OperationType.SORT, this, this.operationsPanel));
 //        this.buttons.add(new OperationButton(stylesheet, OperationType.AGGREGATION, this, this.operationsPanel));
@@ -390,6 +394,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
     private void addMenuItemOperations() {
         this.operationsMenuItem.add(this.selectionMenuItem);
         this.operationsMenuItem.add(this.projectionMenuItem);
+        this.operationsMenuItem.add(this.filterColumnMenuItem);
         this.operationsMenuItem.add(this.sortMenuItem);
 //        this.operationsMenuItem.add(this.aggregationMenuItem);
 //        this.operationsMenuItem.add(this.groupMenuItem);

@@ -11,6 +11,7 @@ import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
 import sgbd.query.Operator;
+import sgbd.query.unaryop.DistinctOperator;
 import sgbd.query.unaryop.SelectColumnsOperator;
 
 import java.util.List;
@@ -59,7 +60,9 @@ public class Projection implements IOperator {
 
         Operator operator = parentCell.getOperator();
 
-        Operator readyOperator = new SelectColumnsOperator(operator, fixedArguments);
+        Operator filterColumns = new SelectColumnsOperator(operator, fixedArguments);
+
+        Operator readyOperator = new DistinctOperator(filterColumns);
 
         String operationName = String.format("%s %s", cell.getType().symbol, fixedArguments);
 

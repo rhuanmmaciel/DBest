@@ -27,6 +27,7 @@ import operations.binary.joins.RightJoin;
 import operations.binary.set.Intersection;
 import operations.binary.set.Union;
 import operations.unary.Aggregation;
+import operations.unary.FilterColumn;
 import operations.unary.Group;
 import operations.unary.Indexer;
 import operations.unary.Projection;
@@ -48,6 +49,8 @@ public enum OperationType {
 
     SELECTION         (ConstantController.getString("operation.selection"), "σ", "selection", "selection[args](source)", OperationArity.UNARY, BooleanExpressionForm.class, Selection.class, NO_ONE_ARGUMENT),
     PROJECTION        (ConstantController.getString("operation.projection"), "π", "projection", "projection[args](source)", OperationArity.UNARY, ProjectionForm.class, Projection.class, PARENT_WITHOUT_COLUMN),
+    FILTER_COLUMN     (ConstantController.getString("operation.filterColumn"), "F", "filterColumn", "filterColumn[args](source)", OperationArity.UNARY, ProjectionForm.class, FilterColumn.class, PARENT_WITHOUT_COLUMN),
+
     RENAME            (ConstantController.getString("operation.rename"), "ρ", "rename", "rename[args](source)", OperationArity.UNARY, RenameForm.class, Rename.class),
 //    GROUP             (ConstantController.getString("operation.group"), "G", "group", "group[args](relation)", OperationArity.UNARY, GroupForm.class, Group.class, NO_ONE_ARGUMENT, PARENT_WITHOUT_COLUMN, NO_PREFIX),
 //    AGGREGATION       (ConstantController.getString("operation.aggregation"), "G", "aggregation", "aggregation[args](relation)", OperationArity.UNARY, AggregationForm.class, Aggregation.class, NO_ONE_ARGUMENT, PARENT_WITHOUT_COLUMN, NO_PREFIX),
