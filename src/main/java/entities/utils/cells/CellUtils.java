@@ -17,12 +17,28 @@ import gui.frames.DataFrame;
 import gui.frames.main.MainFrame;
 
 import javax.swing.*;
+
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class CellUtils extends MainController {
+
+    public static int getCellWidth(mxCell jCell){
+
+        JLabel label = new JLabel();
+        Font font = new Font("Arial", Font.PLAIN, 12);
+        label.setFont(font);
+
+        String text = (String) jCell.getValue();
+        FontMetrics fontMetrics = label.getFontMetrics(font);
+
+        return fontMetrics.stringWidth(text);
+
+    }
 
     public static void activateInactiveJCell(mxGraph jGraph, mxCell inactiveJCell) {
         if (jGraph == null || inactiveJCell == null) return;

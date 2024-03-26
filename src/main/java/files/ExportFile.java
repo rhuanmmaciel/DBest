@@ -207,7 +207,7 @@ public class ExportFile extends JPanel {
     public void exportToFYI(Cell cell, List<Column> primaryKeyColumns) {
         if (primaryKeyColumns == null || primaryKeyColumns.isEmpty()) return;
 
-        String pathname = String.format("%s%s", ConstantController.getString("file.tableFileName"), FileType.HEADER.extension);
+        String pathname = String.format("%s%s", cell.getName(), FileType.HEADER.extension);
 
         this.fileChooser.setSelectedFile(new File(pathname));
 

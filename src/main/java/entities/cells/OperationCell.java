@@ -46,8 +46,7 @@ public final class OperationCell extends Cell {
 
     public OperationCell(mxCell jCell, OperationType type) {
         super(
-            type.getFormattedDisplayName(), jCell,
-            ConstantController.OPERATION_CELL_WIDTH, ConstantController.OPERATION_CELL_HEIGHT
+            type.getFormattedDisplayName(), jCell, ConstantController.OPERATION_CELL_HEIGHT
         );
 
         this.parents = new ArrayList<>();

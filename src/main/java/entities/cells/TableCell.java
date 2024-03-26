@@ -22,7 +22,7 @@ public abstract sealed class TableCell extends Cell permits CSVTableCell, FYITab
     private final File headerFile;
 
     protected TableCell(mxCell jCell, String name, Table table, Prototype prototype, File headerFile) {
-        super(name, jCell, ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT);
+        super(name, jCell, ConstantController.TABLE_CELL_HEIGHT);
         this.headerFile = headerFile;
         this.table = table;
         this.prototype = prototype;

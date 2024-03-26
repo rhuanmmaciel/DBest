@@ -32,18 +32,10 @@ public class Operation {
 
 		MainFrame.getGraph().getModel().setValue(jCell, name);
 
-		JLabel label = new JLabel();
-		Font font = new Font("Arial", Font.PLAIN, 12);
-		label.setFont(font);
-
-		String text = (String) jCell.getValue();
-		FontMetrics fontMetrics = label.getFontMetrics(font);
-		int textWidth = fontMetrics.stringWidth(text);
-
 		mxGeometry oldGeometry = jCell.getGeometry();
 
 		mxGeometry newGeometry = new mxGeometry(
-			oldGeometry.getX(), oldGeometry.getY(), textWidth, oldGeometry.getHeight()
+			oldGeometry.getX(), oldGeometry.getY(), CellUtils.getCellWidth(jCell), oldGeometry.getHeight()
 		);
 
 		if(cell.isMarked()) CellUtils.markCell(jCell);

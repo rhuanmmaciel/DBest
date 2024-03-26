@@ -149,13 +149,15 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
         List<List<String>> columnsSelected = new ArrayList<>();
 
         for (Map.Entry<String, JCheckBox> checkBox : this.pkCheckBoxes.entrySet()) {
+            int i = 0;
             if (checkBox.getValue().isSelected()) {
                 List<String> columnData = new ArrayList<>();
 
                 int index = this.columnNames.indexOf(checkBox.getKey());
 
                 for (Vector<Object> column : this.rows) {
-                    columnData.add(String.valueOf(column.get(index)));
+                    if(i++ != 0)
+                        columnData.add(String.valueOf(column.get(index)));
                 }
 
                 columnsSelected.add(columnData);

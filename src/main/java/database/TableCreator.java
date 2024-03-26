@@ -203,7 +203,7 @@ public class TableCreator {
                     flags = Metadata.FLOATING_POINT;
                 }
                 case STRING -> {
-                    size = Short.MAX_VALUE;
+                    size = 300;
                     flags = Metadata.STRING;
                 }
                 case CHARACTER -> {

@@ -36,25 +36,24 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
     private boolean isMarked = false;
 
-    protected Cell(String name, mxCell jCell, int width, int height) {
+    protected Cell(String name, mxCell jCell, int height) {
+
         this.columns = new ArrayList<>();
         this.name = name;
         this.jCell = jCell;
-        this.width = width;
+        this.width = CellUtils.getCellWidth(jCell);
         this.height = height;
         this.child = null;
         this.operator = null;
         this.tree = new Tree();
 
-        this.style = jCell != null
-            ? jCell.getStyle() : this.isCSVTableCell()
+        this.style =  this.isCSVTableCell()
             ? "csv" : this.isFYITableCell()
             ? "fyi" : this.isOperationCell()
-            ? "operation" : "";
+            ? "operation" : jCell.getStyle();
 
         CellUtils.addCell(jCell, this);
 
-        if (jCell == null) throw new RuntimeException();
     }
 
     public Coordinates getUpperLeftPosition() {
