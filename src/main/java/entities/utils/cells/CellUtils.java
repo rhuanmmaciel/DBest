@@ -137,7 +137,6 @@ public class CellUtils extends MainController {
             }
         } else {
             Optional<Cell> optionalChild = CellRepository.getActiveCell(activeJCell.getTarget());
-
             if (optionalChild.isPresent()) {
                 child = (OperationCell) optionalChild.get();
             }
@@ -149,6 +148,10 @@ public class CellUtils extends MainController {
 
                 parents.add(parent);
                 parent.setChild(null);
+
+                if(child!=null)
+                    child.removeParent(parent);
+
             }
         }
 
