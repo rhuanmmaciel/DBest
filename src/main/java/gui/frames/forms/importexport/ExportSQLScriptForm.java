@@ -239,7 +239,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
     private void loadJTable() {
         boolean columnsPut = false;
 
-        for (Map<String, String> row : TuplesExtractor.getAllRows(this.cell.getOperator(), true)) {
+        for (Map<String, String> row : TuplesExtractor.getAllRowsList(this.cell.getOperator(), true)) {
             if (!columnsPut) {
                 for (String inf : row.keySet()) {
                     this.columnNames.add(inf);

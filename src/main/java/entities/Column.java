@@ -42,6 +42,10 @@ public class Column implements Comparable<Column> {
         this(NAME, SOURCE, ColumnDataType.NONE, IS_PRIMARY_KEY, false);
     }
 
+    public Column(Column column, boolean IS_PRIMARY_KEY) {
+        this(column.NAME, column.SOURCE, column.DATA_TYPE, IS_PRIMARY_KEY, column.IS_IGNORED_COLUMN);
+    }
+
     public Column(String NAME, String SOURCE) {
         this(NAME, SOURCE, ColumnDataType.NONE, false, false);
     }

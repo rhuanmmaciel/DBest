@@ -1,7 +1,6 @@
 package gui.frames.forms.importexport;
 
 import controllers.ConstantController;
-import database.TableUtils;
 import database.TuplesExtractor;
 import entities.Column;
 import entities.cells.Cell;
@@ -39,7 +38,7 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
 
         this.setModal(true);
 
-        List<Map<String, String>> rowsAux = TuplesExtractor.getAllRows(cell.getOperator(), true);
+        List<Map<String, String>> rowsAux = TuplesExtractor.getAllRowsList(cell.getOperator(), true);
 
         for (Map<String, String> row : rowsAux) {
 

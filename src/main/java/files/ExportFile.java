@@ -316,7 +316,7 @@ public class ExportFile extends JPanel {
 
                 boolean columnsPut = false;
 
-                for (Map<String, String> row : TuplesExtractor.getAllRows(cell.getOperator(), true)) {
+                for (Map<String, String> row : TuplesExtractor.getAllRowsList(cell.getOperator(), true)) {
                     if (!columnsPut) {
                         boolean repeatedColumnName = false;
 

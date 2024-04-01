@@ -79,36 +79,12 @@ public class ImportFile {
                     }
                     case EXCEL -> this.excel();
                     case HEADER -> {
+
                         AtomicReference<Table> table = new AtomicReference<>();
-                        this.header(table);
 
-                        if (!this.exitReference.get()) {
-                            String selectedFileName = this.fileUpload.getSelectedFile().getName();
+                        header(table);
 
-                            String fileName = selectedFileName.endsWith(FileType.HEADER.extension) ?
-                                    selectedFileName.substring(0, selectedFileName.indexOf(".")) :
-                                    selectedFileName;
-
-                            JsonObject headerFile = new Gson().fromJson(new FileReader(fileUpload.getSelectedFile()), JsonObject.class);
-                            CellType cellType = headerFile.getAsJsonObject("information").get("file-path").getAsString()
-                                    .replaceAll("' | \"", "").endsWith(".dat")
-                                    ? CellType.FYI_TABLE : CellType.CSV_TABLE;
-
-                            mxCell jCell = (mxCell) MainFrame
-                                    .getGraph()
-                                    .insertVertex(
-                                            MainFrame.getGraph().getDefaultParent(), null,
-                                            fileName, 0, 0, 80, 30, cellType.id
-                                    );
-
-                            table.get().open();
-
-                            this.tableCell = switch (cellType){
-                                case CSV_TABLE -> new CSVTableCell(jCell, fileName, table.get(), this.fileUpload.getSelectedFile());
-                                case FYI_TABLE -> new FYITableCell(jCell, fileName, table.get(), this.fileUpload.getSelectedFile());
-                                default -> throw new IllegalStateException("Unexpected value: " + cellType);
-                            };
-                        }
+                        this.tableCell = importHeaderFile(table, exitReference, fileUpload.getSelectedFile());
                     }
                     case SQL ->
                             throw new UnsupportedOperationException(String.format("Unimplemented case: %s", this.fileType));
@@ -123,6 +99,40 @@ public class ImportFile {
             exitReference.set(true);
 
         }
+    }
+
+    public static TableCell importHeaderFile(AtomicReference<Table> table,
+                                        AtomicReference<Boolean> exitReference, File file) throws FileNotFoundException{
+
+        if (!exitReference.get()) {
+            String selectedFileName = file.getName();
+
+            String fileName = selectedFileName.endsWith(FileType.HEADER.extension) ?
+                selectedFileName.substring(0, selectedFileName.indexOf(".")) :
+                selectedFileName;
+
+            JsonObject headerFile = new Gson().fromJson(new FileReader(file), JsonObject.class);
+            CellType cellType = headerFile.getAsJsonObject("information").get("file-path").getAsString()
+                .replaceAll("' | \"", "").endsWith(".dat")
+                ? CellType.FYI_TABLE : CellType.CSV_TABLE;
+
+            mxCell jCell = (mxCell) MainFrame
+                .getGraph()
+                .insertVertex(
+                    MainFrame.getGraph().getDefaultParent(), null,
+                    fileName, 0, 0, 80, 30, cellType.id
+                );
+
+            table.get().open();
+
+            return switch (cellType){
+                case CSV_TABLE -> new CSVTableCell(jCell, fileName, table.get(), file);
+                case FYI_TABLE -> new FYITableCell(jCell, fileName, table.get(), file);
+                default -> throw new IllegalStateException("Unexpected value: " + cellType);
+            };
+        }
+
+        return null;
     }
 
     @NotNull

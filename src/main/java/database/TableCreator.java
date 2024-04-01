@@ -5,10 +5,9 @@ import com.google.gson.JsonObject;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import controllers.ConstantController;
-import controllers.MainController;
-import dsl.utils.DslUtils;
 import entities.Column;
 import entities.cells.CSVTableCell;
+import entities.cells.Cell;
 import entities.cells.FYITableCell;
 import entities.cells.MemoryTableCell;
 import entities.cells.TableCell;
@@ -23,19 +22,15 @@ import sgbd.prototype.RowData;
 import sgbd.prototype.metadata.Metadata;
 import sgbd.source.components.Header;
 import sgbd.source.table.CSVTable;
-import sgbd.source.table.MemoryTable;
 import sgbd.source.table.Table;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
 
 public class TableCreator {
 
@@ -103,11 +98,37 @@ public class TableCreator {
     }
 
     public static FYITableCell createFYITable(
+        String tableName, List<entities.Column> columns, Cell tableCell){
+
+        List<RowData> rows = new ArrayList<>(getRowData(columns, TuplesExtractor.getAllRowsMap(tableCell.getOperator(), false)));
+        Prototype prototype = createPrototype(columns);
+
+        Table table = Table.openTable(new Header(prototype, tableName));
+        table.open();
+        table.insert(rows);
+        table.saveHeader(String.format("%s%s", tableName, FileType.HEADER.extension));
+
+        mxCell jCell = (mxCell) MainFrame
+            .getGraph()
+            .insertVertex(
+                MainFrame.getGraph().getDefaultParent(), null, tableName, 0, 0,
+                ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, CellType.FYI_TABLE.id
+            );
+
+        return new FYITableCell(jCell, tableName, columns, table, prototype, new File("teste.head"));
+
+
+    }
+
+    public static FYITableCell createFYITable(
             String tableName, List<entities.Column> columns, Map<Integer, Map<String, String>> data, File headerFile, boolean mustExport
     ) {
         List<RowData> rows = new ArrayList<>(getRowData(columns, data));
 
         Prototype prototype = createPrototype(columns);
+
+        System.out.println(getRowData(columns, data));
+        System.out.println(columns);
 
         Table table = Table.openTable(new Header(prototype, tableName));
         table.open();
@@ -228,16 +249,13 @@ public class TableCreator {
 
     private static List<RowData> getRowData(List<entities.Column> columns, Map<Integer, Map<String, String>> content) {
         List<RowData> rows = new ArrayList<>();
-
         for (Map<String, String> line : content.values()) {
             RowData rowData = new RowData();
 
             for (Map.Entry<String, String> data : line.entrySet()) {
                 String key = data.getKey();
                 String value = data.getValue();
-
                 entities.Column column = columns.stream().filter(c -> c.NAME.equals(key)).findFirst().orElseThrow();
-
                 if (!value.equals(ConstantController.NULL) && !value.isEmpty()) {
                     switch (column.DATA_TYPE) {
                         case INTEGER -> rowData.setInt(column.NAME, (int) (Double.parseDouble(value.strip())));

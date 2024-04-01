@@ -15,7 +15,26 @@ public class TuplesExtractor {
 
     }
 
-    public static List<Map<String, String>> getAllRows(Operator operator, boolean sourceAndName) {
+    public static Map<Integer, Map<String, String>>  getAllRowsMap(Operator operator, boolean sourceAndName) {
+        operator.open();
+
+        Map<Integer, Map<String, String>> rows = new HashMap<>();
+
+        Map<String, String> row;
+
+        row = getRow(operator, sourceAndName);
+        int i = 0;
+        while (row != null) {
+            rows.put(i++, row);
+            row = getRow(operator, sourceAndName);
+        }
+
+        operator.close();
+
+        return rows;
+    }
+
+    public static List<Map<String, String>> getAllRowsList(Operator operator, boolean sourceAndName) {
         operator.open();
 
         List<Map<String, String>> rows = new ArrayList<>();

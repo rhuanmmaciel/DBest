@@ -4,6 +4,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.util.mxEvent;
 import controllers.commands.*;
+import database.TableCreator;
 import dsl.entities.BinaryExpression;
 import dsl.entities.OperationExpression;
 import dsl.entities.Relation;
@@ -11,6 +12,7 @@ import entities.Action.CreateOperationCellAction;
 import entities.Action.CreateTableCellAction;
 import entities.Action.CurrentAction;
 import entities.Action.CurrentAction.ActionType;
+import entities.Column;
 import entities.Edge;
 import entities.Tree;
 import entities.buttons.Button;
@@ -30,6 +32,8 @@ import gui.frames.dsl.TextEditor;
 import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.ExportAsForm;
 import gui.frames.forms.importexport.ImportAsForm;
+import gui.frames.forms.importexport.PKAndNameChooserForm;
+import gui.frames.forms.importexport.PrimaryKeyChooserForm;
 import gui.frames.main.MainFrame;
 import utils.RandomUtils;
 
@@ -45,7 +49,7 @@ public class MainController extends MainFrame {
 
     private final Container textEditor = new TextEditor(this).getContentPane();
 
-    private mxCell cell, ghostCell = null;
+    private mxCell jCell, ghostCell = null;
 
     private final AtomicReference<mxCell> invisibleCellReference = new AtomicReference<>(null);
 
@@ -142,10 +146,10 @@ public class MainController extends MainFrame {
             clickedButton.setCurrentAction(this.currentActionReference);
 
             switch (this.currentActionReference.get().getType()) {
-                case DELETE_CELL -> this.executeRemoveCellCommand(this.cell);
+                case DELETE_CELL -> this.executeRemoveCellCommand(this.jCell);
                 case DELETE_ALL -> CellUtils.deleteGraph();
                 case PRINT_SCREEN -> this.printScreen();
-                case SHOW_CELL -> CellUtils.showTable(this.cell);
+                case SHOW_CELL -> CellUtils.showTable(this.jCell);
                 case IMPORT_FILE -> this.createNewTable(CurrentAction.ActionType.IMPORT_FILE);
                 case CREATE_TABLE_CELL -> this.createNewTable(CurrentAction.ActionType.CREATE_TABLE_CELL);
                 case OPEN_CONSOLE -> this.openConsole();
@@ -207,9 +211,9 @@ public class MainController extends MainFrame {
 
     @Override
     public void mouseClicked(MouseEvent event) {
-        this.cell = (mxCell) MainFrame.getGraphComponent().getCellAt(event.getX(), event.getY());
+        this.jCell = (mxCell) MainFrame.getGraphComponent().getCellAt(event.getX(), event.getY());
 
-        Optional<Cell> optionalCell = CellUtils.getActiveCell(this.cell);
+        Optional<Cell> optionalCell = CellUtils.getActiveCell(this.jCell);
 
         if (optionalCell.isPresent() && SwingUtilities.isRightMouseButton(event)) {
             Cell cell = optionalCell.get();
@@ -217,6 +221,7 @@ public class MainController extends MainFrame {
             this.popupMenuJCell.add(this.showMenuItem);
             this.popupMenuJCell.add(this.informationsMenuItem);
             this.popupMenuJCell.add(this.exportTableMenuItem);
+            this.popupMenuJCell.add(this.generateFyiTableMenuItem);
             this.popupMenuJCell.add(this.exportTreeMenuItem);
             this.popupMenuJCell.add(this.editMenuItem);
             this.popupMenuJCell.add(this.operationsMenuItem);
@@ -264,7 +269,7 @@ public class MainController extends MainFrame {
         }
 
         if (optionalCell.isPresent() && event.getClickCount() == 2) {
-            CellUtils.showTable(this.cell);
+            CellUtils.showTable(this.jCell);
         }
     }
 
@@ -282,7 +287,7 @@ public class MainController extends MainFrame {
 
     public void executeInsertOperationCellCommand(MouseEvent event) {
         UndoableRedoableCommand command = new InsertOperationCellCommand(
-            event, new AtomicReference<>(this.cell), this.invisibleCellReference,
+            event, new AtomicReference<>(this.jCell), this.invisibleCellReference,
             new AtomicReference<>(this.ghostCell), new AtomicReference<>(currentEdgeReference.get()),
             this.currentActionReference
         );
@@ -315,32 +320,34 @@ public class MainController extends MainFrame {
         Object menuItem = event.getSource();
 
         if (menuItem == this.showMenuItem) {
-            CellUtils.showTable(this.cell);
+            CellUtils.showTable(this.jCell);
         } else if (menuItem == this.informationsMenuItem) {
-            new CellInformationFrame(this.cell);
+            new CellInformationFrame(this.jCell);
         } else if (menuItem == this.exportTableMenuItem) {
             this.export();
-        } else if (menuItem == this.exportTreeMenuItem) {
+        }else if (menuItem == this.generateFyiTableMenuItem){
+            this.generateFyiTableCell();
+        }else if (menuItem == this.exportTreeMenuItem) {
             CellUtils
-                .getActiveCell(this.cell)
+                .getActiveCell(this.jCell)
                 .ifPresent(cell -> new ExportFile().exportToDsl(cell.getTree()));
         } else if (menuItem == this.editMenuItem) {
             CellUtils
-                .getActiveCell(this.cell)
+                .getActiveCell(this.jCell)
                 .ifPresent(cell -> {
                     OperationCell operationCell = (OperationCell) cell;
-                    operationCell.editOperation(this.cell);
+                    operationCell.editOperation(this.jCell);
                     TreeUtils.recalculateContent(operationCell);
                 });
         } else if (menuItem == this.removeMenuItem) {
-            if (this.cell != null) {
-                this.executeRemoveCellCommand(this.cell);
+            if (this.jCell != null) {
+                this.executeRemoveCellCommand(this.jCell);
             }
             this.resetAnyAction();
         } else if (menuItem == this.markCellMenuItem) {
-            CellUtils.markCell(this.cell);
+            CellUtils.markCell(this.jCell);
         } else if (menuItem == this.unmarkCellMenuItem) {
-            CellUtils.unmarkCell(this.cell);
+            CellUtils.unmarkCell(this.jCell);
         } else if (menuItem == this.selectionMenuItem) {
             createOperationAction = OperationType.SELECTION.getAction();
             style = OperationType.SELECTION.displayName;
@@ -375,7 +382,7 @@ public class MainController extends MainFrame {
 //        }
 
         if (createOperationAction != null) {
-            createOperationAction.setParent(this.cell);
+            createOperationAction.setParent(this.jCell);
             this.currentActionReference.set(createOperationAction);
         }
 
@@ -387,6 +394,33 @@ public class MainController extends MainFrame {
                 80, 30, style
             );
         }
+    }
+
+    private void generateFyiTableCell(){
+
+        AtomicReference<Boolean> cancelService = new AtomicReference<>(false);
+
+        PKAndNameChooserForm pk = new PKAndNameChooserForm(CellUtils.getActiveCell(this.jCell).orElseThrow());
+        List<Column> primaryKeyColumns = pk.getSelectedColumns();
+
+        Cell cell = CellUtils.getActiveCell(this.jCell).get();
+
+        if(!cancelService.get() && !primaryKeyColumns.isEmpty()) {
+
+            List<Column> columns = new ArrayList<>();
+
+            cell.getColumns().forEach(x -> {
+                columns.add(
+                    primaryKeyColumns.stream().map(Column::getSourceAndName).toList().contains(x.getSourceAndName()) ?
+                    new Column(x, true) : x);
+            });
+
+            TableCell tableCell = TableCreator.createFYITable(pk.getTableName(), columns, cell);
+
+            this.executeImportTableCommand(tableCell);
+            CellUtils.deactivateActiveJCell(MainFrame.getGraph(), tableCell.getJCell());
+        }
+
     }
 
     private void openConsole() {
@@ -443,7 +477,7 @@ public class MainController extends MainFrame {
     private void export() {
         AtomicReference<Boolean> cancelService = new AtomicReference<>(false);
 
-        new ExportAsForm(this.cell, cancelService);
+        new ExportAsForm(this.jCell, cancelService);
     }
 
     public static void saveTable(TableCell tableCell) {
@@ -473,13 +507,13 @@ public class MainController extends MainFrame {
         int keyCode = event.getKeyCode();
 
         if (keyCode == KeyEvent.VK_S) {
-            if (this.cell != null) {
-                CellUtils.showTable(this.cell);
+            if (this.jCell != null) {
+                CellUtils.showTable(this.jCell);
             }
             resetAnyAction();
         } else if (keyCode == KeyEvent.VK_DELETE) {
-            if (this.cell != null) {
-                this.executeRemoveCellCommand(this.cell);
+            if (this.jCell != null) {
+                this.executeRemoveCellCommand(this.jCell);
             }
             this.resetAnyAction();
         } else if (keyCode == KeyEvent.VK_E) {
@@ -501,8 +535,8 @@ public class MainController extends MainFrame {
 
             System.out.print("\n\n");
         } else if (keyCode == KeyEvent.VK_A) {
-            if (this.cell != null && CellUtils.getActiveCell(this.cell).isPresent()) {
-                CellUtils.getActiveCell(this.cell).get().getTree().getTreeLayer();
+            if (this.jCell != null && CellUtils.getActiveCell(this.jCell).isPresent()) {
+                CellUtils.getActiveCell(this.jCell).get().getTree().getTreeLayer();
             }
         } else if (keyCode == KeyEvent.VK_Z && (event.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
             commandController.undo();
