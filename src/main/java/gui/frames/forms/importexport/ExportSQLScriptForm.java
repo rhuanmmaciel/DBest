@@ -389,7 +389,7 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
         }
 
         boolean everyColumnHasName = this.newColumnNameTxtFields.values().stream().noneMatch(x -> x.getText().isBlank());
-        boolean canBePK = columnsSelected.isEmpty() || TableUtils.canBePrimaryKey(columnsSelected);
+        boolean canBePK = columnsSelected.isEmpty();
 
         this.btnReady.setEnabled(canBePK && !this.txtFieldDatabaseName.getText().isBlank() && !this.txtFieldTableName.getText().isBlank() && everyColumnHasName);
     }

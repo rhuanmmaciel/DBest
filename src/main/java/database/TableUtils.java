@@ -75,51 +75,5 @@ public class TableUtils {
 
         return types;
     }
-
-    public static boolean canBePrimaryKey(List<List<String>> columns) {
-        if (columns.isEmpty()) return false;
-
-        int size = columns.getFirst().size();
-
-        for (List<String> column : columns) {
-            if (column.size() != size) return false;
-        }
-
-        Map<Integer, List<String>> uniqueData = new LinkedHashMap<>();
-
-        for (List<String> column : columns) {
-            if (column.contains("") || column.contains(null) || column.contains(ConstantController.NULL)) return false;
-
-            int i = 0;
-
-            for (String data : column) {
-                if (uniqueData.get(i) == null) {
-                    uniqueData.put(i, new ArrayList<>(List.of(data)));
-                } else {
-                    List<String> row = uniqueData.get(i);
-                    row.add(data);
-                }
-
-                i++;
-            }
-        }
-
-        for (int i = 0; i < size; i++) {
-            for (int j = i + 1; j < size; j++) {
-                boolean foundDuplicate = true;
-
-                for (int k = 0; k < uniqueData.get(i).size(); k++) {
-                    if (!uniqueData.get(i).get(k).strip().equals(uniqueData.get(j).get(k).strip())) {
-                        foundDuplicate = false;
-                    }
-                }
-
-                if (foundDuplicate) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
+    
 }

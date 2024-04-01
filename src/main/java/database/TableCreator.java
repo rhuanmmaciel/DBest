@@ -115,7 +115,7 @@ public class TableCreator {
         table.saveHeader(String.format("%s%s", tableName, FileType.HEADER.extension));
 
         if (mustExport)
-            return  new FYITableCell(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_FYI_TABLE_STYLE), tableName, columns, table, prototype, headerFile);
+            return  new FYITableCell(new mxCell(tableName, new mxGeometry(), ConstantController.J_CELL_FYI_TABLE_STYLE), tableName, columns, table, prototype, headerFile);
 
         mxCell jCell = (mxCell) MainFrame
             .getGraph()
@@ -203,7 +203,7 @@ public class TableCreator {
                     flags = Metadata.FLOATING_POINT;
                 }
                 case STRING -> {
-                    size = 300;
+                    size = 500;
                     flags = Metadata.STRING;
                 }
                 case CHARACTER -> {

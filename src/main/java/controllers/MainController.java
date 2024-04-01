@@ -333,7 +333,10 @@ public class MainController extends MainFrame {
                     TreeUtils.recalculateContent(operationCell);
                 });
         } else if (menuItem == this.removeMenuItem) {
-            CellUtils.removeCell(this.cell);
+            if (this.cell != null) {
+                this.executeRemoveCellCommand(this.cell);
+            }
+            this.resetAnyAction();
         } else if (menuItem == this.markCellMenuItem) {
             CellUtils.markCell(this.cell);
         } else if (menuItem == this.unmarkCellMenuItem) {

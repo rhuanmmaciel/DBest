@@ -36,6 +36,8 @@ public class CellUtils extends MainController {
         String text = (String) jCell.getValue();
         FontMetrics fontMetrics = label.getFontMetrics(font);
 
+        if(text == null) throw new RuntimeException();
+
         return fontMetrics.stringWidth(text);
 
     }
@@ -280,6 +282,7 @@ public class CellUtils extends MainController {
         } else {
             JOptionPane.showMessageDialog(null, ConstantController.getString("cell.operationCell.error"), ConstantController.getString("error"), JOptionPane.ERROR_MESSAGE);
         }
+
     }
 
     public static void addCell(mxICell jCell, Cell cell) {

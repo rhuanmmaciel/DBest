@@ -175,11 +175,9 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
     public void checkBtnReady() {
         boolean hasPrimaryKey = this.pkCheckBoxes.values().stream().anyMatch(JCheckBox::isSelected);
 
-        boolean canBePrimaryKey = TableUtils.canBePrimaryKey(this.getColumnsSelected());
+        this.btnReady.setEnabled(hasPrimaryKey);
 
-        this.btnReady.setEnabled(hasPrimaryKey && canBePrimaryKey);
-
-        this.updateToolTipText(hasPrimaryKey, canBePrimaryKey);
+        this.updateToolTipText(hasPrimaryKey);
     }
 
     @Override
@@ -188,10 +186,6 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
 
         if (conditions[0]) {
             btnReadyToolTipText = String.format("- %s", ConstantController.getString("pkChooser.toolTip.validColumn"));
-        }
-
-        if (conditions[1]) {
-            btnReadyToolTipText = String.format("- %s", ConstantController.getString("pkChooser.toolTip.pkValid"));
         }
 
         UIManager.put("ToolTip.foreground", Color.RED);
