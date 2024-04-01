@@ -7,6 +7,7 @@ import database.TableCreator;
 import entities.cells.TableCell;
 import entities.utils.cells.CellUtils;
 import enums.FileType;
+import gui.frames.ErrorFrame;
 import gui.frames.main.MainFrame;
 
 import java.io.File;
@@ -89,14 +90,17 @@ public class FileUtils {
         return TEMP.toPath();
     }
 
-    public static void moveToTempDirectory(File file) {
+    public static void moveToTempDirectory(File... files) {
         createTempIfNotExists();
 
-        try {
-            Files.move(file.toPath(), new File(TEMP.getAbsolutePath(), file.getName()).toPath());
-        } catch (IOException ignored) {
+        Arrays.stream(files).forEach(file -> {
+            try {
+                Files.move(file.toPath(), new File(TEMP.getAbsolutePath(), file.getName()).toPath());
+            } catch (IOException e) {
+                new ErrorFrame(e.getMessage());
+            }
+        });
 
-        }
     }
 
     public static File getFile(String fileName) {

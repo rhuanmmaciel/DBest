@@ -103,10 +103,14 @@ public class TableCreator {
         List<RowData> rows = new ArrayList<>(getRowData(columns, TuplesExtractor.getAllRowsMap(tableCell.getOperator(), false)));
         Prototype prototype = createPrototype(columns);
 
+        File file = new File(tableName+FileType.HEADER.extension);
+
         Table table = Table.openTable(new Header(prototype, tableName));
         table.open();
         table.insert(rows);
         table.saveHeader(String.format("%s%s", tableName, FileType.HEADER.extension));
+
+        FileUtils.moveToTempDirectory(file, new File(tableName+FileType.FYI.extension));
 
         mxCell jCell = (mxCell) MainFrame
             .getGraph()
@@ -115,7 +119,7 @@ public class TableCreator {
                 ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT, CellType.FYI_TABLE.id
             );
 
-        return new FYITableCell(jCell, tableName, columns, table, prototype, new File("teste.head"));
+        return new FYITableCell(jCell, tableName, columns, table, prototype, file);
 
 
     }
@@ -126,9 +130,6 @@ public class TableCreator {
         List<RowData> rows = new ArrayList<>(getRowData(columns, data));
 
         Prototype prototype = createPrototype(columns);
-
-        System.out.println(getRowData(columns, data));
-        System.out.println(columns);
 
         Table table = Table.openTable(new Header(prototype, tableName));
         table.open();

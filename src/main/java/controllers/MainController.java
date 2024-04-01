@@ -292,6 +292,9 @@ public class MainController extends MainFrame {
             this.currentActionReference
         );
 
+        if(this.currentActionReference.get().getType() == ActionType.CREATE_EDGE && !currentEdgeReference.get().hasParent() &&
+            !CellUtils.getActiveCell(jCell).get().canBeParent()) return;
+
         if (
             this.currentActionReference.get().getType() == ActionType.CREATE_EDGE &&
             this.invisibleCellReference.get() == null

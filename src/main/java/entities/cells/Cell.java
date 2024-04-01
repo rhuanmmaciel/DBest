@@ -136,6 +136,16 @@ public abstract sealed class Cell permits TableCell, OperationCell {
         return this.getColumns().stream().map(x -> x.NAME).toList();
     }
 
+    public boolean canBeParent(){
+
+        if(this instanceof TableCell) return true;
+
+        OperationCell operationCell = (OperationCell) this;
+
+        return operationCell.hasBeenInitialized() && !operationCell.hasError() && !operationCell.hasParentErrors();
+
+    }
+
     public List<String> getColumnSourcesAndNames() {
         return this
             .getColumns()
