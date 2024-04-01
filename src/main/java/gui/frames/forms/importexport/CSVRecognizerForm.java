@@ -370,13 +370,22 @@ public class CSVRecognizerForm extends FormBase implements ActionListener {
         this.revalidate();
     }
 
+    private Vector<Vector<Object>> limitData(Vector<Vector<Object>> csvData, int limit){
+
+        return csvData.stream().limit(limit).collect(Vector::new, Vector::add, Vector::addAll);
+
+    }
+
     private void loadJTable() {
         this.typeComboBoxes.clear();
         this.columnNames.clear();
 
         this.columnNames.addAll(this.csvData.columnNamesList());
 
-        this.model = new CustomTableModel(this.csvData.dataArray(), this.csvData.columnNamesArray());
+
+        Vector<Vector<Object>> data = limitData(this.csvData.dataArray(), 100);
+
+        this.model = new CustomTableModel(data, this.csvData.columnNamesArray());
         this.model.insertRow(0, new Object[]{});
 
         List<JComboBox<?>> comboBoxes = new ArrayList<>();

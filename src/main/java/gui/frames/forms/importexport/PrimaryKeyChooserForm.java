@@ -57,13 +57,19 @@ public class PrimaryKeyChooserForm extends FormBase implements ActionListener, I
         this.initGUI();
     }
 
+    private Vector<Vector<Object>> limitData(Vector<Vector<Object>> csvData, int limit){
+
+        return csvData.stream().limit(limit).collect(Vector::new, Vector::add, Vector::addAll);
+
+    }
+
     public void initGUI() {
         this.setBounds(0, 0, ConstantController.UI_SCREEN_WIDTH, ConstantController.UI_SCREEN_HEIGHT);
 
         this.btnReady.addActionListener(this);
         this.btnCancel.addActionListener(this);
 
-        this.model = new JTableUtils.CustomTableModel(this.rows, new Vector<>(this.columnNames));
+        this.model = new JTableUtils.CustomTableModel(limitData(rows, 100), new Vector<>(this.columnNames));
         this.model.insertRow(0, new Object[]{});
 
         List<JCheckBox> checkboxes = new ArrayList<>();

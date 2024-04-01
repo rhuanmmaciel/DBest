@@ -1,6 +1,8 @@
 package entities.cells;
 
 import com.mxgraph.model.mxCell;
+
+import controllers.ConstantController;
 import database.TuplesExtractor;
 import entities.Column;
 import entities.Coordinates;
@@ -41,7 +43,7 @@ public abstract sealed class Cell permits TableCell, OperationCell {
         this.columns = new ArrayList<>();
         this.name = name;
         this.jCell = jCell;
-        this.width = CellUtils.getCellWidth(jCell);
+        this.width = Math.max(CellUtils.getCellWidth(jCell), ConstantController.TABLE_CELL_WIDTH);
         this.height = height;
         this.child = null;
         this.operator = null;
