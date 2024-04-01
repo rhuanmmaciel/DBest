@@ -13,6 +13,9 @@ public record CellStats(
         long COMPARE_FILTER,
         long COMPARE_JOIN,
         long COMPARE_DISTINCT_TUPLE,
+
+        long LOOK_UP_LOWERBOUND,
+        long LOOK_UP_UPPERBOUND,
         long IO_SEEK_WRITE_TIME,
         long IO_WRITE_TIME,
         long IO_SEEK_READ_TIME,
@@ -27,6 +30,7 @@ public record CellStats(
         long MEMORY_ALLOCATED_BY_RECORDS,
         long MEMORY_ALLOCATED_BY_COMMITTABLE_BLOCKS,
         long MEMORY_ALLOCATED_BY_BYTE_ARRAY
+
 ) {
 
     public CellStats getDiff(CellStats cellStats2) {
@@ -36,6 +40,8 @@ public record CellStats(
                 COMPARE_FILTER - cellStats2.COMPARE_FILTER,
                 COMPARE_JOIN - cellStats2.COMPARE_JOIN,
                 COMPARE_DISTINCT_TUPLE - cellStats2.COMPARE_DISTINCT_TUPLE,
+                LOOK_UP_LOWERBOUND - cellStats2.LOOK_UP_LOWERBOUND,
+                LOOK_UP_UPPERBOUND - cellStats2.LOOK_UP_UPPERBOUND,
                 IO_SEEK_WRITE_TIME - cellStats2.IO_SEEK_WRITE_TIME,
                 IO_WRITE_TIME - cellStats2.IO_WRITE_TIME,
                 IO_SEEK_READ_TIME - cellStats2.IO_SEEK_READ_TIME,
@@ -60,6 +66,8 @@ public record CellStats(
                 COMPARE_FILTER + cellStats2.COMPARE_FILTER,
                 COMPARE_JOIN + cellStats2.COMPARE_JOIN,
                 COMPARE_DISTINCT_TUPLE + cellStats2.COMPARE_DISTINCT_TUPLE,
+                LOOK_UP_LOWERBOUND + cellStats2.LOOK_UP_LOWERBOUND,
+                LOOK_UP_UPPERBOUND + cellStats2.LOOK_UP_UPPERBOUND,
                 IO_SEEK_WRITE_TIME + cellStats2.IO_SEEK_WRITE_TIME,
                 IO_WRITE_TIME + cellStats2.IO_WRITE_TIME,
                 IO_SEEK_READ_TIME + cellStats2.IO_SEEK_READ_TIME,
@@ -84,6 +92,8 @@ public record CellStats(
                 Query.COMPARE_FILTER,
                 Query.COMPARE_JOIN,
                 Query.COMPARE_DISTINCT_TUPLE,
+                Query.LOOK_UP_LOWERBOUND,
+                Query.LOOK_UP_UPPERBOUND,
                 Parameters.IO_SEEK_WRITE_TIME,
                 Parameters.IO_WRITE_TIME,
                 Parameters.IO_SEEK_READ_TIME,
