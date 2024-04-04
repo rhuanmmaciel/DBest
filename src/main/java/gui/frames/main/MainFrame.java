@@ -48,6 +48,8 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
     protected JMenuItem informationsMenuItem;
 
+    protected JMenuItem asOperatorMenuItem;
+
     protected JMenuItem exportTableMenuItem;
 
     protected JMenuItem generateFyiTableMenuItem;
@@ -130,6 +132,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.topMenuBar = new JMenuBar();
         this.showMenuItem = new JMenuItem(ConstantController.getString("cell.show"));
         this.informationsMenuItem = new JMenuItem(ConstantController.getString("cell.informations"));
+        this.asOperatorMenuItem = new JMenuItem(ConstantController.getString("cell.asOperator"));
         this.exportTableMenuItem = new JMenuItem(ConstantController.getString("cell.exportTable"));
         this.generateFyiTableMenuItem = new JMenuItem(ConstantController.getString("cell.generateFyiTable"));
         this.exportTreeMenuItem = new JMenuItem(ConstantController.getString("cell.exportTree"));
@@ -372,6 +375,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
     private void setMenuItemsListener() {
         this.informationsMenuItem.addActionListener(this);
+        this.asOperatorMenuItem.addActionListener(this);
         this.exportTableMenuItem.addActionListener(this);
         this.generateFyiTableMenuItem.addActionListener(this);
         this.exportTreeMenuItem.addActionListener(this);

@@ -16,6 +16,8 @@ import java.awt.*;
 
 import java.util.List;
 
+import static entities.utils.cells.CellUtils.changeCellName;
+
 public class Operation {
 
 	private Operation() {
@@ -30,17 +32,7 @@ public class Operation {
 		cell.setArguments(arguments);
 		cell.removeError();
 
-		MainFrame.getGraph().getModel().setValue(jCell, name);
-
-		mxGeometry oldGeometry = jCell.getGeometry();
-
-		mxGeometry newGeometry = new mxGeometry(
-			oldGeometry.getX(), oldGeometry.getY(), CellUtils.getCellWidth(jCell), oldGeometry.getHeight()
-		);
-
-		if(cell.isMarked()) CellUtils.markCell(jCell);
-
-		MainFrame.getGraph().getModel().setGeometry(jCell, newGeometry);
+		changeCellName(jCell, name);
 
 	}
 }

@@ -35,6 +35,7 @@ import gui.frames.forms.importexport.ExportAsForm;
 import gui.frames.forms.importexport.ImportAsForm;
 import gui.frames.forms.importexport.PKAndNameChooserForm;
 import gui.frames.forms.importexport.PrimaryKeyChooserForm;
+import gui.frames.forms.operations.unary.AsOperatorForm;
 import gui.frames.main.MainFrame;
 import utils.RandomUtils;
 
@@ -223,6 +224,7 @@ public class MainController extends MainFrame {
             this.popupMenuJCell.add(this.informationsMenuItem);
             this.popupMenuJCell.add(this.exportTableMenuItem);
             this.popupMenuJCell.add(this.generateFyiTableMenuItem);
+            this.popupMenuJCell.add(this.asOperatorMenuItem);
             this.popupMenuJCell.add(this.exportTreeMenuItem);
             this.popupMenuJCell.add(this.editMenuItem);
             this.popupMenuJCell.add(this.operationsMenuItem);
@@ -237,6 +239,9 @@ public class MainController extends MainFrame {
 
             }
 
+            if(cell.isOperationCell())
+                this.popupMenuJCell.remove(this.asOperatorMenuItem);
+
             if (cell instanceof OperationCell operationCell && !operationCell.hasBeenInitialized()) {
                 this.popupMenuJCell.remove(this.showMenuItem);
                 this.popupMenuJCell.remove(this.operationsMenuItem);
@@ -245,7 +250,12 @@ public class MainController extends MainFrame {
                 this.popupMenuJCell.remove(this.exportTreeMenuItem);
             }
 
-            if (cell instanceof TableCell || OperationType.OPERATIONS_WITHOUT_FORM.contains(((OperationCell) cell).getType())) {
+            if(cell.isTableCell()) {
+                this.popupMenuJCell.remove(this.editMenuItem);
+            }
+
+            if (cell instanceof OperationCell operationCell &&
+                OperationType.OPERATIONS_WITHOUT_FORM.contains((operationCell).getType())) {
                 this.popupMenuJCell.remove(this.editMenuItem);
             }
 
@@ -318,6 +328,27 @@ public class MainController extends MainFrame {
         resetCurrentEdgeReferenceValue(new Edge());
     }
 
+    private void executeAsOperator(mxCell cell){
+
+        if(CellUtils.getActiveCell(cell).isEmpty() ||
+            !CellUtils.getActiveCell(cell).get().isTableCell()) return;
+
+        AtomicReference<Boolean> cancelService = new AtomicReference<>(false);
+
+        AsOperatorForm form = new AsOperatorForm(cancelService);
+
+        if(!cancelService.get())
+            executeAsOperator(cell, form.getNewName());
+    }
+
+    public void executeAsOperator(mxCell cell, String text){
+        if(CellUtils.getActiveCell(cell).isEmpty() ||
+            !CellUtils.getActiveCell(cell).get().isTableCell()) return;
+
+        ((TableCell)CellUtils.getActiveCell(cell).get()).asOperator(text);
+
+    }
+
     public void onBottomMenuItemClicked(ActionEvent event, Button<?> clickedButton, String style) {
         CreateOperationCellAction createOperationAction = null;
 
@@ -327,6 +358,8 @@ public class MainController extends MainFrame {
             CellUtils.showTable(this.jCell);
         } else if (menuItem == this.informationsMenuItem) {
             new CellInformationFrame(this.jCell);
+        } else if(menuItem == this.asOperatorMenuItem){
+            executeAsOperator(jCell);
         } else if (menuItem == this.exportTableMenuItem) {
             this.export();
         }else if (menuItem == this.generateFyiTableMenuItem){
@@ -554,7 +587,8 @@ public class MainController extends MainFrame {
         } else if (keyCode == KeyEvent.VK_Y && (event.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
             commandController.redo();
         } else if (keyCode == KeyEvent.VK_M) {
-            // new GeneralStatsFrame();
+            if(this.jCell != null && CellUtils.getActiveCell(this.jCell).isPresent() &&  CellUtils.getActiveCell(this.jCell).get().isTableCell())
+                ((TableCell)CellUtils.getActiveCell(this.jCell).get()).asOperator("novotextoaloaloalo");
         }
 
     }

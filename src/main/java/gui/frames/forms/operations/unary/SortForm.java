@@ -63,7 +63,7 @@ public class SortForm extends OperationForm implements ActionListener, IOperatio
 
         if(!previousArguments.isEmpty()){
 
-            String column = previousArguments.get(0);
+            String column = previousArguments.getFirst();
             String columnName = Column.removeSource(column);
             String columnSource = Column.removeName(column);
 

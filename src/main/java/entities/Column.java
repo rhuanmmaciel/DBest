@@ -60,6 +60,10 @@ public class Column implements Comparable<Column> {
         return sourceAndName.substring(0, sourceAndName.indexOf("."));
     }
 
+    public static Column changeSourceColumn(Column c, String newSource){
+        return new Column(c.NAME, newSource, c.DATA_TYPE, c.IS_PRIMARY_KEY, c.IS_IGNORED_COLUMN);
+    }
+
     public static String removeSource(String sourceAndName) {
         if (!hasSource(sourceAndName)) return sourceAndName;
 

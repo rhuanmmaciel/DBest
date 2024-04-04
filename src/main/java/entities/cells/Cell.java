@@ -2,6 +2,7 @@ package entities.cells;
 
 import com.mxgraph.model.mxCell;
 
+
 import controllers.ConstantController;
 import database.TuplesExtractor;
 import entities.Column;
@@ -10,11 +11,13 @@ import entities.Tree;
 import entities.utils.RootFinder;
 import entities.utils.TreeUtils;
 import entities.utils.cells.CellUtils;
+
 import org.apache.commons.lang3.tuple.Pair;
 import sgbd.query.Operator;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public abstract sealed class Cell permits TableCell, OperationCell {
 
@@ -32,7 +35,7 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
     protected final int height;
 
-    protected final int width;
+    protected int width;
 
     protected Tree tree;
 

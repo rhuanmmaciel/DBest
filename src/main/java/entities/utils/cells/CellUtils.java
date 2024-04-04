@@ -169,6 +169,25 @@ public class CellUtils extends MainController {
         jGraph.refresh();
     }
 
+    public static void changeCellName(mxCell jCell, String name){
+        changeCellName(jCell, name, Integer.MIN_VALUE);
+    }
+
+    public static void changeCellName(mxCell jCell, String name, int minimumSize){
+        MainFrame.getGraph().getModel().setValue(jCell, name);
+
+        mxGeometry oldGeometry = jCell.getGeometry();
+
+        mxGeometry newGeometry = new mxGeometry(
+            oldGeometry.getX(), oldGeometry.getY(), Math.max(CellUtils.getCellWidth(jCell), minimumSize), oldGeometry.getHeight()
+        );
+
+        if(CellRepository.getActiveCell(jCell).isPresent() && CellRepository.getActiveCell(jCell).get().isMarked())
+            CellUtils.markCell(jCell);
+
+        MainFrame.getGraph().getModel().setGeometry(jCell, newGeometry);
+    }
+
     public static void removeCell(mxGraph jGraph, mxCell jCell) {
         if (jGraph == null || jCell == null) return;
 

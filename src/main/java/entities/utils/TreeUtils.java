@@ -12,6 +12,7 @@ import controllers.MainController;
 import entities.Tree;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
+import entities.cells.TableCell;
 import entities.utils.cells.CellUtils;
 
 public class TreeUtils {
@@ -23,6 +24,13 @@ public class TreeUtils {
     private static final Map<mxICell, Cell> cells = CellUtils.getActiveCells();
 
     private static final Map<Integer, Tree> trees = MainController.getTrees();
+
+    public static void updateTreeBelow(TableCell tableCell){
+        if(tableCell.hasChild()) {
+            OperationCell child = tableCell.getChild();
+            updateTreesAboveAndBelow(child.getParents(), child);
+        }
+    }
 
     public static void updateTreesAboveAndBelow(List<Cell> parents, OperationCell child) {
         if (child == null && (parents == null || parents.isEmpty())) return;
@@ -75,7 +83,6 @@ public class TreeUtils {
 
         while (!level.isEmpty()) {
             Set<Cell> children = new HashSet<>();
-
             for (Cell auxCell : level) {
                 trees.add(auxCell.getTree());
 
@@ -140,7 +147,6 @@ public class TreeUtils {
 
     public static void recalculateContent(OperationCell cell) {
         if (cell == null) return;
-
         OperationCell currentCell = cell;
 
         while (currentCell != null) {
