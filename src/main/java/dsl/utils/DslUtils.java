@@ -82,7 +82,7 @@ public class DslUtils {
     public static String getRealName(String tableName){
 
         if(tableName.contains(":"))
-            return tableName.substring(tableName.indexOf(":")+1);
+            return clearTableName(tableName.substring(tableName.indexOf(":")+1));
 
         return clearTableName(tableName);
 
