@@ -8,6 +8,7 @@ import database.TableCreator;
 import dsl.entities.BinaryExpression;
 import dsl.entities.OperationExpression;
 import dsl.entities.Relation;
+import engine.exceptions.DataBaseException;
 import entities.Action.CreateOperationCellAction;
 import entities.Action.CreateTableCellAction;
 import entities.Action.CurrentAction;
@@ -418,10 +419,17 @@ public class MainController extends MainFrame {
                     new Column(x, true) : x);
             });
 
-            TableCell tableCell = TableCreator.createFYITable(pk.getTableName(), columns, cell);
+            try {
 
-            this.executeImportTableCommand(tableCell);
-            CellUtils.deactivateActiveJCell(MainFrame.getGraph(), tableCell.getJCell());
+                TableCell tableCell = TableCreator.createFYITable(pk.getTableName(), columns, cell);
+                this.executeImportTableCommand(tableCell);
+                CellUtils.deactivateActiveJCell(MainFrame.getGraph(), tableCell.getJCell());
+
+            }catch (DataBaseException e){
+                cancelService.set(true);
+                new ErrorFrame(e.getMessage());
+            }
+
         }
 
     }

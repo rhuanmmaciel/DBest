@@ -6,6 +6,7 @@ import com.mxgraph.model.mxCell;
 import controllers.ConstantController;
 import controllers.MainController;
 import database.TableCreator;
+import engine.exceptions.DataBaseException;
 import entities.Column;
 import entities.cells.CSVTableCell;
 import entities.cells.FYITableCell;
@@ -13,6 +14,7 @@ import entities.cells.TableCell;
 import enums.CellType;
 import enums.FileType;
 import files.csv.CSVInfo;
+import gui.frames.ErrorFrame;
 import gui.frames.forms.importexport.CSVRecognizerForm;
 import gui.frames.main.MainFrame;
 import org.jetbrains.annotations.NotNull;
@@ -72,9 +74,15 @@ public class ImportFile {
 
                         if (!this.exitReference.get()) {
                             assert info != null;
-                            this.tableCell = TableCreator.createCSVTable(
+                            try{
+
+                                this.tableCell = TableCreator.createCSVTable(
                                     this.tableName.toString(), this.columns, info, false
-                            );
+                                );
+                            }catch (DataBaseException e){
+                                this.exitReference.set(true);
+                                new ErrorFrame(e.getMessage());
+                            }
                         }
                     }
                     case EXCEL -> this.excel();

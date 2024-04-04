@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import controllers.ConstantController;
+import engine.exceptions.DataBaseException;
 import entities.Column;
 import entities.cells.CSVTableCell;
 import entities.cells.Cell;
@@ -65,9 +66,9 @@ public class TableCreator {
 
     }
 
-    public static CSVTableCell createCSVTable(
+    public static CSVTableCell createCSVTable (
             String tableName, List<entities.Column> columns, CSVInfo csvInfo, boolean mustExport
-    ) {
+    ) throws DataBaseException {
         Prototype prototype = createPrototype(columns);
 
         Header header = new Header(prototype, tableName);
@@ -98,7 +99,7 @@ public class TableCreator {
     }
 
     public static FYITableCell createFYITable(
-        String tableName, List<entities.Column> columns, Cell tableCell){
+        String tableName, List<entities.Column> columns, Cell tableCell) throws DataBaseException{
 
         List<RowData> rows = new ArrayList<>(getRowData(columns, TuplesExtractor.getAllRowsMap(tableCell.getOperator(), false)));
         Prototype prototype = createPrototype(columns);
@@ -126,7 +127,7 @@ public class TableCreator {
 
     public static FYITableCell createFYITable(
             String tableName, List<entities.Column> columns, Map<Integer, Map<String, String>> data, File headerFile, boolean mustExport
-    ) {
+    ) throws DataBaseException{
         List<RowData> rows = new ArrayList<>(getRowData(columns, data));
 
         Prototype prototype = createPrototype(columns);

@@ -6,6 +6,7 @@ import controllers.MainController;
 import database.TableCreator;
 import database.TuplesExtractor;
 import dsl.utils.DslUtils;
+import engine.exceptions.DataBaseException;
 import entities.Column;
 import entities.Tree;
 import entities.cells.Cell;
@@ -264,10 +265,19 @@ public class ExportFile extends JPanel {
 
             if (exitReference.get()) return;
 
-            TableCell createdCell = TableCreator.createFYITable(fileName, columnsWithPrimaryKey, rows, fileToSave, true);
+            try {
 
-            createdCell.getTable().saveHeader(headFileName);
-            createdCell.getTable().close();
+                TableCell createdCell = TableCreator.createFYITable(fileName, columnsWithPrimaryKey, rows, fileToSave, true);
+                createdCell.getTable().saveHeader(headFileName);
+                createdCell.getTable().close();
+
+            }catch (DataBaseException e){
+
+                new ErrorFrame(e.getMessage());
+                return;
+            }
+
+
 
             Path headSourcePath = Paths.get(headFileName);
             String datFileName = String.format("%s%s", fileName, FileType.FYI.extension);

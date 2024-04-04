@@ -20,8 +20,10 @@ import javax.swing.table.DefaultTableModel;
 
 import controllers.ConstantController;
 import database.TableCreator;
+import engine.exceptions.DataBaseException;
 import entities.Column;
 import entities.cells.TableCell;
+import gui.frames.ErrorFrame;
 import gui.frames.forms.FormBase;
 import gui.frames.forms.IFormCondition;
 
@@ -201,7 +203,12 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
         List<Column> rightSourceColumns = new ArrayList<>(columns.stream().map(column -> new Column(column.NAME, txtFieldTableName.getText(), column.DATA_TYPE, column.IS_PRIMARY_KEY)).toList());
 
         if (!exitReference.get()) {
-             tableCell = TableCreator.createMemoryTable(txtFieldTableName.getText(), rightSourceColumns, content);
+            try {
+                tableCell = TableCreator.createMemoryTable(txtFieldTableName.getText(), rightSourceColumns, content);
+            }catch (DataBaseException e){
+                exitReference.set(true);
+                new ErrorFrame(e.getMessage());
+            }
         } else {
             exitReference.set(true);
         }
