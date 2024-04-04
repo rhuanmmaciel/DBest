@@ -8,12 +8,11 @@ import com.mxgraph.util.mxStyleUtils;
 import com.mxgraph.view.mxGraph;
 import controllers.ConstantController;
 import controllers.MainController;
+import threads.OpenDataFrame;
 import entities.Tree;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
-import entities.cells.TableCell;
 import entities.utils.TreeUtils;
-import gui.frames.DataFrame;
 import gui.frames.main.MainFrame;
 
 import javax.swing.*;
@@ -291,19 +290,7 @@ public class CellUtils extends MainController {
 
     public static void showTable(mxCell jCell) {
 
-        Optional<Cell> optionalCell = CellRepository.getActiveCell(jCell);
-
-        if (optionalCell.isEmpty()) return;
-
-        Cell cell = optionalCell.orElse(null);
-
-        if (!(cell instanceof TableCell || ((OperationCell) cell).hasBeenInitialized())) return;
-
-        if (!cell.hasError()) {
-            new DataFrame(cell);
-        } else {
-            JOptionPane.showMessageDialog(null, ConstantController.getString("cell.operationCell.error"), ConstantController.getString("error"), JOptionPane.ERROR_MESSAGE);
-        }
+        new Thread(new OpenDataFrame(jCell)).start();
 
     }
 

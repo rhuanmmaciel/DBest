@@ -9,7 +9,7 @@ import com.mxgraph.model.mxICell;
 
 import entities.cells.Cell;
 
-class CellRepository {
+public class CellRepository {
 
     /**
      * As células que foram adicionadas à interface e estão ativas (ainda não foram removidas).
