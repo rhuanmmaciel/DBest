@@ -10,7 +10,7 @@ pathStatement: (PATH | (THIS RELATION)) '.head';
 
 variableDeclaration: RELATION '=' expression;
 
-createTable: RELATION position?;
+createTable: RELATION asOperator? position?;
 
 expression: (selection | projection | selectColumns | join | leftJoin | rightJoin | cartesianProduct | union | intersection | sort |
  group | aggregation | rename | indexer) position?;
