@@ -74,8 +74,7 @@ public abstract class JoinOperators implements IOperator {
         } catch (BooleanExpressionException exception) {
             cell.setError(exception.getMessage());
         }
-
-        Object[] edges = MainController.getGraph().getEdges(jCell);
+        Object[] edges = MainController.getGraph().getIncomingEdges(jCell);
 
         MainController.getGraph().getModel().setValue(edges[0], ConstantController.getString("left"));
         MainController.getGraph().getModel().setValue(edges[1], ConstantController.getString("right"));
