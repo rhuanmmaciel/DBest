@@ -12,15 +12,18 @@ variableDeclaration: RELATION '=' expression;
 
 createTable: RELATION position?;
 
-expression: (selection | projection | join | leftJoin | rightJoin | cartesianProduct | union | intersection | sort |
+expression: (selection | projection | selectColumns | join | leftJoin | rightJoin | cartesianProduct | union | intersection | sort |
  group | aggregation | rename | indexer) position?;
 
 position: '<' number ',' number '>';
+
+asOperator: ':' RELATION;
 
 number: DIGIT+;
 
 selection: 'selection' PREDICATE unary;
 projection: 'projection' PREDICATE unary;
+selectColumns: 'selectColumns' PREDICATE unary;
 sort: 'sort' PREDICATE unary;
 group: 'group' PREDICATE unary;
 rename: 'rename' PREDICATE unary;
@@ -37,10 +40,10 @@ intersection: 'intersection' binary;
 unary: '(' relation ')';
 binary: '(' relation ',' relation ')';
 
-relation: RELATION position? #simple | expression #nested;
+relation: RELATION asOperator? position? #simple | expression #nested;
 
 IMPORT: 'import';
-AS: 'as';
+AS: 'as' | 'As' | 'aS' | 'AS';
 RELATION: [a-zA-Z] [a-zA-Z0-9_]*;
 PREDICATE: '[' .*? ']';
 DIGIT: [0-9];

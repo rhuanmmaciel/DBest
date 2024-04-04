@@ -3,270 +3,290 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
  * This interface defines a complete listener for a parse tree produced by
- * {@link dsl.antlr4.RelAlgebraParser}.
+ * {@link RelAlgebraParser}.
  */
 public interface RelAlgebraListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#command}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#command}.
 	 * @param ctx the parse tree
 	 */
-	void enterCommand(dsl.antlr4.RelAlgebraParser.CommandContext ctx);
+	void enterCommand(RelAlgebraParser.CommandContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#command}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#command}.
 	 * @param ctx the parse tree
 	 */
-	void exitCommand(dsl.antlr4.RelAlgebraParser.CommandContext ctx);
+	void exitCommand(RelAlgebraParser.CommandContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#importStatement}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#importStatement}.
 	 * @param ctx the parse tree
 	 */
-	void enterImportStatement(dsl.antlr4.RelAlgebraParser.ImportStatementContext ctx);
+	void enterImportStatement(RelAlgebraParser.ImportStatementContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#importStatement}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#importStatement}.
 	 * @param ctx the parse tree
 	 */
-	void exitImportStatement(dsl.antlr4.RelAlgebraParser.ImportStatementContext ctx);
+	void exitImportStatement(RelAlgebraParser.ImportStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#nameDeclaration}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#nameDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterNameDeclaration(dsl.antlr4.RelAlgebraParser.NameDeclarationContext ctx);
+	void enterNameDeclaration(RelAlgebraParser.NameDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#nameDeclaration}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#nameDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitNameDeclaration(dsl.antlr4.RelAlgebraParser.NameDeclarationContext ctx);
+	void exitNameDeclaration(RelAlgebraParser.NameDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#pathStatement}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#pathStatement}.
 	 * @param ctx the parse tree
 	 */
-	void enterPathStatement(dsl.antlr4.RelAlgebraParser.PathStatementContext ctx);
+	void enterPathStatement(RelAlgebraParser.PathStatementContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#pathStatement}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#pathStatement}.
 	 * @param ctx the parse tree
 	 */
-	void exitPathStatement(dsl.antlr4.RelAlgebraParser.PathStatementContext ctx);
+	void exitPathStatement(RelAlgebraParser.PathStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#variableDeclaration}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#variableDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableDeclaration(dsl.antlr4.RelAlgebraParser.VariableDeclarationContext ctx);
+	void enterVariableDeclaration(RelAlgebraParser.VariableDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#variableDeclaration}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#variableDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableDeclaration(dsl.antlr4.RelAlgebraParser.VariableDeclarationContext ctx);
+	void exitVariableDeclaration(RelAlgebraParser.VariableDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#createTable}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#createTable}.
 	 * @param ctx the parse tree
 	 */
-	void enterCreateTable(dsl.antlr4.RelAlgebraParser.CreateTableContext ctx);
+	void enterCreateTable(RelAlgebraParser.CreateTableContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#createTable}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#createTable}.
 	 * @param ctx the parse tree
 	 */
-	void exitCreateTable(dsl.antlr4.RelAlgebraParser.CreateTableContext ctx);
+	void exitCreateTable(RelAlgebraParser.CreateTableContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#expression}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression(dsl.antlr4.RelAlgebraParser.ExpressionContext ctx);
+	void enterExpression(RelAlgebraParser.ExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#expression}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression(dsl.antlr4.RelAlgebraParser.ExpressionContext ctx);
+	void exitExpression(RelAlgebraParser.ExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#position}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#position}.
 	 * @param ctx the parse tree
 	 */
-	void enterPosition(dsl.antlr4.RelAlgebraParser.PositionContext ctx);
+	void enterPosition(RelAlgebraParser.PositionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#position}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#position}.
 	 * @param ctx the parse tree
 	 */
-	void exitPosition(dsl.antlr4.RelAlgebraParser.PositionContext ctx);
+	void exitPosition(RelAlgebraParser.PositionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#number}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#asOperator}.
 	 * @param ctx the parse tree
 	 */
-	void enterNumber(dsl.antlr4.RelAlgebraParser.NumberContext ctx);
+	void enterAsOperator(RelAlgebraParser.AsOperatorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#number}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#asOperator}.
 	 * @param ctx the parse tree
 	 */
-	void exitNumber(dsl.antlr4.RelAlgebraParser.NumberContext ctx);
+	void exitAsOperator(RelAlgebraParser.AsOperatorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#selection}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#number}.
 	 * @param ctx the parse tree
 	 */
-	void enterSelection(dsl.antlr4.RelAlgebraParser.SelectionContext ctx);
+	void enterNumber(RelAlgebraParser.NumberContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#selection}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#number}.
 	 * @param ctx the parse tree
 	 */
-	void exitSelection(dsl.antlr4.RelAlgebraParser.SelectionContext ctx);
+	void exitNumber(RelAlgebraParser.NumberContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#projection}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#selection}.
 	 * @param ctx the parse tree
 	 */
-	void enterProjection(dsl.antlr4.RelAlgebraParser.ProjectionContext ctx);
+	void enterSelection(RelAlgebraParser.SelectionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#projection}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#selection}.
 	 * @param ctx the parse tree
 	 */
-	void exitProjection(dsl.antlr4.RelAlgebraParser.ProjectionContext ctx);
+	void exitSelection(RelAlgebraParser.SelectionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#sort}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#projection}.
 	 * @param ctx the parse tree
 	 */
-	void enterSort(dsl.antlr4.RelAlgebraParser.SortContext ctx);
+	void enterProjection(RelAlgebraParser.ProjectionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#sort}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#projection}.
 	 * @param ctx the parse tree
 	 */
-	void exitSort(dsl.antlr4.RelAlgebraParser.SortContext ctx);
+	void exitProjection(RelAlgebraParser.ProjectionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#group}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#selectColumns}.
 	 * @param ctx the parse tree
 	 */
-	void enterGroup(dsl.antlr4.RelAlgebraParser.GroupContext ctx);
+	void enterSelectColumns(RelAlgebraParser.SelectColumnsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#group}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#selectColumns}.
 	 * @param ctx the parse tree
 	 */
-	void exitGroup(dsl.antlr4.RelAlgebraParser.GroupContext ctx);
+	void exitSelectColumns(RelAlgebraParser.SelectColumnsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#rename}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#sort}.
 	 * @param ctx the parse tree
 	 */
-	void enterRename(dsl.antlr4.RelAlgebraParser.RenameContext ctx);
+	void enterSort(RelAlgebraParser.SortContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#rename}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#sort}.
 	 * @param ctx the parse tree
 	 */
-	void exitRename(dsl.antlr4.RelAlgebraParser.RenameContext ctx);
+	void exitSort(RelAlgebraParser.SortContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#aggregation}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#group}.
 	 * @param ctx the parse tree
 	 */
-	void enterAggregation(dsl.antlr4.RelAlgebraParser.AggregationContext ctx);
+	void enterGroup(RelAlgebraParser.GroupContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#aggregation}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#group}.
 	 * @param ctx the parse tree
 	 */
-	void exitAggregation(dsl.antlr4.RelAlgebraParser.AggregationContext ctx);
+	void exitGroup(RelAlgebraParser.GroupContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#indexer}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#rename}.
 	 * @param ctx the parse tree
 	 */
-	void enterIndexer(dsl.antlr4.RelAlgebraParser.IndexerContext ctx);
+	void enterRename(RelAlgebraParser.RenameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#indexer}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#rename}.
 	 * @param ctx the parse tree
 	 */
-	void exitIndexer(dsl.antlr4.RelAlgebraParser.IndexerContext ctx);
+	void exitRename(RelAlgebraParser.RenameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#join}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#aggregation}.
 	 * @param ctx the parse tree
 	 */
-	void enterJoin(dsl.antlr4.RelAlgebraParser.JoinContext ctx);
+	void enterAggregation(RelAlgebraParser.AggregationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#join}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#aggregation}.
 	 * @param ctx the parse tree
 	 */
-	void exitJoin(dsl.antlr4.RelAlgebraParser.JoinContext ctx);
+	void exitAggregation(RelAlgebraParser.AggregationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#leftJoin}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#indexer}.
 	 * @param ctx the parse tree
 	 */
-	void enterLeftJoin(dsl.antlr4.RelAlgebraParser.LeftJoinContext ctx);
+	void enterIndexer(RelAlgebraParser.IndexerContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#leftJoin}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#indexer}.
 	 * @param ctx the parse tree
 	 */
-	void exitLeftJoin(dsl.antlr4.RelAlgebraParser.LeftJoinContext ctx);
+	void exitIndexer(RelAlgebraParser.IndexerContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#rightJoin}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#join}.
 	 * @param ctx the parse tree
 	 */
-	void enterRightJoin(dsl.antlr4.RelAlgebraParser.RightJoinContext ctx);
+	void enterJoin(RelAlgebraParser.JoinContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#rightJoin}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#join}.
 	 * @param ctx the parse tree
 	 */
-	void exitRightJoin(dsl.antlr4.RelAlgebraParser.RightJoinContext ctx);
+	void exitJoin(RelAlgebraParser.JoinContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#cartesianProduct}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#leftJoin}.
 	 * @param ctx the parse tree
 	 */
-	void enterCartesianProduct(dsl.antlr4.RelAlgebraParser.CartesianProductContext ctx);
+	void enterLeftJoin(RelAlgebraParser.LeftJoinContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#cartesianProduct}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#leftJoin}.
 	 * @param ctx the parse tree
 	 */
-	void exitCartesianProduct(dsl.antlr4.RelAlgebraParser.CartesianProductContext ctx);
+	void exitLeftJoin(RelAlgebraParser.LeftJoinContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#union}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#rightJoin}.
 	 * @param ctx the parse tree
 	 */
-	void enterUnion(dsl.antlr4.RelAlgebraParser.UnionContext ctx);
+	void enterRightJoin(RelAlgebraParser.RightJoinContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#union}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#rightJoin}.
 	 * @param ctx the parse tree
 	 */
-	void exitUnion(dsl.antlr4.RelAlgebraParser.UnionContext ctx);
+	void exitRightJoin(RelAlgebraParser.RightJoinContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#intersection}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#cartesianProduct}.
 	 * @param ctx the parse tree
 	 */
-	void enterIntersection(dsl.antlr4.RelAlgebraParser.IntersectionContext ctx);
+	void enterCartesianProduct(RelAlgebraParser.CartesianProductContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#intersection}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#cartesianProduct}.
 	 * @param ctx the parse tree
 	 */
-	void exitIntersection(dsl.antlr4.RelAlgebraParser.IntersectionContext ctx);
+	void exitCartesianProduct(RelAlgebraParser.CartesianProductContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#unary}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#union}.
 	 * @param ctx the parse tree
 	 */
-	void enterUnary(dsl.antlr4.RelAlgebraParser.UnaryContext ctx);
+	void enterUnion(RelAlgebraParser.UnionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#unary}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#union}.
 	 * @param ctx the parse tree
 	 */
-	void exitUnary(dsl.antlr4.RelAlgebraParser.UnaryContext ctx);
+	void exitUnion(RelAlgebraParser.UnionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#binary}.
+	 * Enter a parse tree produced by {@link RelAlgebraParser#intersection}.
 	 * @param ctx the parse tree
 	 */
-	void enterBinary(dsl.antlr4.RelAlgebraParser.BinaryContext ctx);
+	void enterIntersection(RelAlgebraParser.IntersectionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link dsl.antlr4.RelAlgebraParser#binary}.
+	 * Exit a parse tree produced by {@link RelAlgebraParser#intersection}.
 	 * @param ctx the parse tree
 	 */
-	void exitBinary(dsl.antlr4.RelAlgebraParser.BinaryContext ctx);
+	void exitIntersection(RelAlgebraParser.IntersectionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#unary}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnary(RelAlgebraParser.UnaryContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#unary}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnary(RelAlgebraParser.UnaryContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelAlgebraParser#binary}.
+	 * @param ctx the parse tree
+	 */
+	void enterBinary(RelAlgebraParser.BinaryContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelAlgebraParser#binary}.
+	 * @param ctx the parse tree
+	 */
+	void exitBinary(RelAlgebraParser.BinaryContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code simple}
-	 * labeled alternative in {@link dsl.antlr4.RelAlgebraParser#relation}.
+	 * labeled alternative in {@link RelAlgebraParser#relation}.
 	 * @param ctx the parse tree
 	 */
-	void enterSimple(dsl.antlr4.RelAlgebraParser.SimpleContext ctx);
+	void enterSimple(RelAlgebraParser.SimpleContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code simple}
-	 * labeled alternative in {@link dsl.antlr4.RelAlgebraParser#relation}.
+	 * labeled alternative in {@link RelAlgebraParser#relation}.
 	 * @param ctx the parse tree
 	 */
-	void exitSimple(dsl.antlr4.RelAlgebraParser.SimpleContext ctx);
+	void exitSimple(RelAlgebraParser.SimpleContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code nested}
-	 * labeled alternative in {@link dsl.antlr4.RelAlgebraParser#relation}.
+	 * labeled alternative in {@link RelAlgebraParser#relation}.
 	 * @param ctx the parse tree
 	 */
-	void enterNested(dsl.antlr4.RelAlgebraParser.NestedContext ctx);
+	void enterNested(RelAlgebraParser.NestedContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code nested}
-	 * labeled alternative in {@link dsl.antlr4.RelAlgebraParser#relation}.
+	 * labeled alternative in {@link RelAlgebraParser#relation}.
 	 * @param ctx the parse tree
 	 */
 	void exitNested(RelAlgebraParser.NestedContext ctx);

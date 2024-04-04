@@ -341,7 +341,7 @@ public class MainController extends MainFrame {
             executeAsOperator(cell, form.getNewName());
     }
 
-    public void executeAsOperator(mxCell cell, String text){
+    public static void executeAsOperator(mxCell cell, String text){
         if(CellUtils.getActiveCell(cell).isEmpty() ||
             !CellUtils.getActiveCell(cell).get().isTableCell()) return;
 
@@ -680,14 +680,14 @@ public class MainController extends MainFrame {
             y = (int) RandomUtils.nextDouble() * 600;
         }
 
-        TableCell tableCell = MainController.getTables().get(relation.getName());
+        TableCell tableCell = MainController.getTables().get(relation.getFirstName());
 
         CellType cellType = CellType.fromTableCell(tableCell);
 
         mxCell jTableCell = (mxCell) MainFrame
             .getGraph()
             .insertVertex(
-                graph.getDefaultParent(), null, relation.getName(), x, y,
+                graph.getDefaultParent(), null, relation.getFirstName(), x, y,
                 ConstantController.TABLE_CELL_WIDTH, ConstantController.TABLE_CELL_HEIGHT,
                 cellType.id);
 
@@ -702,6 +702,11 @@ public class MainController extends MainFrame {
         relation.getCell().getTable().open();
 
         saveTable(relation.getCell());
+
+        if(!relation.getFirstName().equals(relation.getName())){
+            executeAsOperator(jTableCell, relation.getName());
+        }
+
     }
 
     public static void putOperationCell(OperationExpression operationExpression) {

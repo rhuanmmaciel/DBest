@@ -17,7 +17,7 @@ import sgbd.query.unaryop.SelectColumnsOperator;
 import java.util.List;
 import java.util.Optional;
 
-public class FilterColumn implements IOperator {
+public class SelectColumns implements IOperator {
 
     @Override
     public void executeOperation(mxCell jCell, List<String> arguments) {

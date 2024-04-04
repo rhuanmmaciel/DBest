@@ -27,7 +27,6 @@ public class Utils {
 
     public static ColumnDataType getColumnDataType(Tuple tuple, String sourceName, String columnName) {
         if (tuple == null || sourceName == null || columnName == null) return ColumnDataType.NONE;
-
         return switch (Util.typeOfColumn(tuple.getContent(sourceName).getMetadata(columnName))) {
             case "int" -> ColumnDataType.INTEGER;
             case "long" -> ColumnDataType.LONG;

@@ -12,9 +12,6 @@ import entities.Action.CreateOperationCellAction;
 
 import gui.frames.forms.operations.BooleanExpressionForm;
 import gui.frames.forms.operations.IOperationForm;
-import gui.frames.forms.operations.unary.AggregationForm;
-import gui.frames.forms.operations.unary.GroupForm;
-import gui.frames.forms.operations.unary.IndexerForm;
 import gui.frames.forms.operations.unary.ProjectionForm;
 import gui.frames.forms.operations.unary.RenameForm;
 import gui.frames.forms.operations.unary.SortForm;
@@ -26,10 +23,7 @@ import operations.binary.joins.LeftJoin;
 import operations.binary.joins.RightJoin;
 import operations.binary.set.Intersection;
 import operations.binary.set.Union;
-import operations.unary.Aggregation;
-import operations.unary.FilterColumn;
-import operations.unary.Group;
-import operations.unary.Indexer;
+import operations.unary.SelectColumns;
 import operations.unary.Projection;
 import operations.unary.Rename;
 import operations.unary.Selection;
@@ -38,7 +32,6 @@ import operations.unary.Sort;
 import static enums.OperationErrorType.NO_ONE_ARGUMENT;
 import static enums.OperationErrorType.NO_ONE_PARENT;
 import static enums.OperationErrorType.NO_PARENT;
-import static enums.OperationErrorType.NO_PREFIX;
 import static enums.OperationErrorType.NO_TWO_ARGUMENTS;
 import static enums.OperationErrorType.NO_TWO_PARENTS;
 import static enums.OperationErrorType.PARENT_ERROR;
@@ -49,7 +42,7 @@ public enum OperationType {
 
     SELECTION         (ConstantController.getString("operation.selection"), "σ", "selection", "selection[args](source)", OperationArity.UNARY, BooleanExpressionForm.class, Selection.class, NO_ONE_ARGUMENT),
     PROJECTION        (ConstantController.getString("operation.projection"), "π", "projection", "projection[args](source)", OperationArity.UNARY, ProjectionForm.class, Projection.class, PARENT_WITHOUT_COLUMN),
-    FILTER_COLUMN     (ConstantController.getString("operation.filterColumn"), "F", "filterColumn", "filterColumn[args](source)", OperationArity.UNARY, ProjectionForm.class, FilterColumn.class, PARENT_WITHOUT_COLUMN),
+    SELECT_COLUMNS(ConstantController.getString("operation.selectColumns"), "S", "selectColumns", "selectColumns[args](source)", OperationArity.UNARY, ProjectionForm.class, SelectColumns.class, PARENT_WITHOUT_COLUMN),
 
     RENAME            (ConstantController.getString("operation.rename"), "ρ", "rename", "rename[args](source)", OperationArity.UNARY, RenameForm.class, Rename.class),
 //    GROUP             (ConstantController.getString("operation.group"), "G", "group", "group[args](relation)", OperationArity.UNARY, GroupForm.class, Group.class, NO_ONE_ARGUMENT, PARENT_WITHOUT_COLUMN, NO_PREFIX),

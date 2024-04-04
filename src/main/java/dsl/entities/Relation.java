@@ -6,13 +6,15 @@ import entities.cells.TableCell;
 public final class Relation extends Expression<TableCell> {
 
 	private final String name;
+    private final String firstName;
 	private TableCell cell = null;
 	
 	public Relation(String command) {
 
 		super(command);
-		
-		this.name = DslUtils.clearTableName(command);
+
+        this.name = DslUtils.getRealName(command);
+		this.firstName = DslUtils.clearTableName(command);
 		setCoordinates(command);
 		
 	}
@@ -32,5 +34,8 @@ public final class Relation extends Expression<TableCell> {
 		if(this.cell == null) this.cell = cell;
 		
 	}
-	
+
+    public String getFirstName() {
+        return firstName;
+    }
 }

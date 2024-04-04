@@ -20,6 +20,8 @@ import exceptions.dsl.InputException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DslUtils {
 
@@ -39,7 +41,7 @@ public class DslUtils {
 	
 	public static Expression<?> expressionRecognizer(String input) throws InputException {
 
-		if (input.contains("(")) {
+        if (input.contains("(")) {
 
 			int endIndex = input.indexOf('(');
 
@@ -54,7 +56,7 @@ public class DslUtils {
 
 		if(DslController.containsVariable(clearTableName(input)))
 			return expressionRecognizer(DslController.getVariableContent(input));
-		
+
 		if(MainController.getTables().get(clearTableName(input)) != null)
 			return new Relation(input);
 
@@ -64,9 +66,27 @@ public class DslUtils {
 
 	public static String clearTableName(String tableName) {
 
-		return removeSemicolon(removeThis(removePosition(tableName))).strip();
+		return removeAs(removeSemicolon(removeThis(removePosition(tableName)))).strip();
 
 	}
+
+    public static String removeAs(String tableName){
+
+        if(tableName.contains(":"))
+            return tableName.substring(0, tableName.indexOf(":"));
+
+        return tableName;
+
+    }
+
+    public static String getRealName(String tableName){
+
+        if(tableName.contains(":"))
+            return tableName.substring(tableName.indexOf(":")+1);
+
+        return clearTableName(tableName);
+
+    }
 
 	public static String removePosition(String tableName) {
 
