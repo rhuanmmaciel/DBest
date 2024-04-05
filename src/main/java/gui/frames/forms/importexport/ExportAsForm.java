@@ -80,8 +80,7 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
         } else if (event.getSource() == this.btnFyiDatabase) {
             this.closeWindow();
 
-            List<Column> primaryKeyColumns = new PrimaryKeyChooserForm(this.cell).getSelectedColumns();
-
+            List<Column> primaryKeyColumns = new PKChooserForm(this.cell).getSelectedColumns();
             if(!this.cancelService.get() && !primaryKeyColumns.isEmpty()) {
                 new ExportFile().exportToFYI(this.cell, primaryKeyColumns);
             }

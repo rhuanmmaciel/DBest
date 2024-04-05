@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -49,6 +50,10 @@ public class PKAndNameChooserForm extends FormBase implements ActionListener, IF
 
     private final Map<String, JCheckBox> pkCheckBoxes = new HashMap<>();
 
+    private final Cell cell;
+
+    private final List<JCheckBox> pkOrder = new LinkedList<>();
+
     private final List<String> columnNames = new ArrayList<>();
 
     public PKAndNameChooserForm(Cell cell) {
@@ -56,7 +61,9 @@ public class PKAndNameChooserForm extends FormBase implements ActionListener, IF
 
         this.setModal(true);
 
-        List<Map<String, String>> rowsAux = TuplesExtractor.getAllRowsList(cell.getOperator(), true);
+        this.cell = cell;
+
+        List<Map<String, String>> rowsAux = TuplesExtractor.getRows(cell.getOperator(), 100, true);
 
         for (Map<String, String> row : rowsAux) {
 
@@ -74,11 +81,6 @@ public class PKAndNameChooserForm extends FormBase implements ActionListener, IF
         this.initGUI();
     }
 
-    private Vector<Vector<Object>> limitData(Vector<Vector<Object>> csvData, int limit){
-
-        return csvData.stream().limit(limit).collect(Vector::new, Vector::add, Vector::addAll);
-
-    }
 
     public void initGUI() {
         this.setBounds(0, 0, ConstantController.UI_SCREEN_WIDTH, ConstantController.UI_SCREEN_HEIGHT);
@@ -86,7 +88,7 @@ public class PKAndNameChooserForm extends FormBase implements ActionListener, IF
         this.btnReady.addActionListener(this);
         this.btnCancel.addActionListener(this);
 
-        this.model = new JTableUtils.CustomTableModel(limitData(rows, 100), new Vector<>(this.columnNames));
+        this.model = new JTableUtils.CustomTableModel(rows, new Vector<>(this.columnNames));
         this.model.insertRow(0, new Object[]{});
 
         List<JCheckBox> checkboxes = new ArrayList<>();
@@ -257,21 +259,41 @@ public class PKAndNameChooserForm extends FormBase implements ActionListener, IF
         this.btnReady.setToolTipText(btnReadyToolTipText.isEmpty() ? null : btnReadyToolTipText);
     }
 
+    private void updateOrder(){
+        for (Map.Entry<String, JCheckBox> checkBox : this.pkCheckBoxes.entrySet()) {
+
+            if(!checkBox.getValue().isSelected()) {
+                pkOrder.remove(checkBox.getValue());
+                continue;
+            }
+
+            if(!pkOrder.contains(checkBox.getValue()))
+                pkOrder.add(checkBox.getValue());
+
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
+        updateOrder();
         this.checkBtnReady();
 
         if (actionEvent.getSource() == this.btnReady) {
-            for (Map.Entry<String, JCheckBox> checkBox : this.pkCheckBoxes.entrySet()) {
-                if (checkBox.getValue().isSelected()) {
-                    String columnName = Column.removeSource(checkBox.getKey());
-                    String sourceName = Column.removeName(checkBox.getKey());
+            for (JCheckBox checkBox : pkOrder) {
+                if (checkBox.isSelected()) {
 
-                    this.selectedColumns.add(new Column(columnName, sourceName, true));
+                    String sourceColumnName = pkCheckBoxes.entrySet().stream()
+                        .filter(x -> x.getValue().equals(checkBox)).findFirst().orElseThrow().getKey();
+                    String columnName = Column.removeSource(sourceColumnName);
+                    String sourceName = Column.removeName(sourceColumnName);
+
+                    Column c = cell.getColumns().stream().filter(x -> x.getSourceAndName()
+                        .equals(sourceColumnName)).findFirst().orElseThrow();
+                    this.selectedColumns.add(new Column(columnName, sourceName, c.DATA_TYPE,  true, c.IS_IGNORED_COLUMN));
                 }
             }
-
+            System.out.println(selectedColumns);
             this.dispose();
         }
 

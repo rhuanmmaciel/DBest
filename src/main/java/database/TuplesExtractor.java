@@ -34,6 +34,25 @@ public class TuplesExtractor {
         return rows;
     }
 
+    public static List<Map<String, String>> getRows(Operator operator, int amount, boolean sourceAndName) {
+        operator.open();
+
+        List<Map<String, String>> rows = new ArrayList<>();
+
+        Map<String, String> row;
+
+        row = getRow(operator, sourceAndName);
+        int i = 1;
+        while (row != null && i++ <= amount) {
+            rows.add(row);
+            row = getRow(operator, sourceAndName);
+        }
+
+        operator.close();
+
+        return rows;
+    }
+
     public static List<Map<String, String>> getAllRowsList(Operator operator, boolean sourceAndName) {
         operator.open();
 

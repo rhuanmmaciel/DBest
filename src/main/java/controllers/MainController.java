@@ -34,7 +34,6 @@ import gui.frames.forms.create.FormFrameCreateTable;
 import gui.frames.forms.importexport.ExportAsForm;
 import gui.frames.forms.importexport.ImportAsForm;
 import gui.frames.forms.importexport.PKAndNameChooserForm;
-import gui.frames.forms.importexport.PrimaryKeyChooserForm;
 import gui.frames.forms.operations.unary.AsOperatorForm;
 import gui.frames.main.MainFrame;
 import utils.RandomUtils;
