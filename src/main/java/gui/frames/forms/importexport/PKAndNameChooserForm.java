@@ -293,7 +293,6 @@ public class PKAndNameChooserForm extends FormBase implements ActionListener, IF
                     this.selectedColumns.add(new Column(columnName, sourceName, c.DATA_TYPE,  true, c.IS_IGNORED_COLUMN));
                 }
             }
-            System.out.println(selectedColumns);
             this.dispose();
         }
 

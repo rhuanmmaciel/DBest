@@ -20,7 +20,7 @@ public class ConstantController {
 
     private static final Locale CURRENT_LOCALE = Locale.of(LANGUAGE, COUNTRY);
 
-    private static final ResourceBundle MESSAGES = ResourceBundle.getBundle("language.messages", CURRENT_LOCALE);
+    private static final ResourceBundle MESSAGES = ResourceBundle.getBundle("messages", CURRENT_LOCALE);
 
     public static final Path ROOT_DIRECTORY = Paths.get("").toAbsolutePath();
 
