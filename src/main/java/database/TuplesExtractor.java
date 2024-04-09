@@ -11,22 +11,46 @@ import java.util.*;
 
 public class TuplesExtractor {
 
-    private TuplesExtractor() {
-
+    public enum Type{
+        ALL_ROWS_IN_A_LIST,
+        ALL_ROWS_IN_A_MAP,
+        ROWS_IN_A_LIST,
+        ROWS_LEFT_WITHOUT_CLOSING,
+        ROW
     }
 
-    public static Map<Integer, Map<String, String>>  getAllRowsMap(Operator operator, boolean sourceAndName) {
+
+    public final Type type;
+    private final Operator operator;
+    private final Boolean sourceAndName;
+    private final int amount;
+
+    public TuplesExtractor(Operator operator, boolean sourceAndName, int amount, Type type) {
+        this.type = type;
+        this.operator = operator;
+        this.sourceAndName = sourceAndName;
+        this.amount = amount;
+    }
+
+    public TuplesExtractor(Operator operator, boolean sourceAndName, Type type) {
+        this.type = type;
+        this.operator = operator;
+        this.sourceAndName = sourceAndName;
+        this.amount = -1;
+    }
+
+    public Map<Integer, Map<String, String>>  getAllRowsMap() {
         operator.open();
 
         Map<Integer, Map<String, String>> rows = new HashMap<>();
 
         Map<String, String> row;
 
-        row = getRow(operator, sourceAndName);
+        row = getRow();
         int i = 0;
         while (row != null) {
             rows.put(i++, row);
-            row = getRow(operator, sourceAndName);
+            row = getRow();
         }
 
         operator.close();
@@ -34,37 +58,18 @@ public class TuplesExtractor {
         return rows;
     }
 
-    public static List<Map<String, String>> getRows(Operator operator, int amount, boolean sourceAndName) {
+    public List<Map<String, String>> getAllRowsList() {
         operator.open();
 
         List<Map<String, String>> rows = new ArrayList<>();
 
         Map<String, String> row;
 
-        row = getRow(operator, sourceAndName);
-        int i = 1;
-        while (row != null && i++ <= amount) {
-            rows.add(row);
-            row = getRow(operator, sourceAndName);
-        }
-
-        operator.close();
-
-        return rows;
-    }
-
-    public static List<Map<String, String>> getAllRowsList(Operator operator, boolean sourceAndName) {
-        operator.open();
-
-        List<Map<String, String>> rows = new ArrayList<>();
-
-        Map<String, String> row;
-
-        row = getRow(operator, sourceAndName);
+        row = getRow();
 
         while (row != null) {
             rows.add(row);
-            row = getRow(operator, sourceAndName);
+            row = getRow();
         }
 
         operator.close();
@@ -72,15 +77,28 @@ public class TuplesExtractor {
         return rows;
     }
 
-    public static List<Map<String, String>> getRows(Operator operator, boolean sourceAndName, int amount){
+    public List<Map<String, String>> getAllRowsLeftWithoutClosingOperatorList() {
 
-        if(amount <= 0)
-            throw new IllegalArgumentException();
+        List<Map<String, String>> rows = new ArrayList<>();
+
+        Map<String, String> row;
+
+        row = getRow();
+
+        while (row != null) {
+            rows.add(row);
+            row = getRow();
+        }
+
+        return rows;
+    }
+
+    public List<Map<String, String>> getRows(){
 
         List<Map<String, String>> rows = new ArrayList<>();
 
         for(int i = 0; i < amount; i++) {
-            Map<String, String> row = getRow(operator, sourceAndName);
+            Map<String, String> row = getRow();
             if(row == null) return rows;
 
             rows.add(row);
@@ -91,7 +109,7 @@ public class TuplesExtractor {
     }
 
 
-    public static Map<String, String> getRow(Operator operator, boolean sourceAndName) {
+    public Map<String, String> getRow() {
         if (operator == null) return null;
 
         Set<String> possibleKeys = new HashSet<>();
@@ -102,7 +120,7 @@ public class TuplesExtractor {
             possibleKeys.addAll(content
                 .getValue()
                 .stream()
-                .map(columnName -> sourceAndName ? entities.Column.composeSourceAndName(content.getKey(), columnName) : columnName)
+                .map(columnName -> sourceAndName ? Column.composeSourceAndName(content.getKey(), columnName) : columnName)
                 .toList()
             );
         }

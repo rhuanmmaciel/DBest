@@ -7,6 +7,7 @@ import entities.cells.Cell;
 import gui.frames.forms.FormBase;
 import gui.frames.forms.IFormCondition;
 import gui.utils.JTableUtils;
+import threads.ReadTuplesRunnable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -42,7 +43,10 @@ public class PKChooserForm extends FormBase implements ActionListener, IFormCond
         this.cell = cell;
         this.setModal(true);
 
-        List<Map<String, String>> rowsAux = TuplesExtractor.getRows(cell.getOperator(), 100, true);
+        ReadTuplesRunnable readTuplesRunnable = new ReadTuplesRunnable(cell.getOperator(), true, 100, TuplesExtractor.Type.ROWS_IN_A_LIST);
+        readTuplesRunnable.run();
+        List<Map<String, String>> rowsAux =
+            readTuplesRunnable.getRows();
 
         for (Map<String, String> row : rowsAux) {
 

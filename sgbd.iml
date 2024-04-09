@@ -3,6 +3,8 @@
   <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$" dumb="true">
       <excludeFolder url="file://$MODULE_DIR$/.idea/libraries" />
+      <excludeFolder url="file://$MODULE_DIR$/.settings" />
+      <excludeFolder url="file://$MODULE_DIR$/bin" />
     </content>
   </component>
 </module>

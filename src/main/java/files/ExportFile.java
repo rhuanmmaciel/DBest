@@ -18,6 +18,7 @@ import gui.frames.forms.importexport.ExportSQLScriptForm;
 import gui.frames.main.MainFrame;
 import net.coobird.thumbnailator.Thumbnails;
 import sgbd.query.Operator;
+import threads.ReadTuplesRunnable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -244,7 +245,11 @@ public class ExportFile extends JPanel {
             int i = 0;
 
             while (operator.hasNext()) {
-                Map<String, String> row = TuplesExtractor.getRow(cell.getOperator(), false);
+                ReadTuplesRunnable readTuplesRunnable = new ReadTuplesRunnable(cell.getOperator(), false, TuplesExtractor.Type.ROW);
+
+                readTuplesRunnable.run();
+                Map<String, String> row =
+                    readTuplesRunnable.getRow();
 
                 if (row != null) {
                     rows.put(i++, row);
@@ -326,7 +331,10 @@ public class ExportFile extends JPanel {
 
                 boolean columnsPut = false;
 
-                for (Map<String, String> row : TuplesExtractor.getAllRowsList(cell.getOperator(), true)) {
+                ReadTuplesRunnable readTuplesRunnable = new ReadTuplesRunnable(cell.getOperator(), true, TuplesExtractor.Type.ALL_ROWS_IN_A_LIST);
+                readTuplesRunnable.run();
+                for (Map<String, String> row :
+                    readTuplesRunnable.getAllRowsList()) {
                     if (!columnsPut) {
                         boolean repeatedColumnName = false;
 

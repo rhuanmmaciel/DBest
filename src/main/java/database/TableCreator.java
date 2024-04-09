@@ -24,6 +24,7 @@ import sgbd.prototype.metadata.Metadata;
 import sgbd.source.components.Header;
 import sgbd.source.table.CSVTable;
 import sgbd.source.table.Table;
+import threads.ReadTuplesRunnable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -101,7 +102,12 @@ public class TableCreator {
     public static FYITableCell createFYITable(
         String tableName, List<entities.Column> columns, Cell tableCell) throws DataBaseException{
 
-        List<RowData> rows = new ArrayList<>(getRowData(columns, TuplesExtractor.getAllRowsMap(tableCell.getOperator(), false)));
+        ReadTuplesRunnable readTuplesRunnable = new ReadTuplesRunnable(
+            tableCell.getOperator(), false, TuplesExtractor.Type.ALL_ROWS_IN_A_MAP);
+
+        readTuplesRunnable.run();
+
+        List<RowData> rows = new ArrayList<>(getRowData(columns, readTuplesRunnable.getAllRowsMap()));
         Prototype prototype = createPrototype(columns);
 
         File file = new File(tableName+FileType.HEADER.extension);

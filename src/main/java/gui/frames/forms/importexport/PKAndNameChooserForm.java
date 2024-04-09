@@ -8,6 +8,7 @@ import entities.cells.Cell;
 import gui.frames.forms.FormBase;
 import gui.frames.forms.IFormCondition;
 import gui.utils.JTableUtils;
+import threads.ReadTuplesRunnable;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
@@ -63,7 +64,10 @@ public class PKAndNameChooserForm extends FormBase implements ActionListener, IF
 
         this.cell = cell;
 
-        List<Map<String, String>> rowsAux = TuplesExtractor.getRows(cell.getOperator(), 100, true);
+        ReadTuplesRunnable readTuplesRunnable = new ReadTuplesRunnable(cell.getOperator(),  true, 100, TuplesExtractor.Type.ROWS_IN_A_LIST);
+        readTuplesRunnable.run();
+        List<Map<String, String>> rowsAux =
+            readTuplesRunnable.getRows();
 
         for (Map<String, String> row : rowsAux) {
 

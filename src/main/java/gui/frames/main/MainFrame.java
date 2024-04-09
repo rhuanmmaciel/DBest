@@ -112,6 +112,8 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
     protected JMenuItem redoTopMenuBarItem = new JMenuItem(String.format("%s (%s)", ConstantController.getString("menu.edit.redo"), ConstantController.getString("menu.edit.redo.shortcut")));
 
+    private JPanel loadingSomethingPanel = new JPanel(new BorderLayout());
+
     protected MainFrame(Set<Button<?>> buttons) {
         super(ConstantController.APPLICATION_TITLE);
 
@@ -170,11 +172,15 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
         this.operationsPanel.setLayout(new BoxLayout(this.operationsPanel, BoxLayout.Y_AXIS));
         tablesPanel.add(this.tablesComponent, BorderLayout.CENTER);
 
+        Box bottomComponents = Box.createVerticalBox();
+        bottomComponents.add(toolBar);
+        bottomComponents.add(loadingSomethingPanel);
+
         this.getContentPane().add(this.topMenuBar, BorderLayout.NORTH);
         this.getContentPane().add(graphComponent, BorderLayout.CENTER);
         this.getContentPane().add(tablesPanel, BorderLayout.WEST);
         this.getContentPane().add(this.operationsPanel, BorderLayout.EAST);
-        this.getContentPane().add(this.toolBar, BorderLayout.SOUTH);
+        this.getContentPane().add(bottomComponents, BorderLayout.SOUTH);
 
         this.addOperationButtons();
         this.addBottomButtons();

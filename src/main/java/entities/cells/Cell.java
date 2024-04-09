@@ -14,6 +14,7 @@ import entities.utils.cells.CellUtils;
 
 import org.apache.commons.lang3.tuple.Pair;
 import sgbd.query.Operator;
+import threads.ReadTuplesRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,15 +184,16 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
     public void closeOperator(){
         operator.close();
-    }
-
-    public void freeOperatorResources(){
         operator.freeResources();
     }
 
     public Pair<Integer, CellStats> getCellStats(int amountOfTuples, CellStats initialCellStats){
 
-        return Pair.of(TuplesExtractor.getRows(operator, true, amountOfTuples).size(), CellStats.getTotalCurrentStats().getDiff(initialCellStats));
+        ReadTuplesRunnable readTuplesRunnable = new ReadTuplesRunnable(operator, true, amountOfTuples, TuplesExtractor.Type.ROWS_IN_A_LIST);
+
+        readTuplesRunnable.run();
+
+        return Pair.of(readTuplesRunnable.getRows().size(), CellStats.getTotalCurrentStats().getDiff(initialCellStats));
 
     }
 

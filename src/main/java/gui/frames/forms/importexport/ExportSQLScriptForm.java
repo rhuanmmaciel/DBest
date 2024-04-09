@@ -42,6 +42,7 @@ import gui.frames.forms.FormBase;
 import gui.frames.forms.IFormCondition;
 
 import gui.utils.JTableUtils;
+import threads.ReadTuplesRunnable;
 
 public class ExportSQLScriptForm extends FormBase implements ActionListener, IFormCondition {
 
@@ -239,7 +240,10 @@ public class ExportSQLScriptForm extends FormBase implements ActionListener, IFo
     private void loadJTable() {
         boolean columnsPut = false;
 
-        for (Map<String, String> row : TuplesExtractor.getAllRowsList(this.cell.getOperator(), true)) {
+        ReadTuplesRunnable readTuplesRunnable = new ReadTuplesRunnable(this.cell.getOperator(), true, TuplesExtractor.Type.ALL_ROWS_IN_A_LIST);
+        readTuplesRunnable.run();
+        for (Map<String, String> row :
+            readTuplesRunnable.getAllRowsList()) {
             if (!columnsPut) {
                 for (String inf : row.keySet()) {
                     this.columnNames.add(inf);

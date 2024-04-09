@@ -27,7 +27,7 @@ public final class CSVTableCell extends TableCell {
     }
 
     public CSVTableCell(String name, Table table, File headerFile) {
-        super(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_CSV_TABLE_STYLE), name, table, headerFile);
+        super(new mxCell(name, new mxGeometry(), ConstantController.J_CELL_CSV_TABLE_STYLE), name, table, headerFile);
     }
 
     public CSVTableCell(mxCell jCell, String name, Table table, File headerFile) {

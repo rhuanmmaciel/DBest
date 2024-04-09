@@ -6,7 +6,8 @@ public enum FileType {
     EXCEL  ("excel", ".xlsx"),
     SQL    ("sql", ".sql"),
     FYI    ("fyi", ".dat"),
-    HEADER ("head", ".head");
+    HEADER ("head", ".head"),
+    TXT("txt", ".txt");
 
     public final String id;
 

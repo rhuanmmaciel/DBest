@@ -2,14 +2,18 @@ package gui.frames;
 
 import controllers.ConstantController;
 import database.TuplesExtractor;
+import engine.exceptions.DataBaseException;
 import engine.info.Parameters;
 import entities.Column;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import gui.utils.JTableUtils;
+
+import org.apache.commons.lang3.tuple.Pair;
 import org.kordamp.ikonli.dashicons.Dashicons;
 import org.kordamp.ikonli.swing.FontIcon;
 import sgbd.info.Query;
+import threads.ReadTuplesRunnable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -22,8 +26,16 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DataFrame extends JDialog implements ActionListener {
+
+    private final JPanel contentPane = new JPanel(new BorderLayout());
+
+    private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
     private final JLabel lblText = new JLabel();
 
@@ -91,12 +103,12 @@ public class DataFrame extends JDialog implements ActionListener {
 
     private final List<String> columnsName;
 
-    private int currentIndex;
+    private final AtomicReference<Integer> currentIndex = new AtomicReference<>();
 
     private final Cell cell;
 
     private Integer lastPage = null;
-
+    private boolean isExecuting = false;
     private int currentLastPage = -1;
 
     public DataFrame(Cell cell) {
@@ -111,15 +123,11 @@ public class DataFrame extends JDialog implements ActionListener {
         }
 
         this.cell = cell;
-
-        cell.openOperator();
+        this.rows = new ArrayList<>();
 
         this.columnsName = cell.getColumnSourcesAndNames();
 
-        this.rows = new ArrayList<>();
-
-        this.updateTable(0);
-        this.currentIndex = 0;
+        this.currentIndex.set(0);
 
         this.addWindowListener(new WindowAdapter() {
 
@@ -129,7 +137,23 @@ public class DataFrame extends JDialog implements ActionListener {
             }
         });
 
+        executorService.execute(()->{
+
+            isExecuting = true;
+            cell.openOperator();
+
+            this.updateTable(0);
+            verifyButtons();
+            this.resize();
+            this.setLocationRelativeTo(null);
+            this.setVisible(true);
+
+            isExecuting = false;
+        });
+
         this.initializeGUI();
+
+
     }
 
     private void setIcons() {
@@ -157,6 +181,7 @@ public class DataFrame extends JDialog implements ActionListener {
     }
 
     private void updateTable(int page) {
+
         int firstElement = page * 15;
         int lastElement = page * 15 + 14;
 
@@ -211,14 +236,74 @@ public class DataFrame extends JDialog implements ActionListener {
         this.table.repaint();
     }
 
+    private void updateLastPageOfTable() {
+
+        DefaultTableModel model = new DefaultTableModel();
+
+        model.addColumn("");
+        Pair<Pair<Integer, Integer>, Integer> updatedValues = this.getAllTuples();
+
+        int firstElement = updatedValues.getLeft().getLeft();
+        int page = updatedValues.getLeft().getRight();
+        int lastElement = updatedValues.getRight();
+
+        this.currentLastPage = Math.max(this.currentLastPage, page);
+
+        if (!this.rows.isEmpty()) {
+            for (Map.Entry<String, List<String>> columns : this.cell.getOperator().getContentInfo().entrySet()) {
+                for (String columnName : columns.getValue()) {
+                    model.addColumn(Column.composeSourceAndName(columns.getKey(), columnName));
+                }
+            }
+
+            int i = currentLastPage * 15 - 14;
+            int endOfList = Math.min(lastElement + 1, this.rows.size());
+
+            for (Map<String, String> currentRow : this.rows.subList(firstElement, endOfList)) {
+                Object[] line = new Object[this.rows.get(firstElement).size() + 1];
+
+                line[0] = i++;
+
+                for (int j = 0; j < currentRow.size(); j++) {
+                    line[j + 1] = currentRow.get(model.getColumnName(j + 1));
+                }
+
+                model.addRow(line);
+            }
+        } else {
+            model.setColumnIdentifiers(this.columnsName.toArray());
+        }
+
+        this.table.setModel(model);
+
+        JTableUtils.preferredColumnWidthByValues(this.table, 0);
+
+        for (int i = 1; i < this.table.getColumnCount(); i++) {
+            JTableUtils.preferredColumnWidthByColumnName(this.table, i);
+        }
+
+        this.table.getColumnModel().getColumn(0).setResizable(false);
+
+        JTableUtils.setColumnBold(this.table, 0);
+        JTableUtils.setNullInRed(this.table);
+
+        this.table.setEnabled(false);
+        this.table.setFillsViewportHeight(true);
+        this.table.repaint();
+    }
+
     private void getTuples(int currentElement, int page, int lastElement) {
         if (page > this.currentLastPage) {
-            Map<String, String> row = TuplesExtractor.getRow(this.cell.getOperator(), true);
+            ReadTuplesRunnable readTuplesRunnable = new ReadTuplesRunnable(this.cell.getOperator(), true, TuplesExtractor.Type.ROW);
+            readTuplesRunnable.run();
+            Map<String, String> row = readTuplesRunnable.getRow();
 
             while (row != null && currentElement < lastElement) {
                 this.rows.add(row);
 
-                row = TuplesExtractor.getRow(this.cell.getOperator(), true);
+                readTuplesRunnable = new ReadTuplesRunnable(this.cell.getOperator(), true, TuplesExtractor.Type.ROW);
+                readTuplesRunnable.run();
+                row = readTuplesRunnable.getRow();
 
                 if (row != null) currentElement++;
 
@@ -233,8 +318,24 @@ public class DataFrame extends JDialog implements ActionListener {
         }
     }
 
+    private Pair<Pair<Integer, Integer>, Integer> getAllTuples() {
+
+        ReadTuplesRunnable readTuplesRunnable =
+            new ReadTuplesRunnable(this.cell.getOperator(), true, TuplesExtractor.Type.ROWS_LEFT_WITHOUT_CLOSING);
+        readTuplesRunnable.run();
+        List<Map<String, String>> data = readTuplesRunnable.getRows();
+
+        this.rows.addAll(data);
+
+        this.lastPage = this.rows.size() / 15;
+
+        int firstElement = lastPage * 15;
+        int lastElement = lastPage * 15 + 14;
+        currentIndex.set(lastPage);
+        return Pair.of(Pair.of(firstElement, lastPage + 1), lastElement);
+    }
+
     private void initializeGUI() {
-        JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         this.setContentPane(contentPane);
@@ -276,6 +377,7 @@ public class DataFrame extends JDialog implements ActionListener {
         this.resize();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+
     }
 
     private void resize() {
@@ -288,38 +390,59 @@ public class DataFrame extends JDialog implements ActionListener {
     }
 
     private void verifyButtons() {
-        this.btnLeft.setEnabled(this.currentIndex != 0);
-        this.btnAllLeft.setEnabled(this.currentIndex != 0);
-        this.btnRight.setEnabled(this.lastPage == null || this.lastPage != this.currentIndex);
-        this.btnAllRight.setEnabled(this.lastPage == null || this.lastPage != this.currentIndex);
-        this.lblPages.setText(this.currentIndex + 1 + "/" + (this.lastPage == null ? " ???" : this.lastPage + 1));
+        this.btnLeft.setEnabled(this.currentIndex.get() != 0);
+        this.btnAllLeft.setEnabled(this.currentIndex.get() != 0);
+        this.btnRight.setEnabled(this.lastPage == null || this.lastPage != this.currentIndex.get());
+        this.btnAllRight.setEnabled(this.lastPage == null || this.lastPage != this.currentIndex.get());
+        this.lblPages.setText(this.currentIndex.get() + 1 + "/" + (this.lastPage == null ? " ???" : this.lastPage + 1));
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == this.btnRight) {
-            this.currentIndex++;
-        } else if (event.getSource() == this.btnLeft) {
-            this.currentIndex--;
-        }
 
-        if (event.getSource() == this.btnAllLeft) {
-            this.currentIndex = 0;
-        } else if (event.getSource() == this.btnAllRight) {
-            if (this.lastPage == null) {
-                while (this.lastPage == null) {
-                    this.updateTable(++this.currentIndex);
-                }
-            } else {
-                this.currentIndex = this.lastPage;
+        if (!isExecuting) {
+            if (event.getSource() == this.btnRight) {
+                this.currentIndex.set(currentIndex.get()+1);
+            } else if (event.getSource() == this.btnLeft) {
+                this.currentIndex.set(currentIndex.get()-1);
             }
-        } else if (event.getSource() == this.btnStats) {
-            this.alternateScreen();
-        }
 
-        this.updateTable(this.currentIndex);
-        this.updateStats();
-        this.verifyButtons();
+            if (event.getSource() == this.btnAllLeft) {
+                this.currentIndex.set(0);
+            } else if (event.getSource() == this.btnAllRight) {
+                if (this.lastPage == null) {
+                    updateDataTillTheEnd();
+
+                } else {
+                    this.currentIndex.set(this.lastPage);
+                }
+            } else if (event.getSource() == this.btnStats) {
+                this.alternateScreen();
+            }
+
+            if (event.getSource() != this.btnAllRight || this.lastPage != null)
+                updateData();
+        }
+    }
+
+    private void updateData() {
+        isExecuting = true;
+        executorService.execute(() -> {
+            this.updateTable(currentIndex.get());
+            this.updateStats();
+            this.verifyButtons();
+            isExecuting = false;
+        });
+
+    }
+    private void updateDataTillTheEnd() {
+        isExecuting = true;
+        executorService.execute(()->{
+            this.updateLastPageOfTable();
+            this.updateStats();
+            this.verifyButtons();
+            isExecuting = false;
+        });
     }
 
     private void updateStats() {
@@ -414,9 +537,9 @@ public class DataFrame extends JDialog implements ActionListener {
         this.repaint();
     }
 
-    private void closeWindow() {
+    public void closeWindow() {
         this.cell.closeOperator();
-        this.cell.freeOperatorResources();
+        executorService.shutdown();
         this.dispose();
     }
 }

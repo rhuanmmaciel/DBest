@@ -90,9 +90,18 @@ public class ImportFile {
 
                         AtomicReference<Table> table = new AtomicReference<>();
 
-                        header(table);
+                        try {
 
-                        this.tableCell = importHeaderFile(table, exitReference, fileUpload.getSelectedFile());
+                            header(table);
+                            this.tableCell = importHeaderFile(table, exitReference, fileUpload.getSelectedFile());
+
+                        }catch (DataBaseException e){
+
+                            this.exitReference.set(true);
+                            new ErrorFrame(e.getMessage());
+
+                        }
+
                     }
                     case SQL ->
                             throw new UnsupportedOperationException(String.format("Unimplemented case: %s", this.fileType));
@@ -155,7 +164,7 @@ public class ImportFile {
         };
     }
 
-    private void header(AtomicReference<Table> table) {
+    private void header(AtomicReference<Table> table) throws DataBaseException{
         if (!this.fileUpload.getSelectedFile().getName().toLowerCase().endsWith(FileType.HEADER.extension)) {
             JOptionPane.showMessageDialog(null, String.format("%s %s", ConstantController.getString("file.error.selectRightExtension"), FileType.HEADER.extension));
             this.exitReference.set(true);
