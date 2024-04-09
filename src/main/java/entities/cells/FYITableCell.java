@@ -25,7 +25,7 @@ public final class FYITableCell extends TableCell {
     }
 
     public FYITableCell(String name, Table table, File headerFile) {
-        super(new mxCell(null, new mxGeometry(), ConstantController.J_CELL_FYI_TABLE_STYLE), name, table, headerFile);
+        super(new mxCell(name, new mxGeometry(), ConstantController.J_CELL_FYI_TABLE_STYLE), name, table, headerFile);
     }
 
     public FYITableCell(FYITableCell tableCell, mxCell jCell) {
