@@ -17,6 +17,7 @@ import threads.ReadTuplesRunnable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.ProgressBarUI;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -55,7 +56,7 @@ public class DataFrame extends JDialog implements ActionListener {
 
     private final JPanel tablePanel = new JPanel(new BorderLayout());
 
-    private JScrollPane scrollPanel;
+    private JScrollPane scrollPanel = new JScrollPane();
 
     private final JTextPane textPane = new JTextPane();
 
@@ -110,6 +111,7 @@ public class DataFrame extends JDialog implements ActionListener {
     private Integer lastPage = null;
     private boolean isExecuting = false;
     private int currentLastPage = -1;
+    private final JProgressBar jProgressBar = new JProgressBar();
 
     public DataFrame(Cell cell) {
 
@@ -122,6 +124,11 @@ public class DataFrame extends JDialog implements ActionListener {
             this.lblText.setText(cell.getName() + ":");
         }
 
+        jProgressBar.setIndeterminate(true);
+        jProgressBar.setPreferredSize(new Dimension(ConstantController.UI_SCREEN_WIDTH, 10));
+        jProgressBar.setMaximumSize(new Dimension(ConstantController.UI_SCREEN_WIDTH, 10));
+        jProgressBar.setMinimumSize(new Dimension(ConstantController.UI_SCREEN_WIDTH, 10));
+
         this.cell = cell;
         this.rows = new ArrayList<>();
 
@@ -133,26 +140,52 @@ public class DataFrame extends JDialog implements ActionListener {
 
             @Override
             public void windowClosing(WindowEvent event) {
-                DataFrame.this.closeWindow();
+                closeWindow();
             }
         });
 
-        executorService.execute(()->{
+        SwingWorker<Void, Integer> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                startExecuting();
+                cell.openOperator();
 
-            isExecuting = true;
-            cell.openOperator();
+                return null;
+            }
 
-            this.updateTable(0);
-            verifyButtons();
-            this.resize();
-            this.setLocationRelativeTo(null);
-            this.setVisible(true);
-
-            isExecuting = false;
-        });
-
+            @Override
+            protected void done() {
+                updateTable(0);
+                verifyButtons();
+                setVisible(true);
+                finishExecuting();
+                resize();            }
+        };
+        worker.execute();
         this.initializeGUI();
 
+
+    }
+
+    private void startExecuting(){
+
+        isExecuting = true;
+
+        scrollPanel.setViewportView(null);
+        scrollPanel.setViewportView(jProgressBar);
+        this.revalidate();
+        this.repaint();
+
+    }
+
+    private void finishExecuting(){
+
+        isExecuting = false;
+
+        scrollPanel.setViewportView(null);
+        scrollPanel.setViewportView(tablePanel);
+        this.revalidate();
+        this.repaint();
 
     }
 
@@ -387,6 +420,8 @@ public class DataFrame extends JDialog implements ActionListener {
             int height = this.getHeight();
             this.setSize((int) (ConstantController.UI_SCREEN_WIDTH * 0.95), height);
         }
+        setLocationRelativeTo(null);
+
     }
 
     private void verifyButtons() {
@@ -400,6 +435,11 @@ public class DataFrame extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
 
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         if (!isExecuting) {
             if (event.getSource() == this.btnRight) {
                 this.currentIndex.set(currentIndex.get()+1);
@@ -426,23 +466,50 @@ public class DataFrame extends JDialog implements ActionListener {
     }
 
     private void updateData() {
-        isExecuting = true;
-        executorService.execute(() -> {
-            this.updateTable(currentIndex.get());
-            this.updateStats();
-            this.verifyButtons();
-            isExecuting = false;
-        });
+
+        SwingWorker<Void, Integer> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                startExecuting();
+                updateTable(currentIndex.get());
+                return null;
+            }
+
+            @Override
+            protected void done() {
+
+                updateStats();
+                verifyButtons();
+                finishExecuting();
+
+            }
+        };
+
+        worker.execute();
 
     }
     private void updateDataTillTheEnd() {
-        isExecuting = true;
-        executorService.execute(()->{
-            this.updateLastPageOfTable();
-            this.updateStats();
-            this.verifyButtons();
-            isExecuting = false;
-        });
+
+        SwingWorker<Void, Integer> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                startExecuting();
+                updateLastPageOfTable();
+                return null;
+            }
+
+            @Override
+            protected void done() {
+
+                updateStats();
+                verifyButtons();
+                finishExecuting();
+
+            }
+        };
+
+        worker.execute();
+
     }
 
     private void updateStats() {
