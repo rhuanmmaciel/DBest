@@ -29,6 +29,8 @@ public class DataFrame extends JDialog implements ActionListener {
 
     private final JLabel lblPages = new JLabel();
 
+    private final JLabel lblTuplesLoaded = new JLabel();
+
     private final JTable table = new JTable();
 
     private final JButton btnLeft = new JButton();
@@ -118,8 +120,7 @@ public class DataFrame extends JDialog implements ActionListener {
 
         this.rows = new ArrayList<>();
 
-        this.updateTable(0);
-        this.currentIndex = 0;
+        firstExecution();
 
         this.addWindowListener(new WindowAdapter() {
 
@@ -130,6 +131,18 @@ public class DataFrame extends JDialog implements ActionListener {
         });
 
         this.initializeGUI();
+    }
+
+    private void firstExecution(){
+
+        if(cell instanceof OperationCell operationCell && operationCell.getType().isSetBasedProcessing)
+            while (lastPage == null)
+                this.updateTable(currentIndex++);
+
+        currentIndex = 0;
+        this.updateTable(0);
+        this.updateStats();
+        this.verifyButtons();
     }
 
     private void setIcons() {
@@ -249,6 +262,7 @@ public class DataFrame extends JDialog implements ActionListener {
         JPanel northPane = new JPanel(new FlowLayout());
         northPane.add(this.lblText);
         northPane.add(this.lblPages);
+        northPane.add(this.lblTuplesLoaded);
         northPane.add(this.btnStats);
 
         this.tablePanel.add(this.table.getTableHeader(), BorderLayout.NORTH);
@@ -272,10 +286,15 @@ public class DataFrame extends JDialog implements ActionListener {
         this.verifyButtons();
 
         if (this.table.getRowCount() == 0) this.lblPages.setText("0/0");
+        updateTuplesLoaded();
 
         this.resize();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+    }
+
+    private void updateTuplesLoaded(){
+        lblTuplesLoaded.setText(ConstantController.getString("dataframe.tuplesLoaded")+":"+rows.size());
     }
 
     private void resize() {
@@ -318,6 +337,7 @@ public class DataFrame extends JDialog implements ActionListener {
         }
 
         this.updateTable(this.currentIndex);
+        this.updateTuplesLoaded();
         this.updateStats();
         this.verifyButtons();
     }
