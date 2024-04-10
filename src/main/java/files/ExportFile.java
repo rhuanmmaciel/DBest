@@ -277,8 +277,6 @@ public class ExportFile extends JPanel {
                 return;
             }
 
-
-
             Path headSourcePath = Paths.get(headFileName);
             String datFileName = String.format("%s%s", fileName, FileType.FYI.extension);
             Path datSourcePath = Paths.get(datFileName);
