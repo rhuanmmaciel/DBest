@@ -70,7 +70,7 @@ public class FileUtils {
     }
 
     private static void initHeader(File file)  {
-        TableCell tableCell = null;
+        TableCell tableCell;
         try {
             tableCell = TableCreator.createTable(file);
         } catch (FileNotFoundException e) {
