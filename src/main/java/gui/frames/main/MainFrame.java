@@ -12,10 +12,13 @@ import entities.buttons.OperationButton;
 import entities.buttons.ToolBarButton;
 import enums.CellType;
 import enums.OperationType;
+import files.FileUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -114,6 +117,7 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
 
     protected MainFrame(Set<Button<?>> buttons) {
         super(ConstantController.APPLICATION_TITLE);
+        this.setIconImage(new ImageIcon(String.valueOf(FileUtils.getDBestLogo())).getImage());
 
         this.initializeFields(buttons);
         this.initializeGUI();

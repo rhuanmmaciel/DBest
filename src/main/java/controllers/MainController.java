@@ -445,11 +445,21 @@ public class MainController extends MainFrame {
 
             List<Column> columns = new ArrayList<>();
 
-            cell.getColumns().forEach(x -> {
-                columns.add(
-                    primaryKeyColumns.stream().map(Column::getSourceAndName).toList().contains(x.getSourceAndName()) ?
-                    new Column(x, true) : x);
-            });
+            for (Column pkColumns : primaryKeyColumns)
+                columns.add(new Column(cell.getColumns().stream()
+                    .filter(c -> c.getSourceAndName()
+                        .equalsIgnoreCase((primaryKeyColumns.stream()
+                            .filter(x -> x.getSourceAndName()
+                                .equalsIgnoreCase(pkColumns.getSourceAndName()))
+                            .findFirst().orElseThrow()).getSourceAndName())).findFirst().orElseThrow(), true));
+
+            for (Column c : cell.getColumns()){
+
+                if(columns.stream().anyMatch(x -> x.getSourceAndName().equalsIgnoreCase(c.getSourceAndName()))) continue;
+
+                columns.add(new Column(c, false));
+
+            }
 
             try {
 

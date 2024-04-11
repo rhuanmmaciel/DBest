@@ -39,6 +39,18 @@ public class FileUtils {
 
     }
 
+    public static Path getDBestLogo(){
+
+        File assets = new File("assets");
+
+        File images = Arrays.stream(Objects.requireNonNull(Arrays.stream(Objects.requireNonNull(assets.listFiles()))
+                .filter(x -> x.getName().equals("images")).findFirst().orElseThrow()
+                .listFiles())).filter(x -> x.getName().equals("dbest-logo.png")).findFirst().orElseThrow();
+
+        return images.toPath();
+
+    }
+
     public static void verifyExistingFilesToInitialize(){
 
         try

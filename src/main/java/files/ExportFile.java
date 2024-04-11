@@ -257,10 +257,20 @@ public class ExportFile extends JPanel {
 
             List<Column> columnsWithPrimaryKey = new ArrayList<>();
 
-            for (Column column : cell.getColumns()) {
-                Column readyColumn = primaryKeyColumns.contains(column) ? new Column(column.NAME, column.SOURCE, column.DATA_TYPE, true) : column;
+            for (Column pkColumns : primaryKeyColumns)
+                columnsWithPrimaryKey.add(new Column(cell.getColumns().stream()
+                    .filter(c -> c.getSourceAndName()
+                        .equalsIgnoreCase((primaryKeyColumns.stream()
+                            .filter(x -> x.getSourceAndName()
+                                .equalsIgnoreCase(pkColumns.getSourceAndName()))
+                            .findFirst().orElseThrow()).getSourceAndName())).findFirst().orElseThrow(), true));
 
-                columnsWithPrimaryKey.add(readyColumn);
+            for (Column c : cell.getColumns()){
+
+                if(columnsWithPrimaryKey.stream().anyMatch(x -> x.getSourceAndName().equalsIgnoreCase(c.getSourceAndName()))) continue;
+
+                columnsWithPrimaryKey.add(new Column(c, false));
+
             }
 
             if (exitReference.get()) return;

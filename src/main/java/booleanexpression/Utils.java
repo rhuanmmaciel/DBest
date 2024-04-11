@@ -3,6 +3,7 @@ package booleanexpression;
 import enums.ColumnDataType;
 
 import lib.booleanexpression.entities.elements.Element;
+import lib.booleanexpression.entities.elements.Null;
 import lib.booleanexpression.entities.elements.Value;
 import lib.booleanexpression.entities.elements.Variable;
 
@@ -16,6 +17,8 @@ public class Utils {
 
     public static Element getElement(String text) {
         if (text.contains("'")) return getValue(text, ColumnDataType.STRING);
+
+        if(text.equalsIgnoreCase("null")) return new Null();
 
         try {
             return getValueAsNumber(text);

@@ -204,6 +204,7 @@ public class TableCreator {
 
     public static Prototype createPrototype(List<entities.Column> columns) {
         Prototype prototype = new Prototype();
+        System.out.println(columns);
         for (entities.Column column : columns) {
             short size;
             short flags;
