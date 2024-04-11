@@ -22,9 +22,11 @@ import entities.cells.*;
 import entities.utils.TreeUtils;
 import entities.utils.cells.CellUtils;
 import enums.CellType;
+import enums.FileType;
 import enums.OperationType;
 import files.ExportFile;
 import files.FileUtils;
+import files.ImportFile;
 import gui.frames.CellInformationFrame;
 import gui.frames.ComparatorFrame;
 import gui.frames.ErrorFrame;
@@ -183,7 +185,7 @@ public class MainController extends MainFrame {
         if (source == this.importTableTopMenuBarItem) {
             this.createNewTable(CurrentAction.ActionType.IMPORT_FILE);
         } else if (source == this.importTreeTopMenuBarItem) {
-
+            new ImportFile(FileType.TXT, new AtomicReference<>(false));
         } else if (source == this.gtkThemeTopMenuBarItem) {
             theme = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
         } else if (source == this.motifThemeTopMenuBarItem) {

@@ -6,6 +6,11 @@ import com.mxgraph.model.mxCell;
 import controllers.ConstantController;
 import controllers.MainController;
 import database.TableCreator;
+import dsl.AntlrController;
+import dsl.DslController;
+import dsl.DslErrorListener;
+import dsl.antlr4.RelAlgebraLexer;
+import dsl.antlr4.RelAlgebraParser;
 import engine.exceptions.DataBaseException;
 import entities.Column;
 import entities.cells.CSVTableCell;
@@ -13,19 +18,27 @@ import entities.cells.FYITableCell;
 import entities.cells.TableCell;
 import enums.CellType;
 import enums.FileType;
+import exceptions.dsl.InputException;
 import files.csv.CSVInfo;
 import gui.frames.ErrorFrame;
 import gui.frames.forms.importexport.CSVRecognizerForm;
 import gui.frames.main.MainFrame;
+
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.jetbrains.annotations.NotNull;
 import sgbd.source.table.Table;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -94,6 +107,48 @@ public class ImportFile {
 
                         this.tableCell = importHeaderFile(table, exitReference, fileUpload.getSelectedFile());
                     }
+                    case TXT -> {
+
+                        StringBuilder content = new StringBuilder();
+
+                        try (BufferedReader reader = new BufferedReader(new FileReader(fileUpload.getSelectedFile()))) {
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                content.append(line).append("\n");
+                            }
+                        } catch (IOException e) {
+
+                            new ErrorFrame(e.getMessage());
+                            this.exitReference.set(true);
+                            return;
+                        }
+
+                        RelAlgebraParser parser = new RelAlgebraParser(new CommonTokenStream(new RelAlgebraLexer(CharStreams.fromString(content.toString()))));
+
+                        parser.removeErrorListeners();
+
+                        DslErrorListener errorListener = new DslErrorListener();
+                        parser.addErrorListener(errorListener);
+
+                        ParseTreeWalker walker = new ParseTreeWalker();
+
+                        AntlrController listener = new AntlrController();
+
+                        walker.walk(listener, parser.command());
+
+                        if (!DslErrorListener.getErrors().isEmpty()) {
+                            new ErrorFrame(DslErrorListener.getErrors().toString());
+                            return;
+                        }
+
+                        try {
+                            DslController.parser();
+                        } catch (InputException exception) {
+                            new ErrorFrame(exception.getMessage());
+                            this.exitReference.set(true);
+                        }
+
+                    }
                     case SQL ->
                             throw new UnsupportedOperationException(String.format("Unimplemented case: %s", this.fileType));
                     default -> throw new IllegalArgumentException(String.format("Unexpected value: %s", this.fileType));
@@ -104,6 +159,7 @@ public class ImportFile {
         }
         catch (FileNotFoundException | IllegalArgumentException e){
 
+            new ErrorFrame(e.getMessage());
             exitReference.set(true);
 
         }
@@ -151,6 +207,7 @@ public class ImportFile {
             case EXCEL -> new FileNameExtensionFilter("Sheets files", "xlsx", "xls", "ods");
             case HEADER -> new FileNameExtensionFilter("Headers files", "head");
             case SQL -> throw new UnsupportedOperationException(String.format("Unimplemented case: %s", this.fileType));
+            case TXT -> new FileNameExtensionFilter("Txt files", "txt");
             default -> throw new IllegalArgumentException(String.format("Unexpected value: %s", this.fileType));
         };
     }
