@@ -1,15 +1,30 @@
 package gui.frames.forms.operations;
 
+import booleanexpression.BooleanExpressionException;
+import booleanexpression.BooleanExpressionRecognizer;
+
 import com.mxgraph.model.mxCell;
 import controllers.ConstantController;
 import entities.Column;
 import entities.cells.Cell;
 import entities.utils.cells.CellUtils;
+import gui.frames.ErrorFrame;
 import gui.frames.forms.IFormCondition;
 import lib.booleanexpression.entities.elements.Element;
 import lib.booleanexpression.entities.elements.Null;
+import lib.booleanexpression.entities.elements.Value;
+import lib.booleanexpression.entities.elements.Variable;
 import lib.booleanexpression.entities.expressions.AtomicExpression;
+import lib.booleanexpression.entities.expressions.BooleanExpression;
 import lib.booleanexpression.enums.RelationalOperator;
+import sgbd.prototype.query.fields.BinaryField;
+import sgbd.prototype.query.fields.BooleanField;
+import sgbd.prototype.query.fields.DoubleField;
+import sgbd.prototype.query.fields.FloatField;
+import sgbd.prototype.query.fields.IntegerField;
+import sgbd.prototype.query.fields.LongField;
+import sgbd.prototype.query.fields.NullField;
+import sgbd.prototype.query.fields.StringField;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
@@ -215,11 +230,51 @@ public class AtomicExpressionForm extends OperationForm implements ActionListene
 	@Override
 	protected void setPreviousArgs() {
 
-//		if(!previousArguments.isEmpty())
-//			insertString(previousArguments.get(0));
+//        if(previousArguments.isEmpty()) return;
+//
+//        try {
+//
+//            System.out.println((previousArguments.get(0)));
+//            this.atomicExpression =
+//                (AtomicExpression) new BooleanExpressionRecognizer(jCell).recognizer(previousArguments.get(0));
+//
+//            txtFieldValue1.setText(getText(atomicExpression.getFirstElement()));
+//            txtFieldValue2.setText(getText(atomicExpression.getSecondElement()));
+//
+//            comboBoxOperator.setSelectedIndex(Arrays.stream(RelationalOperator
+//                .values()).toList().indexOf(atomicExpression.getRelationalOperator()));
+//
+//        } catch (BooleanExpressionException e) {
+//            new ErrorFrame(e.getMessage());
+//        }
 
-	}
+    }
 
+//    private String getText(Element element){
+//
+//        if(element instanceof Value value) {
+//
+//            if(value.getField() instanceof StringField)
+//                return ("'"+value.getField().getString()+"'");
+//            else if(value.getField() instanceof IntegerField)
+//                return (String.valueOf(value.getField().getInt()));
+//            else if(value.getField() instanceof LongField)
+//                return (String.valueOf(value.getField().getLong()));
+//            else if(value.getField() instanceof FloatField)
+//                return (String.valueOf(value.getField().getFloat()));
+//            else if(value.getField() instanceof DoubleField)
+//                return (String.valueOf(value.getField().getDouble()));
+//            else if(value.getField() instanceof BooleanField)
+//                return (String.valueOf(value.getField().getBoolean()));
+//
+//        }else if(element instanceof Variable variable) {
+//
+//            return (variable.getNames()[0] + "." + variable.getNames()[1]);
+//        }
+//
+//        return "NULL";
+//
+//    }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

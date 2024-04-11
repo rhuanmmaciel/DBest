@@ -39,6 +39,8 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
     @Override
     protected void setPreviousArgs() {
 
+        if(previousArguments.isEmpty()) return;
+
         try {
             BooleanExpression booleanExpression = new BooleanExpressionRecognizer(jCell).recognizer(previousArguments.get(0));
 

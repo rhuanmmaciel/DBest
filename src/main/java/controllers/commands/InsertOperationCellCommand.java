@@ -7,6 +7,7 @@ import entities.Action.CurrentAction;
 import entities.Action.CurrentAction.ActionType;
 import entities.Edge;
 import entities.cells.OperationCell;
+import entities.utils.cells.CellRepository;
 import entities.utils.cells.CellUtils;
 import enums.CellType;
 import gui.frames.main.MainFrame;
@@ -153,7 +154,9 @@ public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
     private void insertEdge() {
         MainFrame.getGraph().getModel().getValue(this.cellReference.get());
 
-        if (this.currentActionType == ActionType.CREATE_EDGE && !this.edgeReference.get().hasParent()) {
+        if (this.currentActionType == ActionType.CREATE_EDGE && !this.edgeReference.get().hasParent() &&
+            !CellRepository.getActiveCell(cellReference.get()).get().hasChild()) {
+            System.out.println("a");
             this.edgeReference.get().addParent(this.cellReference.get());
             CellUtils.addMovableEdge(this.mouseEvent, this.invisibleCellReference, this.cellReference.get());
         }
