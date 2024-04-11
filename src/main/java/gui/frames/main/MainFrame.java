@@ -118,13 +118,13 @@ public abstract class MainFrame extends JFrame implements ActionListener, MouseL
     protected MainFrame(Set<Button<?>> buttons) {
         super(ConstantController.APPLICATION_TITLE);
 
-        try {
-
-            this.setIconImage(new ImageIcon(String.valueOf(FileUtils.getDBestLogo())).getImage());
-
-        }catch (Exception ignored){
-
-        }
+//        try {
+//
+//            this.setIconImage(new ImageIcon(String.valueOf(FileUtils.getDBestLogo())).getImage());
+//
+//        }catch (Exception ignored){
+//
+//        }
 
         this.initializeFields(buttons);
         this.initializeGUI();
