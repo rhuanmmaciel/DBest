@@ -1,12 +1,15 @@
 package gui.frames.forms.operations;
 
+import booleanexpression.BooleanExpressionException;
 import booleanexpression.BooleanExpressionRecognizer;
 import com.mxgraph.model.mxCell;
 import controllers.ConstantController;
+import gui.frames.ErrorFrame;
 import gui.frames.forms.IFormCondition;
 import gui.frames.forms.operations.panelstruct.AtomicPane;
 import gui.frames.forms.operations.panelstruct.ExpressionPane;
 import gui.frames.forms.operations.panelstruct.LogicalPane;
+import lib.booleanexpression.entities.expressions.AtomicExpression;
 import lib.booleanexpression.entities.expressions.BooleanExpression;
 import lib.booleanexpression.entities.expressions.LogicalExpression;
 import lib.booleanexpression.enums.LogicalOperator;
@@ -35,6 +38,23 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
     @Override
     protected void setPreviousArgs() {
+
+        try {
+            BooleanExpression booleanExpression = new BooleanExpressionRecognizer(jCell).recognizer(previousArguments.get(0));
+
+            ExpressionPane expressionPane = booleanExpression instanceof LogicalExpression ?
+                new LogicalPane(this, jCell, booleanExpression) :
+                new AtomicPane(this, jCell, previousArguments.get(0));
+
+            root = expressionPane;
+            addExtraComponent(new JScrollPane(expressionPane), 0, 2, 1, 1);
+            setButtonsEnabled(false);
+            update();
+
+        } catch (BooleanExpressionException e) {
+            new ErrorFrame(e.getMessage());
+        }
+
     }
 
     public void initGUI() {
@@ -127,6 +147,15 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
     }
 
+    private void update(){
+
+        checkBtnReady();
+
+        revalidate();
+        pack();
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
@@ -166,10 +195,8 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
             btnReady();
 
         }
-        checkBtnReady();
 
-        revalidate();
-        pack();
+        update();
 
     }
 

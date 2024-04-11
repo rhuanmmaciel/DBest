@@ -5,6 +5,7 @@ import com.mxgraph.model.mxCell;
 import controllers.ConstantController;
 import gui.frames.forms.operations.AtomicExpressionForm;
 import gui.frames.forms.operations.BooleanExpressionForm;
+import lib.booleanexpression.entities.expressions.BooleanExpression;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +33,16 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
         btnDeleteExpression.addActionListener(root);
 
         setVisible(true);
+
+    }
+
+    public AtomicPane(BooleanExpressionForm root, mxCell jCell, String txt){
+
+        this(root, jCell);
+
+        expression.setText(txt);
+        updateRootSize();
+        root.checkBtnReady();
 
     }
 

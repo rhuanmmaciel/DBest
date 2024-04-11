@@ -1,8 +1,12 @@
 package gui.frames.forms.operations.panelstruct;
 
+import booleanexpression.BooleanExpressionRecognizer;
+
 import com.mxgraph.model.mxCell;
 import controllers.ConstantController;
 import gui.frames.forms.operations.BooleanExpressionForm;
+import lib.booleanexpression.entities.expressions.BooleanExpression;
+import lib.booleanexpression.entities.expressions.LogicalExpression;
 import lib.booleanexpression.enums.LogicalOperator;
 
 import javax.swing.*;
@@ -54,6 +58,34 @@ public class LogicalPane extends ExpressionPane implements ActionListener {
         btnDeleteExpression.addActionListener(root);
 
         setVisible(true);
+
+    }
+    public LogicalPane(BooleanExpressionForm root, mxCell jCell, BooleanExpression booleanExpression){
+
+        this(root, jCell, ((LogicalExpression)booleanExpression).getLogicalOperator());
+
+        LogicalExpression logicalExpression = (LogicalExpression) booleanExpression;
+
+        for (BooleanExpression expression : logicalExpression.getExpressions()){
+
+            if(expression instanceof LogicalExpression subLogicalExpression){
+
+                LogicalPane logicalPane = new LogicalPane(root, jCell, subLogicalExpression);
+                children.add(logicalPane);
+                boxChildren.add(logicalPane);
+
+            }else{
+
+                AtomicPane atomicPane = new AtomicPane(root, jCell, new BooleanExpressionRecognizer(jCell).recognizer(expression));
+                children.add(atomicPane);
+                boxChildren.add(atomicPane);
+
+            }
+
+            revalidate();
+            updateRootSize();
+
+        }
 
     }
 
