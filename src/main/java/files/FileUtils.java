@@ -74,8 +74,6 @@ public class FileUtils {
         }
         catch (Exception e){
 
-            new ErrorFrame(e.getMessage());
-
         }
 
     }
