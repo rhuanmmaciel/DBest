@@ -1,0 +1,1 @@
+projection[movie.title, person.person_name](join[ ( movie.movie_id == movie_cast.movie_id )](movie<470,210>,join[ ( movie_cast.person_id == person.person_id )](movie_cast<650,300>,person<770,300>)<590,210>)<490,110>)<530,30>;

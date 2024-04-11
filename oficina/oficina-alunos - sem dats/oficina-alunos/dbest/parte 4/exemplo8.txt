@@ -1,0 +1,1 @@
+projection[idx_year.release_year](selection[ ( idx_year.release_year < 1930 )](idx_year<100,460>)<30,380>)<71,310>;

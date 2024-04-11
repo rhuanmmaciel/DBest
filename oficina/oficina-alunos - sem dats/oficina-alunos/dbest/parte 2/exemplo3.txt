@@ -1,0 +1,1 @@
+projection[movie.title, movie.budget](selection[release_year = 1978](movie<490,290>)<440,190>)<430,90>;

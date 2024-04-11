@@ -1,0 +1,1 @@
+projection[movie.title, person.person_name](join[ ( movie_cast.person_id == person.person_id )](join[ ( movie.movie_id == movie_cast.movie_id )](join[ ( idx_year.movie_id == movie.movie_id )](selection[ ( idx_year.release_year == 1978 )](idx_year<30,460>)<-20,370>,movie<240,380>)<10,300>,movie_cast<400,330>)<40,240>,person<360,250>)<100,160>)<160,70>;
