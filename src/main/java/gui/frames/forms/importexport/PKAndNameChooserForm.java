@@ -76,7 +76,7 @@ public class PKAndNameChooserForm extends FormBase implements ActionListener, IF
             this.rows.add(v);
         }
 
-        this.columnNames.addAll(rowsAux.getFirst().keySet());
+        this.columnNames.addAll(rowsAux.get(0).keySet());
 
         this.initGUI();
     }

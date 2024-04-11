@@ -1,6 +1,7 @@
 package enums;
 
 import entities.cells.*;
+import gui.frames.ErrorFrame;
 
 public enum CellType {
 
@@ -17,17 +18,10 @@ public enum CellType {
 
     public static CellType fromTableCell(Cell tableCell) {
 
-        return switch (tableCell){
-
-          case FYITableCell ignored -> FYI_TABLE;
-
-          case CSVTableCell ignored -> CSV_TABLE;
-
-          case OperationCell ignored -> OPERATION;
-
-          case MemoryTableCell ignored -> MEMORY_TABLE;
-
-        };
+        if(tableCell instanceof FYITableCell) return FYI_TABLE;
+        if(tableCell instanceof CSVTableCell) return CSV_TABLE;
+        if(tableCell instanceof MemoryTableCell) return MEMORY_TABLE;
+        return OPERATION;
 
     }
 }

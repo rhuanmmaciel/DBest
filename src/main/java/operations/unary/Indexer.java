@@ -63,7 +63,7 @@ public class Indexer implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().getFirst();
+        Cell parentCell = cell.getParents().get(0);
 
         Operator operator = parentCell.getOperator();
 
@@ -86,19 +86,19 @@ public class Indexer implements IOperator {
         count.close();
 
         Prototype prototype2 = new Prototype();
-        prototype2.addColumn(arguments.getFirst(), 4, Metadata.SIGNED_INTEGER_COLUMN | Metadata.PRIMARY_KEY);
+        prototype2.addColumn(arguments.get(0), 4, Metadata.SIGNED_INTEGER_COLUMN | Metadata.PRIMARY_KEY);
 
         Table table2 = Table.openTable(new Header(prototype2, "aux"));
         table2.open();
 
         for (int n = 1; n <= numberOfRows; n++) {
             RowData rowData = new RowData();
-            rowData.setInt(arguments.getFirst(), n);
+            rowData.setInt(arguments.get(0), n);
             table2.insert(rowData);
         }
 
         Operator readyOperator = new NestedLoopJoin(new TableScan(table2), operator, (tuple1, tuple2) -> {
-            boolean foundIndex = i == tuple1.getContent("aux").getInt(arguments.getFirst());
+            boolean foundIndex = i == tuple1.getContent("aux").getInt(arguments.get(0));
             boolean rightTuple = j == i;
 
             if (foundIndex) {

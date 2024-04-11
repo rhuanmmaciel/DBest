@@ -47,9 +47,9 @@ public class Sort implements IOperator {
 
             errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
             OperationErrorVerifier.parentContainsColumns(
-                cell.getParents().getFirst().getColumnSourcesAndNames(),
+                cell.getParents().get(0).getColumnSourcesAndNames(),
                 Collections.singletonList(
-                    Utils.replaceIfStartsWithIgnoreCase(arguments.getFirst(), PREFIXES, ""))
+                    Utils.replaceIfStartsWithIgnoreCase(arguments.get(0), PREFIXES, ""))
             );
 
             errorType = null;
@@ -59,11 +59,11 @@ public class Sort implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().getFirst();
+        Cell parentCell = cell.getParents().get(0);
 
         Operator operator = parentCell.getOperator();
 
-        String column = arguments.getFirst();
+        String column = arguments.get(0);
 
         boolean isAscendingOrder = !Utils.startsWithIgnoreCase(column, "DESC:");
 

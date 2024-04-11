@@ -52,9 +52,9 @@ public class Selection implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().getFirst();
+        Cell parentCell = cell.getParents().get(0);
 
-        String expression = arguments.getFirst();
+        String expression = arguments.get(0);
 
         try {
             BooleanExpression booleanExpression = new BooleanExpressionRecognizer(jCell).recognizer(expression);

@@ -45,13 +45,14 @@ public class InsertTableCellCommand extends BaseUndoableRedoableCommand {
 
         TableCell tableCell = MainController.getTables().get(this.jCellReference.get().getValue());
 
-        switch (tableCell){
+        if (tableCell instanceof FYITableCell fyiTableCell)
+            new FYITableCell(fyiTableCell, this.jCellReference.get());
 
-            case FYITableCell fyiTableCell -> new FYITableCell(fyiTableCell, this.jCellReference.get());
-            case CSVTableCell csvTableCell -> new CSVTableCell(csvTableCell, this.jCellReference.get());
-            case MemoryTableCell memoryTableCell -> new MemoryTableCell(memoryTableCell, this.jCellReference.get());
+        else if(tableCell instanceof CSVTableCell csvTableCell)
+            new CSVTableCell(csvTableCell, this.jCellReference.get());
 
-        }
+        else if (tableCell instanceof MemoryTableCell memoryTableCell)
+            new MemoryTableCell(memoryTableCell, this.jCellReference.get());
 
     }
 

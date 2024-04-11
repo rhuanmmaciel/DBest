@@ -55,7 +55,7 @@ public class PKChooserForm extends FormBase implements ActionListener, IFormCond
             this.rows.add(v);
         }
 
-        this.columnNames.addAll(rowsAux.getFirst().keySet());
+        this.columnNames.addAll(rowsAux.get(0).keySet());
 
         this.initGUI();
     }

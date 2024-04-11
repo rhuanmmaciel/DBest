@@ -152,11 +152,11 @@ public class InsertOperationCellCommand extends BaseUndoableRedoableCommand {
     }
 
     private void insertEdge() {
+
         MainFrame.getGraph().getModel().getValue(this.cellReference.get());
 
         if (this.currentActionType == ActionType.CREATE_EDGE && !this.edgeReference.get().hasParent() &&
             !CellRepository.getActiveCell(cellReference.get()).get().hasChild()) {
-            System.out.println("a");
             this.edgeReference.get().addParent(this.cellReference.get());
             CellUtils.addMovableEdge(this.mouseEvent, this.invisibleCellReference, this.cellReference.get());
         }

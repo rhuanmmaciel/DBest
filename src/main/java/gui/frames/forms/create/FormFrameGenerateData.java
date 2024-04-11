@@ -131,7 +131,7 @@ public class FormFrameGenerateData extends FormBase implements ActionListener, C
         this.model = model;
         this.table = table;
         this.columns = new ArrayList<>(columns);
-        this.faker = new Faker(Locale.of("pt", "BR"));
+        this.faker = new Faker(new Locale("pt", "BR"));
         this.dbestFaker = new DBestFaker();
 
         this.initGUI();

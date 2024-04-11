@@ -90,7 +90,7 @@ public class FormFrameAddColumn extends FormBase implements ActionListener, Docu
                 case "String" -> ColumnDataType.STRING;
                 case "Character" -> ColumnDataType.CHARACTER;
                 case "Boolean" -> ColumnDataType.BOOLEAN;
-                case null, default -> ColumnDataType.NONE;
+                default -> ColumnDataType.NONE;
             };
 
             this.table.addColumn(this.textFieldColumnName.getText().replaceAll("[^\\p{Alnum}]", ""));

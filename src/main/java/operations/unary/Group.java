@@ -51,11 +51,11 @@ public class Group implements IOperator {
             errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
 
             OperationErrorVerifier.parentContainsColumns(
-                cell.getParents().getFirst().getColumnSourcesAndNames(), arguments.stream().limit(1).toList()
+                cell.getParents().get(0).getColumnSourcesAndNames(), arguments.stream().limit(1).toList()
             );
 
             OperationErrorVerifier.parentContainsColumns(
-                cell.getParents().getFirst().getColumnSourcesAndNames(),
+                cell.getParents().get(0).getColumnSourcesAndNames(),
                 arguments
                     .stream()
                     .map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, ""))
@@ -73,11 +73,11 @@ public class Group implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().getFirst();
+        Cell parentCell = cell.getParents().get(0);
 
         List<String> fixedArguments = new ArrayList<>();
 
-        fixedArguments.add(Column.composeSourceAndName(parentCell.getSourceNameByColumnName(arguments.getFirst()), arguments.getFirst()));
+        fixedArguments.add(Column.composeSourceAndName(parentCell.getSourceNameByColumnName(arguments.get(0)), arguments.get(0)));
 
         for (String argument : arguments.subList(1, arguments.size())) {
             String fixedArgument = argument.substring(0, Utils.getFirstMatchingPrefixIgnoreCase(argument, PREFIXES).length())
@@ -87,7 +87,7 @@ public class Group implements IOperator {
             fixedArguments.add(fixedArgument);
         }
 
-        String groupBy = fixedArguments.getFirst();
+        String groupBy = fixedArguments.get(0);
 
         List<AgregationOperation> aggregations = new ArrayList<>();
 

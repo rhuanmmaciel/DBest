@@ -43,7 +43,7 @@ public abstract class SetOperators implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell1 = cell.getParents().getFirst();
+        Cell parentCell1 = cell.getParents().get(0);
         Cell parentCell2 = cell.getParents().get(1);
 
         Operator operator1 = parentCell1.getOperator();

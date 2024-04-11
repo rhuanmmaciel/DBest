@@ -104,7 +104,7 @@ public class Aggregation implements IOperator {
 
             errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
             OperationErrorVerifier.parentContainsColumns(
-                cell.getParents().getFirst().getColumnSourcesAndNames(),
+                cell.getParents().get(0).getColumnSourcesAndNames(),
                 arguments.stream().map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, "")).toList(),
                 List.of("*")
             );
@@ -119,13 +119,13 @@ public class Aggregation implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().getFirst();
+        Cell parentCell = cell.getParents().get(0);
 
         Operator operator = parentCell.getOperator();
 
         String fixedArgument = arguments
-            .getFirst()
-            .substring(0, Utils.getFirstMatchingPrefixIgnoreCase(arguments.getFirst(), PREFIXES).length()) + Column.composeSourceAndName(parentCell.getSourceNameByColumnName(arguments.getFirst().substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.getFirst(), PREFIXES).length())), arguments.getFirst().substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.getFirst(), PREFIXES).length()));
+            .get(0)
+            .substring(0, Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length()) + Column.composeSourceAndName(parentCell.getSourceNameByColumnName(arguments.get(0).substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length())), arguments.get(0).substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length()));
 
         String sourceName = Column.removeName(fixedArgument).substring(Utils.getFirstMatchingPrefixIgnoreCase(fixedArgument, PREFIXES).length());
         String columnName = Column.removeSource(fixedArgument);
@@ -156,6 +156,6 @@ public class Aggregation implements IOperator {
         readyOperator = new GroupOperator(readyOperator, "Aux", "madeUp", aggregations);
         readyOperator = new FilterColumnsOperator(readyOperator, List.of("Aux.madeUp"));
 
-        Operation.operationSetter(cell, arguments.getFirst(), List.of(fixedArgument), readyOperator);
+        Operation.operationSetter(cell, arguments.get(0), List.of(fixedArgument), readyOperator);
     }
 }

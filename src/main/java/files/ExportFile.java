@@ -104,7 +104,7 @@ public class ExportFile extends JPanel {
             sqlContent.append(String.format("CREATE TABLE IF NOT EXISTS %s (%n", inf.tableName()));
 
             for (String columnName : inf.columnNames().subList(0, inf.columnNames().size() - 1)) {
-                if (!inf.columnNames().getFirst().equals(columnName)) {
+                if (!inf.columnNames().get(0).equals(columnName)) {
                     sqlContent.append(",\n");
                 }
 

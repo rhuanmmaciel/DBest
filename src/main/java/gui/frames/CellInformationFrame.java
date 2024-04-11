@@ -139,7 +139,7 @@ public class CellInformationFrame extends JDialog {
 
 
         JLabel lblParentId = new JLabel(ConstantController.getString("cellInformation.id") +":");
-        JLabel lblParentIdInf = new JLabel( cell.getParents().getFirst().getJCell().getId());
+        JLabel lblParentIdInf = new JLabel( cell.getParents().get(0).getJCell().getId());
 
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -150,7 +150,7 @@ public class CellInformationFrame extends JDialog {
         parentGroupPanel.add(lblParentIdInf, gbc);
 
         JLabel lblParent = new JLabel(ConstantController.getString("cellInformation.name") +":");
-        JLabel lblParentInf = new JLabel(cell.getParents().getFirst().getName());
+        JLabel lblParentInf = new JLabel(cell.getParents().get(0).getName());
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -161,7 +161,7 @@ public class CellInformationFrame extends JDialog {
         parentGroupPanel.add(lblParentInf, gbc);
 
         JLabel lblParentPosition = new JLabel(ConstantController.getString("cellInformation.position")+":");
-        JLabel lblParentPositionInf = new JLabel(cell.getParents().getFirst().getUpperLeftPosition().toString());
+        JLabel lblParentPositionInf = new JLabel(cell.getParents().get(0).getUpperLeftPosition().toString());
 
         gbc.gridx = 0;
         gbc.gridy = 3;

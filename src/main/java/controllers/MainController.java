@@ -192,10 +192,10 @@ public class MainController extends MainFrame {
             theme = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
         } else if (source == this.nimbusThemeTopMenuBarItem) {
             theme = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
-        } else if (source == this.undoTopMenuBarItem) {
-            commandController.undo();
-        } else if (source == this.redoTopMenuBarItem) {
-            commandController.redo();
+//        } else if (source == this.undoTopMenuBarItem) {
+//            commandController.undo();
+//        } else if (source == this.redoTopMenuBarItem) {
+//            commandController.redo();
         }
 
         if (theme == null) return;
@@ -572,9 +572,7 @@ public class MainController extends MainFrame {
             }
             this.resetAnyAction();
         } else if (keyCode == KeyEvent.VK_E) {
-            resetEdge();
-            graphComponent.getGraphControl().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-            this.currentActionReference.set(new CurrentAction(CurrentAction.ActionType.CREATE_EDGE));
+           edgeAction();
         } else if (keyCode == KeyEvent.VK_I) {
             this.createNewTable(CurrentAction.ActionType.IMPORT_FILE);
             resetAnyAction();
@@ -593,15 +591,19 @@ public class MainController extends MainFrame {
             if (this.jCell != null && CellUtils.getActiveCell(this.jCell).isPresent()) {
                 CellUtils.getActiveCell(this.jCell).get().getTree().getTreeLayer();
             }
-        } else if (keyCode == KeyEvent.VK_Z && (event.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
-            commandController.undo();
-        } else if (keyCode == KeyEvent.VK_Y && (event.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
-            commandController.redo();
+//        } else if (keyCode == KeyEvent.VK_Z && (event.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
+//            commandController.undo();
+//        } else if (keyCode == KeyEvent.VK_Y && (event.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0) {
+//            commandController.redo();
         } else if (keyCode == KeyEvent.VK_M) {
-            if(this.jCell != null && CellUtils.getActiveCell(this.jCell).isPresent() &&  CellUtils.getActiveCell(this.jCell).get().isTableCell())
-                ((TableCell)CellUtils.getActiveCell(this.jCell).get()).asOperator("novotextoaloaloalo");
         }
 
+    }
+
+    private void edgeAction(){
+        resetEdge();
+        setEdgeCursor();
+        this.currentActionReference.set(new CurrentAction(CurrentAction.ActionType.CREATE_EDGE));
     }
 
     private void setEdgeCursor() {

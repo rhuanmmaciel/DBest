@@ -82,7 +82,7 @@ public class OperationErrorVerifier {
 
     public static void noEmptyArgument(List<String> arguments) throws ArgumentsException {
         if (arguments.isEmpty()) throw new ArgumentsException("");
-        if (arguments.getFirst().isEmpty()) throw new ArgumentsException("");
+        if (arguments.get(0).isEmpty()) throw new ArgumentsException("");
     }
 
     public static void oneArgument(List<String> arguments) throws ArgumentsException {

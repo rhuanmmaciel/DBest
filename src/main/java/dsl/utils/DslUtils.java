@@ -191,11 +191,11 @@ public class DslUtils {
 			operationCell.getArguments().toString());
 
 			if (operationCell.getArity() == OperationArity.UNARY)
-				raw = raw.replace("source", generateExpression(cell.getParents().getFirst()));
+				raw = raw.replace("source", generateExpression(cell.getParents().get(0)));
 
 			else {
 
-				raw = raw.replace("source1", generateExpression(cell.getParents().getFirst()));
+				raw = raw.replace("source1", generateExpression(cell.getParents().get(0)));
 				raw = raw.replace("source2", generateExpression(cell.getParents().get(1)));
 
 			}

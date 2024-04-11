@@ -45,7 +45,7 @@ public class SelectColumns implements IOperator {
             OperationErrorVerifier.noEmptyArgument(arguments);
 
             errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
-            OperationErrorVerifier.parentContainsColumns(cell.getParents().getFirst().getColumnSourcesAndNames(), arguments);
+            OperationErrorVerifier.parentContainsColumns(cell.getParents().get(0).getColumnSourcesAndNames(), arguments);
 
             errorType = null;
         } catch (TreeException exception) {
@@ -54,7 +54,7 @@ public class SelectColumns implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().getFirst();
+        Cell parentCell = cell.getParents().get(0);
 
         List<String> fixedArguments = Column.composeSourceAndName(arguments, parentCell);
 

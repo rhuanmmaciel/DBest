@@ -42,7 +42,7 @@ public abstract class OperationForm extends FormBase {
 
         this.operator = cell.getType().operatorClass;
         this.jCell = jCell;
-        this.parent1 = cell.getParents().getFirst();
+        this.parent1 = cell.getParents().get(0);
 
         if(!cell.getArguments().isEmpty()) previousArguments.addAll(cell.getArguments());
 

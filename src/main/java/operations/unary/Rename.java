@@ -49,7 +49,7 @@ public class Rename implements IOperator {
 
         if (errorType != null) return;
 
-        Cell parentCell = cell.getParents().getFirst();
+        Cell parentCell = cell.getParents().get(0);
 
         Operator operator = parentCell.getOperator();
 

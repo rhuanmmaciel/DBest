@@ -74,19 +74,27 @@ public class BooleanExpressionRecognizer {
     }
 
     private String getString(Element element) {
-        return switch (element) {
-            case Value value -> switch (value.getField()) {
-                case IntegerField field -> String.valueOf(field.getInt());
-                case FloatField field -> String.valueOf(field.getFloat());
-                case LongField field -> String.valueOf(field.getLong());
-                case DoubleField field -> String.valueOf(field.getDouble());
-                case StringField field -> String.format("'%s'", field.getString());
-                default -> throw new IllegalStateException(String.format("Unexpected value: %s", value.getField()));
-            };
-            case Null ignored -> ConstantController.NULL;
-            default -> element.toString();
-        };
+        if (element instanceof Value value) {
+            if (value.getField() instanceof IntegerField field) {
+                return String.valueOf(field.getInt());
+            } else if (value.getField() instanceof FloatField field) {
+                return String.valueOf(field.getFloat());
+            } else if (value.getField() instanceof LongField field) {
+                return String.valueOf(field.getLong());
+            } else if (value.getField() instanceof DoubleField field) {
+                return String.valueOf(field.getDouble());
+            } else if (value.getField() instanceof StringField field) {
+                return String.format("'%s'", field.getString());
+            } else {
+                throw new IllegalStateException(String.format("Unexpected value: %s", value.getField()));
+            }
+        } else if (element instanceof Null) {
+            return ConstantController.NULL;
+        } else {
+            return element.toString();
+        }
     }
+
 
     public BooleanExpression recognizer(String text) throws BooleanExpressionException {
         BooleanExpressionDSLParser parser = new BooleanExpressionDSLParser(
@@ -132,7 +140,7 @@ public class BooleanExpressionRecognizer {
             return this.recognizeLogical(operator.get(), tokens);
         }
 
-        return this.recognizeAtomic(tokens.getFirst());
+        return this.recognizeAtomic(tokens.get(0));
     }
 
     private void prioritizeAnds(List<String> tokens) {
@@ -221,7 +229,7 @@ public class BooleanExpressionRecognizer {
     }
 
     private boolean hasUnnecessaryExternalBrackets(List<String> tokens) {
-        if (this.isLeftBracket(tokens.getFirst()) && this.isRightBracket(tokens.get(tokens.size() - 1))) {
+        if (this.isLeftBracket(tokens.get(0)) && this.isRightBracket(tokens.get(tokens.size() - 1))) {
             int bracketsController = 0;
 
             for (String token : tokens.stream().limit(tokens.size() - 1L).toList()) {
