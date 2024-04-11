@@ -44,7 +44,7 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
             ExpressionPane expressionPane = booleanExpression instanceof LogicalExpression ?
                 new LogicalPane(this, jCell, booleanExpression) :
-                new AtomicPane(this, jCell, previousArguments.get(0));
+                new AtomicPane(this, jCell, booleanExpression);
 
             root = expressionPane;
             addExtraComponent(new JScrollPane(expressionPane), 0, 2, 1, 1);

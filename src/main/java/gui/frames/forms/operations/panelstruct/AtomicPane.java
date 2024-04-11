@@ -36,11 +36,12 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
 
     }
 
-    public AtomicPane(BooleanExpressionForm root, mxCell jCell, String txt){
+    public AtomicPane(BooleanExpressionForm root, mxCell jCell, BooleanExpression booleanExpression){
 
         this(root, jCell);
 
-        expression.setText(txt);
+        this.booleanExpression = booleanExpression;
+        expression.setText(new BooleanExpressionRecognizer(jCell).recognizer(booleanExpression));
         updateRootSize();
         root.checkBtnReady();
 

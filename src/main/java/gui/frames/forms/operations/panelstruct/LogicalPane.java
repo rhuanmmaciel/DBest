@@ -76,7 +76,7 @@ public class LogicalPane extends ExpressionPane implements ActionListener {
 
             }else{
 
-                AtomicPane atomicPane = new AtomicPane(root, jCell, new BooleanExpressionRecognizer(jCell).recognizer(expression));
+                AtomicPane atomicPane = new AtomicPane(root, jCell, expression);
                 children.add(atomicPane);
                 boxChildren.add(atomicPane);
 
