@@ -16,11 +16,11 @@ public class TableUtils {
     }
 
     public static boolean hasNull(List<String> columnData) {
-		for (String data : columnData) {
-			if (data.equals(ConstantController.NULL)) {
-				return true;
-			}
-		}
+        for (String data : columnData) {
+            if (data.equals(ConstantController.NULL)) {
+                return true;
+            }
+        }
 
         return false;
     }
@@ -29,15 +29,17 @@ public class TableUtils {
         List<ColumnDataType> types = new ArrayList<>(List.of(ColumnDataType.values()));
 
         List<ColumnDataType> possibleRemovedTypes = new ArrayList<>(List.of(
-			ColumnDataType.CHARACTER, ColumnDataType.INTEGER, ColumnDataType.LONG,
-			ColumnDataType.FLOAT, ColumnDataType.DOUBLE, ColumnDataType.BOOLEAN
-		));
+                ColumnDataType.CHARACTER, ColumnDataType.INTEGER, ColumnDataType.LONG,
+                ColumnDataType.FLOAT, ColumnDataType.DOUBLE, ColumnDataType.BOOLEAN
+        ));
+
+        boolean foundAtLeastOne = false;
 
         for (String data : columnData) {
-            if (!data.equals(ConstantController.NULL)) {
-				if (data.length() > 1) {
-					types.remove(ColumnDataType.CHARACTER);
-				}
+            if (!data.equals(ConstantController.NULL) && !data.isEmpty()) {
+                if (data.length() > 1) {
+                    types.remove(ColumnDataType.CHARACTER);
+                }
 
                 try {
                     Integer.parseInt(data.strip());
@@ -63,17 +65,17 @@ public class TableUtils {
                     types.remove(ColumnDataType.FLOAT);
                 }
 
-				if (data.startsWith(String.valueOf(stringDelimiter)) && data.endsWith(String.valueOf(stringDelimiter))) {
-					types.removeIf(x -> x != ColumnDataType.STRING && x != ColumnDataType.NONE);
-				}
+                if (data.startsWith(String.valueOf(stringDelimiter)) && data.endsWith(String.valueOf(stringDelimiter))) {
+                    types.removeIf(x -> x != ColumnDataType.STRING && x != ColumnDataType.NONE);
+                }
             }
 
-			if (types.stream().noneMatch(possibleRemovedTypes::contains)) {
-				return types;
-			}
+            if (types.stream().noneMatch(possibleRemovedTypes::contains)) {
+                return types;
+            }
         }
 
         return types;
     }
-    
+
 }

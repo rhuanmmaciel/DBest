@@ -12,5 +12,6 @@ public enum OperationErrorType {
     NO_TWO_ARGUMENTS,
     EMPTY_ARGUMENT,
     NO_PREFIX,
-    SAME_SOURCE
+    SAME_SOURCE,
+    NOT_SOURCE,
 }

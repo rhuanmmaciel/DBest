@@ -2,38 +2,63 @@ package dsl.entities;
 
 import dsl.utils.DslUtils;
 import entities.cells.TableCell;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Relation extends Expression<TableCell> {
 
-	private final String name;
+    private final String name;
     private final String firstName;
-	private TableCell cell = null;
-	
-	public Relation(String command) {
+    private TableCell cell = null;
+    private final List<String> arguments = new ArrayList<>();
 
-		super(command);
+    public Relation(String command) {
 
+        super(command);
+        
+        // Find out if this relation has arguments
+        int index = command.indexOf("]");
+        
+        if (index!=-1){
+            setArguments(List.of(command.substring(command.indexOf("[") + 1, command.indexOf("]")).split(",")));
+            command = command.substring(index + 1);
+        }
+        
         this.name = DslUtils.getRealName(command);
-		this.firstName = DslUtils.clearTableName(command);
-		setCoordinates(command);
-		
-	}
+        this.firstName = DslUtils.clearTableName(command);
+        setCoordinates(command);
 
-	public String getName() {
-		return name;
-	}
+    }
+    
+    protected void setArguments(List<String> arguments) {
+        // Filter out empty strings after stripping and add them to the list
+        this.arguments.addAll(
+                arguments.stream()
+                        .map(String::strip) // Strip leading/trailing whitespace
+                        .filter(s -> !s.isEmpty()) // Filter out empty strings
+                        .toList() // Convert back to a list
+        );
+        //this.arguments.addAll(arguments.stream().map(String::strip).toList());
 
-	@Override
-	public TableCell getCell() {
-		return cell;
-	}
+    }
 
-	@Override
-	public void setCell(TableCell cell) {
+    public String getName() {
+        return name;
+    }
 
-		if(this.cell == null) this.cell = cell;
-		
-	}
+    @Override
+    public TableCell getCell() {
+        return cell;
+    }
+
+    @Override
+    public void setCell(TableCell cell) {
+
+        if (this.cell == null) {
+            this.cell = cell;
+        }
+
+    }
 
     public String getFirstName() {
         return firstName;

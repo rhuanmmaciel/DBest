@@ -67,6 +67,12 @@ public class OperationErrorVerifier {
             throw new ParentsAmountException("");
         }
     }
+    
+    public static void notSource(OperationCell cell) throws ParentsAmountException {
+        if (cell.hasParents()) {
+            throw new ParentsAmountException("");
+        }
+    }
 
     public static void oneParent(OperationCell cell) throws ParentsAmountException {
         if (cell.getParents().size() != 1) {

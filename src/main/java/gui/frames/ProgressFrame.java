@@ -1,5 +1,6 @@
 package gui.frames;
 
+import files.FileUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -15,6 +16,10 @@ public class ProgressFrame extends JDialog {
         super((Window) null, "Progresso");
 
         setModal(true);
+        try {
+            this.setIconImage(new ImageIcon(String.valueOf(FileUtils.getDBestLogo())).getImage());
+        }catch (Exception ignored){
+        }
         setLayout(new FlowLayout());
         progressBar.setStringPainted(true);
         add(progressBar);

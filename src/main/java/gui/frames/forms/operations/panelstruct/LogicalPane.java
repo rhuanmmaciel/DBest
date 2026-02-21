@@ -28,9 +28,9 @@ public class LogicalPane extends ExpressionPane implements ActionListener {
 
     private final List<ExpressionPane> children = new ArrayList<>();
 
-    public LogicalPane(BooleanExpressionForm root, mxCell jCell, LogicalOperator logicalOperator){
+    public LogicalPane(BooleanExpressionForm root, mxCell jCell, LogicalOperator logicalOperator, boolean acceptFilters, boolean acceptReferenceFilters){
 
-        super(root, jCell);
+        super(root, jCell,acceptFilters, acceptReferenceFilters);
 
         this.logicalOperator = logicalOperator;
 
@@ -60,9 +60,9 @@ public class LogicalPane extends ExpressionPane implements ActionListener {
         setVisible(true);
 
     }
-    public LogicalPane(BooleanExpressionForm root, mxCell jCell, BooleanExpression booleanExpression){
+    public LogicalPane(BooleanExpressionForm root, mxCell jCell, BooleanExpression booleanExpression, boolean acceptFilters, boolean acceptReferenceFilters){
 
-        this(root, jCell, ((LogicalExpression)booleanExpression).getLogicalOperator());
+        this(root, jCell, ((LogicalExpression)booleanExpression).getLogicalOperator(), acceptFilters, acceptReferenceFilters);
 
         LogicalExpression logicalExpression = (LogicalExpression) booleanExpression;
 
@@ -70,13 +70,13 @@ public class LogicalPane extends ExpressionPane implements ActionListener {
 
             if(expression instanceof LogicalExpression subLogicalExpression){
 
-                LogicalPane logicalPane = new LogicalPane(root, jCell, subLogicalExpression);
+                LogicalPane logicalPane = new LogicalPane(root, jCell, subLogicalExpression, acceptFilters, acceptReferenceFilters);
                 children.add(logicalPane);
                 boxChildren.add(logicalPane);
 
             }else{
 
-                AtomicPane atomicPane = new AtomicPane(root, jCell, expression);
+                AtomicPane atomicPane = new AtomicPane(root, jCell, expression, acceptFilters, acceptReferenceFilters);
                 children.add(atomicPane);
                 boxChildren.add(atomicPane);
 
@@ -94,14 +94,14 @@ public class LogicalPane extends ExpressionPane implements ActionListener {
 
         if(actionEvent.getSource() == btnAnd || actionEvent.getSource() == btnOr ){
 
-            LogicalPane logicalPane = actionEvent.getSource() == btnAnd ? new LogicalPane(root, jCell, LogicalOperator.AND) :
-                    new LogicalPane(root, jCell, LogicalOperator.OR) ;
+            LogicalPane logicalPane = actionEvent.getSource() == btnAnd ? new LogicalPane(root, jCell, LogicalOperator.AND, acceptFilters, acceptReferenceFilters):
+                    new LogicalPane(root, jCell, LogicalOperator.OR, acceptFilters, acceptReferenceFilters);
             children.add(logicalPane);
             boxChildren.add(logicalPane);
 
         }else if(actionEvent.getSource() == btnAtomic){
 
-            AtomicPane atomicPane = new AtomicPane(root, jCell);
+            AtomicPane atomicPane = new AtomicPane(root, jCell, acceptFilters, acceptReferenceFilters);
             children.add(atomicPane);
             boxChildren.add(atomicPane);
 

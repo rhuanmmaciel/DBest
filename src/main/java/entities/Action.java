@@ -11,8 +11,8 @@ public class Action implements Serializable {
 	public static class CurrentAction implements Serializable {
 
 		public enum ActionType {
-			CREATE_EDGE, CREATE_OPERATOR_CELL, DELETE_CELL, DELETE_ALL, PRINT_SCREEN, SHOW_CELL,
-			IMPORT_FILE, CREATE_TABLE_CELL, OPEN_CONSOLE, OPEN_TEXT_EDITOR, OPEN_COMPARATOR, NONE
+            CREATE_EDGE, CREATE_OPERATOR_CELL, DELETE_CELL, DELETE_ALL, PRINT_SCREEN, SHOW_CELL, IMPORT_FILE,
+            CREATE_TABLE_CELL, OPEN_CONSOLE, OPEN_TEXT_EDITOR, OPEN_COMPARATOR, NONE
 		}
 
 		private final ActionType type;

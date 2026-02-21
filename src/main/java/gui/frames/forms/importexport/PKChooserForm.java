@@ -36,12 +36,15 @@ public class PKChooserForm extends FormBase implements ActionListener, IFormCond
 
     private final List<String> columnNames = new ArrayList<>();
 
-    public PKChooserForm(Cell cell) {
+    public PKChooserForm(Cell cell, boolean unique) {
         super(null);
 
         this.cell = cell;
         this.setModal(true);
-
+        if (unique)
+            this.setTitle("Unique Index Creation");
+        else this.setTitle("Non-Unique Index Creation");
+        
         List<Map<String, String>> rowsAux = TuplesExtractor.getRows(cell.getOperator(), 100, true);
 
         for (Map<String, String> row : rowsAux) {
@@ -138,7 +141,7 @@ public class PKChooserForm extends FormBase implements ActionListener, IFormCond
 
     private void addFirstColumn() {
         String firstColumnName = String.format("%s:", ConstantController.getString("pkChooser.firstColumn.name"));
-        String firstColumnPrimaryKey = String.format("%s:", ConstantController.getString("pkChooser.firstColumn.primaryKey"));
+        String firstColumnPrimaryKey = String.format("%s:", ConstantController.getString("pkChooser.firstColumn.key"));
 
         this.model.addColumn(firstColumnName);
         this.model.setValueAt(firstColumnPrimaryKey, 0, this.model.getColumnCount() - 1);

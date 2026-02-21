@@ -56,7 +56,7 @@ public class PKAndNameChooserForm extends FormBase implements ActionListener, IF
 
     private final List<String> columnNames = new ArrayList<>();
 
-    public PKAndNameChooserForm(Cell cell) {
+    public PKAndNameChooserForm(Cell cell) throws Exception {
         super(null);
 
         this.setModal(true);

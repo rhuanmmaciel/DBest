@@ -3,9 +3,6 @@ package utils;
 import java.util.List;
 import java.util.Objects;
 
-import enums.ColumnDataType;
-import sgbd.prototype.query.Tuple;
-import sgbd.util.global.Util;
 
 public class Utils {
 
@@ -25,18 +22,18 @@ public class Utils {
         return false;
     }
 
-    public static ColumnDataType getColumnDataType(Tuple tuple, String sourceName, String columnName) {
-        if (tuple == null || sourceName == null || columnName == null) return ColumnDataType.NONE;
-        return switch (Util.typeOfColumn(tuple.getContent(sourceName).getMetadata(columnName))) {
-            case "int" -> ColumnDataType.INTEGER;
-            case "long" -> ColumnDataType.LONG;
-            case "float" -> ColumnDataType.FLOAT;
-            case "double" -> ColumnDataType.DOUBLE;
-            case "boolean" -> ColumnDataType.BOOLEAN;
-            case "string" -> ColumnDataType.STRING;
-            default -> ColumnDataType.NONE;
-        };
-    }
+//    public static ColumnDataType getColumnDataType(Tuple tuple, String sourceName, String columnName) {
+//        if (tuple == null || sourceName == null || columnName == null) return ColumnDataType.NONE;
+//        return switch (Util.typeOfColumn(tuple.getContent(sourceName).getMetadata(columnName))) {
+//            case "int" -> ColumnDataType.INTEGER;
+//            case "long" -> ColumnDataType.LONG;
+//            case "float" -> ColumnDataType.FLOAT;
+//            case "double" -> ColumnDataType.DOUBLE;
+//            case "boolean" -> ColumnDataType.BOOLEAN;
+//            case "string" -> ColumnDataType.STRING;
+//            default -> ColumnDataType.NONE;
+//        };
+//    }
 
     public static boolean areEqual(Number x, Number y) {
         if (x == null || y == null) return false;

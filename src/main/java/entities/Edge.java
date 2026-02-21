@@ -33,7 +33,7 @@ public class Edge implements Serializable {
         boolean cellHasTree;
 
         if (cell instanceof OperationCell operationCell) {
-            cellHasTree = operationCell.hasTree();
+            cellHasTree = (operationCell.hasTree() || operationCell.alwaysAllowConnections());
         } else {
             cellHasTree = true;
         }

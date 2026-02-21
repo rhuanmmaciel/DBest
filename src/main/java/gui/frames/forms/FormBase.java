@@ -1,6 +1,7 @@
 package gui.frames.forms;
 
 import controllers.ConstantController;
+import files.FileUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,11 +22,16 @@ public abstract class FormBase extends JDialog {
 
         this.btnCancel = new JButton(ConstantController.getString("formBase.cancelButton"));
         this.btnReady = new JButton(ConstantController.getString("formBase.readyButton"));
+        
+        try {
+            this.setIconImage(new ImageIcon(String.valueOf(FileUtils.getDBestLogo())).getImage());
+        }catch (Exception ignored){
+        }
 
         this.initBottomButtons();
     }
 
-    private void initBottomButtons() {
+    protected void initBottomButtons() {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.add(this.btnCancel);
         bottomPanel.add(this.btnReady);

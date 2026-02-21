@@ -36,17 +36,27 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
         initGUI();
     }
 
+    protected boolean acceptFilters() {
+        return true;
+    }
+
+    protected boolean acceptReferenceFilters() {
+        return true;
+    }
+
     @Override
     protected void setPreviousArgs() {
 
-        if(previousArguments.isEmpty()) return;
+        if (previousArguments.isEmpty()) {
+            return;
+        }
 
         try {
             BooleanExpression booleanExpression = new BooleanExpressionRecognizer(jCell).recognizer(previousArguments.get(0));
 
-            ExpressionPane expressionPane = booleanExpression instanceof LogicalExpression ?
-                new LogicalPane(this, jCell, booleanExpression) :
-                new AtomicPane(this, jCell, booleanExpression);
+            ExpressionPane expressionPane = booleanExpression instanceof LogicalExpression
+                    ? new LogicalPane(this, jCell, booleanExpression, acceptFilters(), acceptReferenceFilters())
+                    : new AtomicPane(this, jCell, booleanExpression, acceptFilters(), acceptReferenceFilters());
 
             root = expressionPane;
             addExtraComponent(new JScrollPane(expressionPane), 0, 2, 1, 1);
@@ -69,7 +79,7 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
             }
         });
 
-        setMinimumSize(new Dimension((int)(ConstantController.UI_SCREEN_WIDTH * 0.8), (int)(ConstantController.UI_SCREEN_HEIGHT * 0.8)));
+        setMinimumSize(new Dimension((int) (ConstantController.UI_SCREEN_WIDTH * 0.8), (int) (ConstantController.UI_SCREEN_HEIGHT * 0.8)));
         centerPanel.removeAll();
 
         Container parent = centerPanel.getParent();
@@ -94,7 +104,7 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
         setVisible(true);
     }
 
-    private void initButtons(){
+    private void initButtons() {
 
         addExtraComponent(btnAnd, 0, 0, 1, 1);
         addExtraComponent(new JLabel(" "), 1, 0, 1, 1);
@@ -115,8 +125,9 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
                 root = null;
                 setButtonsEnabled(true);
 
-            } else
+            } else {
                 removeExpressionPane(root, pane);
+            }
 
             revalidate();
             pack();
@@ -141,7 +152,7 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
         return false;
     }
 
-    private void setButtonsEnabled(boolean c){
+    private void setButtonsEnabled(boolean c) {
 
         btnAnd.setEnabled(c);
         btnOr.setEnabled(c);
@@ -149,7 +160,7 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
     }
 
-    private void update(){
+    private void update() {
 
         checkBtnReady();
 
@@ -161,17 +172,18 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
-        if(root == null && (actionEvent.getSource() == btnAnd || actionEvent.getSource() == btnOr
+        if (root == null && (actionEvent.getSource() == btnAnd || actionEvent.getSource() == btnOr
                 || actionEvent.getSource() == btnAtomic)) {
 
             ExpressionPane expressionPane;
 
-            if (actionEvent.getSource() == btnAnd)
-                expressionPane = new LogicalPane(this, jCell, LogicalOperator.AND);
-            else if (actionEvent.getSource() == btnOr)
-                expressionPane = new LogicalPane(this, jCell, LogicalOperator.OR);
-            else
-                expressionPane = new AtomicPane(this, jCell);
+            if (actionEvent.getSource() == btnAnd) {
+                expressionPane = new LogicalPane(this, jCell, LogicalOperator.AND, acceptFilters(), acceptReferenceFilters());
+            } else if (actionEvent.getSource() == btnOr) {
+                expressionPane = new LogicalPane(this, jCell, LogicalOperator.OR, acceptFilters(), acceptReferenceFilters());
+            } else {
+                expressionPane = new AtomicPane(this, jCell, acceptFilters(), acceptReferenceFilters());
+            }
 
             root = expressionPane;
             addExtraComponent(new JScrollPane(expressionPane), 0, 2, 1, 1);
@@ -180,15 +192,13 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
         }
 
-        if(root != null && actionEvent.getSource() == btnReady){
+        if (root != null && actionEvent.getSource() == btnReady) {
 
-            if(root instanceof AtomicPane atomicPane){
+            if (root instanceof AtomicPane atomicPane) {
 
                 arguments.add(atomicPane.getAtomicExpression());
 
-            }
-
-            else {
+            } else {
 
                 arguments.add(new BooleanExpressionRecognizer(jCell).recognizer(getBooleanExpression(root)));
 
@@ -202,24 +212,26 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
     }
 
-    private BooleanExpression getBooleanExpression(ExpressionPane expressionPane){
+    private BooleanExpression getBooleanExpression(ExpressionPane expressionPane) {
 
-        if(expressionPane instanceof AtomicPane atomicPane) return atomicPane.booleanExpression;
+        if (expressionPane instanceof AtomicPane atomicPane) {
+            return atomicPane.booleanExpression;
+        }
 
         List<BooleanExpression> arguments = new ArrayList<>();
-        for (ExpressionPane exp : ((LogicalPane) expressionPane).getChildren())
+        for (ExpressionPane exp : ((LogicalPane) expressionPane).getChildren()) {
             arguments.add(getBooleanExpression(exp));
+        }
 
         LogicalOperator logicalOperator = ((LogicalPane) expressionPane).logicalOperator;
 
-        return new LogicalExpression( logicalOperator, arguments);
+        return new LogicalExpression(logicalOperator, arguments);
 
     }
 
     protected void closeWindow() {
         dispose();
     }
-
 
     @Override
     public void checkBtnReady() {
@@ -228,39 +240,43 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
         boolean leafNotAnAtomic = false;
         boolean anyAtomicIncomplete = false;
 
-        if(!noArgument && root instanceof LogicalPane logicalPane){
+        if (!noArgument && root instanceof LogicalPane logicalPane) {
 
             List<ExpressionPane> children = new ArrayList<>(logicalPane.getChildren());
 
-            if(logicalPane.getChildren().isEmpty()) leafNotAnAtomic = true;
+            if (logicalPane.getChildren().isEmpty()) {
+                leafNotAnAtomic = true;
+            }
 
-            do{
+            do {
 
                 List<ExpressionPane> childrenAux = new ArrayList<>(children);
                 children.clear();
-                for(ExpressionPane exp : childrenAux){
+                for (ExpressionPane exp : childrenAux) {
 
-                    if(exp instanceof LogicalPane log){
+                    if (exp instanceof LogicalPane log) {
 
-                        if(log.getChildren().isEmpty()) leafNotAnAtomic = true;
+                        if (log.getChildren().isEmpty()) {
+                            leafNotAnAtomic = true;
+                        }
                         children.addAll(log.getChildren());
 
                     }
-                    if(exp instanceof AtomicPane atomicPane &&
-                            (atomicPane.getAtomicExpression() == null || atomicPane.getAtomicExpression().isEmpty() ||
-                            atomicPane.getAtomicExpression().isBlank())) {
+                    if (exp instanceof AtomicPane atomicPane
+                            && (atomicPane.getAtomicExpression() == null || atomicPane.getAtomicExpression().isEmpty()
+                            || atomicPane.getAtomicExpression().isBlank())) {
                         anyAtomicIncomplete = true;
                     }
 
                 }
 
-            }while (!leafNotAnAtomic && !anyAtomicIncomplete && !children.isEmpty());
+            } while (!leafNotAnAtomic && !anyAtomicIncomplete && !children.isEmpty());
 
-        }else if(!noArgument && root instanceof AtomicPane atomicPane &&
-                (atomicPane.getAtomicExpression() == null || atomicPane.getAtomicExpression().isEmpty() ||
-                atomicPane.getAtomicExpression().isBlank()))
+        } else if (!noArgument && root instanceof AtomicPane atomicPane
+                && (atomicPane.getAtomicExpression() == null || atomicPane.getAtomicExpression().isEmpty()
+                || atomicPane.getAtomicExpression().isBlank())) {
             anyAtomicIncomplete = true;
-
+        }
 
         btnReady.setEnabled(!noArgument && !leafNotAnAtomic && !anyAtomicIncomplete);
 
@@ -269,7 +285,7 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
     }
 
     @Override
-    public void updateToolTipText(boolean ...conditions) {
+    public void updateToolTipText(boolean... conditions) {
 
         boolean noArgument = conditions[0];
         boolean leafNotAnAtomic = conditions[1];
@@ -277,12 +293,13 @@ public class BooleanExpressionForm extends OperationForm implements ActionListen
 
         String btnReadyToolTipText = "";
 
-        if (noArgument)
+        if (noArgument) {
             btnReadyToolTipText = "- " + ConstantController.getString("operationForm.booleanExpression.toolTip.selectOne");
-        else if(leafNotAnAtomic)
+        } else if (leafNotAnAtomic) {
             btnReadyToolTipText = "- " + ConstantController.getString("operationForm.booleanExpression.toolTip.mostInternal");
-        else if(anyAtomicIncomplete)
+        } else if (anyAtomicIncomplete) {
             btnReadyToolTipText = "- " + ConstantController.getString("operationForm.booleanExpression.toolTip.incomplete");
+        }
 
         UIManager.put("ToolTip.foreground", Color.RED);
 

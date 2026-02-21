@@ -8,27 +8,18 @@ import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
 import enums.OperationErrorType;
 import exceptions.tree.TreeException;
+import ibd.query.unaryop.aggregation.AggregationType;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import sgbd.prototype.Prototype;
-import sgbd.prototype.RowData;
-import sgbd.prototype.metadata.Metadata;
-import sgbd.query.Operator;
-import sgbd.query.agregation.*;
-import sgbd.query.binaryop.joins.NestedLoopJoin;
-import sgbd.query.sourceop.TableScan;
-import sgbd.query.unaryop.FilterColumnsOperator;
-import sgbd.query.unaryop.GroupOperator;
-import sgbd.source.components.Header;
-import sgbd.source.table.MemoryTable;
-import sgbd.source.table.Table;
 import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Aggregation implements IOperator {
 
@@ -57,6 +48,30 @@ public class Aggregation implements IOperator {
             public String getPrefix() {
                 return "AVG:";
             }
+        }, SUM {
+            public String getDisplayName() {
+                return ConstantController.getString("operationForm.sum");
+            }
+
+            public String getPrefix() {
+                return "SUM:";
+            }
+        }, FIRST {
+            public String getDisplayName() {
+                return ConstantController.getString("operationForm.first");
+            }
+
+            public String getPrefix() {
+                return "FIRST:";
+            }
+        }, LAST {
+            public String getDisplayName() {
+                return ConstantController.getString("operationForm.last");
+            }
+
+            public String getPrefix() {
+                return "LAST:";
+            }
         }, COUNT {
             public String getDisplayName() {
                 return ConstantController.getString("operationForm.count");
@@ -64,6 +79,22 @@ public class Aggregation implements IOperator {
 
             public String getPrefix() {
                 return "COUNT:";
+            }
+        }, COUNT_ALL {
+            public String getDisplayName() {
+                return ConstantController.getString("operationForm.countAll");
+            }
+
+            public String getPrefix() {
+                return "COUNT_ALL:";
+            }
+        }, COUNT_NULL {
+            public String getDisplayName() {
+                return ConstantController.getString("operationForm.countNull");
+            }
+
+            public String getPrefix() {
+                return "COUNT_NULL:";
             }
         };
 
@@ -75,10 +106,12 @@ public class Aggregation implements IOperator {
     public static final List<String> PREFIXES = Arrays.stream(Function.values()).map(Function::getPrefix).toList();
 
     @Override
-    public void executeOperation(mxCell jCell, List<String> arguments) {
+    public void executeOperation(mxCell jCell, List<String> arguments, String alias) {
         Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
-        if (optionalCell.isEmpty()) return;
+        if (optionalCell.isEmpty()) {
+            return;
+        }
 
         OperationCell cell = (OperationCell) optionalCell.get();
         OperationErrorType errorType = null;
@@ -104,9 +137,9 @@ public class Aggregation implements IOperator {
 
             errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
             OperationErrorVerifier.parentContainsColumns(
-                cell.getParents().get(0).getColumnSourcesAndNames(),
-                arguments.stream().map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, "")).toList(),
-                List.of("*")
+                    cell.getParents().get(0).getColumnSourcesAndNames(),
+                    arguments.stream().map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, "")).toList(),
+                    List.of("*")
             );
 
             errorType = OperationErrorType.NO_PREFIX;
@@ -117,45 +150,36 @@ public class Aggregation implements IOperator {
             cell.setError(errorType);
         }
 
-        if (errorType != null) return;
+        if (errorType != null) {
+            return;
+        }
 
         Cell parentCell = cell.getParents().get(0);
 
-        Operator operator = parentCell.getOperator();
+        ibd.query.Operation operator = parentCell.getOperator();
 
         String fixedArgument = arguments
-            .get(0)
-            .substring(0, Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length()) + Column.composeSourceAndName(parentCell.getSourceNameByColumnName(arguments.get(0).substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length())), arguments.get(0).substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length()));
+                .get(0)
+                .substring(0, Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length()) + Column.composeSourceAndName(parentCell.getSourceNameByColumnName(arguments.get(0).substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length())), arguments.get(0).substring(Utils.getFirstMatchingPrefixIgnoreCase(arguments.get(0), PREFIXES).length()));
 
-        String sourceName = Column.removeName(fixedArgument).substring(Utils.getFirstMatchingPrefixIgnoreCase(fixedArgument, PREFIXES).length());
-        String columnName = Column.removeSource(fixedArgument);
+        List<AggregationType> aggregations = AggregationType.getAggregationTypes(fixedArgument);
 
-        List<AgregationOperation> aggregations = new ArrayList<>();
+        //ibd.query.Operation readyOperator = new GroupOperator(operator, Column.removeName(groupBy), Column.removeSource(groupBy), aggregations);
+        try {
+            //readyOperator = new ibd.query.unaryop.AllAggregation(operator, "aggregate",  aggregateCol, aggregateType);
+            ibd.query.unaryop.aggregation.AllAggregation readyOperator = new ibd.query.unaryop.aggregation.AllAggregation(operator, alias, aggregations);
+            String formattedAlias = "";
+            alias = readyOperator.getDataSourceAlias();
+            if (!alias.isBlank()) {
+                formattedAlias = ":" + alias;
+            }
 
-        if (Utils.startsWithIgnoreCase(fixedArgument, "MAX:")) {
-            aggregations.add(new MaxAgregation(sourceName, columnName));
-        } else if (Utils.startsWithIgnoreCase(fixedArgument, "MIN:")) {
-            aggregations.add(new MinAgregation(sourceName, columnName));
-        } else if (Utils.startsWithIgnoreCase(fixedArgument, "AVG:")) {
-            aggregations.add(new AvgAgregation(sourceName, columnName));
-        } else if (Utils.startsWithIgnoreCase(fixedArgument, "COUNT:")) {
-            aggregations.add(new CountAgregation(sourceName, columnName));
+            String operationName = String.format("%s%s %s", cell.getType().symbol, formattedAlias, arguments);
+
+            Operation.operationSetter(cell, operationName, arguments, readyOperator);
+        } catch (Exception ex) {
+            Logger.getLogger(Group.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Prototype prototype = new Prototype();
-        prototype.addColumn("madeUp", 4, Metadata.SIGNED_INTEGER_COLUMN | Metadata.PRIMARY_KEY);
-
-        Table table = MemoryTable.openTable(new Header(prototype, "Aux"));
-        table.open();
-
-        RowData row = new RowData();
-        row.setInt("madeUp", 1);
-        table.insert(row);
-
-        Operator readyOperator = new NestedLoopJoin(operator, new TableScan(table));
-        readyOperator = new GroupOperator(readyOperator, "Aux", "madeUp", aggregations);
-        readyOperator = new FilterColumnsOperator(readyOperator, List.of("Aux.madeUp"));
-
-        Operation.operationSetter(cell, arguments.get(0), List.of(fixedArgument), readyOperator);
     }
 }

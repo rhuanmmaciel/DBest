@@ -91,6 +91,30 @@ public class CSVRecognizerForm extends FormBase implements ActionListener {
     private int beginIndex = this.defaultBeginIndex;
 
     public CSVRecognizerForm(
+        Path path,  AtomicReference<Boolean> exitReference
+    ) {
+        super(null);
+
+        this.setModal(true);
+
+        this.exitReference = exitReference;
+        this.path = path;
+        this.columns = new ArrayList();
+        this.content = new HashMap();
+        this.tableName = new StringBuilder();
+
+        this.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent event) {
+                exitReference.set(true);
+            }
+        });
+
+        this.initGUI();
+    }
+    
+    public CSVRecognizerForm(
         Path path, StringBuilder tableName, List<Column> columns,
         Map<Integer, Map<String, String>> content, AtomicReference<Boolean> exitReference
     ) {
@@ -193,7 +217,7 @@ public class CSVRecognizerForm extends FormBase implements ActionListener {
         itemTableName.add(Box.createHorizontalGlue());
         itemFromRow.add(new JLabel(String.format("%s:", ConstantController.getString("csvRecognizer.beginRow"))));
 
-        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, this.jTable.getRowCount() - 2, 1);
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, Math.max(1, this.jTable.getRowCount() - 2), 1);
 
         this.fromRowSpinner.setModel(spinnerModel);
         this.fromRowSpinner.setValue(1);
@@ -473,6 +497,6 @@ public class CSVRecognizerForm extends FormBase implements ActionListener {
     }
 
     public CSVInfo getCSVInfo() {
-        return new CSVInfo(this.separator, this.stringDelimiter, this.beginIndex, this.path);
+        return new CSVInfo(this.separator, this.stringDelimiter, this.beginIndex, this.path, this.tableName.toString(), columns);
     }
 }

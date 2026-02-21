@@ -9,16 +9,16 @@ import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import sgbd.query.Operator;
-import sgbd.query.binaryop.joins.NestedLoopJoin;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CartesianProduct implements IOperator {
 
     @Override
-    public void executeOperation(mxCell jCell, List<String> arguments) {
+    public void executeOperation(mxCell jCell, List<String> arguments, String alias) {
         Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
         if (optionalCell.isEmpty()) return;
@@ -49,10 +49,15 @@ public class CartesianProduct implements IOperator {
         Cell parentCell1 = cell.getParents().get(0);
         Cell parentCell2 = cell.getParents().get(1);
 
-        Operator operator1 = parentCell1.getOperator();
-        Operator operator2 = parentCell2.getOperator();
+        ibd.query.Operation operator1 = parentCell1.getOperator();
+        ibd.query.Operation operator2 = parentCell2.getOperator();
 
-        Operator readyOperator = new NestedLoopJoin(operator1, operator2);
+        ibd.query.Operation readyOperator = null;
+        try {
+            readyOperator = new ibd.query.binaryop.join.CrossJoin(operator1, operator2);
+        } catch (Exception ex) {
+            Logger.getLogger(CartesianProduct.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         Operation.operationSetter(cell, "  X  ", List.of(), readyOperator);
     }

@@ -5,49 +5,73 @@ import java.util.List;
 import dsl.utils.DslUtils;
 import enums.OperationType;
 import exceptions.dsl.InputException;
+import ibd.table.Table;
+import java.util.Map;
 
 public final class UnaryExpression extends OperationExpression {
 
-	public UnaryExpression(String command) throws InputException {
+    public UnaryExpression(String command, Map<String, Table> tables) throws InputException {
 
-		super(command);
-		unaryRecognizer(command);
-		
-	}
+        super(command);
+        unaryRecognizer(command, tables);
 
-	private void unaryRecognizer(String input) throws InputException {
+    }
 
-		int endIndex = input.indexOf('(');
+    public boolean hasSquareBracketBeforeParenthesis(String input) {
+        int indexOfSquareBracket = input.indexOf('[');
+        int indexOfParenthesis = input.indexOf('(');
 
-		if (input.contains("[")) {
+        // Check if both symbols are present and if '[' appears before '('
+        return indexOfSquareBracket != -1 && indexOfParenthesis != -1 && indexOfSquareBracket < indexOfParenthesis;
+    }
 
-			endIndex = Math.min(input.indexOf('['), endIndex);
-			setArguments(List.of(input.substring(input.indexOf("[") + 1, input.indexOf("]")).split(",")));
+    private void unaryRecognizer(String input, Map<String, Table> tables) throws InputException {
 
-		}
+        int endIndex = input.indexOf('(');
 
-		setType(OperationType.fromString(input.substring(0, endIndex).toLowerCase()));
+        //if (input.contains("[")) 
+        if (hasSquareBracketBeforeParenthesis(input)){
 
-		int beginSourceIndex = 0;
+            endIndex = Math.min(input.indexOf('['), endIndex);
+            setArguments(List.of(input.substring(input.indexOf("[") + 1, input.indexOf("]")).split(",")));
 
-		int bracketsAmount = 0;
-		for(int i = 0; i < input.toCharArray().length; i++){
+        }
+        
+        String type = input.substring(0, endIndex);
+        int index = type.indexOf(":");
+        if (index!=-1){
+            String alias = type.substring(index+1, type.length()).trim();
+            setAlias(alias);
+            type = type.substring(0, index);
+        }
 
-			char c = input.toCharArray()[i];
+        setType(OperationType.fromString(type));
 
-			if(c == '[') bracketsAmount++;
-			if(c == ']') bracketsAmount--;
-			if(beginSourceIndex == 0 && bracketsAmount == 0 && c == '(')
-				beginSourceIndex = i + 1;
+        int beginSourceIndex = 0;
 
-		}
+        int bracketsAmount = 0;
+        for (int i = 0; i < input.toCharArray().length; i++) {
 
-		String source = input.substring(beginSourceIndex, input.lastIndexOf(")"));
-		
-		setSource(DslUtils.expressionRecognizer(source));
+            char c = input.toCharArray()[i];
 
-		setCoordinates(input.substring(input.lastIndexOf(")") + 1));
+            if (c == '[') {
+                bracketsAmount++;
+            }
+            if (c == ']') {
+                bracketsAmount--;
+            }
+            if (beginSourceIndex == 0 && bracketsAmount == 0 && c == '(') {
+                beginSourceIndex = i + 1;
+            }
 
-	}
+        }
+
+        String source = input.substring(beginSourceIndex, input.lastIndexOf(")"));
+
+        setSource(DslUtils.expressionRecognizer(source, tables));
+
+        setCoordinates(input.substring(input.lastIndexOf(")") + 1));
+
+    }
 
 }

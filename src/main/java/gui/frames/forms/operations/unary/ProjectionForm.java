@@ -12,128 +12,133 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ProjectionForm extends OperationForm implements ActionListener, IOperationForm {
 
-	private final JButton btnAdd = new JButton(ConstantController.getString("operationForm.add"));
-	private final JButton btnRemove = new JButton(ConstantController.getString("operationForm.removeColumns"));
-	private final JButton btnAddAll = new JButton(ConstantController.getString("operationForm.addAllColumns"));
-	private final JTextArea textArea = new JTextArea();
+    private final JButton btnAdd = new JButton(ConstantController.getString("operationForm.add"));
+    private final JButton btnRemove = new JButton(ConstantController.getString("operationForm.remove"));
+    private final JButton btnClear = new JButton(ConstantController.getString("operationForm.clear"));
+    private final JButton btnAddAll = new JButton(ConstantController.getString("operationForm.addAllColumns"));
 
-	public ProjectionForm(mxCell jCell) {
+    private final JPanel checkBoxPanel = new JPanel();
+    private final ArrayList<JCheckBox> projectionCheckBoxes = new ArrayList<>();
 
-		super(jCell);
+    public ProjectionForm(mxCell jCell) {
+        super(jCell);
+        initGUI();
+    }
 
-		initGUI();
+    public void initGUI() {
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                closeWindow();
+            }
+        });
 
-	}
+        btnReady.addActionListener(this);
+        btnCancel.addActionListener(this);
 
-	public void initGUI() {
+        checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
+        checkBoxPanel.setPreferredSize(new Dimension(300, 300));
 
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				closeWindow();
-			}
-		});
+        btnAdd.addActionListener(this);
+        btnRemove.addActionListener(this);
+        btnClear.addActionListener(this);
+        btnAddAll.addActionListener(this);
 
-		btnReady.addActionListener(this);
-		btnCancel.addActionListener(this);
+        addExtraComponent(btnAdd, 0, 2, 1, 1);
+        addExtraComponent(btnAddAll, 1, 2, 1, 1);
+        addExtraComponent(btnRemove, 2, 2, 1, 1);
+        addExtraComponent(btnClear, 3, 2, 1, 1);
+        addExtraComponent(new JScrollPane(checkBoxPanel), 0, 3, 4, 3);
 
-		textArea.setPreferredSize(new Dimension(300,300));
-		textArea.setEditable(false);
+        setPreviousArgs();
 
-		btnAdd.addActionListener(this);
-		btnRemove.addActionListener(this);
-		btnAddAll.addActionListener(this);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
 
-		addExtraComponent(btnAdd, 0, 2, 1, 1);
-		addExtraComponent(btnAddAll, 1, 2, 1, 1);
-		addExtraComponent(btnRemove, 2, 2, 1, 1);
-		addExtraComponent(new JScrollPane(textArea), 0, 3, 3, 3);
+    @Override
+    protected void setPreviousArgs() {
+        if (!previousArguments.isEmpty()) {
+            for (String element : previousArguments) {
+                if (projectionCheckBoxes.stream().noneMatch(cb -> cb.getText().equals(element))) {
+                    projectionCheckBoxes.add(new JCheckBox(element));
 
-		setPreviousArgs();
+                    String columnName = Column.removeSource(element);
+                    comboBoxColumn.removeItem(columnName);
+                }
+            }
+            refreshCheckBoxPanel();
+        }
+    }
 
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnAdd) {
+            if (comboBoxColumn.getItemCount() > 0) {
+                addColumn();
+            }
+        } else if (e.getSource() == btnRemove) {
+            List<JCheckBox> selectedBoxes = projectionCheckBoxes.stream()
+                .filter(AbstractButton::isSelected)
+                .collect(Collectors.toList());
 
-	}
+            for (JCheckBox checkBox : selectedBoxes) {
+                String columnName = Column.removeSource(checkBox.getText());
+                comboBoxColumn.addItem(columnName);
+            }
 
-	@Override
-	protected void setPreviousArgs() {
+            projectionCheckBoxes.removeIf(AbstractButton::isSelected);
+            refreshCheckBoxPanel();
 
-		if(!previousArguments.isEmpty()){
+        } else if (e.getSource() == btnClear) {
+            projectionCheckBoxes.clear();
+            restrictedColumns.clear();
+            comboBoxColumn.removeAllItems();
+            leftChild.getColumnNames().forEach(comboBoxColumn::addItem);
+            refreshCheckBoxPanel();
 
-			for(String element : previousArguments){
+        } else if (e.getSource() == btnCancel) {
+            closeWindow();
+        } else if (e.getSource() == btnReady) {
+            arguments.addAll(projectionCheckBoxes.stream().map(JCheckBox::getText).toList());
+            btnReady();
+        } else if (e.getSource() == btnAddAll) {
+            while (comboBoxColumn.getItemCount() != 0) {
+                comboBoxColumn.setSelectedIndex(0);
+                addColumn();
+            }
+        }
+    }
 
-				String columnName = Column.removeSource(element);
-				String sourceName = Column.removeName(element);
+    private void addColumn() {
+        String column = Objects.requireNonNull(comboBoxSource.getSelectedItem()) +
+            "." +
+            Objects.requireNonNull(comboBoxColumn.getSelectedItem());
 
-				comboBoxSource.setSelectedItem(sourceName);
-				comboBoxColumn.setSelectedItem(columnName);
+        projectionCheckBoxes.add(new JCheckBox(column));
+        refreshCheckBoxPanel();
 
-				if (comboBoxColumn.getItemCount() > 0)
-					updateColumns();
+        restrictedColumns.add(column);
+        comboBoxColumn.removeItemAt(comboBoxColumn.getSelectedIndex());
+    }
 
-			}
+    private void refreshCheckBoxPanel() {
+        checkBoxPanel.removeAll();
+        for (JCheckBox checkBox : projectionCheckBoxes) {
+            checkBoxPanel.add(checkBox);
+        }
+        checkBoxPanel.revalidate();
+        checkBoxPanel.repaint();
+    }
 
-		}
-
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == btnAdd) {
-
-			if (comboBoxColumn.getItemCount() > 0)
-				updateColumns();
-
-		} else if (e.getSource() == btnRemove) {
-
-			textArea.setText("");
-
-			restrictedColumns.clear();
-			comboBoxColumn.removeAllItems();
-
-			parent1.getColumnNames().forEach(comboBoxColumn::addItem);
-
-		} else if(e.getSource() == btnCancel){
-
-			closeWindow();
-
-		}else if (e.getSource() == btnReady) {
-			
-			arguments.addAll(List.of(textArea.getText().split("\n")));
-			arguments.remove(0);
-			btnReady();
-
-		}  else if (e.getSource() == btnAddAll) {
-
-			while (comboBoxColumn.getItemCount() != 0) {
-
-				updateColumns();
-
-			}
-
-		}
-	}
-
-	private void updateColumns(){
-
-		String column = Objects.requireNonNull(comboBoxSource.getSelectedItem())+
-				"."+
-				Objects.requireNonNull(comboBoxColumn.getSelectedItem());
-		String textColumnsPicked = textArea.getText() + "\n" + column;
-		restrictedColumns.add(column);
-		comboBoxColumn.removeItemAt(comboBoxColumn.getSelectedIndex());
-		textArea.setText(textColumnsPicked);
-
-	}
-
-	protected void closeWindow() {
-		dispose();
-	}
+    protected void closeWindow() {
+        dispose();
+    }
 }

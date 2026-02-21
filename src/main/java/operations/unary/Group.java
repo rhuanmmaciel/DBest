@@ -7,27 +7,29 @@ import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
 import enums.OperationErrorType;
 import exceptions.tree.TreeException;
+import ibd.query.unaryop.aggregation.AggregationType;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import sgbd.query.Operator;
-import sgbd.query.agregation.*;
-import sgbd.query.unaryop.GroupOperator;
 import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Group implements IOperator {
 
-    public static final List<String> PREFIXES = List.of("MIN:", "MAX:", "AVG:", "COUNT:");
+    public static final List<String> PREFIXES = List.of("MIN:", "MAX:", "AVG:", "COUNT_ALL:", "COUNT_NULL:", "COUNT:", "FIRST:", "LAST:", "SUM:");
 
     @Override
-    public void executeOperation(mxCell jCell, List<String> arguments) {
+    public void executeOperation(mxCell jCell, List<String> arguments, String alias) {
         Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
-        if (optionalCell.isEmpty()) return;
+        if (optionalCell.isEmpty()) {
+            return;
+        }
 
         OperationCell cell = (OperationCell) optionalCell.get();
         OperationErrorType errorType = null;
@@ -51,16 +53,16 @@ public class Group implements IOperator {
             errorType = OperationErrorType.PARENT_WITHOUT_COLUMN;
 
             OperationErrorVerifier.parentContainsColumns(
-                cell.getParents().get(0).getColumnSourcesAndNames(), arguments.stream().limit(1).toList()
+                    cell.getParents().get(0).getColumnSourcesAndNames(), arguments.stream().limit(1).toList()
             );
 
             OperationErrorVerifier.parentContainsColumns(
-                cell.getParents().get(0).getColumnSourcesAndNames(),
-                arguments
-                    .stream()
-                    .map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, ""))
-                    .toList()
-                    .subList(1, arguments.size())
+                    cell.getParents().get(0).getColumnSourcesAndNames(),
+                    arguments
+                            .stream()
+                            .map(x -> Utils.replaceIfStartsWithIgnoreCase(x, PREFIXES, ""))
+                            .toList()
+                            .subList(1, arguments.size())
             );
 
             errorType = OperationErrorType.NO_PREFIX;
@@ -71,25 +73,28 @@ public class Group implements IOperator {
             cell.setError(errorType);
         }
 
-        if (errorType != null) return;
+        if (errorType != null) {
+            return;
+        }
 
         Cell parentCell = cell.getParents().get(0);
 
-        List<String> fixedArguments = new ArrayList<>();
+        String source = parentCell.getSourceNameByColumnName(arguments.get(0));
 
-        fixedArguments.add(Column.composeSourceAndName(parentCell.getSourceNameByColumnName(arguments.get(0)), arguments.get(0)));
+        List<String> fixedArguments = new ArrayList<>();
+        fixedArguments.add(Column.composeSourceAndName(source, arguments.get(0)));
 
         for (String argument : arguments.subList(1, arguments.size())) {
             String fixedArgument = argument.substring(0, Utils.getFirstMatchingPrefixIgnoreCase(argument, PREFIXES).length())
-                + Column.composeSourceAndName(parentCell.getSourceNameByColumnName(argument.substring(Utils.getFirstMatchingPrefixIgnoreCase(argument, PREFIXES).length())), argument.substring(Utils.getFirstMatchingPrefixIgnoreCase(argument, PREFIXES).length())
-            );
+                    + Column.composeSourceAndName(parentCell.getSourceNameByColumnName(argument.substring(Utils.getFirstMatchingPrefixIgnoreCase(argument, PREFIXES).length())), argument.substring(Utils.getFirstMatchingPrefixIgnoreCase(argument, PREFIXES).length())
+                    );
 
             fixedArguments.add(fixedArgument);
         }
 
         String groupBy = fixedArguments.get(0);
 
-        List<AgregationOperation> aggregations = new ArrayList<>();
+        List<AggregationType> aggregations = new ArrayList<>();
 
         for (String argument : fixedArguments.subList(1, arguments.size())) {
             String column = argument.substring(Utils.getFirstMatchingPrefixIgnoreCase(argument, PREFIXES).length());
@@ -97,21 +102,46 @@ public class Group implements IOperator {
             String columnName = Column.removeSource(column);
 
             if (Utils.startsWithIgnoreCase(argument, "MAX:")) {
-                aggregations.add(new MaxAgregation(sourceName, columnName));
+                aggregations.add(new AggregationType(sourceName, columnName, AggregationType.MAX));
             } else if (Utils.startsWithIgnoreCase(argument, "MIN:")) {
-                aggregations.add(new MinAgregation(sourceName, columnName));
+                aggregations.add(new AggregationType(sourceName, columnName, AggregationType.MIN));
             } else if (Utils.startsWithIgnoreCase(argument, "AVG:")) {
-                aggregations.add(new AvgAgregation(sourceName, columnName));
-            } else if (Utils.startsWithIgnoreCase(argument, "COUNT:")) {
-                aggregations.add(new CountAgregation(sourceName, columnName));
+                aggregations.add(new AggregationType(sourceName, columnName, AggregationType.AVG));
+            }else if (Utils.startsWithIgnoreCase(argument, "COUNT_ALL:")) {
+                aggregations.add(new AggregationType(sourceName, columnName, AggregationType.COUNT_ALL));
             }
+            else if (Utils.startsWithIgnoreCase(argument, "COUNT_NULL:")) {
+                aggregations.add(new AggregationType(sourceName, columnName, AggregationType.COUNT_NULL));
+            } 
+            else if (Utils.startsWithIgnoreCase(argument, "COUNT:")) {
+                aggregations.add(new AggregationType(sourceName, columnName, AggregationType.COUNT));
+            } else if (Utils.startsWithIgnoreCase(argument, "FIRST:")) {
+                aggregations.add(new AggregationType(sourceName, columnName, AggregationType.FIRST));
+            } else if (Utils.startsWithIgnoreCase(argument, "LAST:")) {
+                aggregations.add(new AggregationType(sourceName, columnName, AggregationType.LAST));
+            } else if (Utils.startsWithIgnoreCase(argument, "SUM:")) {
+                aggregations.add(new AggregationType(sourceName, columnName, AggregationType.SUM));
+            }
+            
         }
 
-        Operator operator = parentCell.getOperator();
-        Operator readyOperator = new GroupOperator(operator, Column.removeName(groupBy), Column.removeSource(groupBy), aggregations);
+        ibd.query.Operation operator = parentCell.getOperator();
+        //ibd.query.Operation readyOperator = new GroupOperator(operator, Column.removeName(groupBy), Column.removeSource(groupBy), aggregations);
+        try {
+            //readyOperator = new ibd.query.unaryop.Aggregation(operator, "aggregate", groupBy, aggregateCol, aggregateType, false);
+            ibd.query.unaryop.aggregation.Aggregation readyOperator = new ibd.query.unaryop.aggregation.Aggregation(operator, alias, groupBy, aggregations, true);
+            String formattedAlias = "";
+            alias = readyOperator.getDataSourceAlias();
+            if (!alias.isBlank()) {
+                formattedAlias = ":" + alias;
+            }
 
-        String operationName = String.format("%s %s", cell.getType().symbol, arguments);
+            String operationName = String.format("%s%s %s", cell.getType().symbol, formattedAlias, arguments);
 
-        Operation.operationSetter(cell, operationName, arguments, readyOperator);
+            Operation.operationSetter(cell, operationName, arguments, readyOperator);
+        } catch (Exception ex) {
+            Logger.getLogger(Group.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 }

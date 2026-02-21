@@ -26,18 +26,23 @@ import java.util.stream.Collectors;
 
 public class CellUtils extends MainController {
 
-    public static int getCellWidth(mxCell jCell){
+    public static int getCellWidth(String text){
 
         JLabel label = new JLabel();
         Font font = new Font("Arial", Font.PLAIN, 12);
         label.setFont(font);
 
-        String text = (String) jCell.getValue();
         FontMetrics fontMetrics = label.getFontMetrics(font);
 
         if(text == null) throw new RuntimeException();
 
         return fontMetrics.stringWidth(text);
+
+    }
+    
+    public static int getCellWidth(mxCell jCell){
+        String text = (String) jCell.getValue();
+        return getCellWidth(text);
 
     }
 
@@ -250,19 +255,22 @@ public class CellUtils extends MainController {
     public static void removeCell(AtomicReference<mxCell> jCell) {
         removeCell(MainFrame.getGraph(), jCell.get());
         jCell.set(null);
-    }
-
-    public static void addMovableEdge(MouseEvent mouseEvent, AtomicReference<mxCell> invisibleCellReference, mxCell jCell) {
+    }    public static void addMovableEdge(MouseEvent mouseEvent, AtomicReference<mxCell> invisibleCellReference, mxCell jCell) {
+       
+        entities.Coordinates canvasCoords = entities.utils.CoordinatesUtils.transformScreenToCanvasCoordinates(mouseEvent);
+        double centeredX = canvasCoords.x() - (80 / 2.0);
+        double centeredY = canvasCoords.y() - (30 / 2.0);
+        
         invisibleCellReference
             .set((mxCell) MainFrame
                 .getGraph()
                 .insertVertex(
                     MainFrame.getGraph().getDefaultParent(), "invisible", "",
-                    mouseEvent.getX(), mouseEvent.getY(), 80, 30, "invisible"
+                    centeredX, centeredY, 80, 30, "invisible"
                 )
             );
 
-        MainFrame.getGraph().insertEdge(jCell, null, "", jCell, invisibleCellReference.get());
+        MainFrame.getGraph().insertEdge(MainFrame.getGraph().getDefaultParent(), null, "", jCell, invisibleCellReference.get());
 
         invisibleCellReference.get().setGeometry(new mxGeometry(0, 0, 0, 0));
     }

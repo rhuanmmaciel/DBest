@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import lib.booleanexpression.entities.expressions.AtomicExpression;
 
 public class AtomicPane extends ExpressionPane implements ActionListener {
 
@@ -18,9 +19,9 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
     private final mxCell jCell;
     private final JLabel expression = new JLabel();
 
-    public AtomicPane(BooleanExpressionForm root, mxCell jCell){
+    public AtomicPane(BooleanExpressionForm root, mxCell jCell, boolean acceptFilters, boolean acceptReferenceFilters){
 
-        super(root, jCell);
+        super(root, jCell, acceptFilters, acceptReferenceFilters);
         this.jCell = jCell;
         add(new JLabel(ConstantController.getString("operationForm.atomicPane.atomicExpression")), BorderLayout.NORTH);
 
@@ -36,9 +37,9 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
 
     }
 
-    public AtomicPane(BooleanExpressionForm root, mxCell jCell, BooleanExpression booleanExpression){
+    public AtomicPane(BooleanExpressionForm root, mxCell jCell, BooleanExpression booleanExpression, boolean acceptFilters, boolean acceptReferenceFilters){
 
-        this(root, jCell);
+        this(root, jCell, acceptFilters, acceptReferenceFilters);
 
         this.booleanExpression = booleanExpression;
         expression.setText(new BooleanExpressionRecognizer(jCell).recognizer(booleanExpression));
@@ -52,7 +53,7 @@ public class AtomicPane extends ExpressionPane implements ActionListener {
 
         if(actionEvent.getSource() == btnEdit){
 
-            booleanExpression = new AtomicExpressionForm(root, jCell).getResult();
+            booleanExpression = new AtomicExpressionForm(root, jCell, (AtomicExpression)booleanExpression, acceptFilters, acceptReferenceFilters).getResult();
             expression.setText( booleanExpression != null ?
                     new BooleanExpressionRecognizer(jCell).recognizer(booleanExpression) :
                     "");

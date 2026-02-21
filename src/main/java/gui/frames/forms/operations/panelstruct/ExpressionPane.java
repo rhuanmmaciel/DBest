@@ -15,11 +15,17 @@ public abstract class ExpressionPane extends JPanel {
     public BooleanExpression booleanExpression;
 
     protected final BooleanExpressionForm root;
+    
+    protected boolean acceptFilters = true;
+    protected boolean acceptReferenceFilters = true;
+    
 
-    public ExpressionPane(BooleanExpressionForm root, mxCell jCell){
+    public ExpressionPane(BooleanExpressionForm root, mxCell jCell, boolean acceptFilters, boolean acceptReferenceFilters){
 
         this.root = root;
         this.jCell = jCell;
+        this.acceptFilters = acceptFilters;
+        this.acceptReferenceFilters = acceptReferenceFilters;
 
         setLayout(new BorderLayout());
 

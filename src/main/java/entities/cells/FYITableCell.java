@@ -10,9 +10,9 @@ import com.mxgraph.model.mxGeometry;
 import controllers.ConstantController;
 
 import entities.Column;
+import ibd.table.Table;
 
-import sgbd.prototype.Prototype;
-import sgbd.source.table.Table;
+import ibd.table.prototype.Prototype;
 
 public final class FYITableCell extends TableCell {
 
@@ -30,5 +30,19 @@ public final class FYITableCell extends TableCell {
 
     public FYITableCell(FYITableCell tableCell, mxCell jCell) {
         super(jCell, tableCell.getName(), tableCell.getTable(), tableCell.getHeaderFile());
+    }
+    
+    @Override
+    public Cell copy() {
+        mxCell newCell;
+        try {
+            newCell = (mxCell) this.jCell.clone();
+        } catch (CloneNotSupportedException e) {
+            newCell = new mxCell(this.jCell.getValue(), this.jCell.getGeometry(), this.jCell.getStyle());
+        }
+        
+        FYITableCell copy = new FYITableCell(newCell, this.getName(), this.getTable(), this.getHeaderFile());
+        copy.alias = this.alias;
+        return copy;
     }
 }

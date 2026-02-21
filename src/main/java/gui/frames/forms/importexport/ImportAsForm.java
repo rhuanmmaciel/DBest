@@ -15,6 +15,8 @@ import entities.cells.TableCell;
 import enums.FileType;
 
 import files.ImportFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ImportAsForm extends ImportExportAsForm {
 
@@ -61,12 +63,18 @@ public class ImportAsForm extends ImportExportAsForm {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == this.btnCsv) {
-            this.dispose();
-            this.tableCell = new ImportFile(FileType.CSV, this.deleteCellReference).getResult();
-        } else if (event.getSource() == this.headFileButton) {
-            this.dispose();
-            this.tableCell = new ImportFile(FileType.HEADER, this.deleteCellReference).getResult();
+        try {
+            if (event.getSource() == this.btnCsv) {
+                this.dispose();
+
+                this.tableCell = new ImportFile(FileType.CSV, this.deleteCellReference).getResult();
+
+            } else if (event.getSource() == this.headFileButton) {
+                this.dispose();
+                this.tableCell = new ImportFile(FileType.HEADER, this.deleteCellReference).getResult();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ImportAsForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

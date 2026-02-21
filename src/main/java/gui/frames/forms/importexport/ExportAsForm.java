@@ -27,14 +27,18 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
 
     private final AtomicReference<Boolean> cancelService;
 
-    private final JButton btnFyiDatabase = new JButton(ConstantController.getString("exportAs.fyiDatabaseButton"));;
+    private final JButton btnUniqueIndex = new JButton(ConstantController.getString("exportAs.uniqueIndexButton"));
 
-    private final JButton btnSqlScript = new JButton(ConstantController.getString("exportAs.scriptSQLButton"));;
+    private final JButton btnNonUniqueIndex = new JButton(ConstantController.getString("exportAs.nonUniqueIndexButton"));
+    
+    private final JButton btnSqlScript = new JButton(ConstantController.getString("exportAs.scriptSQLButton"));
 
     private final Cell cell;
 
     public ExportAsForm(mxCell jCell, AtomicReference<Boolean> cancelService) {
         this.setModal(true);
+        
+        this.setTitle(ConstantController.getString("exportAs.title"));
 
         this.cancelService = cancelService;
         this.cell = CellUtils.getActiveCell(jCell).orElse(null);
@@ -53,13 +57,15 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
 
         JPanel pane = new JPanel(new FlowLayout());
 
-        pane.add(this.btnFyiDatabase);
+        pane.add(this.btnUniqueIndex);
+        pane.add(this.btnNonUniqueIndex);
         pane.add(this.btnCsv);
         pane.add(this.btnSqlScript);
 
         this.contentPanel.add(pane, BorderLayout.CENTER);
         this.btnSqlScript.addActionListener(this);
-        this.btnFyiDatabase.addActionListener(this);
+        this.btnUniqueIndex.addActionListener(this);
+        this.btnNonUniqueIndex.addActionListener(this);
 
         this.pack();
         this.setLocationRelativeTo(null);
@@ -77,12 +83,20 @@ public class ExportAsForm extends ImportExportAsForm implements ActionListener {
             if (!this.cancelService.get()) {
                 new ExportFile().exportToCSV(this.cell);
             }
-        } else if (event.getSource() == this.btnFyiDatabase) {
+        } else if (event.getSource() == this.btnUniqueIndex) {
             this.closeWindow();
 
-            List<Column> primaryKeyColumns = new PKChooserForm(this.cell).getSelectedColumns();
+            List<Column> primaryKeyColumns = new PKChooserForm(this.cell, true).getSelectedColumns();
             if(!this.cancelService.get() && !primaryKeyColumns.isEmpty()) {
-                new ExportFile().exportToFYI(this.cell, primaryKeyColumns);
+                new ExportFile().exportToFYI(this.cell, primaryKeyColumns, true);
+            }
+        }
+            else if (event.getSource() == this.btnNonUniqueIndex) {
+            this.closeWindow();
+
+            List<Column> primaryKeyColumns = new PKChooserForm(this.cell, false).getSelectedColumns();
+            if(!this.cancelService.get() && !primaryKeyColumns.isEmpty()) {
+                new ExportFile().exportToFYI(this.cell, primaryKeyColumns, false);
             }
         } else if (event.getSource() == this.btnSqlScript) {
             this.closeWindow();

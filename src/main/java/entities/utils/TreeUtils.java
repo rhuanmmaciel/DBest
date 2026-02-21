@@ -25,7 +25,7 @@ public class TreeUtils {
 
     private static final Map<Integer, Tree> trees = MainController.getTrees();
 
-    public static void updateTreeBelow(TableCell tableCell){
+    public static void updateTreeBelow(Cell tableCell){
         if(tableCell.hasChild()) {
             OperationCell child = tableCell.getChild();
             updateTreesAboveAndBelow(child.getParents(), child);

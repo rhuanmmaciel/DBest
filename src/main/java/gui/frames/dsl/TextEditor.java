@@ -61,15 +61,15 @@ public class TextEditor extends JFrame implements ActionListener {
 
     private final JButton importButton = new JButton();
 
-    private final JMenuItem selectionMenuItem = new JMenuItem(OperationType.SELECTION.displayName);
+    private final JMenuItem selectionMenuItem = new JMenuItem(OperationType.FILTER.displayName);
 
     private final JMenuItem projectionMenuItem = new JMenuItem(OperationType.PROJECTION.displayName);
 
-    private final JMenuItem joinMenuItem = new JMenuItem(OperationType.JOIN.displayName);
+    private final JMenuItem joinMenuItem = new JMenuItem(OperationType.NESTED_LOOP_JOIN.displayName);
 
-    private final JMenuItem leftJoinMenuItem = new JMenuItem(OperationType.LEFT_JOIN.displayName);
+    private final JMenuItem leftJoinMenuItem = new JMenuItem(OperationType.NESTED_LOOP_LEFT_OUTER_JOIN.displayName);
 
-    private final JMenuItem rightJoinMenuItem = new JMenuItem(OperationType.RIGHT_JOIN.displayName);
+    private final JMenuItem rightJoinMenuItem = new JMenuItem(OperationType.NESTED_LOOP_RIGHT_OUTER_JOIN.displayName);
 
     private final JMenuItem cartesianProductMenuItem = new JMenuItem(OperationType.CARTESIAN_PRODUCT.displayName);
 
@@ -159,6 +159,10 @@ public class TextEditor extends JFrame implements ActionListener {
         this.runButton.addActionListener(this);
         this.runSelection.addActionListener(this);
 
+        // Integra sistema de autocomplete
+        AutoCompletionController autoCompletionController = new AutoCompletionController(textPane);
+        textPane.addKeyListener(autoCompletionController.getKeyListener());
+
         this.setIcons();
     }
 
@@ -184,20 +188,20 @@ public class TextEditor extends JFrame implements ActionListener {
 
         walker.walk(listener, parser.command());
 
-        this.execute();
+        this.execute(text);
     }
 
-    private void execute() {
-        if (DslErrorListener.getErrors().isEmpty()) {
+    private void execute(String text) {
             try {
-                DslController.parser();
+                MainController.isImporting = true;
+                DslController.parser(text);
+                MainController.isImporting = false;
             } catch (InputException exception) {
+                MainController.isImporting = false;
+                DslController.reset();
                 DslErrorListener.throwError(this.console);
             }
             return;
-        }
-
-        DslErrorListener.throwError(this.console);
     }
 
     private void setIcons() {
@@ -280,4 +284,5 @@ public class TextEditor extends JFrame implements ActionListener {
     public static String getLastPath() {
         return lastPath;
     }
+
 }

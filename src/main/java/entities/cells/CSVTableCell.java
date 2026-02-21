@@ -10,11 +10,10 @@ import com.mxgraph.model.mxGeometry;
 import controllers.ConstantController;
 
 import entities.Column;
+import ibd.query.Operation;
+import ibd.table.Table;
+import ibd.table.prototype.Prototype;
 
-import sgbd.prototype.Prototype;
-import sgbd.query.Operator;
-import sgbd.query.unaryop.FilterColumnsOperator;
-import sgbd.source.table.Table;
 
 public final class CSVTableCell extends TableCell {
 
@@ -35,10 +34,25 @@ public final class CSVTableCell extends TableCell {
     }
 
     @Override
-    public void setOperator(Operator operator) {
-        this.operator = new FilterColumnsOperator(
-            operator,
-            List.of(String.format("%s.%s", this.getTable().getSourceName(), ConstantController.PRIMARY_KEY_CSV_TABLE_NAME))
-        );
+    public void setOperator(Operation operator) {
+//        this.operator = new FilterColumnsOperator(
+//            operator,
+//            List.of(String.format("%s.%s", this.getTable().getSourceName(), ConstantController.PRIMARY_KEY_CSV_TABLE_NAME))
+//        );
+    this.operator = operator;
+    }
+    
+    @Override
+    public Cell copy() {
+        mxCell newCell;
+        try {
+            newCell = (mxCell) this.jCell.clone();
+        } catch (CloneNotSupportedException e) {
+            newCell = new mxCell(this.jCell.getValue(), this.jCell.getGeometry(), this.jCell.getStyle());
+        }
+        
+        CSVTableCell copy = new CSVTableCell(newCell, this.getName(), this.getTable(), this.getHeaderFile());
+        copy.alias = this.alias;
+        return copy;
     }
 }

@@ -8,19 +8,20 @@ import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
 import enums.OperationErrorType;
 import exceptions.tree.TreeException;
+import ibd.query.unaryop.RemoveColumns;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import sgbd.query.Operator;
-import sgbd.query.unaryop.SelectColumnsOperator;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SelectColumns implements IOperator {
 
     @Override
-    public void executeOperation(mxCell jCell, List<String> arguments) {
+    public void executeOperation(mxCell jCell, List<String> arguments, String alias) {
         Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
         if (optionalCell.isEmpty()) return;
@@ -58,9 +59,13 @@ public class SelectColumns implements IOperator {
 
         List<String> fixedArguments = Column.composeSourceAndName(arguments, parentCell);
 
-        Operator operator = parentCell.getOperator();
+        ibd.query.Operation operator = parentCell.getOperator();
 
-        Operator readyOperator = new SelectColumnsOperator(operator, fixedArguments);
+        ibd.query.Operation readyOperator = null;
+        try {
+            readyOperator = new RemoveColumns(operator, "Projection", fixedArguments);
+        } catch (Exception ex) {
+        }
 
         String operationName = String.format("%s %s", cell.getType().symbol, fixedArguments);
 

@@ -41,10 +41,27 @@ public class FileUtils {
 
     public static Path getDBestLogo() throws Exception{
 
-        File assets = new File("assets");
+        File assets = new File("assets/images");
 
-        File images = (Objects.requireNonNull(Arrays.stream(Objects.requireNonNull(assets.listFiles()))
-                .filter(x -> x.getName().equals("dbest-logo.png")).findFirst().orElseThrow()));
+//        File images = (Objects.requireNonNull(Arrays.stream(Objects.requireNonNull(assets.listFiles()))
+//                .filter(x -> x.getName().equals("dbest-logo.png")).findFirst().orElseThrow()));
+File[] files = assets.listFiles();
+        if (files == null) {
+            throw new NullPointerException("No files found in the assets directory.");
+        }
+
+        File images = null;
+        for (File file : files) {
+            if (file.getName().equals("dbest-logo.png")) {
+                images = file;
+                break;
+            }
+        }
+
+        if (images == null) {
+            throw new RuntimeException("File dbest-logo.png not found.");
+        }
+
 
         return images.toPath();
 
@@ -82,7 +99,7 @@ public class FileUtils {
         TableCell tableCell;
         try {
             tableCell = TableCreator.createTable(file);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -137,6 +154,7 @@ public class FileUtils {
         try {
             DslController.parser();
         } catch (InputException exception) {
+            DslController.reset();
         }
     }
 
@@ -225,7 +243,7 @@ public class FileUtils {
         for (File file : files) {
             String fileName = file.getName();
 
-            if (file.isFile() && fileName.endsWith(FileType.FYI.extension)) {
+            if (file.isFile() && fileName.endsWith(FileType.DAT.extension)) {
                 fileNames.add(fileName.substring(0, fileName.length() - 4));
             }
         }
@@ -248,8 +266,8 @@ public class FileUtils {
                 Files.copy(headFilePath, destinationHeadFilePath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            String newDatFileName = String.format("%s%s", tableName, FileType.FYI.extension);
-            Path datFilePath = Path.of(path.replace(FileType.HEADER.extension, FileType.FYI.extension));
+            String newDatFileName = String.format("%s%s", tableName, FileType.DAT.extension);
+            Path datFilePath = Path.of(path.replace(FileType.HEADER.extension, FileType.DAT.extension));
 
             if (shouldReplaceFileName) {
                 Path newDatFilePath = destinationDirectory.resolve(newDatFileName);
@@ -263,5 +281,15 @@ public class FileUtils {
         } catch (Exception exception) {
             return false;
         }
+    }
+    
+    public static String getFileExtension(File file) {
+        String fileName = file.getName();
+        int lastDotIndex = fileName.lastIndexOf('.');
+        
+        if (lastDotIndex > 0 && lastDotIndex < fileName.length() - 1) {
+            return fileName.substring(lastDotIndex + 1);
+        }
+        return ""; // No extension found
     }
 }

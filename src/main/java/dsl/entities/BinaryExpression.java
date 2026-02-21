@@ -7,15 +7,17 @@ import java.util.regex.Pattern;
 import dsl.utils.DslUtils;
 import enums.OperationType;
 import exceptions.dsl.InputException;
+import ibd.table.Table;
+import java.util.Map;
 
 public final class BinaryExpression extends OperationExpression {
 
 	private dsl.entities.Expression<?> source2;
 	
-	public BinaryExpression(String command) throws InputException {
+	public BinaryExpression(String command, Map<String, Table> tables) throws InputException {
 	
 		super(command);
-		binaryRecognizer(command);
+		binaryRecognizer(command, tables);
 		
 	}
 
@@ -37,7 +39,7 @@ public final class BinaryExpression extends OperationExpression {
         return -1;
     }
 
-	private void binaryRecognizer(String input) throws InputException {
+	private void binaryRecognizer(String input, Map<String, Table> tables) throws InputException {
 
 		int endIndex = findFirstUnbracketedParenthesis(input);
 
@@ -53,7 +55,15 @@ public final class BinaryExpression extends OperationExpression {
 
 		}
 		
-		setType(OperationType.fromString(input.substring(0, endIndex).toLowerCase()));
+                String type = input.substring(0, endIndex);
+                int index = type.indexOf(":");
+                if (index!=-1){
+                    String alias = type.substring(index+1, type.length()).trim();
+                    setAlias(alias);
+                    type = type.substring(0, index);
+                }
+                
+		setType(OperationType.fromString(type));
 		
 		int sourcePosition = findFirstUnbracketedParenthesis(input) + 1;
 		int commaPosition = DslUtils.findCommaPosition(input.substring(sourcePosition))
@@ -62,8 +72,8 @@ public final class BinaryExpression extends OperationExpression {
 		String source1 = input.substring(sourcePosition, commaPosition);
 		String source2 = input.substring(commaPosition + 1, input.lastIndexOf(")"));
 
-		setSource(DslUtils.expressionRecognizer(source1));
-		this.source2 = DslUtils.expressionRecognizer(source2);
+		setSource(DslUtils.expressionRecognizer(source1, tables));
+		this.source2 = DslUtils.expressionRecognizer(source2, tables);
 		
 		setCoordinates(input.substring(input.lastIndexOf(")") + 1));
 

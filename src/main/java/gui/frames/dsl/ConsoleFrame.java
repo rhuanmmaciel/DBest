@@ -139,6 +139,7 @@ public class ConsoleFrame extends JFrame implements ActionListener, KeyListener 
         try {
             DslController.parser();
         } catch (InputException exception) {
+            DslController.reset();
             DslErrorListener.throwError(this.textArea);
         }
     }

@@ -23,10 +23,12 @@ public class AsOperatorForm extends FormBase implements ActionListener, IFormCon
 
     private final AtomicReference<Boolean> cancelService;
 
-    public AsOperatorForm(AtomicReference<Boolean> cancelService) {
+    public AsOperatorForm(AtomicReference<Boolean> cancelService, String text) {
 
         super(null);
         setModal(true);
+        
+        setTitle("Rename");
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -38,6 +40,8 @@ public class AsOperatorForm extends FormBase implements ActionListener, IFormCon
 
         btnCancel.addActionListener(this);
         btnReady.addActionListener(this);
+        
+        textField.setText(text);
 
         textField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -85,6 +89,7 @@ public class AsOperatorForm extends FormBase implements ActionListener, IFormCon
     }
 
     private void closeWindow() {
+        cancelService.set(true);
         dispose();
     }
 

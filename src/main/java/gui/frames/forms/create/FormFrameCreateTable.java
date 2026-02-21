@@ -26,6 +26,8 @@ import entities.cells.TableCell;
 import gui.frames.ErrorFrame;
 import gui.frames.forms.FormBase;
 import gui.frames.forms.IFormCondition;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.kordamp.ikonli.dashicons.Dashicons;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
@@ -144,7 +146,11 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
             this.exitReference.set(true);
             this.dispose();
         } else if (event.getSource() == this.btnReady) {
-            this.createTable();
+            try {
+                this.createTable();
+            } catch (Exception ex) {
+                Logger.getLogger(FormFrameCreateTable.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else if (event.getSource() == this.btnAddColumn) {
             new FormFrameAddColumn(this.model, this.columns);
         } else if (event.getSource() == this.btnAddRow) {
@@ -179,7 +185,7 @@ public class FormFrameCreateTable extends FormBase implements ActionListener, Do
         this.updateToolTipText();
     }
 
-    private void createTable() {
+    private void createTable() throws Exception {
         Map<Integer, Map<String, String>> content = new HashMap<>();
 
         for (int i = 0; i < this.table.getRowCount(); i++) {

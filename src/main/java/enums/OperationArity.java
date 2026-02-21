@@ -3,5 +3,6 @@ package enums;
 public enum OperationArity {
 
 	UNARY,
-	BINARY;
+	BINARY,
+        NULLARY;
 }

@@ -8,20 +8,23 @@ import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
 import enums.OperationErrorType;
 import exceptions.tree.TreeException;
+import ibd.query.lookup.ExpressionConverter;
+import ibd.query.lookup.LookupFilter;
+import ibd.query.unaryop.filter.Filter;
 import lib.booleanexpression.entities.expressions.BooleanExpression;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import sgbd.query.Operator;
-import sgbd.query.unaryop.FilterOperator;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Selection implements IOperator {
 
     @Override
-    public void executeOperation(mxCell jCell, List<String> arguments) {
+    public void executeOperation(mxCell jCell, List<String> arguments, String alias) {
         Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
         if (optionalCell.isEmpty()) return;
@@ -58,14 +61,17 @@ public class Selection implements IOperator {
 
         try {
             BooleanExpression booleanExpression = new BooleanExpressionRecognizer(jCell).recognizer(expression);
-
-            Operator operator = parentCell.getOperator();
-            operator = new FilterOperator(operator, booleanExpression);
+            LookupFilter filter = ExpressionConverter.convert(booleanExpression);
+            ibd.query.Operation operator = parentCell.getOperator();
+                //operator = new FilterOperator(operator, booleanExpression);
+                operator = new Filter(operator, filter);
 
             String operationName = String.format("%s  %s", cell.getType().symbol, new BooleanExpressionRecognizer(jCell).recognizer(booleanExpression));
 
             Operation.operationSetter(cell, operationName, arguments, operator);
         } catch (BooleanExpressionException exception) {
+            cell.setError(exception.getMessage());
+        } catch (Exception exception) {
             cell.setError(exception.getMessage());
         }
     }

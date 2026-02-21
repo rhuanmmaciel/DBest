@@ -5,6 +5,7 @@ import controllers.MainController;
 import dsl.DslController;
 import dsl.entities.BinaryExpression;
 import dsl.entities.Expression;
+import dsl.entities.NullaryExpression;
 import dsl.entities.Relation;
 import dsl.entities.UnaryExpression;
 import dsl.enums.CommandType;
@@ -16,198 +17,259 @@ import entities.cells.TableCell;
 import enums.OperationArity;
 import enums.OperationType;
 import exceptions.dsl.InputException;
+import ibd.table.Table;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class DslUtils {
 
-	public static CommandType commandRecognizer(String command) {
-		
-		command = command.strip();
-		
-		if(command.startsWith("import")) return CommandType.IMPORT_STATEMENT;
-		
-		if (command.contains("=")) 
-			if (!command.contains("[") || command.indexOf("=") < command.indexOf("[")) 
-					return CommandType.VARIABLE_DECLARATION;
-		
-		return CommandType.EXPRESSION;
-		
-	}
-	
-	public static Expression<?> expressionRecognizer(String input) throws InputException {
+    public static CommandType commandRecognizer(String command) {
 
+        command = command.strip();
+
+        if (command.startsWith("import")) {
+            return CommandType.IMPORT_STATEMENT;
+        }
+
+        if (command.contains("=")) {
+            if (!command.contains("[") || command.indexOf("=") < command.indexOf("[")) {
+                return CommandType.VARIABLE_DECLARATION;
+            }
+        }
+
+        return CommandType.EXPRESSION;
+
+    }
+
+    public static Expression<?> expressionRecognizer(String input, Map<String, Table> tables) throws InputException {
+        input = input.trim();
         if (input.contains("(")) {
 
-			int endIndex = input.indexOf('(');
+            int endIndex = input.indexOf('(');
 
-			if (input.contains("["))
-				endIndex = Math.min(input.indexOf('['), endIndex);
+            if (input.contains("[")) {
+                endIndex = Math.min(input.indexOf('['), endIndex);
+            }
 
-			if (OperationType.fromString(input.substring(0, endIndex).toLowerCase()).arity == OperationArity.UNARY)
-				return new UnaryExpression(input);
+            OperationArity arity = OperationType.fromString(input.substring(0, endIndex).toLowerCase()).arity;
+            if (arity == OperationArity.UNARY) {
+                return new UnaryExpression(input, tables);
+            } else if (arity == OperationArity.NULLARY) {
+                return new NullaryExpression(input, tables);
+            }
 
-			return new BinaryExpression(input);
-		}
+            return new BinaryExpression(input, tables);
+        }
+        int endIndex = input.length() - 1;
 
-		if(DslController.containsVariable(clearTableName(input)))
-			return expressionRecognizer(DslController.getVariableContent(input));
+        if (input.contains("<"))
+            endIndex = input.indexOf('<');
+            
+        if (input.contains("[")) {
+            endIndex = input.indexOf('[');
+        }
 
-		if(MainController.getTables().get(clearTableName(input)) != null)
-			return new Relation(input);
+        OperationType type = OperationType.fromString(input.substring(0, endIndex).toLowerCase());
+        if (type!=null && type.arity == OperationArity.NULLARY) {
+            return new NullaryExpression(input, tables);
+        }
+        if (DslController.containsVariable(clearTableName(input))) {
+            return expressionRecognizer(DslController.getVariableContent(input), tables);
+        }
 
-		throw new InputException(ConstantController.getString("dsl.error.sourceNotFound")+": " + input );
+        if (MainController.getTables().get(clearTableName(input)) != null) {
+            return new Relation(input);
+        }
 
-	}
+        if (tables != null && tables.get(clearTableName(input)) != null) {
+            return new Relation(input);
+        }
 
-	public static String clearTableName(String tableName) {
+        throw new InputException(ConstantController.getString("dsl.error.sourceNotFound") + ": " + input);
 
-		return removeAs(removeSemicolon(removeThis(removePosition(tableName)))).strip();
+    }
 
-	}
+    public static String clearTableName(String tableName) {
 
-    public static String removeAs(String tableName){
+        return removeAs(removeSemicolon(removeThis(removePosition(tableName)))).strip();
 
-        if(tableName.contains(":"))
+    }
+
+    public static String removeAs(String tableName) {
+
+        if (tableName.contains(":")) {
             return tableName.substring(0, tableName.indexOf(":"));
+        }
 
         return tableName;
 
     }
 
-    public static String getRealName(String tableName){
+    public static String getRealName(String tableName) {
 
-        if(tableName.contains(":"))
-            return clearTableName(tableName.substring(tableName.indexOf(":")+1));
+        if (tableName.contains(":")) {
+            return clearTableName(tableName.substring(tableName.indexOf(":") + 1));
+        }
 
         return clearTableName(tableName);
 
     }
 
-	public static String removePosition(String tableName) {
+    public static String removePosition(String tableName) {
 
-		return tableName.contains("<") ? tableName.substring(0, tableName.indexOf("<")) : tableName;
+        return tableName.contains("<") ? tableName.substring(0, tableName.indexOf("<")) : tableName;
 
-	}
+    }
 
-	public static String removeThis(String tableName) {
+    public static String removeThis(String tableName) {
 
-		return tableName.startsWith("this.") ? tableName.replace("this.", "") : tableName;
+        return tableName.startsWith("this.") ? tableName.replace("this.", "") : tableName;
 
-	}
+    }
 
-	public static String removeSemicolon(String tableName) {
+    public static String removeSemicolon(String tableName) {
 
-		return tableName.endsWith(";") ? tableName.substring(0, tableName.lastIndexOf(";")) : tableName;
+        return tableName.endsWith(";") ? tableName.substring(0, tableName.lastIndexOf(";")) : tableName;
 
-	}
+    }
 
-	public static Optional<Coordinates> getPosition(String input) {
+    public static Optional<Coordinates> getPosition(String input) {
 
-		if (input == null)
-			return Optional.empty();
+        if (input == null) {
+            return Optional.empty();
+        }
 
-		if (input.contains("<")) {
+        if (input.contains("<")) {
 
-			int x = Integer.parseInt(input.substring(input.indexOf("<") + 1, input.indexOf(",")));
-			int y = Integer.parseInt(input.substring(input.indexOf(",") + 1, input.indexOf(">")));
+            int x = Integer.parseInt(input.substring(input.indexOf("<") + 1, input.indexOf(",")));
+            int y = Integer.parseInt(input.substring(input.indexOf(",") + 1, input.indexOf(">")));
 
-			return Optional.of(new Coordinates(x, y));
+            return Optional.of(new Coordinates(x, y));
 
-		}
+        }
 
-		return Optional.empty();
+        return Optional.empty();
 
-	}
+    }
 
-	public static String getPosition(Coordinates coordinates) {
+    public static String getPosition(Coordinates coordinates) {
 
-		return String.format("<%d,%d>", coordinates.x(), coordinates.y());
+        return String.format("<%d,%d>", coordinates.x(), coordinates.y());
 
-	}
+    }
 
-	public static int findCommaPosition(String input) {
+    public static int findCommaPosition(String input) {
 
-		int openingParenthesisAmount = 0;
-		int openingSquareBracketsAmount = 0;
-		int openingAngleBracketsAmount = 0;
+        int openingParenthesisAmount = 0;
+        int openingSquareBracketsAmount = 0;
+        int openingAngleBracketsAmount = 0;
 
-		for (int i = 0; i < input.length(); i++) {
+        for (int i = 0; i < input.length(); i++) {
 
-			switch (input.charAt(i)) {
+            switch (input.charAt(i)) {
 
-			case '(' -> openingParenthesisAmount++;
-			case ')' -> openingParenthesisAmount--;
-			case '[' -> openingSquareBracketsAmount++;
-			case ']' -> {
-				openingSquareBracketsAmount--;
-				openingAngleBracketsAmount = 0;
-			}
-			case '<' -> openingAngleBracketsAmount++;
-			case '>' -> openingAngleBracketsAmount--;
-			case ',' -> {
-				if (openingParenthesisAmount == 0 && openingSquareBracketsAmount == 0
-						&& openingAngleBracketsAmount == 0)
-					return i;
+                case '(' ->
+                    openingParenthesisAmount++;
+                case ')' ->
+                    openingParenthesisAmount--;
+                case '[' ->
+                    openingSquareBracketsAmount++;
+                case ']' -> {
+                    openingSquareBracketsAmount--;
+                    openingAngleBracketsAmount = 0;
+                }
+                case '<' ->
+                    openingAngleBracketsAmount++;
+                case '>' ->
+                    openingAngleBracketsAmount--;
+                case ',' -> {
+                    if (openingParenthesisAmount == 0 && openingSquareBracketsAmount == 0
+                            && openingAngleBracketsAmount == 0) {
+                        return i;
+                    }
 
-			}
+                }
 
-			}
-		}
+            }
+        }
 
-		throw new RuntimeException("Didn't find comma");
+        throw new RuntimeException("Didn't find comma");
 
-	}
+    }
 
-	public static String generateDslTree(Tree tree) {
+    public static String generateDslTree(Tree tree) {
 
-		return generateImports(tree) + "\n" + generateExpression(tree.getRoot()) + ";";
+        return generateImports(tree) + "\n" + generateExpression(tree.getRoot()) + ";";
 
-	}
+    }
 
-	private static String generateImports(Tree tree) {
-		Set<String> uniqueLines = new HashSet<>();
+    private static String generateImports(Tree tree) {
+        Set<String> uniqueLines = new HashSet<>();
 
-		tree.getLeaves().forEach(leaf -> uniqueLines.add("import this." + leaf.getName() + ".head;"));
-		StringBuilder importStatement = new StringBuilder();
-		uniqueLines.forEach(line -> importStatement.append(line).append("\n"));
+        //tree.getLeaves().forEach(leaf -> uniqueLines.add("import this." + leaf.getName() + ".head;"));
+        List<Cell> cells = tree.getLeaves();
+        for (Cell cell : cells) {
+            if (cell instanceof TableCell tableCell) {
+                uniqueLines.add("import " + tableCell.getHeaderFile().getAbsolutePath() + ";");
+            }
+        }
 
-		return importStatement.toString();
-	}
+        StringBuilder importStatement = new StringBuilder();
+        uniqueLines.forEach(line -> importStatement.append(line).append("\n"));
 
-	private static String generateExpression(Cell cell) {
+        return importStatement.toString();
+    }
 
-		String raw = null;
+    private static String generateExpression(Cell cell) {
 
-		if (cell instanceof OperationCell operationCell) {
+        String raw = null;
 
-			raw = operationCell.getType().dslSyntax;
+        if (cell instanceof OperationCell operationCell) {
 
-			raw = raw.replace("[args]", OperationType.OPERATIONS_WITHOUT_FORM.contains(operationCell.getType()) ? "" :
-			operationCell.getArguments().toString());
+            raw = operationCell.getType().dslSyntax;
 
-			if (operationCell.getArity() == OperationArity.UNARY)
-				raw = raw.replace("source", generateExpression(cell.getParents().get(0)));
+            int in = raw.indexOf('[');
+            if (in == -1) {
+                in = raw.indexOf('(');
+            }
+            String toBeReplaced = raw.substring(0, in);
+            String replacement = toBeReplaced;
+            if (!operationCell.getAlias().isBlank()) {
+                replacement = replacement + ":" + operationCell.getAlias();
+            }
 
-			else {
+            raw = raw.replace(toBeReplaced, replacement);
 
-				raw = raw.replace("source1", generateExpression(cell.getParents().get(0)));
-				raw = raw.replace("source2", generateExpression(cell.getParents().get(1)));
+            raw = raw.replace("[args]", OperationType.OPERATIONS_WITHOUT_FORM.contains(operationCell.getType()) ? ""
+                    : operationCell.getArguments().toString());
 
-			}
+            if (operationCell.getArity() == OperationArity.UNARY) {
+                raw = raw.replace("source", generateExpression(cell.getParents().get(0)));
+            } else if (operationCell.getArity() == OperationArity.BINARY) {
 
-		} else if (cell instanceof TableCell tableCell) {
+                raw = raw.replace("source1", generateExpression(cell.getParents().get(0)));
+                raw = raw.replace("source2", generateExpression(cell.getParents().get(1)));
+            } else {
 
-			raw = tableCell.getName();
+            }
 
-		}
+        } else if (cell instanceof TableCell tableCell) {
+            String fileName = tableCell.getTable().getHeaderName();
+            String alias = tableCell.getAlias();
+            if (fileName.equals(alias) || alias.isBlank()) {
+                raw = fileName;
+            } else {
+                raw = fileName + ":" + alias;
+            }
 
-		return raw + getPosition(cell.getUpperLeftPosition());
+        }
 
-	}
+        return raw + getPosition(cell.getUpperLeftPosition());
+
+    }
 
 }

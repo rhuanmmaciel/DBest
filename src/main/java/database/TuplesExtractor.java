@@ -2,10 +2,10 @@ package database;
 
 import controllers.ConstantController;
 import entities.Column;
-import sgbd.prototype.RowData;
-import sgbd.prototype.query.Tuple;
-import sgbd.query.Operator;
-import utils.Utils;
+import ibd.query.Operation;
+import ibd.query.ReferedDataSource;
+import ibd.query.Tuple;
+import ibd.table.prototype.LinkedDataRow;
 
 import java.util.*;
 
@@ -15,130 +15,197 @@ public class TuplesExtractor {
 
     }
 
-    public static Map<Integer, Map<String, String>>  getAllRowsMap(Operator operator, boolean sourceAndName) {
-        operator.open();
-
+    public static Map<Integer, Map<String, String>> getAllRowsMap(Operation operator, boolean sourceAndName) {
         Map<Integer, Map<String, String>> rows = new HashMap<>();
 
-        Map<String, String> row;
+        try {
+            operator.open();
+            int i = 0;
+            while (operator.hasNext()) {
+                Tuple tuple = operator.next();
+                Map<String, String> row = getRow_(tuple, operator, sourceAndName);
+                rows.put(i++, row);
+            }
+            operator.close();
 
-        row = getRow(operator, sourceAndName);
+        } catch (Exception ex) {
+        }
+        return rows;
+    }
+
+    public static List<Map<String, String>> getRows(Operation operator, int amount, boolean sourceAndName) {
+        List<Map<String, String>> rows = new ArrayList<>();
+        try {
+            operator.open();
+            int i = 1;
+            while (operator.hasNext() && i++ <= amount) {
+                Tuple tuple = operator.next();
+                Map<String, String> row = getRow_(tuple, operator, sourceAndName);
+                rows.add(row);
+            }
+
+            operator.close();
+        } catch (Exception ex) {
+        }
+        return rows;
+    }
+
+    public static List<Map<String, String>> getAllRowsList(Operation operator, boolean sourceAndName) {
+
+        List<Map<String, String>> rows = new ArrayList<>();
+
+        try {
+            operator.open();
+            while (operator.hasNext()) {
+                Tuple tuple = operator.next();
+                Map<String, String>  row = getRow_(tuple, operator, sourceAndName);
+                rows.add(row);
+            }
+
+            operator.close();
+        } catch (Exception ex) {
+        }
+
+        return rows;
+    }
+
+    public static List<Map<String, String>> getRows(Operation operator, boolean sourceAndName, int amount) {
+
+        if (amount <= 0) {
+            //throw new IllegalArgumentException();
+            return new ArrayList<>();
+        }
+
+        List<Map<String, String>> rows = new ArrayList<>();
         int i = 0;
-        while (row != null) {
-            rows.put(i++, row);
-            row = getRow(operator, sourceAndName);
-        }
-
-        operator.close();
-
-        return rows;
-    }
-
-    public static List<Map<String, String>> getRows(Operator operator, int amount, boolean sourceAndName) {
-        operator.open();
-
-        List<Map<String, String>> rows = new ArrayList<>();
-
-        Map<String, String> row;
-
-        row = getRow(operator, sourceAndName);
-        int i = 1;
-        while (row != null && i++ <= amount) {
+        while (i<amount && operator.hasNext()) {
+            Tuple tuple = operator.next();
+            
+            Map<String, String> row = getRow_(tuple, operator, sourceAndName);
             rows.add(row);
-            row = getRow(operator, sourceAndName);
-        }
-
-        operator.close();
-
-        return rows;
-    }
-
-    public static List<Map<String, String>> getAllRowsList(Operator operator, boolean sourceAndName) {
-        operator.open();
-
-        List<Map<String, String>> rows = new ArrayList<>();
-
-        Map<String, String> row;
-
-        row = getRow(operator, sourceAndName);
-
-        while (row != null) {
-            rows.add(row);
-            row = getRow(operator, sourceAndName);
-        }
-
-        operator.close();
-
-        return rows;
-    }
-
-    public static List<Map<String, String>> getRows(Operator operator, boolean sourceAndName, int amount){
-
-        if(amount <= 0)
-            throw new IllegalArgumentException();
-
-        List<Map<String, String>> rows = new ArrayList<>();
-
-        for(int i = 0; i < amount; i++) {
-            Map<String, String> row = getRow(operator, sourceAndName);
-            if(row == null) return rows;
-
-            rows.add(row);
+            i++;
         }
 
         return rows;
 
     }
 
-
-    public static Map<String, String> getRow(Operator operator, boolean sourceAndName) {
-        if (operator == null) return null;
-
+    public static Set<String> getPossibleKeys(Operation operator, boolean sourceAndName) {
         Set<String> possibleKeys = new HashSet<>();
+        for (Map.Entry<String, List<String>> content : operator.getContentInfo().entrySet()) {
+            possibleKeys.addAll(content
+                    .getValue()
+                    .stream()
+                    .map(columnName -> sourceAndName ? entities.Column.composeSourceAndName(content.getKey(), columnName) : columnName)
+                    .toList()
+            );
+        }
+        return possibleKeys;
+    }
+
+    public static Map<String, String> getRow___(Operation operator, boolean sourceAndName) {
+        if (operator == null) {
+            return null;
+        }
 
         Map<String, String> row = new TreeMap<>();
 
-        for (Map.Entry<String, List<String>> content : operator.getContentInfo().entrySet()) {
-            possibleKeys.addAll(content
-                .getValue()
-                .stream()
-                .map(columnName -> sourceAndName ? entities.Column.composeSourceAndName(content.getKey(), columnName) : columnName)
-                .toList()
-            );
-        }
-
         if (operator.hasNext()) {
             Tuple tuple = operator.next();
-
-            for (Map.Entry<String, List<String>> content : operator.getContentInfo().entrySet()) {
-                for (String columnName : content.getValue()) {
-                    RowData rowData = tuple.getContent(content.getKey());
-                    String sourceAndColumn = sourceAndName ? Column.composeSourceAndName(content.getKey(), columnName) : columnName;
-
-                    switch (Utils.getColumnDataType(tuple, content.getKey(), columnName)) {
-                        case INTEGER ->
-                            row.put(sourceAndColumn, Objects.toString(rowData.getInt(columnName), ConstantController.NULL));
-                        case LONG ->
-                            row.put(sourceAndColumn, Objects.toString(rowData.getLong(columnName), ConstantController.NULL));
-                        case FLOAT ->
-                            row.put(sourceAndColumn, Objects.toString(rowData.getFloat(columnName), ConstantController.NULL));
-                        case DOUBLE ->
-                            row.put(sourceAndColumn, Objects.toString(rowData.getDouble(columnName), ConstantController.NULL));
-                        case BOOLEAN ->
-                            row.put(sourceAndColumn, Objects.toString(rowData.getBoolean(columnName), ConstantController.NULL));
-                        case STRING, NONE, CHARACTER ->
-                            row.put(sourceAndColumn, Objects.toString(rowData.getString(columnName), ConstantController.NULL));
-                    }
-                }
+            int rowIndex = 0;
+            ReferedDataSource[] dataSources = null;
+            try {
+                dataSources = operator.getExposedDataSources();
+            } catch (Exception ex) {
             }
+            for (LinkedDataRow row1 : tuple.rows) {
+
+                String alias = dataSources[rowIndex].alias;
+                int colIndex = 0;
+                for (ibd.table.prototype.column.Column column : row1.getPrototype().getColumns()) {
+                    String columnName = column.getName();
+                    String sourceAndColumn = sourceAndName ? Column.composeSourceAndName(alias, columnName) : columnName;
+                    boolean hasValue = row1.hasValue(columnName);
+                    if (hasValue) {
+                        switch (column.getType()) {
+                            case ibd.table.prototype.column.Column.INTEGER_TYPE ->
+                                row.put(sourceAndColumn, Objects.toString(row1.getInt(columnName), ConstantController.NULL));
+                            case ibd.table.prototype.column.Column.LONG_TYPE ->
+                                row.put(sourceAndColumn, Objects.toString(row1.getLong(columnName), ConstantController.NULL));
+                            case ibd.table.prototype.column.Column.FLOAT_TYPE ->
+                                row.put(sourceAndColumn, Objects.toString(row1.getFloat(columnName), ConstantController.NULL));
+                            case ibd.table.prototype.column.Column.DOUBLE_TYPE ->
+                                row.put(sourceAndColumn, Objects.toString(row1.getDouble(columnName), ConstantController.NULL));
+                            case ibd.table.prototype.column.Column.BOOLEAN_TYPE ->
+                                row.put(sourceAndColumn, Objects.toString(row1.getBoolean(columnName), ConstantController.NULL));
+                            case ibd.table.prototype.column.Column.STRING_TYPE ->
+                                row.put(sourceAndColumn, Objects.toString(row1.getString(columnName), ConstantController.NULL));
+                            default ->
+                                row.put(sourceAndColumn, Objects.toString(row1.getString(columnName), ConstantController.NULL));
+
+                        }
+                    } else {
+                        row.put(sourceAndColumn, ConstantController.NULL);
+                    }
+                    colIndex++;
+                }
+                rowIndex++;
+            }
+
         } else {
             return null;
         }
 
-        for (String key : possibleKeys) {
-            if (!row.containsKey(key)) {
-                row.put(key, ConstantController.NULL);
+//        for (String key : possibleKeys) {
+//            if (!row.containsKey(key)) {
+//                row.put(key, ConstantController.NULL);
+//            }
+//        }
+        return row;
+    }
+
+    public static Map<String, String> getRow_(Tuple tuple, Operation operator, boolean sourceAndName) {
+
+        Map<String, String> row = new TreeMap<>();
+
+        int rowIndex = 0;
+        ReferedDataSource[] dataSources = null;
+        try {
+            dataSources = operator.getExposedDataSources();
+        } catch (Exception ex) {
+        }
+        for (LinkedDataRow row1 : tuple.rows) {
+
+            String alias = dataSources[rowIndex].alias;
+            int colIndex = 0;
+            for (ibd.table.prototype.column.Column column : row1.getPrototype().getColumns()) {
+                String columnName = column.getName();
+                String sourceAndColumn = sourceAndName ? Column.composeSourceAndName(alias, columnName) : columnName;
+                boolean hasValue = row1.hasValue(columnName);
+                if (hasValue) {
+                    switch (column.getType()) {
+                        case ibd.table.prototype.column.Column.INTEGER_TYPE ->
+                            row.put(sourceAndColumn, Objects.toString(row1.getInt(columnName), ConstantController.NULL));
+                        case ibd.table.prototype.column.Column.LONG_TYPE ->
+                            row.put(sourceAndColumn, Objects.toString(row1.getLong(columnName), ConstantController.NULL));
+                        case ibd.table.prototype.column.Column.FLOAT_TYPE ->
+                            row.put(sourceAndColumn, Objects.toString(row1.getFloat(columnName), ConstantController.NULL));
+                        case ibd.table.prototype.column.Column.DOUBLE_TYPE ->
+                            row.put(sourceAndColumn, Objects.toString(row1.getDouble(columnName), ConstantController.NULL));
+                        case ibd.table.prototype.column.Column.BOOLEAN_TYPE ->
+                            row.put(sourceAndColumn, Objects.toString(row1.getBoolean(columnName), ConstantController.NULL));
+                        case ibd.table.prototype.column.Column.STRING_TYPE ->
+                            row.put(sourceAndColumn, Objects.toString(row1.getString(columnName), ConstantController.NULL));
+                        default ->
+                            row.put(sourceAndColumn, Objects.toString(row1.getString(columnName), ConstantController.NULL));
+
+                    }
+                } else {
+                    row.put(sourceAndColumn, ConstantController.NULL);
+                }
+                colIndex++;
             }
+            rowIndex++;
         }
 
         return row;

@@ -5,6 +5,7 @@ import controllers.ConstantController;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
 import entities.utils.cells.CellUtils;
+import files.FileUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +25,10 @@ public class CellInformationFrame extends JDialog {
     public CellInformationFrame(mxCell jCell) {
         super((Window) null);
         setModal(true);
+        try {
+            this.setIconImage(new ImageIcon(String.valueOf(FileUtils.getDBestLogo())).getImage());
+        }catch (Exception ignored){
+        }
 
         this.jCell = jCell;
 

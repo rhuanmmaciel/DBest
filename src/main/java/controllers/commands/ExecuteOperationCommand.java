@@ -1,6 +1,7 @@
 package controllers.commands;
 
 import com.mxgraph.model.mxCell;
+import controllers.MainController;
 import entities.Edge;
 import entities.cells.Cell;
 import entities.cells.OperationCell;
@@ -81,8 +82,12 @@ public class ExecuteOperationCommand extends BaseUndoableRedoableCommand {
             (operationCell.getArity() == OperationArity.UNARY || operationCell.getParents().size() == 2) &&
             OperationType.OPERATIONS_WITHOUT_FORM.contains(operationType)
         ) {
-            this.executeOperationWithoutForm(operationType);
+            this.executeOperationWithoutForm(operationType, operationCell.getAlias());
         }
+        
+        //TO DO: added to recalculate after operation created.
+        //need to check if the recalculate before creation (a few lines of code above) is really needed
+        TreeUtils.recalculateContent(operationCell);
     }
 
     @Override
@@ -132,6 +137,8 @@ public class ExecuteOperationCommand extends BaseUndoableRedoableCommand {
 
     private void executeOperationWithForm(OperationType operationType) {
         try {
+            MainController.setPopupBeingActivatedByCommand(true);
+            
             Constructor<? extends IOperationForm> constructor = operationType.form.getDeclaredConstructor(mxCell.class);
             constructor.newInstance(this.cellReference.get());
         } catch (
@@ -139,13 +146,15 @@ public class ExecuteOperationCommand extends BaseUndoableRedoableCommand {
             NoSuchMethodException | InvocationTargetException exception
         ) {
             exception.printStackTrace();
+        } finally {
+            MainController.setPopupBeingActivatedByCommand(false);
         }
     }
 
-    private void executeOperationWithoutForm(OperationType operationType) {
+    private void executeOperationWithoutForm(OperationType operationType, String alias) {
         try {
             Constructor<? extends IOperator> constructor = operationType.operatorClass.getDeclaredConstructor();
-            constructor.newInstance().executeOperation(this.cellReference.get(), List.of());
+            constructor.newInstance().executeOperation(this.cellReference.get(), List.of(), alias);
         } catch (
             InstantiationException | IllegalAccessException |
             NoSuchMethodException | InvocationTargetException exception

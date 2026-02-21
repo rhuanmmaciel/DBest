@@ -10,8 +10,6 @@ import exceptions.tree.TreeException;
 import operations.IOperator;
 import operations.Operation;
 import operations.OperationErrorVerifier;
-import sgbd.query.Operator;
-import sgbd.query.unaryop.SortOperator;
 import utils.Utils;
 
 import java.util.Collections;
@@ -24,7 +22,7 @@ public class Sort implements IOperator {
 
     @Override
     @SuppressWarnings(value = "deprecation")
-    public void executeOperation(mxCell jCell, List<String> arguments) {
+    public void executeOperation(mxCell jCell, List<String> arguments, String alias) {
         Optional<Cell> optionalCell = CellUtils.getActiveCell(jCell);
 
         if (optionalCell.isEmpty()) return;
@@ -61,7 +59,7 @@ public class Sort implements IOperator {
 
         Cell parentCell = cell.getParents().get(0);
 
-        Operator operator = parentCell.getOperator();
+        ibd.query.Operation operator = parentCell.getOperator();
 
         String column = arguments.get(0);
 
@@ -76,60 +74,11 @@ public class Sort implements IOperator {
         String prefix = isAscendingOrder ? "ASC:" : "DESC:";
         arguments = List.of(prefix + Column.composeSourceAndName(sourceName, columnName));
 
-        Operator readyOperator = new SortOperator(operator, (entries, tuple1) -> {
-            switch (Utils.getColumnDataType(tuple1, sourceName, columnName)) {
-                case INTEGER -> {
-                    Integer integer1 = entries.getContent(sourceName).getInt(columnName);
-                    Integer integer2 = tuple1.getContent(sourceName).getInt(columnName);
-
-                    if (isAscendingOrder) {
-                        return integer1.compareTo(integer2);
-                    } else {
-                        return integer2.compareTo(integer1);
-                    }
-                }
-                case LONG -> {
-                    Long long1 = entries.getContent(sourceName).getLong(columnName);
-                    Long long2 = tuple1.getContent(sourceName).getLong(columnName);
-
-                    if (isAscendingOrder) {
-                        return long1.compareTo(long2);
-                    } else {
-                        return long2.compareTo(long1);
-                    }
-                }
-                case FLOAT -> {
-                    Float float1 = entries.getContent(sourceName).getFloat(columnName);
-                    Float float2 = tuple1.getContent(sourceName).getFloat(columnName);
-
-                    if (isAscendingOrder) {
-                        return float1.compareTo(float2);
-                    } else {
-                        return float2.compareTo(float1);
-                    }
-                }
-                case DOUBLE -> {
-                    Double double1 = entries.getContent(sourceName).getDouble(columnName);
-                    Double double2 = tuple1.getContent(sourceName).getDouble(columnName);
-
-                    if (isAscendingOrder) {
-                        return double1.compareTo(double2);
-                    } else {
-                        return double2.compareTo(double1);
-                    }
-                }
-                default -> {
-                    String string1 = tuple1.getContent(sourceName).getString(columnName);
-                    String string2 = entries.getContent(sourceName).getString(columnName);
-
-                    if (isAscendingOrder) {
-                        return string1.compareTo(string2);
-                    } else {
-                        return string2.compareTo(string1);
-                    }
-                }
-            }
-        });
+        ibd.query.Operation readyOperator = null;
+        try {
+            readyOperator = new ibd.query.unaryop.sort.Sort(operator, sourceName+"."+columnName, isAscendingOrder);
+        } catch (Exception ex) {
+        }
 
         String operationName = String.format("%s %s", cell.getType().symbol, arguments);
 

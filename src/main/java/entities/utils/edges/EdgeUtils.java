@@ -5,6 +5,8 @@ import java.util.Optional;
 import com.mxgraph.model.mxICell;
 
 import entities.Edge;
+import entities.cells.Cell;
+import entities.utils.cells.CellUtils;
 import gui.frames.main.MainFrame;
 
 public class EdgeUtils {
@@ -14,6 +16,13 @@ public class EdgeUtils {
     }
 
     public static mxICell addEdge(Edge edge, mxICell target) {
+        Optional<Cell> targetCell = CellUtils.getActiveCell(target);
+        if (targetCell.isPresent() && !targetCell.get().canBeChild()) {
+            System.err.println("Cannot create edge: target cell cannot be a child (tables cannot be edge targets)");
+            MainFrame.getGraph().refresh();
+            return null;
+        }
+        
         MainFrame.getGraph().getModel().beginUpdate();
 
         try {

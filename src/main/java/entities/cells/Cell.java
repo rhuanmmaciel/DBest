@@ -11,23 +11,28 @@ import entities.Tree;
 import entities.utils.RootFinder;
 import entities.utils.TreeUtils;
 import entities.utils.cells.CellUtils;
+import ibd.query.Operation;
+import ibd.query.SingleSource;
 
 import org.apache.commons.lang3.tuple.Pair;
-import sgbd.query.Operator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public abstract sealed class Cell permits TableCell, OperationCell {
 
-    protected Operator operator;
+    protected Operation operator;
 
     protected List<Column> columns;
 
     protected final String style;
 
     protected String name;
+
+    protected String alias="";
 
     protected final mxCell jCell;
 
@@ -44,7 +49,7 @@ public abstract sealed class Cell permits TableCell, OperationCell {
     protected Cell(String name, mxCell jCell, int height) {
 
         this.columns = new ArrayList<>();
-        this.name = name;
+        this.name = name.trim();
         this.jCell = jCell;
         this.width = Math.max(CellUtils.getCellWidth(jCell), ConstantController.TABLE_CELL_WIDTH);
         this.height = height;
@@ -54,7 +59,8 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
         this.style =  this.isCSVTableCell()
             ? "csv" : this.isFYITableCell()
-            ? "fyi" : this.isOperationCell()
+            ? "fyi" : this.isXMLTableCell()
+            ? "xml" : this.isOperationCell()
             ? "operation" : jCell.getStyle();
 
         CellUtils.addCell(jCell, this);
@@ -103,11 +109,11 @@ public abstract sealed class Cell permits TableCell, OperationCell {
         return this.jCell;
     }
 
-    public void setOperator(Operator operator) {
+    public void setOperator(Operation operator) {
         this.operator = operator;
     }
 
-    public Operator getOperator() {
+    public Operation getOperator() {
         return this.operator;
     }
 
@@ -117,6 +123,10 @@ public abstract sealed class Cell permits TableCell, OperationCell {
 
     public void setChild(OperationCell child) {
         this.child = child;
+    }
+
+    public void removeChild() {
+        this.child = null;
     }
 
     public Boolean hasChild() {
@@ -139,14 +149,26 @@ public abstract sealed class Cell permits TableCell, OperationCell {
         return this.getColumns().stream().map(x -> x.NAME).toList();
     }
 
+    public String getAlias() {
+        return this.alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
     public boolean canBeParent(){
 
         if(this instanceof TableCell) return true;
 
         OperationCell operationCell = (OperationCell) this;
 
-        return operationCell.hasBeenInitialized() && !operationCell.hasError() && !operationCell.hasParentErrors();
+        return operationCell.getType().allwaysAllowConnections || (operationCell.hasBeenInitialized() && !operationCell.hasError() && !operationCell.hasParentErrors());
 
+    }
+
+    public boolean canBeChild(){
+        return this instanceof OperationCell;
     }
 
     public List<String> getColumnSourcesAndNames() {
@@ -177,16 +199,31 @@ public abstract sealed class Cell permits TableCell, OperationCell {
         return null;
     }
 
-    public void openOperator(){
-        operator.open();
+    public void openOperator() throws Exception{
+            operator.open();
     }
 
     public void closeOperator(){
-        operator.close();
+        try {
+            operator.close();
+        } catch (Exception ex) {
+            Logger.getLogger(Cell.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void freeOperatorResources(){
-        operator.freeResources();
+        // Simple memory cleanup - call freeResources if available
+        if (operator != null) {
+            try {
+                // Try to clean up hash tables and other data structures
+                operator.close();
+                
+                //operator is reopen in case the processing continues
+                openOperator();
+            } catch (Exception e) {
+                // Ignore cleanup errors
+            }
+        }
     }
 
     public Pair<Integer, CellStats> getCellStats(int amountOfTuples, CellStats initialCellStats){
@@ -219,6 +256,10 @@ public abstract sealed class Cell permits TableCell, OperationCell {
         return this instanceof CSVTableCell;
     }
 
+    public boolean isXMLTableCell(){
+        return this instanceof XMLTableCell;
+    }
+
     public boolean isTableCell(){
         return this instanceof TableCell;
     }
@@ -227,10 +268,23 @@ public abstract sealed class Cell permits TableCell, OperationCell {
         return this instanceof OperationCell;
     }
 
+    public boolean alwaysAllowConnections(){
+        return false;
+    }
+
+    public boolean hasSingleSource(){
+        if (operator==null) return false;
+        if (operator instanceof SingleSource) return true;
+
+        return false;
+    }
+
     @Override
     public String toString() {
         return this.name;
     }
+
+    public abstract Cell copy();
 
     public abstract boolean hasParents();
 
